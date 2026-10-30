@@ -341,7 +341,7 @@ Object.keys(CABANG).forEach(function(k){R(CABANG[k].map(function(x){return {i:x.
 /* Tempel URL Web App Google Apps Script di sini (lihat panduan apps-script.gs). Kosongkan "" jika belum terhubung. */
 var SCRIPT_URL="https://script.google.com/macros/s/AKfycbxkIioAhO7UwoVjpRr_i8yULRzvTa7YIcvPSVuvoI6bBscIEyWP-vCYEgx7ff34GdcX/exec";
 /* Ubah ke true untuk menguji formulir di luar masa pendaftaran. */
-var FORCE_OPEN=TRUE;
+var FORCE_OPEN=true;
 var WIN={k:["2026-11-01","2026-11-20"],b:["2026-11-01","2026-12-19"]};
 var PICK="",LAST=null;
 var ALLC=[];Object.keys(CABANG).forEach(function(k){CABANG[k].forEach(function(x){ALLC.push({n:x.t,g:NM[k]})})});
