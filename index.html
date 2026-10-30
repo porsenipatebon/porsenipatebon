@@ -20,8 +20,8 @@ body{margin:0;min-height:100%;background:#fff;color:var(--ink);font:600 1.15rem/
 .b2{width:240px;height:240px;background:var(--cyan);top:120px;right:-110px;animation-delay:-5s}
 .b3{width:190px;height:190px;background:var(--yellow);top:420px;left:-80px;opacity:.35;animation-delay:-9s}
 @keyframes float{to{transform:translate(26px,34px) scale(1.1)}}
-.sw{position:absolute;top:0;left:0;width:min(78%,420px);height:auto;pointer-events:none}
-.page{position:relative;max-width:520px;margin:0 auto;padding:78px 20px 0}
+.sw{position:absolute;top:0;left:0;width:100%;max-width:560px;height:auto;pointer-events:none}
+.page{position:relative;max-width:520px;margin:0 auto;padding:92px 20px 0}
 .head{text-align:center;margin-bottom:10px}
 .panitia{display:inline-block;background:linear-gradient(90deg,var(--navy),var(--blue));color:#fff;font:800 .78rem var(--display);letter-spacing:.06em;padding:6px 20px;border-radius:999px;box-shadow:0 6px 16px rgba(10,99,201,.3)}
 .wm{display:flex;justify-content:center;align-items:center;font:800 clamp(2.8rem,14vw,4.2rem)/1 var(--display);color:var(--navy);margin:16px 0 6px;letter-spacing:-.02em}
@@ -34,14 +34,16 @@ body{margin:0;min-height:100%;background:#fff;color:var(--ink);font:600 1.15rem/
 .chips .cd{background:linear-gradient(90deg,var(--orange),var(--yellow));color:#2a1a00}
 .sec{display:flex;align-items:center;gap:10px;font:800 .95rem var(--display);letter-spacing:.04em;color:var(--navy);margin:34px 4px 14px}
 .sec::after{content:"";flex:1;height:6px;border-radius:6px;background:linear-gradient(90deg,var(--cyan),var(--blue) 40%,transparent)}
-a.link,summary{--a:var(--cyan);--b:var(--blue);display:flex;align-items:center;gap:14px;background:#fff;border-radius:999px;padding:10px 12px 10px 10px;margin-bottom:12px;text-decoration:none;color:inherit;cursor:pointer;list-style:none;box-shadow:0 6px 20px rgba(11,45,114,.13);transition:transform .25s,box-shadow .25s}
+a.link,summary,.card{--a:var(--cyan);--b:var(--blue);display:flex;align-items:center;gap:14px;background:#fff;border-radius:999px;padding:10px 12px 10px 10px;margin-bottom:12px;text-decoration:none;color:inherit;cursor:pointer;list-style:none;box-shadow:0 6px 20px rgba(11,45,114,.13);transition:transform .25s,box-shadow .25s}
 a.link:nth-child(5n+1){--a:var(--red);--b:var(--orange)}a.link:nth-child(5n+2){--a:var(--orange);--b:var(--yellow)}a.link:nth-child(5n+3){--a:var(--cyan);--b:var(--blue)}a.link:nth-child(5n+4){--a:var(--blue);--b:var(--navy)}a.link:nth-child(5n){--a:var(--yellow);--b:var(--orange)}
 a.link:hover,summary:hover{transform:translateY(-3px) scale(1.015);box-shadow:0 12px 28px rgba(10,99,201,.25)}
 summary::-webkit-details-marker{display:none}
 .ic{flex:none;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-size:1.35rem;background:linear-gradient(135deg,var(--a),var(--b))}
 .t{flex:1;min-width:0}
 .t b{display:block;font:800 .98rem/1.25 var(--display);color:var(--navy)}
-.t small{color:var(--muted);font-size:1.02rem}
+.t small{display:block;color:var(--muted);font-size:1.05rem;line-height:1.6}
+.about{background:linear-gradient(180deg,var(--tint),#fff);border-radius:26px;padding:16px 20px 18px;margin:0 6px 14px;font-size:1.12rem;line-height:1.55;animation:drop .35s ease}
+.about p{margin:0}.about .chips{margin-top:12px;justify-content:center}
 .arr{flex:none;margin-right:6px;font:800 1.3rem var(--body);color:var(--blue);transition:transform .25s}
 a.link:hover .arr{transform:translateX(4px)}
 details[open]>summary .arr{transform:rotate(90deg)}
@@ -62,6 +64,70 @@ a.link.off .arr{font-size:.9rem;color:var(--muted)}
 .row::after{content:"";position:absolute;left:4px;top:25px;bottom:-8px;width:2px;background:#cfe0f7}
 .row:last-child::after{display:none}
 .row time{flex:0 0 112px;font-weight:700;color:var(--blue)}.row.done{opacity:.45}
+.box a{color:var(--blue);font-weight:700}
+.st{display:flex;gap:12px;padding:10px 0}
+.st .n{flex:none;width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--orange),var(--red));color:#fff;font:800 .95rem var(--display);display:grid;place-items:center;margin-top:2px}
+.st b{display:block;font:800 .98rem/1.25 var(--display);color:var(--navy)}
+.st p{margin:4px 0 0;color:var(--muted);line-height:1.5}
+.st ol{margin:6px 0 0;padding-left:22px;list-style:lower-alpha;color:var(--muted);line-height:1.5}
+.acc{background:#fff;border-radius:16px;padding:10px 16px;margin:10px 0;box-shadow:0 2px 10px rgba(11,45,114,.08)}
+.acc b{display:block;font:800 .9rem var(--display);color:var(--navy)}
+.acc span{display:block;line-height:1.35}
+.acc a{display:inline-block;font:800 1.2rem var(--display);text-decoration:underline;padding:2px 0}
+.acc .num{font:800 1.25rem var(--display);color:var(--blue);margin:2px 0}
+.sub{font:800 .9rem var(--display);color:var(--navy);margin:22px 6px 10px}
+.rekap{background:#fff;border-radius:22px;box-shadow:0 6px 20px rgba(11,45,114,.13);padding:8px 10px;margin:0 0 16px;overflow-x:auto}
+.tb{width:100%;border-collapse:collapse}.tb th,.tb td{padding:9px 6px;text-align:center;border-bottom:1px solid #e3ecfa}
+.tb th{font:800 .85rem var(--display);color:var(--navy)}.tb td:nth-child(2),.tb th:nth-child(2){text-align:left}
+.tb tr:last-child td{border-bottom:0}.tb .emp{color:var(--muted);padding:16px 8px;text-align:center}
+.back{display:inline-flex;align-items:center;gap:6px;background:#fff;border-radius:999px;padding:6px 16px;font:800 .9rem var(--display);color:var(--navy);text-decoration:none;box-shadow:0 4px 14px rgba(11,45,114,.14)}
+.pg{font:800 clamp(1.3rem,6vw,1.7rem)/1.2 var(--display);color:var(--navy);margin:20px 4px 6px}
+.pgsub{margin:0 4px 6px;color:var(--muted);line-height:1.5}
+[hidden]{display:none!important}
+.fld{display:block;margin:0 0 12px}
+.fld>span,.lbl{display:block;font:800 .85rem var(--display);color:var(--navy);margin:0 0 5px}
+.fld input,.fld select,.fld textarea{width:100%;font:600 1.1rem var(--body);padding:9px 14px;border:2px solid #cfe0f7;border-radius:14px;background:#fff;color:var(--ink)}
+.fld input:focus,.fld select:focus,.fld textarea:focus{outline:none;border-color:var(--blue)}
+.fld textarea{min-height:70px;resize:vertical}
+.formbox{background:linear-gradient(180deg,var(--tint),#fff);border-radius:26px;padding:18px 18px 8px;margin:0 0 14px}
+.formbox h3{font:800 .9rem var(--display);color:var(--navy);margin:8px 0 10px;padding-top:6px;border-top:2px dashed #cfe0f7}
+.formbox h3:first-child{border-top:0;margin-top:0}
+.grp{font:800 .8rem var(--display);color:var(--blue);margin:8px 0 6px}
+.chks{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px}.chks.one{grid-template-columns:1fr}
+.chk{display:flex;align-items:center;gap:8px;background:#fff;border:2px solid #cfe0f7;border-radius:14px;padding:6px 10px;cursor:pointer}
+.chk input{width:20px;height:20px;accent-color:var(--blue);flex:none;margin:0}.chk span{font-weight:700;line-height:1.2}
+.btn{display:block;width:100%;border:0;border-radius:999px;padding:14px;margin:0 0 12px;font:800 1rem var(--display);color:#fff;background:linear-gradient(90deg,var(--blue),var(--cyan));box-shadow:0 8px 20px rgba(10,99,201,.28);cursor:pointer}
+.btn.alt{background:#fff;color:var(--navy);box-shadow:0 4px 14px rgba(11,45,114,.14)}.btn:disabled{opacity:.5;cursor:not-allowed}
+.warn{background:#fff4dd;border-radius:16px;padding:10px 14px;margin:0 0 12px;color:#6a4300;font-weight:700}
+.prow{display:grid;grid-template-columns:1fr 64px;gap:6px;margin-bottom:10px;padding:10px;background:#fff;border-radius:16px;border:2px solid #cfe0f7}
+.prow input,.prow select{width:100%;font:600 1.05rem var(--body);padding:7px 10px;border:2px solid #e3ecfa;border-radius:12px;background:#fff;color:var(--ink)}
+.prow .w{grid-column:1/-1}.prow .rm{border:0;background:#ffe3e1;color:#b3261e;border-radius:12px;font-weight:800;cursor:pointer}
+.paper{background:#fff;color:#000;border-radius:10px;padding:18px;margin-bottom:14px;box-shadow:0 6px 20px rgba(11,45,114,.15);font:500 .92rem/1.45 "Segoe UI",Arial,sans-serif;overflow-x:auto}
+.paper .kop{text-align:center;border-bottom:3px double #000;padding-bottom:8px;margin-bottom:10px}.paper .kop b{display:block;font-size:1.1em}.paper .kop span{font-size:.85em}
+.paper h2{text-align:center;font:800 1.05em Arial,sans-serif;margin:8px 0 2px}.paper .no{text-align:center;margin:0 0 10px;font-size:.9em}
+.paper h4{margin:12px 0 4px;font:800 .95em Arial,sans-serif}
+.paper table{width:100%;border-collapse:collapse}.paper td,.paper th{border:1px solid #333;padding:4px 7px;vertical-align:top;text-align:left}
+.paper td:first-child{width:34%;font-weight:700;background:#f2f2f2;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.paper .pl td:first-child{width:auto;font-weight:500;background:none}.paper .pl td.c{width:36px;text-align:center}
+.paper th{background:#e6e6e6;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.paper ol,.paper ul{margin:4px 0;padding-left:22px}.paper ul{list-style:none;padding-left:4px}
+.paper .sign{display:flex;justify-content:space-between;gap:16px;margin-top:18px;text-align:center}.paper .sign>div{flex:1}.paper .sp{height:70px}
+.paper small{color:#444}
+.kats{grid-column:1/-1;background:#fff;border-radius:14px;padding:8px 10px;border:2px dashed #cfe0f7}
+.kats b{display:block;font:800 .8rem var(--display);color:var(--navy);margin-bottom:6px}.kats .chk{margin-bottom:6px}
+.kt{display:block;font-style:normal;font-size:.8em;color:var(--muted);font-weight:600;line-height:1.3;margin-top:2px}
+.note{margin:12px 0 4px;padding:10px 14px;border-radius:14px;background:#fff4dd;color:#6a4300;font-weight:600;line-height:1.45}
+.fld input[type=file]{font-size:.95rem;padding:8px 10px}
+.stat{margin:0 0 12px;padding:10px 14px;border-radius:16px;background:#e5f6ea;color:#14532d;font-weight:700}.stat.w{background:#fff4dd;color:#6a4300}.stat.i{background:#e8f1ff;color:#0b2d72}
+@media print{
+ @page{size:A4;margin:12mm}
+ :root{padding:0!important}
+ body{background:#fff}
+ .blob,.sw,footer,.noprint{display:none!important}
+ .page{padding:0;max-width:none}
+ .paper{box-shadow:none;border-radius:0;padding:0;font-size:11pt;overflow:visible}
+}
+.hint{margin:10px 4px 4px;color:var(--muted)}
 .reveal{opacity:0;animation:up .6s ease forwards;animation-delay:calc(var(--i,0)*70ms + 150ms)}
 @keyframes up{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 footer{position:relative;text-align:center;color:var(--muted);margin-top:36px;padding:70px 20px 40px}
@@ -74,26 +140,25 @@ footer b{color:var(--navy)}
 <i class="blob b1"></i><i class="blob b2"></i><i class="blob b3"></i>
 <svg class="sw" viewBox="0 0 420 150" aria-hidden="true"><path d="M0 0H190C110 22 50 62 0 120Z" fill="#f7941d"/><path d="M0 0H120C70 20 25 50 0 82Z" fill="#e8312f"/><path d="M190 0H300C200 25 90 80 0 150V120C50 62 110 22 190 0Z" fill="#0a63c9"/><path d="M300 0H400C290 30 150 100 0 150C90 80 200 25 300 0Z" fill="#12a9e8"/></svg>
 <main class="page">
+<div id="v-home">
 <header class="head">
-  <span class="panitia">PANITIA PELAKSANA</span>
   <h1 class="wm" aria-label="PORSENI">P<i class="o"></i>RSENI</h1>
   <h2>PAC IPNU IPPNU PATEBON 2026</h2>
   <p class="tag">“Unitas Ad Gloriam”</p>
-  <div class="chips"><span>25–26 Des 2026</span><span>Desa Margosari</span><span class="cd" id="cd"></span></div>
 </header>
 
-<div class="sec">PENDAFTARAN DAN BERKAS</div>
-<div id="links"></div>
+<div class="sec">APA ITU PORSENI?</div>
+<div class="about">
+  <p>PORSENI (Pekan Olahraga dan Seni) adalah ajang kompetisi dan kreativitas pelajar NU se-Kecamatan Patebon yang diadakan setiap tahun sekali, terdiri dari berbagai cabang lomba dalam bidang akademik, olahraga maupun seni. Terdapat beberapa rangkaian acara seperti Road To Porseni, Parade Gelar Budaya, Perlombaan, PORSENI EXPO meliputi Stand UMKM, Pasar Murah, Pameran Karya Seni, Donor Darah.</p>
+  <div class="chips"><span>📚 Akademik</span><span>⚽ Olahraga</span><span>🎭 Seni</span></div>
+</div>
 
 <div class="sec">INFORMASI</div>
+
 <details><summary><span class="ic" style="--a:#0a63c9;--b:#12a9e8">🗓️</span><span class="t"><b>Tahapan menuju PORSENI</b><small>Dari pendaftaran sampai hari puncak</small></span><span class="arr">›</span></summary>
 <div class="box" id="tl"></div></details>
 <details><summary><span class="ic" style="--a:#f7941d;--b:#e8312f">🏅</span><span class="t"><b>Cabang lomba</b><small>16 cabang, 24 kategori</small></span><span class="arr">›</span></summary>
-<div class="box">
-<h3>Akademik</h3><div class="tags ak"><span>Duta Pelajar</span><span>Khitobah</span><span>LCC</span><span>Karya ilmiah</span><span>Baca kitab</span></div>
-<h3>Olahraga</h3><div class="tags ol"><span>Badminton <i>(Road to PORSENI)</i></span><span>Voli <i>(Road to PORSENI)</i></span><span>Sprint</span><span>Tenis meja</span><span>PES PS3</span></div>
-<h3>Seni</h3><div class="tags se"><span>Parade Gelar Budaya</span><span>Rebana</span><span>Paduan suara</span><span>Kaligrafi</span><span>Baca puisi</span><span>MTQ</span></div>
-</div></details>
+<div class="box" id="cabdetail"></div></details>
 <details><summary><span class="ic" style="--a:#12a9e8;--b:#0a63c9">🎤</span><span class="t"><b>Susunan acara puncak</b><small>Jum’at 25 dan Sabtu 26 Desember</small></span><span class="arr">›</span></summary>
 <div class="box">
 <h3>Jum’at, 25 Desember</h3>
@@ -109,130 +174,322 @@ footer b{color:var(--navy)}
 <div class="row"><time>23.00–23.59</time><span>Penutupan dan pengumuman juara umum</span></div>
 </div></details>
 
+<div class="sec">DOKUMEN PENTING</div>
+<div id="docs"></div>
+
+<div class="sec">PENDAFTARAN KONTINGEN</div>
+<details><summary><span class="ic" style="--a:#f7941d;--b:#e8312f">✔️</span><span class="t"><b>Tata cara pendaftaran</b><small>Langkah mendaftar sebagai kontingen</small></span><span class="arr">›</span></summary>
+<div class="box">
+<div class="st"><span class="n">1</span><div><b>Ikuti sosialisasi PORSENI 2026</b><p>18 Oktober 2026.</p></div></div>
+<div class="st"><span class="n">2</span><div><b>Ikuti Technical Meeting 1</b><p>25 Oktober 2026.</p></div></div>
+<div class="st"><span class="n">3</span><div><b>Pelajari Juknis PORSENI 2026</b><p>Dapat diunduh di bagian Dokumen Penting.</p></div></div>
+<div class="st"><span class="n">4</span><div><b>Daftar kontingen dengan mengisi formulir pada <a href="#daftar-kontingen">link di bagian Pendaftaran Kontingen</a></b>
+<p>Siapkan berkas berikut untuk diunggah:</p>
+<ol><li>Pakta integritas</li><li>Bukti pembayaran uang mandat</li><li>SP (Surat Pengesahan) / berita acara Rapat Anggota Tahunan PR/PK IPNU-IPPNU</li><li>KTP ketua kontingen</li></ol></div></div>
+<div class="st"><span class="n">5</span><div><b>Konfirmasi cabang lomba yang akan diikuti</b><p>Pada link formulir pendaftaran kontingen, paling lambat 20 November 2026.</p></div></div>
+<div class="st"><span class="n">6</span><div><b>Ikuti Technical Meeting 2</b><p>22 November 2026. Pengambilan nomor undian, pembagian bagan, penjelasan teknis dan denah kegiatan, serta rute Parade Gelar Budaya.</p></div></div>
+<div class="st"><span class="n">7</span><div><b>Unggah berkas cabang lomba</b><p>Pada link yang tersedia di bagian Pendaftaran Cabang Lomba, paling lambat 19 Desember 2026 (kecuali Duta Pelajar, voli, dan badminton).</p></div></div>
+<p class="note">Apabila terdapat kendala, bisa menghubungi Koor. Perlombaan Sochibul Mustaqim (WA <a href="https://wa.me/6283842236096" target="_blank" rel="noopener">083842236096</a>).</p>
+</div></details>
+<details><summary><span class="ic" style="--a:#ffc20e;--b:#f7941d">💰</span><span class="t"><b>Uang mandat</b><small>Rp500.000 per kontingen</small></span><span class="arr">›</span></summary>
+<div class="box">
+<h3>Rp500.000 per kontingen</h3>
+<p style="margin:0 0 4px">Diserahkan tunai (cash) kepada Bendahara Panitia atau transfer ke rekening berikut:</p>
+<div class="acc"><b>BRI</b><span class="num">003401067303505</span><span>a.n. Dewi Malika Zakiya</span></div>
+<div class="acc"><b>DANA / GoPay / ShopeePay</b><span class="num">087738207479</span><span>a.n. Dewi Malika Zakiya</span></div>
+</div></details>
+<div id="reg"></div>
+
+<div class="sec">PENDAFTARAN CABANG LOMBA</div>
+<div class="about">
+  <b style="font:800 .98rem var(--display);color:var(--navy)">Pendaftaran cabang lomba:</b>
+  <div class="st"><span class="n">1</span><div><p style="margin:0;color:var(--ink)">Konfirmasi cabang lomba yang akan diikuti pada formulir pendaftaran kontingen, maksimal <b>20 November 2026</b>.</p></div></div>
+  <div class="st"><span class="n">2</span><div><p style="margin:0;color:var(--ink)">Mengunggah berkas cabang lomba yang diikuti melalui formulir online di bawah ini, maksimal <b>19 Desember 2026</b>. Kendala? Hubungi sekretariat (A. Fuad Syafi, WA <a href="https://wa.me/6283836151201" target="_blank" rel="noopener" style="color:var(--blue);font-weight:700">083836151201</a>).</p></div></div>
+</div>
+<a class="link reveal" href="#cabang-lomba" style="--a:#f7941d;--b:#e8312f"><span class="ic">🏅</span><span class="t"><b>Formulir pendaftaran cabang lomba</b><small>Dibuka 1–20 November 2026 · pilih cabang lomba</small></span><span class="arr">›</span></a>
+
+<div class="sec">HASIL KEJUARAAN</div>
+<div id="podium"></div>
+<div class="sub">Rekap Perolehan Juara</div>
+<div class="rekap" id="rekap"></div>
+
 <div class="sec">HUBUNGI PANITIA</div>
+<details><summary><span class="ic" style="--a:#0a63c9;--b:#0b2d72">💬</span><span class="t"><b>Narahubung (contact person)</b><small>Ketua, bendahara, koor. perlombaan, sekretariat</small></span><span class="arr">›</span></summary>
+<div class="box">
+<div class="acc"><b>Ketua Panitia</b><span>Prasetyo Wahyu A.R</span><a href="https://wa.me/62895711550808" target="_blank" rel="noopener">0895711550808</a></div>
+<div class="acc"><b>Bendahara</b><span>Dewi Malika Zakiya</span><a href="https://wa.me/6289523699314" target="_blank" rel="noopener">089523699314</a></div>
+<div class="acc"><b>Koor. Perlombaan</b><span>Sochibul Mustaqim</span><a href="https://wa.me/6283842236096" target="_blank" rel="noopener">083842236096</a></div>
+<div class="acc"><b>Sekretariat</b><span>A. Fuad Syafi</span><a href="https://wa.me/6283836151201" target="_blank" rel="noopener">083836151201</a></div>
+<p class="hint">Ketuk nomor untuk membuka WhatsApp.</p>
+</div></details>
 <div id="contact"></div>
-</main>
-<style>
-.form-modal{display:none;position:fixed;inset:0;z-index:1000;background:rgba(5,20,55,.72);padding:16px;overflow:auto}
-.form-modal.show{display:block}.form-card{max-width:760px;margin:3vh auto;background:#fff;border-radius:22px;padding:22px;box-shadow:0 20px 70px #061b45aa;color:var(--ink);font:600 1rem/1.45 var(--body)}
-.form-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}.form-top h2{font:800 1.15rem var(--display);margin:0;color:var(--navy)}
-.form-close{border:0;background:#eef5ff;border-radius:50%;width:38px;height:38px;font-size:1.35rem;cursor:pointer;color:var(--navy)}
-.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.form-field{display:flex;flex-direction:column;gap:5px;min-width:0}.form-field.full{grid-column:1/-1}
-.form-field label,.form-label{font-weight:800;color:var(--navy);font-size:.92rem}.form-field input,.form-field select,.form-field textarea{width:100%;border:1px solid #c8d8ef;border-radius:10px;padding:10px 11px;font:600 1rem var(--body);color:var(--ink);background:#fff}.form-field textarea{min-height:76px;resize:vertical}.form-help{font-size:.85rem;color:var(--muted);font-weight:600}
-.form-section{font:800 .95rem var(--display);color:var(--blue);border-bottom:2px solid #e5effb;padding-bottom:6px;margin:18px 0 12px}
-.form-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}.form-btn{border:0;border-radius:999px;padding:12px 20px;font:800 .95rem var(--display);cursor:pointer;background:linear-gradient(90deg,var(--navy),var(--blue));color:#fff}.form-btn.secondary{background:#eaf2ff;color:var(--navy)}.form-btn:disabled{opacity:.6;cursor:wait}
-.checkgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.checkitem{display:flex;align-items:center;gap:8px;background:#f2f7ff;border-radius:9px;padding:8px;font-size:.92rem}.checkitem input{accent-color:var(--blue)}
-.part-table{width:100%;border-collapse:collapse;margin-top:8px;font-size:.9rem}.part-table th,.part-table td{border:1px solid #d5e2f3;padding:6px;text-align:left}.part-table input,.part-table select{width:100%;min-width:0;border:1px solid #c8d8ef;border-radius:6px;padding:7px;font:inherit}
-.form-status{margin-top:12px;padding:10px 12px;border-radius:10px;background:#eef5ff;color:var(--navy);display:none}.form-status.show{display:block}.form-status.error{background:#fff0f0;color:#9c1c1c}
-@media(max-width:560px){.form-card{padding:16px}.form-grid{grid-template-columns:1fr}.form-field.full{grid-column:auto}.checkgrid{grid-template-columns:1fr}.part-table{font-size:.8rem}.part-table th,.part-table td{padding:4px}}
-</style>
-<div class="form-modal" id="registrationModal" aria-hidden="true">
- <section class="form-card" role="dialog" aria-modal="true" aria-labelledby="formTitle">
-  <div class="form-top"><h2 id="formTitle">Formulir Pendaftaran PORSENI 2026</h2><button class="form-close" type="button" onclick="closeForm()" aria-label="Tutup">×</button></div>
-  <div id="formChooser" class="form-actions" style="margin-top:0"><button class="form-btn" type="button" onclick="showForm('kontingen')">Pendaftaran Kontingen</button><button class="form-btn secondary" type="button" onclick="showForm('cabang')">Pengumpulan Berkas Cabang</button></div>
-  <form id="kontingenForm" style="display:none">
-   <div class="form-section">A. Identitas Kontingen</div><div class="form-grid">
-    <div class="form-field"><label>Nama kontingen *</label><input name="nama" required maxlength="120" placeholder="Contoh: PR IPNU-IPPNU Kebonharjo"></div>
-    <div class="form-field"><label>Asal PR/PK *</label><input name="asal" required maxlength="120"></div>
-    <div class="form-field full"><label>Alamat sekretariat *</label><textarea name="alamat" required></textarea></div>
-    <div class="form-field"><label>Nama ketua kontingen *</label><input name="ketua" required></div>
-    <div class="form-field"><label>WhatsApp ketua *</label><input name="wa_ketua" required inputmode="tel" placeholder="08xxxxxxxxxx"></div>
-    <div class="form-field"><label>Nama pendamping *</label><input name="pendamping" required></div>
-    <div class="form-field"><label>WhatsApp pendamping *</label><input name="wa_pend" required inputmode="tel"></div>
-    <div class="form-field"><label>Email aktif</label><input name="email" type="email" placeholder="opsional"></div>
-    <div class="form-field"><label>Jumlah peserta *</label><input name="jml" type="number" min="1" max="500" required></div>
-   </div>
-   <div class="form-section">B. Cabang yang Diikuti</div><div class="form-field full"><div id="kontingenCabang" class="checkgrid"></div><span class="form-help">Pilih seluruh cabang lomba yang akan diikuti kontingen.</span></div>
-   <div class="form-section">C. Uang Mandat</div><div class="form-grid">
-    <div class="form-field"><label>Metode pembayaran *</label><select name="bayar" required><option value="">Pilih metode</option><option>Transfer</option><option>Tunai</option></select></div>
-    <div class="form-field"><label>Tanggal pembayaran</label><input name="tgl_bayar" type="date"></div>
-    <div class="form-field full"><label>Bukti pembayaran / berkas pendukung</label><input name="uploads" type="file" multiple accept=".pdf,.jpg,.jpeg,.png"><span class="form-help">Maksimal 12 file, masing-masing maksimal 10 MB dan total maksimal 25 MB. PDF formulir akan dibuat otomatis.</span></div>
-   </div>
-   <div class="form-actions"><button class="form-btn" type="submit">Kirim Pendaftaran</button><button class="form-btn secondary" type="button" onclick="closeForm()">Batal</button></div>
-  </form>
-  <form id="cabangForm" style="display:none">
-   <div class="form-section">A. Identitas Pengajuan</div><div class="form-grid">
-    <div class="form-field"><label>Nama kontingen *</label><input name="nama" required maxlength="120"></div>
-    <div class="form-field"><label>Cabang lomba *</label><select name="cabang" id="branchSelect" required><option value="">Pilih cabang</option></select></div>
-    <div class="form-field"><label>Kategori *</label><select name="kategori" id="categorySelect" required><option value="">Pilih cabang terlebih dahulu</option></select></div>
-    <div class="form-field"><label>Nama pendamping *</label><input name="pendamping" required></div>
-    <div class="form-field"><label>WhatsApp pendamping *</label><input name="wa" required inputmode="tel"></div>
-    <div class="form-field"><label>Jumlah peserta *</label><input name="jml" id="participantCount" type="number" min="1" max="30" required value="1"></div>
-    <div class="form-field full"><label>Catatan</label><textarea name="catatan" placeholder="Keterangan tambahan (opsional)"></textarea></div>
-   </div>
-   <div class="form-section">B. Daftar Peserta</div><div class="form-help">Isi nama dan jenis kelamin setiap peserta sesuai kategori lomba.</div>
-   <div style="overflow-x:auto"><table class="part-table"><thead><tr><th style="width:42px">No.</th><th>Nama lengkap</th><th style="width:130px">Jenis kelamin</th><th>Keterangan</th></tr></thead><tbody id="participantRows"></tbody></table></div>
-   <div class="form-section">C. Berkas Pendukung</div><div class="form-field full"><label>Unggah berkas persyaratan *</label><input name="uploads" type="file" multiple required accept=".pdf,.jpg,.jpeg,.png"><span class="form-help">Lampirkan berkas sesuai ketentuan juknis. Maksimal 12 file, masing-masing maksimal 10 MB dan total maksimal 25 MB. Formulir dan daftar peserta akan digabung menjadi satu PDF otomatis.</span></div>
-   <div class="form-actions"><button class="form-btn" type="submit">Kirim Berkas Cabang</button><button class="form-btn secondary" type="button" onclick="closeForm()">Batal</button></div>
-  </form>
-  <div id="formStatus" class="form-status" role="status"></div>
- </section>
 </div>
 
+<div id="v-cabang" hidden>
+  <a class="back" href="#beranda">‹ Kembali</a>
+  <h2 class="pg">Formulir Pendaftaran Cabang Lomba</h2>
+  <p class="pgsub">Pilih cabang lomba yang diikuti untuk mengisi formulir pengumpulan berkas. Berkas dikumpulkan ke sekretariat paling lambat 19 Desember 2026.</p>
+  <div class="sec">AKADEMIK</div><div id="cb-ak"></div>
+  <div class="sec">OLAHRAGA</div><div id="cb-ol"></div>
+  <div class="sec">SENI</div><div id="cb-se"></div>
+</div>
+
+<div id="v-kontingen" hidden>
+  <a class="back" href="#beranda">‹ Kembali</a>
+  <h2 class="pg">Pendaftaran Kontingen</h2>
+  <p class="pgsub">Isi data dan unggah berkas kontingen. Setelah dikirim, formulir A4 siap dicetak dan ditandatangani.</p>
+  <p class="warn" id="k-state" hidden></p>
+  <form id="fk" class="formbox">
+    <h3>Data kontingen</h3>
+    <label class="fld"><span>Nama kontingen *</span><input name="nama" required placeholder="Contoh: PR IPNU-IPPNU Margosari"></label>
+    <h3>Ketua kontingen</h3>
+    <label class="fld"><span>Nama ketua kontingen *</span><input name="ketua" required></label>
+    <label class="fld"><span>No. WhatsApp ketua *</span><input name="wa_ketua" type="tel" inputmode="tel" required placeholder="08xxxxxxxxxx"></label>
+    <h3>Cabang lomba yang diikuti *</h3>
+    <div id="fk-cabang"></div>
+    <h3>Uang mandat (Rp500.000)</h3>
+    <label class="fld"><span>Metode pembayaran *</span><select name="bayar" required><option value="">Pilih…</option><option>Tunai ke Bendahara</option><option>Transfer BRI</option><option>Transfer DANA / GoPay / ShopeePay</option></select></label>
+    <label class="fld"><span>Tanggal pembayaran</span><input name="tgl_bayar" type="date"></label>
+    <h3>Unggah berkas</h3>
+    <label class="fld"><span>Bukti transfer / kwitansi pembayaran uang mandat *</span><input type="file" name="f_bukti" accept="image/*,.pdf" required></label>
+    <label class="fld"><span>KTP ketua kontingen *</span><input type="file" name="f_ktp" accept="image/*,.pdf" required></label>
+    <label class="fld"><span>Pakta integritas bertanda tangan *</span><input type="file" name="f_pakta" accept="image/*,.pdf" required></label>
+    <label class="fld"><span>SP / berita acara Rapat Anggota Tahunan PR/PK *</span><input type="file" name="f_sp" accept="image/*,.pdf" required></label>
+    <p class="pgsub" style="margin:0 0 12px">Format foto atau PDF, maksimal 10 MB per berkas. Foto otomatis diperkecil.</p>
+    <label class="chk" style="margin:6px 0 14px"><input type="checkbox" name="setuju" required><span>Data sudah benar dan kontingen bersedia mengikuti seluruh peraturan PORSENI 2026.</span></label>
+    <button class="btn" type="submit" id="fk-btn">Kirim dan buat formulir A4</button>
+  </form>
+</div>
+
+<div id="v-berkas" hidden>
+  <a class="back" href="#cabang-lomba">‹ Kembali</a>
+  <h2 class="pg">Pengumpulan Berkas Cabang Lomba</h2>
+  <p class="pgsub">Isi daftar peserta dan unggah berkas cabang lomba paling lambat 19 Desember 2026. Formulir A4 siap dicetak setelah dikirim.</p>
+  <p class="warn" id="b-state" hidden></p>
+  <form id="fb" class="formbox">
+    <h3>Data cabang</h3>
+    <label class="fld"><span>Nama kontingen *</span><input name="nama" required></label>
+    <label class="fld"><span>Cabang lomba *</span><select name="cabang" id="fb-cabang" required></select></label>
+    <label class="fld"><span>Kategori *</span><select name="kategori" id="fb-kategori" required><option value="">Pilih kategori…</option></select></label>
+    <label class="fld"><span>Nama pendamping *</span><input name="pendamping" required></label>
+    <label class="fld"><span>No. WhatsApp pendamping *</span><input name="wa" type="tel" inputmode="tel" required placeholder="08xxxxxxxxxx"></label>
+    <h3>Daftar peserta</h3>
+    <div id="fb-peserta"></div>
+    <button class="btn alt" type="button" id="fb-add">+ Tambah peserta</button>
+    <h3>Unggah berkas cabang lomba</h3>
+    <label class="fld"><span>Berkas cabang lomba * (boleh lebih dari satu)</span><input type="file" name="f_files" id="fb-files" multiple accept="image/*,.pdf,.doc,.docx" required></label>
+    <p class="pgsub" style="margin:0 0 12px">Foto, PDF, atau Word. Maksimal 10 berkas, 10 MB per berkas.</p>
+    <label class="fld"><span>Catatan</span><textarea name="catatan"></textarea></label>
+    <button class="btn" type="submit" id="fb-btn">Kirim dan buat formulir A4</button>
+  </form>
+</div>
+
+<div id="v-print" hidden>
+  <div class="noprint">
+    <a class="back" href="#beranda" id="pr-home">‹ Beranda</a>
+    <h2 class="pg">Formulir siap dicetak</h2>
+    <div class="stat" id="pr-stat"></div>
+    <button class="btn" type="button" id="pr-print">🖨️ Cetak / Simpan PDF (A4)</button>
+  </div>
+  <div class="paper" id="paper"></div>
+  <div class="noprint"><button class="btn alt" type="button" id="pr-back">‹ Ubah isian</button></div>
+</div>
+</main>
 <footer>
   <svg class="wave" viewBox="0 0 520 120" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#e8312f"/><stop offset=".25" stop-color="#f7941d"/><stop offset=".45" stop-color="#ffc20e"/><stop offset=".7" stop-color="#12a9e8"/><stop offset="1" stop-color="#0a63c9"/></linearGradient></defs><path d="M0 50C90 10 170 90 270 55S450 5 520 40V120H0Z" fill="url(#g)" opacity=".35"/><path d="M0 80C110 40 190 105 290 75S450 40 520 70V120H0Z" fill="url(#g)"/></svg>
   <b>Panitia Pelaksana PORSENI 2026</b><br>Sekretariat: Graha MWC NU Patebon<br>porsenipatebon@gmail.com
 </footer>
 <script>
 /* EDIT DI SINI: isi u dengan tautan Google Drive / Google Form / Instagram. Kosongkan ("") jika belum ada. */
-var LINKS=[
- {i:"📝",t:"Formulir pendaftaran kontingen",d:"Dibuka 1–20 November 2026",u:"#form-kontingen",form:"kontingen"},
- {i:"🎓",t:"Formulir pendaftaran Duta Pelajar",d:"Dibuka 1–6 Desember 2026",u:""},
- {i:"📘",t:"Unduh juklak dan juknis",d:"Aturan lomba tiap cabang",u:""},
- {i:"📄",t:"Unduh proposal kegiatan",d:"PDF",u:""},
- {i:"📤",t:"Pengumpulan berkas cabang lomba",d:"Batas akhir 19 Desember 2026",u:"#form-cabang",form:"cabang"},
- {i:"🏆",t:"Pengumuman dan hasil",d:"Finalis, juara, dokumentasi",u:""}
+var DOCS=[
+ {i:"📑",t:"Unduh TOR (Term Of Reference) Kegiatan",d:"Dokumen PDF",u:""},
+ {i:"📘",t:"Unduh Petunjuk Teknis (Juknis)",d:"Aturan lomba tiap cabang",u:""}
 ];
+var REG=[
+ {i:"📝",t:"Formulir pendaftaran kontingen",d:"Dibuka 1–20 November 2026 · isi online",u:"#daftar-kontingen"},
+ {i:"🤝",t:"Unduh Pakta Integritas",d:"Wajib dilengkapi kontingen",u:""}
+];
+var CABANG={
+ ak:[{i:"🎓",t:"Duta Pelajar"},{i:"🎤",t:"Khitobah"},{i:"🧠",t:"LCC"},{i:"🔬",t:"Karya ilmiah"},{i:"📖",t:"Baca kitab"}],
+ ol:[{i:"🏸",t:"Badminton",x:" · Road to PORSENI"},{i:"🏐",t:"Voli",x:" · Road to PORSENI"},{i:"🏃",t:"Sprint"},{i:"🏓",t:"Tenis meja"},{i:"🎮",t:"PES PS3"}],
+ se:[{i:"🎭",t:"Parade Gelar Budaya"},{i:"🥁",t:"Rebana"},{i:"🎶",t:"Paduan suara"},{i:"🖌️",t:"Kaligrafi"},{i:"📜",t:"Baca puisi"},{i:"🕌",t:"MTQ"}]
+};
+/* Kategori tiap cabang lomba. Contoh:
+   var KAT={"Badminton":["Tunggal Putra","Tunggal Putri"],"Voli":["Putra","Putri"]};
+   Cabang yang punya lebih dari satu kategori otomatis mendapat pilihan kategori (boleh lebih dari satu) di formulir kontingen. */
+var KAT={
+ "Duta Pelajar":["Tunggal Putra","Tunggal Putri"],
+ "Khitobah":["Tunggal Putra","Tunggal Putri"],
+ "LCC":["Beregu Campuran"],
+ "Karya ilmiah":["Beregu Campuran"],
+ "Baca kitab":["Tunggal Putra","Tunggal Putri"],
+ "Badminton":["Ganda Campuran"],
+ "Voli":["Beregu Putra"],
+ "Sprint":["Tunggal Putra","Tunggal Putri"],
+ "Tenis meja":["Tunggal Putra","Tunggal Putri"],
+ "PES PS3":["Tunggal Bebas"],
+ "Parade Gelar Budaya":["Beregu Campuran"],
+ "Rebana":["Beregu Bebas"],
+ "Paduan suara":["Beregu Campuran"],
+ "Kaligrafi":["Tunggal Putra","Tunggal Putri"],
+ "Baca puisi":["Tunggal Putra","Tunggal Putri"],
+ "MTQ":["Tunggal Putra","Tunggal Putri"]
+};
+var NM={ak:"Akademik",ol:"Olahraga",se:"Seni"};
+Object.keys(CABANG).forEach(function(k){R(CABANG[k].map(function(x){return {i:x.i,t:x.t,d:"Pengumpulan berkas "+x.t+(x.x||"")+" · "+NM[k],u:"#berkas-cabang"}}),'cb-'+k)});
+/* ===== FORMULIR ONLINE ===== */
+/* Tempel URL Web App Google Apps Script di sini (lihat panduan apps-script.gs). Kosongkan "" jika belum terhubung. */
+var SCRIPT_URL="https://script.google.com/macros/s/AKfycbxkIioAhO7UwoVjpRr_i8yULRzvTa7YIcvPSVuvoI6bBscIEyWP-vCYEgx7ff34GdcX/exec";
+/* Ubah ke true untuk menguji formulir di luar masa pendaftaran. */
+var FORCE_OPEN=false;
+var WIN={k:["2026-11-01","2026-11-20"],b:["2026-11-01","2026-12-19"]};
+var PICK="",LAST=null;
+var ALLC=[];Object.keys(CABANG).forEach(function(k){CABANG[k].forEach(function(x){ALLC.push({n:x.t,g:NM[k]})})});
+var $=function(id){return document.getElementById(id)};
+var VIEWS={"#cabang-lomba":"v-cabang","#daftar-kontingen":"v-kontingen","#berkas-cabang":"v-berkas"};
+function showView(id){["v-home","v-cabang","v-kontingen","v-berkas","v-print"].forEach(function(v){$(v).hidden=(v!==id)});window.scrollTo(0,0)}
+function winState(w){if(FORCE_OPEN)return 0;var t=new Date();return t<new Date(w[0]+"T00:00:00")?-1:(t>new Date(w[1]+"T23:59:59")?1:0)}
+function fmtTgl(s){if(!s)return"";var d=(s instanceof Date)?s:new Date(s+"T00:00:00");return d.toLocaleDateString("id-ID",{day:"numeric",month:"long",year:"numeric"})}
+function setState(el,btn,w,txt){var st=winState(w);el.hidden=(st===0);btn.disabled=(st!==0);if(st<0)el.textContent="Pendaftaran dibuka "+txt[0]+".";if(st>0)el.textContent="Pendaftaran sudah ditutup ("+txt[1]+").";}
+function route(){var id=VIEWS[location.hash]||"v-home";showView(id);
+ if(id==="v-berkas"){if(PICK)$("fb-cabang").value=PICK;updateKategori();setState($("b-state"),$("fb-btn"),WIN.b,["1 November 2026","19 Desember 2026"])}
+ if(id==="v-kontingen")setState($("k-state"),$("fk-btn"),WIN.k,["1 November 2026","20 November 2026"])}
+window.addEventListener('hashchange',route);
+$("v-cabang").addEventListener("click",function(e){var a=e.target.closest("a.link");if(a)PICK=a.querySelector("b").textContent});
+
+/* checkbox cabang (kontingen) dan pilihan cabang (berkas) */
+$("fk-cabang").innerHTML=Object.keys(CABANG).map(function(k){return '<div class="grp">'+NM[k]+'</div><div class="chks">'+CABANG[k].map(function(x){var ks=KAT[x.t]||[];
+ return '<label class="chk"><input type="checkbox" name="cabang" value="'+esc(x.t)+'"><span>'+esc(x.t)+'</span></label>'+(ks.length>1?'<div class="kats" hidden data-k="'+esc(x.t)+'"><b>Kategori '+esc(x.t)+' (boleh lebih dari satu) *</b>'+ks.map(function(c){return '<label class="chk"><input type="checkbox" name="kat" data-c="'+esc(x.t)+'" value="'+esc(c)+'"><span>'+esc(c)+'</span></label>'}).join('')+'</div>':'')}).join('')+'</div>'}).join('');
+$("fk-cabang").addEventListener("change",function(e){var t=e.target;if(t.name==="cabang"){var kb=this.querySelector('.kats[data-k="'+t.value+'"]');if(kb){kb.hidden=!t.checked;if(!t.checked)Array.prototype.forEach.call(kb.querySelectorAll("input"),function(c){c.checked=false})}}});
+$("cabdetail").innerHTML=Object.keys(CABANG).map(function(k){return '<h3>'+NM[k]+'</h3><div class="tags '+k+'">'+CABANG[k].map(function(x){var ks=KAT[x.t]||[];return '<span>'+esc(x.t)+(x.x?' <i>('+esc(x.x.replace(/^ · /,""))+')</i>':'')+(ks.length?'<em class="kt">'+ks.map(esc).join(' · ')+'</em>':'')+'</span>'}).join('')+'</div>'}).join('');
+$("fb-cabang").innerHTML='<option value="">Pilih cabang…</option>'+ALLC.map(function(c){return '<option>'+esc(c.n)+'</option>'}).join('');
+function updateKategori(){var c=$("fb-cabang").value,ks=KAT[c]||[],el=$("fb-kategori");el.innerHTML='<option value="">Pilih kategori…</option>'+ks.map(function(k){return '<option value="'+esc(k)+'">'+esc(k)+'</option>'}).join('');el.disabled=!c;}
+$("fb-cabang").addEventListener("change",updateKategori);updateKategori();
+
+/* daftar peserta dinamis */
+function addRow(){var box=$("fb-peserta");if(box.children.length>=25)return;var n=box.children.length+1;
+ var d=document.createElement("div");d.className="prow";
+ d.innerHTML='<input name="pn" placeholder="Nama peserta '+n+'" required><select name="pl"><option>L</option><option>P</option></select><input class="w" name="pa" placeholder="Asal (sekolah / PR / PK)"><button type="button" class="rm w">Hapus peserta</button>';
+ d.querySelector(".rm").onclick=function(){if(box.children.length>1){box.removeChild(d)}};box.appendChild(d)}
+$("fb-add").onclick=addRow;addRow();
+
+/* utilitas */
+function regNo(p){var c="ABCDEFGHJKLMNPQRSTUVWXYZ23456789",r="",t=new Date();for(var i=0;i<4;i++)r+=c.charAt(Math.floor(Math.random()*c.length));
+ return p+"-"+String(t.getFullYear()).slice(2)+("0"+(t.getMonth()+1)).slice(-2)+("0"+t.getDate()).slice(-2)+"-"+r}
+function checks(f,n){return Array.prototype.map.call(f.querySelectorAll('input[name="'+n+'"]:checked'),function(x){return x.value})}
+function v(f,n){return (f.elements[n].value||"").trim()}
+
+function send(d,done){if(!SCRIPT_URL){done({status:"offline"});return}
+ fetch(SCRIPT_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(d)})
+ .then(function(r){return r.json()}).then(function(j){done(j&&j.ok?{status:"ok",data:j}:{status:"fail",error:(j&&j.error)||"Pengiriman ditolak oleh server."})})
+ .catch(function(){done({status:"unknown",error:"Respons server tidak dapat dibaca. Periksa koneksi dan data pada Spreadsheet sebelum mengirim ulang."})})}
+
+function kop(t,d){return '<div class="kop"><b>PANITIA PELAKSANA PORSENI 2026</b><span>PAC IPNU IPPNU PATEBON · Sekretariat: Graha MWC NU Patebon</span></div><h2>'+t+'</h2><p class="no">No. Registrasi: <b>'+esc(d.reg)+'</b> · Dicetak: '+fmtTgl(new Date())+'</p>'}
+function tr(l,x){return '<tr><td>'+l+'</td><td>'+(x?esc(x):'&nbsp;')+'</td></tr>'}
+function sign(l,r,nm){return '<div class="sign"><div><p>&nbsp;<br>'+l+',</p><div class="sp"></div><p>( ............................ )</p></div><div><p>Patebon, ................ 2026<br>'+r+',</p><div class="sp"></div><p>( <b>'+esc(nm)+'</b> )</p><small>Tanda tangan dan cap</small></div></div>'}
+var BK=["Bukti pembayaran","KTP ketua kontingen","Pakta integritas","SP / berita acara RAT"];
+function fl(d,l){var f=(d.fl||[]).filter(function(x){return x.label==l})[0];return f?f.name:""}
+function paperK(d){
+ var cb=d.cabang.split("; ");
+ return kop("FORMULIR PENDAFTARAN KONTINGEN",d)+'<table>'+tr("Nama kontingen",d.nama)+tr("Ketua kontingen",d.ketua)+tr("WhatsApp ketua",d.wa_ketua)+tr("Uang mandat","Rp500.000 · "+d.bayar+(d.tgl_bayar?" · "+fmtTgl(d.tgl_bayar):""))+'</table>'
+ +'<h4>Cabang lomba dan kategori yang diikuti ('+cb.length+')</h4><ol>'+cb.map(function(c){return '<li>'+esc(c)+'</li>'}).join('')+'</ol>'
+ +'<h4>Berkas yang diunggah</h4><ul>'+BK.map(function(b){var n=fl(d,b);return '<li>'+(n?'☑':'☐')+' '+b+(n?' <small>('+esc(n)+')</small>':'')+'</li>'}).join('')+'</ul>'
+ +'<p style="margin-top:8px">Dengan ini kontingen menyatakan data di atas benar dan bersedia mengikuti seluruh peraturan PORSENI 2026.</p>'
+ +sign("Panitia Penerima","Ketua Kontingen",d.ketua)}
+function paperB(d){
+ return kop("FORMULIR PENGUMPULAN BERKAS CABANG LOMBA",d)+'<table>'+tr("Nama kontingen",d.nama)+tr("Cabang lomba",d.cabang)+tr("Kategori",d.kategori)+tr("Pendamping",d.pendamping)+tr("WhatsApp pendamping",d.wa)+tr("Jumlah peserta",String(d.list.length))+tr("Berkas diunggah",(d.fl||[]).map(function(f){return f.name}).join(", "))+tr("Catatan",d.catatan)+'</table>'
+ +'<h4>Daftar peserta</h4><table class="pl"><tr><th class="c">No</th><th>Nama peserta</th><th class="c">L/P</th><th>Asal</th></tr>'+d.list.map(function(p,i){return '<tr><td class="c">'+(i+1)+'</td><td>'+esc(p.n)+'</td><td class="c">'+esc(p.l)+'</td><td>'+(esc(p.a)||'&nbsp;')+'</td></tr>'}).join('')+'</table>'
+ +'<p style="margin-top:8px">Berkas cabang lomba diunggah melalui website PORSENI 2026 paling lambat 19 Desember 2026. Sekretariat: A. Fuad Syafi, WA 083836151201.</p>'
+ +sign("Sekretariat Penerima","Pendamping Kontingen",d.pendamping)}
+var MSG={ok:["","✅ Data dan berkas berhasil terkirim ke panitia. Cetak formulir ini dan tanda tangani sebagai arsip."],
+ offline:["i","ℹ️ Formulir belum terhubung ke Google Sheets dan Drive, jadi data dan berkas belum terkirim. Cetak formulir ini dan hubungi sekretariat."],
+ fail:["w","⚠️ Pengiriman gagal. Cetak formulir ini lalu hubungi sekretariat, atau coba kirim ulang."],
+ unknown:["w","⚠️ Pengiriman tidak bisa dipastikan (periksa koneksi). Cetak formulir ini lalu hubungi sekretariat, atau coba kirim ulang."]};
+function showPaper(html,result){$("paper").innerHTML=html;var res=result.status||"fail",s=$("pr-stat");s.className="stat "+(MSG[res]?MSG[res][0]:"w");
+ s.textContent=(MSG[res]?MSG[res][1]:"⚠️ Pengiriman belum berhasil.")+(result.error?" "+result.error:"");
+ if(res==="ok"&&result.data&&result.data.pdf){var a=document.createElement("a");a.href=result.data.pdf;a.target="_blank";a.rel="noopener";a.textContent="Buka PDF resmi tersimpan di Google Drive";a.style.display="";a.style.fontWeight="800";a.style.marginTop="8px";s.appendChild(document.createElement("br"));s.appendChild(a);}
+ showView("v-print")}
+
+var MAXF=10*1024*1024,MAXT=25*1024*1024;
+function toB64(blob){return new Promise(function(res,rej){var r=new FileReader();r.onload=function(){res(String(r.result).split(",")[1])};r.onerror=function(){rej(new Error("Berkas tidak bisa dibaca."))};r.readAsDataURL(blob)})}
+function shrink(file){return new Promise(function(res){if(!/^image\/(jpeg|png|webp)$/.test(file.type)){res(file);return}
+ var img=new Image(),u=URL.createObjectURL(file);
+ img.onload=function(){var s=Math.min(1,1800/Math.max(img.width,img.height)),c=document.createElement("canvas");c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);c.getContext("2d").drawImage(img,0,0,c.width,c.height);
+  c.toBlob(function(b){URL.revokeObjectURL(u);res(b&&b.size<file.size?new File([b],file.name.replace(/\.\w+$/,"")+".jpg",{type:"image/jpeg"}):file)},"image/jpeg",.82)};
+ img.onerror=function(){URL.revokeObjectURL(u);res(file)};img.src=u})}
+function prepFiles(items){var tot=0;return Promise.all(items.map(function(it){return shrink(it.file).then(function(f){
+ if(f.size>MAXF)throw new Error('Berkas "'+it.file.name+'" melebihi 10 MB.');tot+=f.size;
+ return toB64(f).then(function(b){return {label:it.label,name:f.name,type:f.type,data:b}})})})).then(function(a){if(tot>MAXT)throw new Error("Total ukuran berkas melebihi 25 MB.");return a})}
+function meta(a){return a.map(function(x){return {label:x.label,name:x.name}})}
+
+var fkf=$("fk");
+fkf.addEventListener("submit",function(e){e.preventDefault();var f=e.target,sel=checks(f,"cabang"),parts=[];
+ for(var i=0;i<sel.length;i++){var c=sel[i],ks=KAT[c]||[],pick=[];
+  if(ks.length===1)pick.push(ks[0]);
+  if(ks.length>1){Array.prototype.forEach.call(f.querySelectorAll('input[name="kat"]:checked'),function(x){if(x.getAttribute("data-c")===c)pick.push(x.value)});
+   if(!pick.length){alert("Pilih minimal satu kategori untuk "+c+".");return}}
+  parts.push(c+(pick.length?" ("+pick.join(", ")+")":""))}
+ if(!parts.length){alert("Pilih minimal satu cabang lomba.");return}
+ var d={type:"kontingen",waktu:new Date().toISOString(),reg:regNo("K"),nama:v(f,"nama"),asal:"",alamat:"",ketua:v(f,"ketua"),wa_ketua:v(f,"wa_ketua"),pendamping:"",wa_pend:"",email:"",cabang:parts.join("; "),jml:"",bayar:v(f,"bayar"),tgl_bayar:v(f,"tgl_bayar")};
+ var items=[["Bukti pembayaran","f_bukti"],["KTP ketua kontingen","f_ktp"],["Pakta integritas","f_pakta"],["SP / berita acara RAT","f_sp"]].filter(function(x){return f.elements[x[1]].files.length}).map(function(x){return {label:x[0],file:f.elements[x[1]].files[0]}});
+ var b=$("fk-btn");b.disabled=true;b.textContent="Mengunggah…";
+ prepFiles(items).then(function(fs){d.fl=meta(fs);var p=JSON.parse(JSON.stringify(d));delete p.fl;p.files=fs;
+  send(p,function(r){b.disabled=false;b.textContent="Kirim dan buat formulir A4";showPaper(paperK(d),r)})})
+ .catch(function(er){b.disabled=false;b.textContent="Kirim dan buat formulir A4";alert(er.message)})});
+
+$("fb").addEventListener("submit",function(e){e.preventDefault();var f=e.target,rows=f.querySelectorAll(".prow"),list=[];
+ Array.prototype.forEach.call(rows,function(r){var n=r.querySelector('[name="pn"]').value.trim();if(n)list.push({n:n,l:r.querySelector('[name="pl"]').value,a:r.querySelector('[name="pa"]').value.trim()})});
+ if(!list.length){alert("Isi minimal satu peserta.");return}
+ var fi=f.elements.f_files.files;if(fi.length>10){alert("Maksimal 10 berkas.");return}
+ var d={type:"cabang",waktu:new Date().toISOString(),reg:regNo("C"),nama:v(f,"nama"),cabang:v(f,"cabang"),kategori:v(f,"kategori"),pendamping:v(f,"pendamping"),wa:v(f,"wa"),jml:list.length,catatan:v(f,"catatan"),pesertaList:list.map(function(q){return {nama:q.n,gender:q.l,keterangan:q.a}})};
+ var items=Array.prototype.map.call(fi,function(x){return {label:"Berkas cabang lomba",file:x}});
+ var b=$("fb-btn");b.disabled=true;b.textContent="Mengunggah…";
+ prepFiles(items).then(function(fs){d.fl=meta(fs);d.list=list;var p=JSON.parse(JSON.stringify(d));delete p.fl;delete p.list;p.files=fs;
+  send(p,function(r){b.disabled=false;b.textContent="Kirim dan buat formulir A4";showPaper(paperB(d),r)})})
+ .catch(function(er){b.disabled=false;b.textContent="Kirim dan buat formulir A4";alert(er.message)})});
+
+$("pr-print").onclick=function(){window.print()};
+$("pr-back").onclick=function(){route()};
+$("pr-home").onclick=function(e){e.preventDefault();if(location.hash==="#beranda"||location.hash===""){route()}else{location.hash="#beranda"}};
+route();
+/* HASIL KEJUARAAN: tambahkan satu baris per kontingen, misalnya
+   {k:"PR IPNU-IPPNU Contoh",g:2,s:1,b:0}  (g=emas/juara 1, s=perak/juara 2, b=perunggu/juara 3).
+   Urutan dan Juara Umum 1-3 dihitung otomatis. Kosongkan [] jika belum ada hasil. */
+var MEDALS=[];
+var UPDATED="";
 var CONTACT=[
- {i:"💬",t:"WhatsApp panitia",d:"0895711550808",u:"https://wa.me/62895711550808"},
- {i:"✉️",t:"Email panitia",d:"porsenipatebon@gmail.com",u:"mailto:porsenipatebon@gmail.com"},
- {i:"📍",t:"Lokasi acara",d:"Desa Margosari, Patebon, Kendal",u:"https://www.google.com/maps/search/?api=1&query=Desa+Margosari+Patebon+Kendal"},
- {i:"📸",t:"Instagram PAC IPNU-IPPNU Patebon",d:"Info dan dokumentasi",u:""}
+ {i:"✉️",t:"Email panitia",d:"porsenipatebon@gmail.com",u:"mailto:porsenipatebon@gmail.com",c:["#ffc20e","#f7941d"]},
+ {i:"📍",t:"Lokasi acara",d:"Desa Margosari, Patebon, Kendal",u:"https://www.google.com/maps/search/?api=1&query=Desa+Margosari+Patebon+Kendal",c:["#ffc20e","#e8312f"]},
+ {i:"📸",t:"Instagram",d:"@porsenipatebon · Info dan dokumentasi",u:"https://www.instagram.com/porsenipatebon",c:["#12a9e8","#0b2d72"]}
 ];
 function R(a,id){document.getElementById(id).innerHTML=a.map(function(x,n){var on=x.u!=="";
- var action=x.form?'href="'+x.u+'" data-form="'+x.form+'"':(on?'href="'+x.u+'" target="_blank" rel="noopener"':'aria-disabled="true"');
- return '<a class="link reveal'+((on||x.form)?'':' off')+'" style="--i:'+n+'" '+action+'><span class="ic">'+x.i+'</span><span class="t"><b>'+x.t+'</b><small>'+x.d+'</small></span><span class="arr">'+((on||x.form)?'›':'Segera')+'</span></a>';}).join('');}
-R(LINKS,'links');R(CONTACT,'contact');
+ return '<a class="link reveal'+(on?'':' off')+'" style="--i:'+n+(x.c?';--a:'+x.c[0]+';--b:'+x.c[1]:'')+'" '+(on?'href="'+x.u+'"'+(x.u.charAt(0)=="#"?'':' target="_blank" rel="noopener"'):'aria-disabled="true"')+'><span class="ic">'+x.i+'</span><span class="t"><b>'+x.t+'</b><small>'+x.d+'</small></span><span class="arr">'+(on?'›':'Segera')+'</span></a>';}).join('');}
+R(DOCS,'docs');R(REG,'reg');R(CONTACT,'contact');
+function esc(v){return String(v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function renderHasil(){
+var gold=0,rows=MEDALS.slice().sort(function(x,y){return y.g-x.g||y.s-x.s||y.b-x.b});
+var ICN=['🥇','🥈','🥉'],CL=[['#ffc20e','#f7941d'],['#c3cfe0','#7d8ca5'],['#e8a46a','#b4622a']];
+MEDALS.forEach(function(m){gold+=m.g});
+document.getElementById('podium').innerHTML=[0,1,2].map(function(i){var r=rows[i];
+ return '<div class="card reveal" style="--i:'+i+';--a:'+CL[i][0]+';--b:'+CL[i][1]+(r?'':';opacity:.75')+'"><span class="ic">'+ICN[i]+'</span><span class="t"><b>'+(r?esc(r.k):'Belum ada juara')+'</b><small>Juara Umum '+(i+1)+' · '+(r?'🥇'+r.g+' 🥈'+r.s+' 🥉'+r.b:'menunggu hasil lomba')+'</small></span></div>';}).join('')
+ +'<p class="hint">Klasemen sementara · '+gold+' dari 24 kategori sudah ada juara 1'+(UPDATED?' · diperbarui '+esc(UPDATED):'')+'</p>';
+document.getElementById('rekap').innerHTML='<table class="tb"><thead><tr><th>#</th><th>Kontingen</th><th>🥇</th><th>🥈</th><th>🥉</th><th>Total</th></tr></thead><tbody>'+
+ (rows.length?rows.map(function(r,i){return '<tr><td>'+(i+1)+'</td><td>'+esc(r.k)+'</td><td>'+r.g+'</td><td>'+r.s+'</td><td>'+r.b+'</td><td><b>'+(r.g+r.s+r.b)+'</b></td></tr>'}).join(''):'<tr><td class="emp" colspan="6">Belum ada hasil. Rekap muncul setelah lomba berlangsung (25–26 Desember 2026).</td></tr>')+'</tbody></table>';
+}
+renderHasil();
+/* Hubungkan ke Google Sheets: isi SHEET_URL dengan link CSV (File > Bagikan > Publikasikan ke web > CSV).
+   Kolom: A=Kontingen, B=Emas, C=Perak, D=Perunggu. Baris pertama boleh judul. Kosongkan "" untuk memakai MEDALS di atas. */
+var SHEET_URL="";
+function parseCSV(t){var r=[],row=[],f="",q=false;for(var i=0;i<t.length;i++){var c=t[i];
+ if(q){if(c=='"'&&t[i+1]=='"'){f+='"';i++}else if(c=='"')q=false;else f+=c}
+ else if(c=='"')q=true;else if(c==','){row.push(f);f=""}else if(c=='\n'){row.push(f);r.push(row);row=[];f=""}else if(c!='\r')f+=c}
+ if(f!==""||row.length){row.push(f);r.push(row)}return r}
+if(SHEET_URL){fetch(SHEET_URL+(SHEET_URL.indexOf('?')>-1?'&':'?')+'t='+Date.now()).then(function(r){return r.text()}).then(function(t){
+ var d=parseCSV(t).filter(function(r){return r[0]&&r[0].trim()&&!isNaN(parseInt(r[1]))}).map(function(r){return {k:r[0].trim(),g:parseInt(r[1])||0,s:parseInt(r[2])||0,b:parseInt(r[3])||0}});
+ MEDALS=d;renderHasil()}).catch(function(){})}
 var T=[["Sosialisasi PORSENI","18 Okt","2026-10-18","2026-10-18"],["Technical Meeting 1","25 Okt","2026-10-25","2026-10-25"],["Pendaftaran kontingen dan cabang lomba","1–20 Nov","2026-11-01","2026-11-20"],["Technical Meeting 2","22 Nov","2026-11-22","2026-11-22"],["Pendaftaran Duta Pelajar","1–6 Des","2026-12-01","2026-12-06"],["Road to PORSENI: Badminton","6 Des","2026-12-06","2026-12-06"],["Pengumuman tahap 1 Duta Pelajar","7 Des","2026-12-07","2026-12-07"],["Road to PORSENI: Voli dan seleksi tahap 2 Duta Pelajar","13 Des","2026-12-13","2026-12-13"],["Pengumuman finalis Duta Pelajar","14 Des","2026-12-14","2026-12-14"],["Batas akhir berkas cabang lomba","19 Des","2026-12-19","2026-12-19"],["PORSENI 2026 (pembekalan Duta Pelajar 25 Des)","25–26 Des","2026-12-25","2026-12-26"]];
 var n=new Date(),p=function(v){return String(v).padStart(2,'0')},today=n.getFullYear()+'-'+p(n.getMonth()+1)+'-'+p(n.getDate());
 document.getElementById('tl').innerHTML=T.map(function(t){return '<div class="row'+(t[3]<today?' done':'')+'"><time>'+t[1]+'</time><span>'+t[0]+'</span></div>'}).join('');
-var d=Math.ceil((new Date(2026,11,25)-new Date(n.getFullYear(),n.getMonth(),n.getDate()))/864e5);
-document.getElementById('cd').textContent=d>0?'H-'+d:(d>=-1?'Sedang berlangsung':'Selesai');
-
-// ===== FORMULIR PENDAFTARAN TERINTEGRASI =====
-// Isi URL ini dengan URL Web App Apps Script yang berakhiran /exec.
-var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxkIioAhO7UwoVjpRr_i8yULRzvTa7YIcvPSVuvoI6bBscIEyWP-vCYEgx7ff34GdcX/exec";
-var KAT={
- "Duta Pelajar":["Tunggal Putra","Tunggal Putri"],"Khitobah":["Tunggal Putra","Tunggal Putri"],
- "LCC":["Beregu Campuran"],"Karya ilmiah":["Beregu Campuran"],"Baca kitab":["Tunggal Putra","Tunggal Putri"],
- "Badminton":["Ganda Campuran"],"Voli":["Beregu Putra"],"Sprint":["Tunggal Putra","Tunggal Putri"],
- "Tenis meja":["Tunggal Putra","Tunggal Putri"],"PES PS3":["Tunggal Bebas"],
- "Parade Gelar Budaya":["Beregu Campuran"],"Rebana":["Beregu Bebas"],"Paduan suara":["Beregu Campuran"],
- "Kaligrafi":["Tunggal Putra","Tunggal Putri"],"Baca puisi":["Tunggal Putra","Tunggal Putri"],
- "MTQ":["Tunggal Putra","Tunggal Putri"]
-};
-function openForm(which){document.getElementById('registrationModal').classList.add('show');document.getElementById('registrationModal').setAttribute('aria-hidden','false');showForm(which);}
-function closeForm(){document.getElementById('registrationModal').classList.remove('show');document.getElementById('registrationModal').setAttribute('aria-hidden','true');}
-function showForm(which){document.getElementById('formChooser').style.display='none';document.getElementById('kontingenForm').style.display=which==='kontingen'?'block':'none';document.getElementById('cabangForm').style.display=which==='cabang'?'block':'none';document.getElementById('formTitle').textContent=which==='kontingen'?'Pendaftaran Kontingen':'Pengumpulan Berkas Cabang Lomba';statusForm('');}
-document.addEventListener('click',function(e){var a=e.target.closest('a[data-form]');if(a){e.preventDefault();openForm(a.getAttribute('data-form'));}});
-document.getElementById('registrationModal').addEventListener('click',function(e){if(e.target===this)closeForm();});
-var cabangBox=document.getElementById('kontingenCabang');Object.keys(KAT).forEach(function(k,i){var l=document.createElement('label');l.className='checkitem';l.innerHTML='<input type="checkbox" value="'+k.replace(/"/g,'&quot;')+'"> <span>'+k+'</span>';cabangBox.appendChild(l);});
-var bs=document.getElementById('branchSelect');Object.keys(KAT).forEach(function(k){var o=document.createElement('option');o.value=k;o.textContent=k;bs.appendChild(o);});
-bs.addEventListener('change',function(){var cs=document.getElementById('categorySelect');cs.innerHTML='<option value="">Pilih kategori</option>';(KAT[this.value]||[]).forEach(function(k){var o=document.createElement('option');o.value=k;o.textContent=k;cs.appendChild(o);});});
-function renderParticipants(){var n=Math.max(1,Math.min(30,Number(document.getElementById('participantCount').value)||1)),tb=document.getElementById('participantRows');tb.innerHTML='';for(var i=0;i<n;i++){var tr=document.createElement('tr');tr.innerHTML='<td>'+(i+1)+'</td><td><input required name="pname" aria-label="Nama peserta '+(i+1)+'"></td><td><select name="pgender" required><option value="">Pilih</option><option value="Putra">Putra</option><option value="Putri">Putri</option></select></td><td><input name="pnote" aria-label="Keterangan peserta '+(i+1)+'"></td>';tb.appendChild(tr);}}
-document.getElementById('participantCount').addEventListener('change',renderParticipants);renderParticipants();
-function statusForm(t,err){var el=document.getElementById('formStatus');el.textContent=t;el.className='form-status'+(t?' show':'')+(err?' error':'');}
-function fileData(files){var list=Array.from(files||[]);if(list.length>12) return Promise.reject(new Error('Maksimal 12 file lampiran.'));var total=list.reduce(function(a,f){return a+f.size;},0);if(total>25*1024*1024)return Promise.reject(new Error('Total ukuran seluruh lampiran maksimal 25 MB.'));return Promise.all(list.map(function(f){if(f.size>10*1024*1024)throw new Error('Ukuran file '+f.name+' melebihi 10 MB.');return new Promise(function(resolve,reject){var r=new FileReader();r.onload=function(){resolve({name:f.name,type:f.type||'application/octet-stream',label:'Lampiran',data:String(r.result).split(',')[1]});};r.onerror=function(){reject(new Error('Gagal membaca file '+f.name));};r.readAsDataURL(f);});}));}
-function formObj(form){var o={};new FormData(form).forEach(function(v,k){if(!(v instanceof File))o[k]=v;});return o;}
-function sendRegistration(payload,form){if(!SCRIPT_URL){statusForm('URL Web App Apps Script belum diatur. Isi SCRIPT_URL pada bagian JavaScript website.',true);return;}
- var btn=form.querySelector('button[type="submit"]');btn.disabled=true;btn.textContent='Mengirim...';statusForm('Sedang mengirim data, membuat PDF A4, dan menyimpan berkas ke Google Drive. Jangan tutup halaman ini.');
- fetch(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)})
- .then(function(r){return r.json();}).then(function(res){if(!res||!res.ok)throw new Error(res&&res.error?res.error:'Pendaftaran gagal diproses.');statusForm('Pendaftaran berhasil. Nomor registrasi: '+res.reg+'. PDF: '+(res.pdf||'tersimpan di Google Drive')+'. Tautan folder: '+(res.folder||'-'));form.reset();if(form.id==='cabangForm')renderParticipants();btn.disabled=false;btn.textContent=form.id==='cabangForm'?'Kirim Berkas Cabang':'Kirim Pendaftaran';})
- .catch(function(err){statusForm('Gagal mengirim: '+err.message,true);btn.disabled=false;btn.textContent=form.id==='cabangForm'?'Kirim Berkas Cabang':'Kirim Pendaftaran';});
-}
-document.getElementById('kontingenForm').addEventListener('submit',function(e){e.preventDefault();var f=this;if(!f.reportValidity())return;var d=formObj(f);d.type='kontingen';d.cabang=Array.from(cabangBox.querySelectorAll('input:checked')).map(function(x){return x.value;}).join(', ');if(!d.cabang){statusForm('Pilih minimal satu cabang lomba.',true);return;}fileData(f.elements.uploads.files).then(function(files){d.files=files;sendRegistration(d,f);}).catch(function(err){statusForm(err.message,true);});});
-document.getElementById('cabangForm').addEventListener('submit',function(e){e.preventDefault();var f=this;if(!f.reportValidity())return;var d=formObj(f),rows=Array.from(document.querySelectorAll('#participantRows tr'));d.type='cabang';d.pesertaList=rows.map(function(tr){var x=tr.querySelectorAll('input,select');return {nama:x[0].value,gender:x[1].value,keterangan:x[2].value};});d.peserta=d.pesertaList.map(function(x,i){return (i+1)+'. '+x.nama+' ('+x.gender+')'+(x.keterangan?' - '+x.keterangan:'');}).join('\n');fileData(f.elements.uploads.files).then(function(files){d.files=files;sendRegistration(d,f);}).catch(function(err){statusForm(err.message,true);});});
-
 </script>
 </body>
 </html>
