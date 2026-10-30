@@ -339,9 +339,9 @@ var NM={ak:"Akademik",ol:"Olahraga",se:"Seni"};
 Object.keys(CABANG).forEach(function(k){R(CABANG[k].map(function(x){return {i:x.i,t:x.t,d:"Pengumpulan berkas "+x.t+(x.x||"")+" · "+NM[k],u:"#berkas-cabang"}}),'cb-'+k)});
 /* ===== FORMULIR ONLINE ===== */
 /* Tempel URL Web App Google Apps Script di sini (lihat panduan apps-script.gs). Kosongkan "" jika belum terhubung. */
-var SCRIPT_URL="";
+var SCRIPT_URL="https://script.google.com/macros/s/AKfycbxkIioAhO7UwoVjpRr_i8yULRzvTa7YIcvPSVuvoI6bBscIEyWP-vCYEgx7ff34GdcX/exec";
 /* Ubah ke true untuk menguji formulir di luar masa pendaftaran. */
-var FORCE_OPEN=false;
+var FORCE_OPEN=true;
 var WIN={k:["2026-11-01","2026-11-20"],b:["2026-11-01","2026-12-19"]};
 var PICK="",LAST=null;
 var ALLC=[];Object.keys(CABANG).forEach(function(k){CABANG[k].forEach(function(x){ALLC.push({n:x.t,g:NM[k]})})});
@@ -377,9 +377,27 @@ function regNo(p){var c="ABCDEFGHJKLMNPQRSTUVWXYZ23456789",r="",t=new Date();for
 function checks(f,n){return Array.prototype.map.call(f.querySelectorAll('input[name="'+n+'"]:checked'),function(x){return x.value})}
 function v(f,n){return (f.elements[n].value||"").trim()}
 
-function send(d,done){if(!SCRIPT_URL){done("offline");return}
- fetch(SCRIPT_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(d)})
- .then(function(r){return r.json()}).then(function(j){done(j&&j.ok?"ok":"fail")}).catch(function(){done("unknown")})}
+function send(d,done){
+  if(!SCRIPT_URL){
+    done("offline");
+    return;
+  }
+
+  fetch(SCRIPT_URL,{
+    method:"POST",
+    mode:"no-cors",
+    headers:{
+      "Content-Type":"text/plain;charset=utf-8"
+    },
+    body:JSON.stringify(d)
+  })
+  .then(function(){
+    done("unknown");
+  })
+  .catch(function(){
+    done("fail");
+  });
+}
 
 function kop(t,d){return '<div class="kop"><b>PANITIA PELAKSANA PORSENI 2026</b><span>PAC IPNU IPPNU PATEBON · Sekretariat: Graha MWC NU Patebon</span></div><h2>'+t+'</h2><p class="no">No. Registrasi: <b>'+esc(d.reg)+'</b> · Dicetak: '+fmtTgl(new Date())+'</p>'}
 function tr(l,x){return '<tr><td>'+l+'</td><td>'+(x?esc(x):'&nbsp;')+'</td></tr>'}
