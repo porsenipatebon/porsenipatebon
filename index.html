@@ -352,6 +352,34 @@ footer b{color:var(--navy)}
 @media(min-width:600px) and (max-width:899px){.timeline-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(min-width:900px){.timeline-feature{padding:24px 24px 18px}.timeline-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}.timeline-item{padding:14px}.timeline-item.is-current{padding:13px}}
 
+
+/* DESKTOP RESET: prevent the content grid from collapsing into narrow columns */
+@media (min-width:900px){
+  html,body{width:100%;min-width:900px}
+  .page{display:block!important;width:calc(100vw - 80px)!important;max-width:1320px!important;min-width:820px!important;margin:0 auto!important;padding:30px 0 48px!important}
+  #v-home{display:block!important;width:100%!important;max-width:none!important;min-width:0!important}
+  #v-home>.head,#v-home>.desk-nav,#v-home>.desk-panel{display:block;float:none;position:relative;width:100%!important;max-width:none!important;min-width:0!important;grid-column:auto!important;grid-row:auto!important;margin:0 0 24px!important;box-sizing:border-box}
+  #v-home>.head{display:flex;min-height:250px;padding:38px 54px;border-radius:28px}
+  #v-home>.desk-nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap;position:sticky;top:10px;z-index:20;padding:10px 12px}
+  #v-home>.desk-panel[data-panel="apa-itu-porseni"] .about{width:100%;max-width:none}
+  #v-home>.desk-panel[data-panel="informasi"]{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:14px 18px!important;align-items:start}
+  #v-home>.desk-panel[data-panel="informasi"]>.sec{grid-column:1/-1!important}
+  #v-home>.desk-panel[data-panel="informasi"]>details{display:block!important;width:100%;min-width:0;margin:0!important;align-self:start}
+  #v-home>.desk-panel[data-panel="informasi"]>details>summary{height:auto;min-height:92px}
+  #v-home>.desk-panel[data-panel="informasi"]>details[open]{grid-column:1/-1!important}
+  #v-home>.desk-panel[data-panel="dokumen-penting"],#v-home>.desk-panel[data-panel="pendaftaran"],#v-home>.desk-panel[data-panel="kontingen-dan-peserta-yang-telah-terdaftar"],#v-home>.desk-panel[data-panel="hasil-kejuaraan"],#v-home>.desk-panel[data-panel="hubungi-panitia"]{display:block!important;width:100%!important}
+  #v-home>.desk-panel[data-panel="kontingen-dan-peserta-yang-telah-terdaftar"] .about{display:inline-block;vertical-align:top;width:calc(50% - 12px);max-width:none;min-height:150px;box-sizing:border-box}
+  #v-home>.desk-panel[data-panel="kontingen-dan-peserta-yang-telah-terdaftar"] .about:last-child{margin-right:0}
+  #docs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 16px}
+  #cb-ak,#cb-ol,#cb-se{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 16px}
+  #v-cabang,#v-kontingen,#v-berkas,#v-print{width:calc(100vw - 80px)!important;max-width:1280px!important;min-width:820px!important;margin:0 auto!important}
+}
+@media (min-width:900px) and (max-width:1100px){
+  .page,#v-cabang,#v-kontingen,#v-berkas,#v-print{width:calc(100vw - 48px)!important;min-width:0!important}
+  #v-home>.desk-panel[data-panel="informasi"]{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  #cb-ak,#cb-ol,#cb-se{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
 </style>
 </head>
 <body>
