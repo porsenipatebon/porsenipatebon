@@ -405,6 +405,11 @@ footer b{color:var(--navy)}
 .recap-empty{padding:16px;border:1px dashed #cbdcf2;border-radius:14px;color:var(--muted);background:#f8fbff}
 @media(max-width:600px){.recap-summary th,.recap-summary td{padding:8px 7px;font-size:.88rem}.recap-table{font-size:.88rem}.recap-table th,.recap-table td{padding:8px 6px}.recap-branch-head,.recap-cat{padding:12px}.recap-table th:nth-child(2),.recap-table td:nth-child(2){text-align:center}}
 
+
+/* Rekap cabang lomba digabung ke dalam kotak biru kontingen */
+#v-home>.desk-panel[data-panel="kontingen-dan-peserta-yang-telah-terdaftar"] #recap-cabang{display:block;width:100%;min-height:0;margin-top:0}
+#v-home>.desk-panel[data-panel="kontingen-dan-peserta-yang-telah-terdaftar"] .recap-action{margin:12px 0 0}
+#v-home>.desk-panel[data-panel="kontingen-dan-peserta-yang-telah-terdaftar"] .recap-action .btn{background:linear-gradient(100deg,#f7941d,#ffc20e);color:#172b4d}
 </style>
 </head>
 <body>
@@ -459,9 +464,6 @@ footer b{color:var(--navy)}
 <div id="docs"></div>
 
 <div class="sec">PENDAFTARAN</div>
-<div class="sec" style="margin-top:12px">REKAP PESERTA CABANG LOMBA</div>
-<div id="recap-cabang" class="about"><p class="hint">Memuat rekap peserta cabang lomba…</p></div>
-<div class="recap-action"><a class="btn" href="#rekap-peserta" style="text-decoration:none;text-align:center">Lihat Rekap Lengkap Cabang Lomba <span aria-hidden="true">→</span></a></div>
 <details><summary><span class="ic" style="--a:#f7941d;--b:#e8312f">✔️</span><span class="t"><b>Tata cara pendaftaran</b><small>Langkah mendaftar sebagai kontingen</small></span><span class="arr">›</span></summary>
 <div class="box">
 <div class="st"><span class="n">1</span><div><b>Ikuti sosialisasi PORSENI 2026</b><p>18 Oktober 2026.</p></div></div>
@@ -487,6 +489,10 @@ footer b{color:var(--navy)}
 
 <div class="sec">KONTINGEN DAN PESERTA YANG TELAH TERDAFTAR</div>
 <div id="recap-kontingen" class="about"><p class="hint">Memuat rekap kontingen terdaftar…</p></div>
+
+<div class="sub" style="margin:16px 0 10px;color:#fff;font-weight:800">REKAP PESERTA CABANG LOMBA</div>
+<div id="recap-cabang" class="about"><p class="hint">Memuat rekap peserta cabang lomba…</p></div>
+<div class="recap-action"><a class="btn" href="#rekap-peserta" style="text-decoration:none;text-align:center">Lihat Rekap Lengkap Cabang Lomba <span aria-hidden="true">→</span></a></div>
 
 
 
