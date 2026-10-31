@@ -410,6 +410,71 @@ footer b{color:var(--navy)}
 #v-home>.desk-panel[data-panel="kontingen-dan-peserta-yang-telah-terdaftar"] #recap-cabang{display:block;width:100%;min-height:0;margin-top:0}
 #v-home>.desk-panel[data-panel="kontingen-dan-peserta-yang-telah-terdaftar"] .recap-action{margin:12px 0 0}
 #v-home>.desk-panel[data-panel="kontingen-dan-peserta-yang-telah-terdaftar"] .recap-action .btn{background:linear-gradient(100deg,#f7941d,#ffc20e);color:#172b4d}
+
+/* Dua kotak rekap berdampingan secara proporsional di dalam panel biru */
+#v-home>.desk-panel[data-panel="kontingen-dan-peserta-yang-telah-terdaftar"]{
+  display:grid;
+  grid-template-columns:minmax(0,0.9fr) minmax(0,1.35fr);
+  column-gap:22px;
+  row-gap:0;
+  align-items:start;
+}
+#v-home>.desk-panel[data-panel="kontingen-dan-peserta-yang-telah-terdaftar"]>.sec{
+  grid-column:1/-1;
+}
+#v-home>.desk-panel[data-panel="kontingen-dan-peserta-yang-telah-terdaftar"] #recap-kontingen{
+  grid-column:1;
+  grid-row:2;
+  width:100%;
+  min-width:0;
+  box-sizing:border-box;
+  height:100%;
+}
+#v-home>.desk-panel[data-panel="kontingen-dan-peserta-yang-telah-terdaftar"]>.sub{
+  grid-column:2;
+  grid-row:2;
+  margin:0 0 10px!important;
+  color:#fff!important;
+  align-self:start;
+}
+#v-home>.desk-panel[data-panel="kontingen-dan-peserta-yang-telah-terdaftar"] #recap-cabang{
+  grid-column:2;
+  grid-row:3;
+  width:100%;
+  min-width:0;
+  box-sizing:border-box;
+  margin-top:0;
+}
+#v-home>.desk-panel[data-panel="kontingen-dan-peserta-yang-telah-terdaftar"] .recap-action{
+  grid-column:2;
+  grid-row:4;
+  margin:12px 0 0;
+  min-width:0;
+}
+#v-home>.desk-panel[data-panel="kontingen-dan-peserta-yang-telah-terdaftar"] .recap-action .btn{
+  background:linear-gradient(100deg,#f7941d,#ffc20e);
+  color:#172b4d;
+  max-width:100%;
+  white-space:normal;
+}
+@media(max-width:700px){
+  #v-home>.desk-panel[data-panel="kontingen-dan-peserta-yang-telah-terdaftar"]{
+    grid-template-columns:minmax(0,1fr);
+    row-gap:0;
+  }
+  #v-home>.desk-panel[data-panel="kontingen-dan-peserta-yang-telah-terdaftar"]>.sec,
+  #v-home>.desk-panel[data-panel="kontingen-dan-peserta-yang-telah-terdaftar"] #recap-kontingen,
+  #v-home>.desk-panel[data-panel="kontingen-dan-peserta-yang-telah-terdaftar"]>.sub,
+  #v-home>.desk-panel[data-panel="kontingen-dan-peserta-yang-telah-terdaftar"] #recap-cabang,
+  #v-home>.desk-panel[data-panel="kontingen-dan-peserta-yang-telah-terdaftar"] .recap-action{
+    grid-column:1;
+    grid-row:auto;
+  }
+  #v-home>.desk-panel[data-panel="kontingen-dan-peserta-yang-telah-terdaftar"]>.sub{
+    margin:16px 0 10px!important;
+  }
+}
+
 </style>
 </head>
 <body>
