@@ -142,6 +142,15 @@ a.link.off .arr{font-size:.9rem;color:var(--muted)}
 footer{position:relative;text-align:center;color:var(--muted);margin-top:36px;padding:70px 20px 40px}
 footer b{color:var(--navy)}
 .wave{position:absolute;left:0;right:0;bottom:0;width:100%;height:120px;z-index:-1}
+@media (max-width:899px){
+ /* Mobile header: balance the logo with the PORSENI title */
+ .header-brand{gap:clamp(9px,3vw,14px);margin:12px auto 10px;justify-content:center}
+ .header-logo{height:clamp(58px,18vw,78px);max-width:27%;width:auto;object-fit:contain}
+ .header-copy{flex:0 1 auto;max-width:calc(73% - 10px)}
+ .header-title{font-size:clamp(1.15rem,5.5vw,1.7rem);letter-spacing:.015em;line-height:1.08;margin-bottom:6px}
+ .header-copy .head-subtitle{font-size:clamp(.68rem,2.8vw,.9rem);line-height:1.2}
+ .header-copy .tag{font-size:clamp(.9rem,3.5vw,1.05rem);margin-top:5px}
+}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1}html{scroll-behavior:auto}}
 
 /* Desktop experience: responsive dashboard layout */
@@ -208,6 +217,79 @@ footer b{color:var(--navy)}
 }
 @media (min-width:900px) and (max-width:1100px){.page{width:calc(100% - 40px)}#v-home{gap:0 18px}.head{padding:30px}.wm{font-size:4.6rem}}
 @media (max-width:899px){.desk-nav{display:none!important}}
+
+/* Refined desktop: modern sports-festival editorial layout (mobile remains unchanged) */
+@media (min-width:900px){
+ body{background:radial-gradient(ellipse at 5% 8%,rgba(247,148,29,.13),transparent 26rem),radial-gradient(ellipse at 96% 16%,rgba(18,169,232,.14),transparent 30rem),linear-gradient(180deg,#f8fbff 0%,#eef4fc 100%);}
+ .page{max-width:1440px;width:calc(100% - 88px);padding-top:30px;padding-bottom:30px}
+ #v-home{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px;row-gap:4px;align-items:start}
+ #v-home>.head,#v-home>.desk-nav{grid-column:1/-1}
+ #v-home>.desk-panel{min-width:0;margin:0 0 24px;}
+ #v-home>.desk-panel[data-panel="apa-itu-porseni"]{grid-column:1/-1;margin-bottom:18px}
+ #v-home>.desk-panel[data-panel="informasi"]{grid-column:1/span 7;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-content:start}
+ #v-home>.desk-panel[data-panel="dokumen-penting"]{grid-column:8/span 5;grid-row:auto}
+ #v-home>.desk-panel[data-panel="pendaftaran"]{grid-column:1/span 7;grid-row:auto}
+ #v-home>.desk-panel[data-panel="kontingen-dan-peserta-yang-telah-terdaftar"]{grid-column:1/-1}
+ #v-home>.desk-panel[data-panel="hasil-kejuaraan"]{grid-column:1/span 7}
+ #v-home>.desk-panel[data-panel="hubungi-panitia"]{grid-column:8/span 5;align-self:start}
+ .head{min-height:270px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;padding:42px 58px;margin-bottom:20px;border-radius:34px;background:linear-gradient(112deg,#08265f 0%,#0b3d89 47%,#0a63c9 76%,#12a9e8 100%);box-shadow:0 24px 58px rgba(11,45,114,.20);}
+ .head:before{content:"PEKAN OLAHRAGA DAN SENI  •  PATEBON 2026";font-size:.82rem;letter-spacing:.22em;color:#ffd36a;margin-bottom:12px}
+ .head:after{width:440px;height:440px;border-width:58px;right:-40px;top:-230px;box-shadow:0 0 0 42px rgba(255,255,255,.035),0 0 0 100px rgba(255,255,255,.025)}
+ .header-brand{gap:30px;position:relative;z-index:1}
+ .header-logo{height:154px;max-width:200px}
+ .header-title{font-size:3.25rem;letter-spacing:.045em;text-shadow:0 4px 16px rgba(0,0,0,.12)}
+ .header-copy .head-subtitle{font-size:1.22rem;letter-spacing:.08em}
+ .header-copy .tag{font-size:1.48rem;color:#ffe09a;margin-top:12px}
+ .desk-nav{position:sticky;top:10px;margin:0 0 22px;padding:9px 12px;border-radius:16px;border:1px solid rgba(199,216,241,.9);background:rgba(255,255,255,.91);box-shadow:0 10px 28px rgba(11,45,114,.09);backdrop-filter:blur(18px)}
+ .desk-nav strong{padding:0 16px 0 8px;border-right:1px solid #e2eaf6;margin-right:4px}
+ .desk-nav button{padding:10px 16px;font-size:.76rem}
+ .desk-nav .nav-cta{background:linear-gradient(100deg,var(--orange),var(--yellow));box-shadow:0 5px 14px rgba(247,148,29,.24)}
+ .desk-panel>.sec{font-size:1.02rem;letter-spacing:.08em;margin:0 0 16px;padding:0 0 12px;border:0;position:relative}
+ .desk-panel>.sec:after{height:4px;max-width:130px;border-radius:99px;background:linear-gradient(90deg,var(--orange),var(--red),var(--cyan));}
+ #v-home>.desk-panel[data-panel="apa-itu-porseni"] .about{position:relative;overflow:hidden;padding:28px 34px 26px 38px;margin:0;border:0;border-radius:8px 24px 24px 8px;border-left:6px solid var(--orange);background:linear-gradient(105deg,#fff 0%,#f3f8ff 72%,#e9f6ff 100%);box-shadow:0 12px 30px rgba(11,45,114,.07);font-size:1.16rem;line-height:1.65}
+ #v-home>.desk-panel[data-panel="apa-itu-porseni"] .about:after{content:"2026";position:absolute;right:22px;bottom:-25px;font:800 6.5rem var(--display);color:rgba(10,99,201,.055);pointer-events:none}
+ #v-home>.desk-panel[data-panel="informasi"]{padding:0;background:transparent;border:0;box-shadow:none}
+ #v-home>.desk-panel[data-panel="informasi"]>.sec{grid-column:1/-1}
+ #v-home>.desk-panel[data-panel="informasi"]>details{align-self:stretch;margin:0 0 2px;min-width:0}
+ #v-home>.desk-panel[data-panel="informasi"]>details>summary{height:100%;min-height:92px;border-radius:18px;padding:14px 16px;background:#fff;border:1px solid #e6eef9;box-shadow:0 7px 20px rgba(11,45,114,.055)}
+ #v-home>.desk-panel[data-panel="informasi"]>details>summary .ic{width:52px;height:52px;box-shadow:inset 0 1px 0 rgba(255,255,255,.35)}
+ #v-home>.desk-panel[data-panel="informasi"]>details[open]{grid-column:span 2}
+ #v-home>.desk-panel[data-panel="informasi"]>details[open] .box{margin:0 0 12px;border-radius:18px;background:#fff;border:1px solid #e6eef9;box-shadow:0 8px 24px rgba(11,45,114,.06)}
+ #v-home>.desk-panel[data-panel="dokumen-penting"],#v-home>.desk-panel[data-panel="pendaftaran"]{padding:24px 25px 18px;border:1px solid #e2eaf6;border-radius:24px;background:linear-gradient(155deg,#fff 0%,#f8fbff 100%);box-shadow:0 12px 32px rgba(11,45,114,.065)}
+ #v-home>.desk-panel[data-panel="dokumen-penting"] #docs{display:grid;grid-template-columns:1fr;gap:2px}
+ #v-home>.desk-panel[data-panel="pendaftaran"]>details>summary{border-radius:16px;background:#f8fbff;border:1px solid #e8eff9;box-shadow:none}
+ #v-home>.desk-panel[data-panel="pendaftaran"]>a.link{border-radius:16px;background:linear-gradient(100deg,#fff5e6,#fff);border:1px solid #f8d8a8;box-shadow:0 8px 20px rgba(247,148,29,.12)}
+ #v-home>.desk-panel[data-panel="kontingen-dan-peserta-yang-telah-terdaftar"]{padding:24px 26px 20px;border-radius:26px;background:linear-gradient(120deg,#092b70,#0b4b9d 70%,#087fb9);box-shadow:0 16px 38px rgba(11,45,114,.14)}
+ #v-home>.desk-panel[data-panel="kontingen-dan-peserta-yang-telah-terdaftar"]>.sec{color:#fff}
+ #v-home>.desk-panel[data-panel="kontingen-dan-peserta-yang-telah-terdaftar"]>.sec:after{background:linear-gradient(90deg,var(--yellow),var(--orange),transparent)}
+ #v-home>.desk-panel[data-panel="kontingen-dan-peserta-yang-telah-terdaftar"] .about{display:inline-block;vertical-align:top;width:calc(50% - 12px);min-height:150px;margin:0 14px 0 0;padding:20px 22px;border:1px solid rgba(255,255,255,.55);border-radius:18px;background:rgba(255,255,255,.97);box-shadow:0 8px 22px rgba(0,0,0,.08)}
+ #v-home>.desk-panel[data-panel="kontingen-dan-peserta-yang-telah-terdaftar"] .about:last-child{margin-right:0}
+ #v-home>.desk-panel[data-panel="hasil-kejuaraan"],#v-home>.desk-panel[data-panel="hubungi-panitia"]{padding:22px 24px;border:1px solid #e2eaf6;border-radius:24px;background:#fff;box-shadow:0 10px 28px rgba(11,45,114,.055)}
+ #v-home>.desk-panel[data-panel="hasil-kejuaraan"] .rekap{border:1px solid #e6eef9;box-shadow:none;border-radius:16px}
+ #v-home>.desk-panel[data-panel="hubungi-panitia"] details>summary{border-radius:16px;background:#f8fbff;box-shadow:none;border:1px solid #e8eff9}
+ a.link,summary,.card{border-radius:17px;padding:13px 15px;margin-bottom:10px;box-shadow:0 6px 18px rgba(11,45,114,.065);border:1px solid #e9f0fa}
+ a.link:hover,summary:hover,.card:hover{transform:translateY(-3px);box-shadow:0 14px 26px rgba(10,99,201,.13)}
+ .ic{width:48px;height:48px}
+ #v-cabang,#v-kontingen,#v-berkas,#v-print{max-width:1280px;padding:34px 42px;border-radius:30px;box-shadow:0 18px 48px rgba(11,45,114,.09)}
+ #cb-ak,#cb-ol,#cb-se{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px 16px}
+ #v-cabang .sec{margin-top:30px}
+ #v-cabang .sec:after{max-width:180px}
+ .pg{font-size:2.15rem;letter-spacing:-.025em}
+ .pgsub{max-width:860px}
+ #v-home .desk-panel[data-panel="informasi"] details[open] .box{animation:drop .25s ease}
+}
+@media (min-width:900px) and (max-width:1120px){
+ .page{width:calc(100% - 48px)}
+ #v-home{column-gap:16px}
+ #v-home>.desk-panel[data-panel="informasi"]{grid-column:1/-1}
+ #v-home>.desk-panel[data-panel="dokumen-penting"]{grid-column:1/span 6}
+ #v-home>.desk-panel[data-panel="pendaftaran"]{grid-column:7/span 6}
+ #v-home>.desk-panel[data-panel="hasil-kejuaraan"]{grid-column:1/span 7}
+ #v-home>.desk-panel[data-panel="hubungi-panitia"]{grid-column:8/span 5}
+ .head{padding:34px 38px}
+ .header-logo{height:126px}
+ .header-title{font-size:2.7rem}
+}
 
 </style>
 </head>
