@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>PORSENI PAC IPNU-IPPNU Patebon 2026</title>
+<link rel="icon" type="image/png" sizes="192x192" href="favicon-porseni.png">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="favicon-porseni.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
@@ -24,9 +27,13 @@ body{margin:0;min-height:100%;background:#fff;color:var(--ink);font:600 1.15rem/
 .page{position:relative;max-width:520px;margin:0 auto;padding:92px 20px 0}
 .head{text-align:center;margin-bottom:10px}
 .panitia{display:inline-block;background:linear-gradient(90deg,var(--navy),var(--blue));color:#fff;font:800 .78rem var(--display);letter-spacing:.06em;padding:6px 20px;border-radius:999px;box-shadow:0 6px 16px rgba(10,99,201,.3)}
-.wm{display:flex;justify-content:center;align-items:center;font:800 clamp(2.8rem,14vw,4.2rem)/1 var(--display);color:var(--navy);margin:16px 0 6px;letter-spacing:-.02em}
-.wm .o{display:inline-block;width:.86em;height:.86em;border-radius:50%;margin:0 .02em;background:conic-gradient(var(--red),var(--orange),var(--yellow),var(--cyan),var(--blue),var(--navy),var(--red));-webkit-mask:radial-gradient(circle,transparent 31%,#000 32%);mask:radial-gradient(circle,transparent 31%,#000 32%);animation:spin 18s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
+.header-brand{display:flex;align-items:center;justify-content:center;gap:16px;margin:14px auto 10px;max-width:100%}
+.header-logo{display:block;width:auto;height:104px;max-width:34%;object-fit:contain;flex:none;filter:drop-shadow(0 5px 10px rgba(11,45,114,.14))}
+.header-copy{text-align:left;min-width:0}
+.header-title{font:800 clamp(1.65rem,7vw,2.45rem)/1 var(--display);letter-spacing:.035em;color:var(--navy);margin:0 0 8px}
+.header-copy .head-subtitle{font:800 clamp(.78rem,3.2vw,1rem)/1.25 var(--display);color:var(--navy);margin:0}
+.header-copy .tag{font-size:1.12rem;margin:7px 0 0}
+
 .head h2{font:800 clamp(1.05rem,5vw,1.3rem)/1.2 var(--display);color:var(--navy);margin:0}
 .tag{font:italic 600 1.3rem var(--body);margin:8px 0 0;color:var(--blue)}
 .chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px}
@@ -136,6 +143,72 @@ footer{position:relative;text-align:center;color:var(--muted);margin-top:36px;pa
 footer b{color:var(--navy)}
 .wave{position:absolute;left:0;right:0;bottom:0;width:100%;height:120px;z-index:-1}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1}html{scroll-behavior:auto}}
+
+/* Desktop experience: responsive dashboard layout */
+@media (min-width:900px){
+ body{background:radial-gradient(circle at 8% 4%,#fff0dc 0,transparent 24rem),radial-gradient(circle at 92% 18%,#e3f5ff 0,transparent 28rem),#f4f7fc;font-size:1.05rem}
+ .page{max-width:1320px;width:calc(100% - 64px);padding:34px 0 0}
+ .sw{width:460px;opacity:.55}
+ .blob{position:fixed;z-index:-1;opacity:.22;filter:blur(70px)}
+ #v-home{display:block}
+ .head{position:relative;text-align:left;padding:38px 48px 34px;margin:0 0 24px;border-radius:30px;overflow:hidden;background:linear-gradient(115deg,#09265f 0%,#0b4b9d 56%,#12a9e8 100%);box-shadow:0 18px 45px rgba(11,45,114,.18);color:#fff}
+ .head:after{content:"";position:absolute;width:360px;height:360px;border:52px solid rgba(255,255,255,.09);border-radius:50%;right:-70px;top:-190px;pointer-events:none}
+ .header-brand{justify-content:flex-start;margin:0;gap:24px}
+ .header-logo{height:138px;max-width:180px;margin:0;filter:drop-shadow(0 5px 12px rgba(0,0,0,.18))}
+ .header-title{font-size:2.7rem;color:#fff;margin-bottom:10px}
+ .header-copy .head-subtitle{font-size:1.15rem;color:#fff}
+ .header-copy .tag{font-size:1.4rem;color:#c9edff}
+ .head h2{font-size:1.55rem;color:#fff;letter-spacing:.06em}
+ .tag{font-size:1.45rem;color:#c9edff}
+ .head:before{content:"PEKAN OLAHRAGA DAN SENI";display:block;color:#ffcf70;font:800 .78rem var(--display);letter-spacing:.2em;margin-bottom:8px}
+ #v-home>.desk-panel{margin:0 0 22px;min-width:0}
+ #v-home>.desk-panel .sec{margin:0 0 16px;padding:0 2px 12px;border-bottom:1px solid #dce7f6;font-size:1rem}
+ #v-home>.desk-panel .sec:after{height:4px;max-width:180px}
+ #v-home>.desk-panel .about,#v-home>.desk-panel .box{margin-left:0;margin-right:0}
+ #v-home>.desk-panel[data-panel="apa-itu-porseni"] .about{padding:26px 30px;font-size:1.2rem;border:1px solid #e0eaf8;box-shadow:0 8px 24px rgba(11,45,114,.06)}
+ #v-home>.desk-panel[data-panel="informasi"]{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 18px;align-content:start}
+ #v-home>.desk-panel[data-panel="informasi"]>.sec{grid-column:1/-1}
+ #v-home>.desk-panel[data-panel="informasi"]>details{align-self:start}
+ #v-home>.desk-panel[data-panel="dokumen-penting"],#v-home>.desk-panel[data-panel="pendaftaran"]{background:#fff;border:1px solid #e2eaf6;border-radius:24px;padding:22px;box-shadow:0 8px 28px rgba(11,45,114,.06)}
+ #v-home>.desk-panel[data-panel="kontingen-dan-peserta-yang-telah-terdaftar"] .about{display:inline-block;vertical-align:top;width:calc(50% - 10px);min-height:100%;padding:20px}
+ #v-home>.desk-panel[data-panel="hasil-kejuaraan"] .rekap{margin-top:10px}
+ #v-home>.desk-panel[data-panel="hubungi-panitia"]{align-self:start}
+ #v-home{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 26px;align-items:start}
+ #v-home>.head,#v-home>.desk-panel[data-panel="apa-itu-porseni"],#v-home>.desk-panel[data-panel="informasi"],#v-home>.desk-panel[data-panel="kontingen-dan-peserta-yang-telah-terdaftar"]{grid-column:1/-1}
+ #v-home>.desk-panel[data-panel="dokumen-penting"]{grid-column:1}
+ #v-home>.desk-panel[data-panel="pendaftaran"]{grid-column:2;grid-row:4 / span 2}
+ #v-home>.desk-panel[data-panel="hasil-kejuaraan"]{grid-column:1}
+ #v-home>.desk-panel[data-panel="hubungi-panitia"]{grid-column:2}
+ .sec{font-size:1rem;margin-top:22px}
+ a.link,summary,.card{border-radius:18px;padding:14px 16px;margin-bottom:12px;box-shadow:0 5px 18px rgba(11,45,114,.08);border:1px solid #edf2fa}
+ a.link:hover,summary:hover,.card:hover{transform:translateY(-3px);box-shadow:0 14px 28px rgba(10,99,201,.15)}
+ .ic{width:50px;height:50px}
+ .box{padding:12px 22px 18px;border:1px solid #e4edfa}
+ .about{border:1px solid #e4edfa}
+ #v-cabang,#v-kontingen,#v-berkas,#v-print{max-width:1180px;margin:0 auto;background:#fff;padding:30px 34px;border-radius:28px;box-shadow:0 14px 42px rgba(11,45,114,.10)}
+ #v-cabang{display:block}
+ #v-cabang[hidden]{display:none!important}
+ #cb-ak,#cb-ol,#cb-se{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 18px}
+ #v-cabang .sec{margin-top:28px}
+ .pg{font-size:2rem;margin-top:24px}
+ .pgsub{font-size:1.12rem;max-width:900px}
+ .formbox{padding:26px 30px;border:1px solid #e2eaf6}
+ .formbox .fld{margin-bottom:16px}
+ .fld input,.fld select,.fld textarea{padding:12px 15px}
+ .btn{max-width:440px;margin-left:auto;margin-right:auto}
+ footer{padding-top:90px}
+ .desk-nav{position:sticky;top:12px;z-index:50;display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 12px;margin:0 0 22px;background:rgba(255,255,255,.88);backdrop-filter:blur(16px);border:1px solid #e2eaf6;border-radius:18px;box-shadow:0 8px 24px rgba(11,45,114,.10)}
+ .desk-nav strong{font:800 .78rem var(--display);color:var(--navy);padding:0 12px 0 6px;letter-spacing:.06em}
+ .desk-nav button{border:0;background:transparent;border-radius:999px;padding:10px 14px;font:800 .78rem var(--display);color:#38527d;cursor:pointer;transition:.2s}
+ .desk-nav button:hover,.desk-nav button.active{background:#eaf4ff;color:#075bb5}
+ .desk-nav .nav-cta{margin-left:auto;background:linear-gradient(90deg,var(--orange),var(--yellow));color:#352100}
+ .desk-panel{scroll-margin-top:100px}
+ .desk-panel.is-active>.sec{color:var(--blue)}
+ #v-home .desk-panel details[open]{grid-column:span 1}
+}
+@media (min-width:900px) and (max-width:1100px){.page{width:calc(100% - 40px)}#v-home{gap:0 18px}.head{padding:30px}.wm{font-size:4.6rem}}
+@media (max-width:899px){.desk-nav{display:none!important}}
+
 </style>
 </head>
 <body>
@@ -144,9 +217,14 @@ footer b{color:var(--navy)}
 <main class="page">
 <div id="v-home">
 <header class="head">
-  <h1 class="wm" aria-label="PORSENI">P<i class="o"></i>RSENI</h1>
-  <h2>PAC IPNU IPPNU PATEBON 2026</h2>
-  <p class="tag">“Unitas Ad Gloriam”</p>
+  <div class="header-brand">
+    <img class="header-logo" src="logo-porseni.png" alt="Logo PORSENI 2026">
+    <div class="header-copy">
+      <h1 class="header-title">PORSENI 2026</h1>
+      <h2 class="head-subtitle">PAC IPNU IPPNU PATEBON</h2>
+      <p class="tag">“Unitas Ad Gloriam”</p>
+    </div>
+  </div>
 </header>
 
 <div class="sec">APA ITU PORSENI?</div>
@@ -617,5 +695,25 @@ var n=new Date(),p=function(v){return String(v).padStart(2,'0')},today=n.getFull
 document.getElementById('tl').innerHTML=T.map(function(t){return '<div class="row'+(t[3]<today?' done':'')+'"><time>'+t[1]+'</time><span>'+t[0]+'</span></div>'}).join('');
 document.getElementById('tl-duta').innerHTML=T.filter(function(t){return /Duta Pelajar/i.test(t[0])}).map(function(t){return '<div class="row'+(t[3]<today?' done':'')+'"><time>'+t[1]+'</time><span>'+t[0]+'</span></div>'}).join('');
 </script>
+
+<script>
+(function(){
+ var home=document.getElementById('v-home'); if(!home)return;
+ var secs=Array.prototype.slice.call(home.children).filter(function(el){return el.classList&&el.classList.contains('sec')});
+ secs.forEach(function(h){
+   var title=h.textContent.trim(),slug=title.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+   var panel=document.createElement('section');panel.className='desk-panel';panel.dataset.panel=slug;panel.id='desk-'+slug;
+   home.insertBefore(panel,h);panel.appendChild(h);
+   var n=panel.nextSibling;
+   while(n&&!(n.nodeType===1&&n.classList.contains('sec'))){var next=n.nextSibling;panel.appendChild(n);n=next;}
+ });
+ var nav=document.createElement('nav');nav.className='desk-nav';nav.setAttribute('aria-label','Navigasi cepat');
+ nav.innerHTML='<strong>PORSENI 2026</strong><button data-target="desk-apa-itu-porseni">Beranda</button><button data-target="desk-informasi">Informasi</button><button data-target="desk-dokumen-penting">Dokumen</button><button data-target="desk-pendaftaran">Pendaftaran</button><button data-target="desk-kontingen-dan-peserta-yang-telah-terdaftar">Rekap</button><button data-target="desk-hasil-kejuaraan">Hasil</button><button class="nav-cta" data-action="cabang">Kumpulkan Berkas ↗</button>';
+ var head=home.querySelector('.head'); if(head)head.insertAdjacentElement('afterend',nav);
+ nav.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;if(b.dataset.action==='cabang'){if(typeof showView==='function')showView('v-cabang');location.hash='#cabang-lomba';return;}var target=document.getElementById(b.dataset.target);if(target){target.scrollIntoView({behavior:'smooth',block:'start'});nav.querySelectorAll('button').forEach(function(x){x.classList.toggle('active',x===b);});}});
+ if('IntersectionObserver'in window){var io=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){nav.querySelectorAll('button[data-target]').forEach(function(b){b.classList.toggle('active',b.dataset.target===e.target.id);});}});},{rootMargin:'-25% 0px -65% 0px'});home.querySelectorAll('.desk-panel').forEach(function(p){io.observe(p);});}
+})();
+</script>
+
 </body>
 </html>
