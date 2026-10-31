@@ -194,7 +194,7 @@ footer b{color:var(--navy)}
  .ic{width:50px;height:50px}
  .box{padding:12px 22px 18px;border:1px solid #e4edfa}
  .about{border:1px solid #e4edfa}
- #v-cabang,#v-kontingen,#v-berkas,#v-print{max-width:1180px;margin:0 auto;background:#fff;padding:30px 34px;border-radius:28px;box-shadow:0 14px 42px rgba(11,45,114,.10)}
+ #v-rekap-peserta,#v-cabang,#v-kontingen,#v-berkas,#v-print{max-width:1180px;margin:0 auto;background:#fff;padding:30px 34px;border-radius:28px;box-shadow:0 14px 42px rgba(11,45,114,.10)}
  #v-cabang{display:block}
  #v-cabang[hidden]{display:none!important}
  #cb-ak,#cb-ol,#cb-se{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 18px}
@@ -272,7 +272,7 @@ footer b{color:var(--navy)}
  a.link,summary,.card{border-radius:17px;padding:13px 15px;margin-bottom:10px;box-shadow:0 6px 18px rgba(11,45,114,.065);border:1px solid #e9f0fa}
  a.link:hover,summary:hover,.card:hover{transform:translateY(-3px);box-shadow:0 14px 26px rgba(10,99,201,.13)}
  .ic{width:48px;height:48px}
- #v-cabang,#v-kontingen,#v-berkas,#v-print{max-width:1280px;padding:34px 42px;border-radius:30px;box-shadow:0 18px 48px rgba(11,45,114,.09)}
+ #v-rekap-peserta,#v-cabang,#v-kontingen,#v-berkas,#v-print{max-width:1280px;padding:34px 42px;border-radius:30px;box-shadow:0 18px 48px rgba(11,45,114,.09)}
  #cb-ak,#cb-ol,#cb-se{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px 16px}
  #v-cabang .sec{margin-top:30px}
  #v-cabang .sec:after{max-width:180px}
@@ -372,13 +372,38 @@ footer b{color:var(--navy)}
   #v-home>.desk-panel[data-panel="kontingen-dan-peserta-yang-telah-terdaftar"] .about:last-child{margin-right:0}
   #docs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 16px}
   #cb-ak,#cb-ol,#cb-se{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 16px}
-  #v-cabang,#v-kontingen,#v-berkas,#v-print{width:calc(100vw - 80px)!important;max-width:1280px!important;min-width:820px!important;margin:0 auto!important}
+  #v-rekap-peserta,#v-cabang,#v-kontingen,#v-berkas,#v-print{width:calc(100vw - 80px)!important;max-width:1280px!important;min-width:820px!important;margin:0 auto!important}
 }
 @media (min-width:900px) and (max-width:1100px){
-  .page,#v-cabang,#v-kontingen,#v-berkas,#v-print{width:calc(100vw - 48px)!important;min-width:0!important}
+  .page,#v-rekap-peserta,#v-cabang,#v-kontingen,#v-berkas,#v-print{width:calc(100vw - 48px)!important;min-width:0!important}
   #v-home>.desk-panel[data-panel="informasi"]{grid-template-columns:repeat(2,minmax(0,1fr))!important}
   #cb-ak,#cb-ol,#cb-se{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
+
+
+/* Rekap peserta: ringkasan homepage dan halaman detail */
+.recap-summary{display:grid;gap:8px}
+.recap-summary table{width:100%;border-collapse:separate;border-spacing:0;overflow:hidden;border:1px solid #dce8f8;border-radius:14px;background:#fff}
+.recap-summary th,.recap-summary td{padding:10px 12px;border-bottom:1px solid #e8eff9;text-align:left}
+.recap-summary th{background:#edf5ff;color:var(--navy);font:800 .78rem var(--display)}
+.recap-summary td:last-child,.recap-summary th:last-child{text-align:center;width:110px}
+.recap-summary tr:last-child td{border-bottom:0}
+.recap-action{display:flex;justify-content:center;margin:14px 0 2px}
+.recap-action .btn{max-width:420px;margin:0}
+.recap-detail-wrap{display:grid;gap:16px;margin-top:18px}
+.recap-branch{border:1px solid #dce8f8;border-radius:18px;background:#fff;overflow:hidden;box-shadow:0 7px 20px rgba(11,45,114,.06)}
+.recap-branch-head{padding:14px 18px;background:linear-gradient(100deg,#0b2d72,#0a63c9);color:#fff;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.recap-branch-head h3{margin:0;font:800 1rem var(--display)}
+.recap-cat{padding:14px 18px;border-top:1px solid #e8eff9}
+.recap-cat h4{margin:0 0 10px;color:var(--navy);font:800 .9rem var(--display)}
+.recap-table{width:100%;border-collapse:collapse;font-size:.98rem}
+.recap-table th,.recap-table td{padding:9px 8px;text-align:left;border-bottom:1px solid #edf2f9;vertical-align:middle}
+.recap-table th{font:800 .75rem var(--display);color:var(--muted);background:#f7faff}
+.recap-table tr:last-child td{border-bottom:0}
+.recap-status{display:inline-block;padding:4px 9px;border-radius:999px;font:800 .72rem var(--display);white-space:nowrap}
+.recap-status.yes{background:#e5f8ed;color:#147a43}.recap-status.no{background:#fff1e8;color:#b45309}
+.recap-empty{padding:16px;border:1px dashed #cbdcf2;border-radius:14px;color:var(--muted);background:#f8fbff}
+@media(max-width:600px){.recap-summary th,.recap-summary td{padding:8px 7px;font-size:.88rem}.recap-table{font-size:.88rem}.recap-table th,.recap-table td{padding:8px 6px}.recap-branch-head,.recap-cat{padding:12px}.recap-table th:nth-child(2),.recap-table td:nth-child(2){text-align:center}}
 
 </style>
 </head>
@@ -434,8 +459,9 @@ footer b{color:var(--navy)}
 <div id="docs"></div>
 
 <div class="sec">PENDAFTARAN</div>
-<div class="sec" style="margin-top:12px">REKAP CABANG LOMBA DAN KONTINGEN TERDAFTAR</div>
-<div id="recap-cabang" class="about"><p class="hint">Memuat rekap cabang lomba…</p></div>
+<div class="sec" style="margin-top:12px">REKAP PESERTA CABANG LOMBA</div>
+<div id="recap-cabang" class="about"><p class="hint">Memuat rekap peserta cabang lomba…</p></div>
+<div class="recap-action"><a class="btn" href="#rekap-peserta" style="text-decoration:none;text-align:center">Lihat Rekap Lengkap Cabang Lomba <span aria-hidden="true">→</span></a></div>
 <details><summary><span class="ic" style="--a:#f7941d;--b:#e8312f">✔️</span><span class="t"><b>Tata cara pendaftaran</b><small>Langkah mendaftar sebagai kontingen</small></span><span class="arr">›</span></summary>
 <div class="box">
 <div class="st"><span class="n">1</span><div><b>Ikuti sosialisasi PORSENI 2026</b><p>18 Oktober 2026.</p></div></div>
@@ -480,6 +506,14 @@ footer b{color:var(--navy)}
 <p class="hint">Ketuk nomor untuk membuka WhatsApp.</p>
 </div></details>
 <div id="contact"></div>
+</div>
+
+<div id="v-rekap-peserta" hidden>
+  <a class="back" href="#beranda">‹ Kembali ke Beranda</a>
+  <h2 class="pg">REKAP LENGKAP PESERTA CABANG LOMBA</h2>
+  <p class="pgsub">Data cabang dan kategori yang dipilih kontingen, jumlah peserta yang sudah tercatat melalui pengumpulan berkas, serta status pengumpulan berkas masing-masing kontingen.</p>
+  <div class="recap-action" style="justify-content:flex-start"><button class="btn alt" type="button" id="refresh-recap" style="max-width:230px">↻ Perbarui Rekap</button></div>
+  <div id="recap-detail" class="recap-detail-wrap"><div class="recap-empty">Memuat data rekap…</div></div>
 </div>
 
 <div id="v-cabang" hidden>
@@ -648,13 +682,14 @@ var PICK="",LAST=null,SELECTED_EVENT=null;
 var ALLC=[];Object.keys(CABANG).forEach(function(k){CABANG[k].forEach(function(x){ALLC.push({n:x.t,g:NM[k]})})});
 var $=function(id){return document.getElementById(id)};
 fillKontingenSelects();
-var VIEWS={"#cabang-lomba":"v-cabang","#daftar-kontingen":"v-kontingen","#berkas-cabang":"v-berkas"};
-function showView(id){["v-home","v-cabang","v-kontingen","v-berkas","v-print"].forEach(function(v){$(v).hidden=(v!==id)});window.scrollTo(0,0)}
+var VIEWS={"#cabang-lomba":"v-cabang","#daftar-kontingen":"v-kontingen","#berkas-cabang":"v-berkas","#rekap-peserta":"v-rekap-peserta"};
+function showView(id){["v-home","v-rekap-peserta","v-cabang","v-kontingen","v-berkas","v-print"].forEach(function(v){$(v).hidden=(v!==id)});window.scrollTo(0,0)}
 function winState(w){if(FORCE_OPEN)return 0;var t=new Date();return t<new Date(w[0]+"T00:00:00")?-1:(t>new Date(w[1]+"T23:59:59")?1:0)}
 function fmtTgl(s){if(!s)return"";var d=(s instanceof Date)?s:new Date(s+"T00:00:00");return d.toLocaleDateString("id-ID",{day:"numeric",month:"long",year:"numeric"})}
 function setState(el,btn,w,txt){var st=winState(w);el.hidden=(st===0);btn.disabled=(st!==0);if(st<0)el.textContent="Pendaftaran dibuka "+txt[0]+".";if(st>0)el.textContent="Pendaftaran sudah ditutup ("+txt[1]+").";}
 function route(){var id=VIEWS[location.hash]||"v-home";showView(id);
  if(id==="v-berkas"){configureBranchInfo();loadRegisteredContingents();if($("fb-nama").value)lookupEvents($("fb-nama").value)}
+ if(id==="v-rekap-peserta"){loadPublicRecap();}
  if(id==="v-kontingen")setState($("k-state"),$("fk-btn"),WIN.k,["1 November 2026","20 November 2026"])}
 window.addEventListener('hashchange',route);
 $("v-cabang").addEventListener("click",function(e){var a=e.target.closest("a.link[data-branch]");if(a){PICK=a.getAttribute("data-branch");SELECTED_EVENT=null;}});
@@ -835,16 +870,30 @@ function loadPublicRecap(){
  if(!SCRIPT_URL)return;
  fetch(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'public_recap'})})
  .then(function(r){return r.json()}).then(function(j){if(!j||!j.ok)throw new Error('Rekap belum dapat dimuat.');renderPublicRecap(j.recap||{});})
- .catch(function(){['recap-kontingen','recap-cabang'].forEach(function(id){var el=document.getElementById(id);if(el)el.innerHTML='<p class="hint">Rekap belum dapat dimuat. Silakan muat ulang halaman.</p>';});});
+ .catch(function(){['recap-kontingen','recap-cabang','recap-detail'].forEach(function(id){var el=document.getElementById(id);if(el)el.innerHTML='<p class="hint">Rekap belum dapat dimuat. Silakan muat ulang halaman.</p>';});});
 }
 function renderPublicRecap(d){
  var k=d.kontingen||[],a=document.getElementById('recap-kontingen');
- a.innerHTML='<h3 style="margin:0 0 8px;color:var(--navy)">Rekap kontingen terdaftar</h3><p style="margin:0 0 10px"><b style="font-size:1.35rem">'+(d.jumlahKontingen||0)+'</b> kontingen terdaftar</p>'+(k.length?'<ol style="margin:0;padding-left:22px">'+k.map(function(n){return '<li>'+esc(n)+'</li>';}).join('')+'</ol>':'<p class="hint">Belum ada kontingen yang terdaftar.</p>');
- var c=d.cabang||[],b=document.getElementById('recap-cabang');
- b.innerHTML='<h3 style="margin:0 0 8px;color:var(--navy)">Kontingen yang telah mendaftarkan cabang lomba</h3>'+(c.length?'<div style="display:grid;gap:10px">'+c.map(function(x){return '<section style="border:1px solid var(--line,#dbe6f5);border-radius:12px;padding:12px;background:#fff"><b style="color:var(--navy);font-size:1rem">'+esc(x.cabang)+'</b>'+(x.kategori&&x.kategori.length?'<p style="margin:5px 0;color:var(--muted,#64748b);font-size:.85rem">Kategori: '+x.kategori.map(esc).join(', ')+'</p>':'')+'<div style="margin-top:7px"><b style="font-size:.82rem">Kontingen:</b><ul style="margin:5px 0 0;padding-left:20px">'+x.kontingen.map(function(n){return '<li>'+esc(n)+'</li>';}).join('')+'</ul></div></section>';}).join('')+'</div>':'<p class="hint">Belum ada kontingen yang memilih cabang lomba.</p>');
+ if(a)a.innerHTML='<h3 style="margin:0 0 8px;color:var(--navy)">Rekap kontingen terdaftar</h3><p style="margin:0 0 10px"><b style="font-size:1.35rem">'+(d.jumlahKontingen||0)+'</b> kontingen terdaftar</p>'+(k.length?'<ol style="margin:0;padding-left:22px">'+k.map(function(n){return '<li>'+esc(n)+'</li>';}).join('')+'</ol>':'<p class="hint">Belum ada kontingen yang terdaftar.</p>');
+ var rows=d.ringkasan||[],b=document.getElementById('recap-cabang');
+ if(b)b.innerHTML=rows.length?'<div class="recap-summary"><table><thead><tr><th>Cabang lomba</th><th>Kategori</th><th>Jumlah peserta</th></tr></thead><tbody>'+rows.map(function(x){return '<tr><td><b>'+esc(x.cabang)+'</b></td><td>'+esc(x.kategori)+'</td><td><b>'+Number(x.jumlahPeserta||0)+'</b></td></tr>';}).join('')+'</tbody></table><p class="hint" style="margin:8px 0 0">Kontingen yang belum mengumpulkan berkas tetap masuk hitungan (minimal 1 keterwakilan); status pengumpulan ditampilkan di samping nama kontingen.</p></div>':'<p class="hint">Belum ada kontingen yang memilih cabang lomba.</p>';
+ renderDetailedRecap(d);
+}
+function renderDetailedRecap(d){
+ var root=document.getElementById('recap-detail');if(!root)return;
+ var groups=d.cabang||[];
+ if(!groups.length){root.innerHTML='<div class="recap-empty">Belum ada data pendaftaran cabang lomba.</div>';return;}
+ root.innerHTML=groups.map(function(g){
+  var cats=g.kategori||[],total=cats.reduce(function(n,c){return n+Number(c.jumlahPeserta||0);},0);
+  return '<section class="recap-branch"><header class="recap-branch-head"><h3>'+esc(g.cabang)+'</h3><b>'+total+' peserta</b></header>'+cats.map(function(c){
+   var list=c.kontingen||[];
+   return '<div class="recap-cat"><h4>'+esc(c.nama)+' <span style="color:var(--muted);font-weight:600">· '+Number(c.jumlahPeserta||0)+' peserta terdata</span></h4>'+(list.length?'<div style="overflow-x:auto"><table class="recap-table"><thead><tr><th style="width:48px">No.</th><th>Kontingen</th><th style="width:120px">Jumlah peserta</th></tr></thead><tbody>'+list.map(function(x,i){return '<tr><td>'+(i+1)+'</td><td>'+esc(x.nama)+' <span class="recap-status '+(x.berkasSudah?'yes':'no')+'">'+(x.berkasSudah?'✓ Sudah mengumpulkan':'Belum mengumpulkan')+'</span></td><td>'+Number(x.jumlahPeserta||0)+'</td></tr>';}).join('')+'</tbody></table></div>':'<p class="hint">Belum ada kontingen untuk kategori ini.</p>')+'</div>';
+  }).join('')+'</section>';
+ }).join('');
 }
 
 loadPublicRecap();
+var refreshRecap=document.getElementById("refresh-recap");if(refreshRecap)refreshRecap.addEventListener("click",function(){var box=document.getElementById("recap-detail");if(box)box.innerHTML="<div class=\"recap-empty\">Memperbarui data…</div>";loadPublicRecap();});
 function renderHasil(){
 var gold=0,rows=MEDALS.slice().sort(function(x,y){return y.g-x.g||y.s-x.s||y.b-x.b});
 var ICN=['🥇','🥈','🥉'],CL=[['#ffc20e','#f7941d'],['#c3cfe0','#7d8ca5'],['#e8a46a','#b4622a']];
