@@ -763,6 +763,7 @@ function route(){var id=VIEWS[location.hash]||"v-home";showView(id);
  if(id==="v-rekap-peserta"){loadPublicRecap();}
  if(id==="v-kontingen")setState($("k-state"),$("fk-btn"),WIN.k,["1 November 2026","20 November 2026"])}
 window.addEventListener('hashchange',route);
+ route();
 $("v-cabang").addEventListener("click",function(e){var a=e.target.closest("a.link[data-branch]");if(a){PICK=a.getAttribute("data-branch");SELECTED_EVENT=null;}});
 
 /* checkbox cabang (kontingen) dan pilihan cabang (berkas) */
