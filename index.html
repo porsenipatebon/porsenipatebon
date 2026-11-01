@@ -712,13 +712,22 @@ footer b{color:var(--navy)}
     <label class="fld"><span>Nama pendamping *</span><input name="pendamping" required></label>
     <label class="fld"><span>No. WhatsApp pendamping *</span><input name="wa" type="tel" inputmode="tel" required placeholder="08xxxxxxxxxx"></label>
     <h3>Daftar peserta</h3>
-    <p class="pgsub" style="margin:0 0 10px">Setiap peserta wajib mengunggah KTP masing-masing dalam format PDF untuk pemeriksaan batas usia.</p>
+    <p class="pgsub" style="margin:0 0 10px">Lengkapi berkas setiap peserta secara berurutan: nama peserta, pas foto 4×6, lalu identitas diri sesuai juknis (KTP dalam PDF untuk verifikasi usia).</p>
+    <div id="fb-rule" class="note">Ketentuan jumlah peserta akan tampil setelah cabang lomba dipilih.</div>
     <div id="fb-peserta"></div>
     <button class="btn alt" type="button" id="fb-add">+ Tambah peserta</button>
-    <h3>Unggah berkas cabang lomba</h3>
-    <label class="fld"><span>Berkas persyaratan cabang lomba * (PDF, boleh lebih dari satu)</span><input type="file" name="f_files" id="fb-files" multiple accept="application/pdf,.pdf" required></label>
-    <label class="fld"><span>Pas foto peserta (JPG, PNG, atau WebP)</span><input type="file" name="f_pasfoto" id="fb-pasfoto" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"></label>
-    <p class="pgsub" style="margin:0 0 12px">Berkas persyaratan dan KTP peserta wajib PDF. Pas foto diunggah terpisah dan boleh berupa JPG, PNG, atau WebP. Maksimal 10 berkas persyaratan, 25 KTP peserta, dan 1 pas foto; 10 MB per berkas.</p>
+    <div id="fb-kti-files" hidden>
+      <h3>Berkas Karya Tulis Ilmiah</h3>
+      <label class="fld"><span>Soft file makalah (Word: DOC/DOCX) *</span><input type="file" id="fb-kti-word" name="f_kti_word" accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"></label>
+      <label class="fld"><span>File presentasi (PPT/PPTX) *</span><input type="file" id="fb-kti-ppt" name="f_kti_ppt" accept=".ppt,.pptx,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation"></label>
+    </div>
+    <div id="fb-khitobah-files" hidden>
+      <h3>Berkas Khitobah</h3>
+      <label class="fld"><span>Naskah khitobah (PDF) *</span><input type="file" id="fb-khitobah-pdf" name="f_khitobah_pdf" accept="application/pdf,.pdf"></label>
+    </div>
+    <h3>Surat tugas kontingen</h3>
+    <label class="fld"><span>Surat Tugas dari PR IPNU-IPPNU * (PDF)</span><input type="file" name="f_surat_tugas" id="fb-surat-tugas" accept="application/pdf,.pdf" required></label>
+    <p class="pgsub" style="margin:0 0 12px">Pas foto setiap peserta wajib JPG, PNG, atau WebP. Identitas diri/KTP dan Surat Tugas wajib PDF. Maksimal 10 MB per berkas dan total seluruh berkas maksimal 25 MB.</p>
     <label class="fld"><span>Catatan</span><textarea name="catatan"></textarea></label>
     <button class="btn" type="submit" id="fb-btn">Kirim dan buat formulir A4</button>
   </form>
@@ -825,7 +834,7 @@ function route(){var id=VIEWS[location.hash]||"v-home";showView(id);
  if(id==="v-rekap-peserta"){loadParticipantRecap();}
  if(id==="v-kontingen")setState($("k-state"),$("fk-btn"),WIN.k,["1 November 2026","20 November 2026"])}
 window.addEventListener('hashchange',route);
-$("v-cabang").addEventListener("click",function(e){var a=e.target.closest("a.link[data-branch]");if(a){PICK=a.getAttribute("data-branch");SELECTED_EVENT=null;}});
+$("v-cabang").addEventListener("click",function(e){var a=e.target.closest("a.link[data-branch]");if(a){PICK=a.getAttribute("data-branch");SELECTED_EVENT=null;resetParticipantRows();configureSpecialFiles();}});
 
 /* checkbox cabang (kontingen) dan pilihan cabang (berkas) */
 $("fk-cabang").innerHTML=Object.keys(CABANG).map(function(k){return '<div class="grp">'+NM[k]+'</div><div class="chks">'+CABANG[k].map(function(x){var ks=KAT[x.t]||[];
@@ -856,8 +865,14 @@ var SCHEDULE={
  "Karya ilmiah":"Sabtu, 26 Desember 2026 · 19.30–23.00 WIB."
 };
 function deadlineFor(branch){return DEADLINES[branch]||"19 Desember 2026";}
+function configureSpecialFiles(){
+ var isKti=PICK==="Karya ilmiah",isKhitobah=PICK==="Khitobah";
+ $("fb-kti-files").hidden=!isKti;$("fb-khitobah-files").hidden=!isKhitobah;
+ $("fb-kti-word").required=isKti;$("fb-kti-ppt").required=isKti;$("fb-khitobah-pdf").required=isKhitobah;
+}
 function configureBranchInfo(){
- var branch=PICK||"";$("fb-title").textContent="PENGUMPULAN BERKAS CABANG LOMBA"+(branch?" "+branch.toUpperCase():"");
+ var branch=PICK||"";
+ configureSpecialFiles();$("fb-title").textContent="PENGUMPULAN BERKAS CABANG LOMBA"+(branch?" "+branch.toUpperCase():"");
  var info=$("fb-info");
  if(!branch){info.innerHTML='Pilih tombol cabang lomba terlebih dahulu.';return;}
  var timeline=branch==="Duta Pelajar"?'<p style="margin:8px 0"><a class="btn alt" href="#beranda" id="fb-timeline-link">📅 Lihat Timeline Duta Pelajar</a></p>':'';
@@ -891,11 +906,28 @@ function renderRegisteredEvents(){
 }
 $("fb-nama").addEventListener("change",function(){$("fb-cabang").value="";$("fb-kategori").value="";$("fb-selected-summary").hidden=true;renderRegisteredEvents();if(!REGISTERED_EVENTS.length||this.value)lookupEvents(this.value);});
 
-/* daftar peserta dinamis */
-function addRow(){var box=$("fb-peserta");if(box.children.length>=25)return;var n=box.children.length+1;
+/* Ketentuan jumlah dan komposisi peserta per kategori */
+function participantRule(){
+ var b=PICK;
+ if(b==="Voli")return {min:1,max:12,desc:"Voli: maksimal 12 orang dan seluruh peserta wajib putra (L)."};
+ if(b==="Badminton")return {min:2,max:2,exact:true,desc:"Badminton ganda campuran: wajib 2 orang, terdiri dari 1 putra (L) dan 1 putri (P)."};
+ if(b==="Paduan suara")return {min:11,max:11,exact:true,choir:true,desc:"Paduan suara: wajib 11 orang, terdiri dari 1 dirigen (bebas gender) dan 10 penyanyi campuran putra-putri."};
+ if(b==="Rebana")return {min:1,max:15,desc:"Rebana: maksimal 15 orang, komposisi gender bebas."};
+ if(b==="LCC"||b==="Karya ilmiah")return {min:1,max:3,mixed:true,desc:b+": maksimal 3 orang dan wajib terdiri dari putra dan putri."};
+ return {min:1,max:1,desc:"Kategori tunggal: maksimal 1 orang peserta."};
+}
+function updateParticipantRule(){
+ var rule=participantRule(),box=$("fb-peserta"),banner=$("fb-rule");
+ banner.textContent=rule.desc;
+ Array.prototype.forEach.call(box.querySelectorAll(".prow"),function(row){var role=row.querySelector("[name=pr]");if(role)role.parentNode.hidden=!rule.choir;});
+ $("fb-add").hidden=box.children.length>=rule.max;
+ $("fb-add").textContent="+ Tambah peserta ("+box.children.length+"/"+rule.max+")";
+}
+function resetParticipantRows(){var box=$("fb-peserta");box.innerHTML="";addRow();updateParticipantRule();}
+function addRow(){var box=$("fb-peserta"),rule=participantRule();if(box.children.length>=rule.max)return;var n=box.children.length+1;
  var d=document.createElement("div");d.className="prow";
- d.innerHTML='<input name="pn" placeholder="Nama peserta '+n+'" required><select name="pl"><option>L</option><option>P</option></select><input class="w" name="pa" placeholder="Asal (sekolah / PR / PK)"><label class="fld ktp"><span>KTP peserta '+n+' (PDF) *</span><input type="file" name="peserta_ktp" accept="application/pdf,.pdf" required></label><button type="button" class="rm w">Hapus peserta</button>';
- d.querySelector(".rm").onclick=function(){if(box.children.length>1){box.removeChild(d)}};box.appendChild(d)}
+ d.innerHTML='<h4 class="w" style="margin:0 0 4px">Peserta '+n+'</h4><input name="pn" placeholder="Nama peserta '+n+'" required><select name="pl" aria-label="Jenis kelamin"><option value="L">Putra (L)</option><option value="P">Putri (P)</option></select><label class="fld w" style="margin:0" hidden><span>Peran dalam paduan suara</span><select name="pr"><option value="Penyanyi">Penyanyi</option><option value="Dirigen">Dirigen</option></select></label><input class="w" name="pa" placeholder="Asal (sekolah / PR / PK)"><label class="fld w"><span>Pas foto 4×6 peserta '+n+' *</span><input type="file" name="peserta_foto" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" required></label><label class="fld w ktp"><span>Identitas diri peserta '+n+' (KTP sesuai juknis, PDF) *</span><input type="file" name="peserta_ktp" accept="application/pdf,.pdf" required></label><button type="button" class="rm w">Hapus peserta</button>';
+ d.querySelector(".rm").onclick=function(){if(box.children.length>1){box.removeChild(d);updateParticipantRule();}};box.appendChild(d);updateParticipantRule();}
 $("fb-add").onclick=addRow;addRow();
 
 /* utilitas */
@@ -925,7 +957,7 @@ function paperK(d,stamps){
  +'<p class="note" style="margin-top:12px"><b>SIMPAN PIN KONTINGEN:</b> '+esc(d.pin||'-')+'<br><small>PIN ini digunakan untuk mengumpulkan berkas cabang lomba.</small></p>'+signature3(d,stamps)}
 function paperB(d){
  return kop("FORMULIR PENGUMPULAN BERKAS CABANG LOMBA "+String(d.cabang||"").toUpperCase(),d)+'<table>'+tr("Nama kontingen",d.nama)+tr("Cabang lomba",d.cabang)+tr("Kategori",d.kategori)+tr("Pendamping",d.pendamping)+tr("WhatsApp pendamping",d.wa)+tr("Jumlah peserta",String(d.list.length))+tr("Berkas diunggah",(d.fl||[]).map(function(f){return f.name}).join(", "))+tr("Catatan",d.catatan)+'</table>'
- +'<h4>Daftar peserta</h4><table class="pl"><tr><th class="c">No</th><th>Nama peserta</th><th>Tanggal lahir</th><th class="c">L/P</th><th>Asal</th></tr>'+d.list.map(function(p,i){return '<tr><td class="c">'+(i+1)+'</td><td>'+esc(p.n)+'</td><td>'+esc(p.tanggalLahir||"Diambil dari KTP")+'</td><td class="c">'+esc(p.l)+'</td><td>'+(esc(p.a)||'&nbsp;')+'</td></tr>'}).join('')+'</table>'
+ +'<h4>Daftar peserta</h4><table class="pl"><tr><th class="c">No</th><th>Nama peserta</th><th>Tanggal lahir</th><th class="c">L/P</th><th>Peran</th><th>Asal</th></tr>'+d.list.map(function(p,i){return '<tr><td class="c">'+(i+1)+'</td><td>'+esc(p.n)+'</td><td>'+esc(p.tanggalLahir||"Diambil dari KTP")+'</td><td class="c">'+esc(p.l)+'</td><td>'+esc(p.role||"-")+'</td><td>'+(esc(p.a)||'&nbsp;')+'</td></tr>'}).join('')+'</table>'
  +'<p style="margin-top:8px">Batas akhir pengumpulan berkas '+deadlineFor(d.cabang)+'. Jadwal pelaksanaan: '+(SCHEDULE[d.cabang]||'Sabtu, 26 Desember 2026 sesuai susunan acara PORSENI 2026.')+' Sekretariat: A. Fuad Syafi, WA 083836151201.</p>'
  +sign("Sekretariat Penerima","Pendamping Kontingen",d.pendamping)}
 var MSG={ok:["","✅ Data dan berkas berhasil terkirim ke panitia. Cetak formulir ini dan tanda tangani sebagai arsip."],
@@ -944,7 +976,7 @@ function shrink(file){return new Promise(function(res){if(!/^image\/(jpeg|png|we
  img.onload=function(){var s=Math.min(1,1800/Math.max(img.width,img.height)),c=document.createElement("canvas");c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);c.getContext("2d").drawImage(img,0,0,c.width,c.height);
   c.toBlob(function(b){URL.revokeObjectURL(u);res(b&&b.size<file.size?new File([b],file.name.replace(/\.\w+$/,"")+".jpg",{type:"image/jpeg"}):file)},"image/jpeg",.82)};
  img.onerror=function(){URL.revokeObjectURL(u);res(file)};img.src=u})}
-function checkFileType(file,allowed,label){var t=(file.type||"").toLowerCase(),n=(file.name||"").toLowerCase();var ok=allowed.some(function(x){return x==="pdf"?(t==="application/pdf"||/\.pdf$/.test(n)):x==="image"?(/^image\/(jpeg|png|webp)$/.test(t)||/\.(jpe?g|png|webp)$/.test(n)):false});if(!ok)throw new Error(label+" harus "+(allowed.indexOf("image")>=0?"berupa gambar JPG/PNG/WebP":"berformat PDF")+".");}
+function checkFileType(file,allowed,label){var t=(file.type||"").toLowerCase(),n=(file.name||"").toLowerCase();var ok=allowed.some(function(x){if(x==="pdf")return t==="application/pdf"||/\.pdf$/.test(n);if(x==="image")return /^image\/(jpeg|png|webp)$/.test(t)||/\.(jpe?g|png|webp)$/.test(n);if(x==="word")return /\.(doc|docx)$/.test(n);if(x==="ppt")return /\.(ppt|pptx)$/.test(n);return false});if(!ok){var desc=allowed.indexOf("image")>=0?"berupa gambar JPG/PNG/WebP":allowed.indexOf("word")>=0?"berformat Word DOC/DOCX":allowed.indexOf("ppt")>=0?"berformat PPT/PPTX":"berformat PDF";throw new Error(label+" harus "+desc+".");}}
 function prepFiles(items){var tot=0;return Promise.all(items.map(function(it){return (it.preserve?Promise.resolve(it.file):shrink(it.file)).then(function(f){
  if(f.size>MAXF)throw new Error('Berkas "'+it.file.name+'" melebihi 10 MB.');tot+=f.size;
  return toB64(f).then(function(b){var o={label:it.label,name:f.name,type:f.type,data:b};if(it.participantIndex!==undefined)o.participantIndex=it.participantIndex;return o})})})).then(function(a){if(tot>MAXT)throw new Error("Total ukuran berkas melebihi 25 MB.");return a})}
@@ -969,12 +1001,29 @@ fkf.addEventListener("submit",function(e){e.preventDefault();var f=e.target,sel=
 
 $("fb").addEventListener("submit",function(e){e.preventDefault();var f=e.target,rows=f.querySelectorAll(".prow"),list=[];
  if(!v(f,"cabang")||!v(f,"kategori")){alert("Pilih cabang/kategori dari daftar yang sudah didaftarkan kontingen.");return}
- Array.prototype.forEach.call(rows,function(r){var n=r.querySelector('[name="pn"]').value.trim();if(n)list.push({n:n,l:r.querySelector('[name="pl"]').value,a:r.querySelector('[name="pa"]').value.trim()})});
+ Array.prototype.forEach.call(rows,function(r){var n=r.querySelector('[name="pn"]').value.trim();if(n)list.push({n:n,l:r.querySelector('[name="pl"]').value,a:r.querySelector('[name="pa"]').value.trim(),role:r.querySelector('[name="pr"]').value})});
  if(!list.length){alert("Isi minimal satu peserta.");return}
- var fi=f.elements.f_files.files,pf=f.elements.f_pasfoto.files;if(fi.length>10){alert("Maksimal 10 berkas persyaratan PDF.");return}
- var d={type:"cabang",waktu:new Date().toISOString(),reg:regNo("C"),nama:v(f,"nama"),pin:v(f,"pin"),cabang:v(f,"cabang"),kategori:v(f,"kategori"),pendamping:v(f,"pendamping"),wa:v(f,"wa"),jml:list.length,catatan:v(f,"catatan"),pesertaList:list.map(function(q){return {nama:q.n,gender:q.l,keterangan:q.a}})};
- var items=[],participantNo=0;try{Array.prototype.forEach.call(rows,function(r,i){var nm=r.querySelector('[name="pn"]').value.trim();if(!nm)return;participantNo++;var ktp=r.querySelector('[name="peserta_ktp"]').files[0];if(!ktp)throw new Error("KTP PDF wajib diunggah untuk peserta "+nm+".");checkFileType(ktp,["pdf"],"KTP peserta "+nm);items.push({label:"KTP peserta "+participantNo,participantIndex:participantNo-1,file:ktp})});
- Array.prototype.forEach.call(fi,function(x){checkFileType(x,["pdf"],"Berkas persyaratan cabang lomba");items.push({label:"Berkas cabang lomba",file:x})});if(pf.length){checkFileType(pf[0],["image"],"Pas foto");items.push({label:"Pas foto",file:pf[0]})}}catch(er){alert(er.message);return}if(!fi.length){alert("Unggah minimal satu berkas persyaratan PDF.");return}
+ var rule=participantRule();
+ if(list.length<rule.min||list.length>rule.max){alert(rule.exact?"Jumlah peserta wajib tepat "+rule.max+" orang.":"Jumlah peserta minimal "+rule.min+" dan maksimal "+rule.max+" orang.");return}
+ if(PICK==="Voli"&&list.some(function(p){return p.l!=="L"})){alert("Peserta voli wajib seluruhnya putra (L).");return}
+ if(PICK==="Badminton"&&(list.filter(function(p){return p.l==="L"}).length!==1||list.filter(function(p){return p.l==="P"}).length!==1)){alert("Badminton ganda campuran wajib 1 putra (L) dan 1 putri (P).");return}
+ if((PICK==="LCC"||PICK==="Karya ilmiah")&&(!list.some(function(p){return p.l==="L"})||!list.some(function(p){return p.l==="P"}))){alert(PICK+" wajib memiliki peserta putra dan putri.");return}
+ if(PICK==="Paduan suara"){
+  var conductors=list.filter(function(p){return p.role==="Dirigen"}),singers=list.filter(function(p){return p.role==="Penyanyi"});
+  if(conductors.length!==1||singers.length!==10){alert("Paduan suara wajib terdiri dari tepat 1 dirigen dan 10 penyanyi.");return}
+  if(!singers.some(function(p){return p.l==="L"})||!singers.some(function(p){return p.l==="P"})){alert("Sepuluh penyanyi wajib campuran putra dan putri (minimal 1 orang berbeda gender).");return}
+ }
+ var suratTugas=f.elements.f_surat_tugas.files[0];
+ var d={type:"cabang",waktu:new Date().toISOString(),reg:regNo("C"),nama:v(f,"nama"),pin:v(f,"pin"),cabang:v(f,"cabang"),kategori:v(f,"kategori"),pendamping:v(f,"pendamping"),wa:v(f,"wa"),jml:list.length,catatan:v(f,"catatan"),pesertaList:list.map(function(q){return {nama:q.n,gender:q.l,role:q.role,keterangan:q.a}})};
+ var items=[],participantNo=0;try{Array.prototype.forEach.call(rows,function(r,i){var nm=r.querySelector('[name="pn"]').value.trim();if(!nm)return;participantNo++;var foto=r.querySelector('[name="peserta_foto"]').files[0],ktp=r.querySelector('[name="peserta_ktp"]').files[0];if(!foto)throw new Error("Pas foto 4×6 wajib diunggah untuk peserta "+nm+".");checkFileType(foto,["image"],"Pas foto peserta "+nm);items.push({label:"Pas foto peserta "+participantNo,participantIndex:participantNo-1,file:foto});if(!ktp)throw new Error("Identitas diri/KTP PDF wajib diunggah untuk peserta "+nm+".");checkFileType(ktp,["pdf"],"Identitas diri peserta "+nm);items.push({label:"KTP peserta "+participantNo,participantIndex:participantNo-1,file:ktp})});
+ if(PICK==="Karya ilmiah"){
+  var word=f.elements.f_kti_word.files[0],ppt=f.elements.f_kti_ppt.files[0];
+  if(!word)throw new Error("Soft file makalah Word wajib diunggah.");checkFileType(word,["word"],"Soft file makalah KTI");items.push({label:"Soft file makalah KTI (Word)",file:word,preserve:true});
+  if(!ppt)throw new Error("File presentasi PPT wajib diunggah.");checkFileType(ppt,["ppt"],"File presentasi KTI");items.push({label:"Presentasi KTI (PPT)",file:ppt,preserve:true});
+ }else if(PICK==="Khitobah"){
+  var naskah=f.elements.f_khitobah_pdf.files[0];if(!naskah)throw new Error("Naskah khitobah PDF wajib diunggah.");checkFileType(naskah,["pdf"],"Naskah khitobah");items.push({label:"Naskah khitobah (PDF)",file:naskah,preserve:true});
+ }
+ if(!suratTugas)throw new Error("Surat Tugas dari PR IPNU-IPPNU wajib diunggah.");checkFileType(suratTugas,["pdf"],"Surat Tugas dari PR IPNU-IPPNU");items.push({label:"Surat Tugas dari PR IPNU-IPPNU",file:suratTugas})}catch(er){alert(er.message);return}
  var b=$("fb-btn");b.disabled=true;b.textContent="Mengunggah…";
  prepFiles(items).then(function(fs){d.fl=meta(fs);d.list=list;var p=JSON.parse(JSON.stringify(d));delete p.fl;delete p.list;p.files=fs;
   send(p,function(r){b.disabled=false;b.textContent="Kirim dan buat formulir A4";if(r.status==="ok"&&r.data&&r.data.birthDatesPeserta){r.data.birthDatesPeserta.forEach(function(dt,i){if(d.list[i])d.list[i].tanggalLahir=dt})}showPaper(paperB(d),r)})})
