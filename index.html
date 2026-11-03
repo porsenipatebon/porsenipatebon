@@ -1020,10 +1020,28 @@ var MSG={ok:["","✅ Data dan berkas berhasil terkirim ke panitia. Formulir ceta
  fail:["w","⚠️ Pengiriman gagal. Formulir belum dibuat."],
  unknown:["w","⚠️ Status pengiriman belum dapat dipastikan. Periksa data pada portal sebelum mengirim ulang."]};
 function showSubmitError(formId,result){var box=document.getElementById(formId);if(!box)return;var id=formId+"-upload-error",el=document.getElementById(id);if(!el){el=document.createElement("p");el.id=id;el.className="warn";el.style.display="block";box.insertBefore(el,box.querySelector("button[type=submit]"));}el.textContent=(result.error||"Pengiriman belum berhasil.")+" Periksa data dan unggahan, lalu coba kembali.";}
-function showPaper(html,result){$("paper").innerHTML=html;var res=result.status||"fail",s=$("pr-stat");s.className="stat "+(MSG[res]?MSG[res][0]:"w");
+var OFFICIAL_PDF_URL="";
+function drivePreviewUrl(url){
+ try{
+  var m=String(url||"").match(/drive\.google\.com\/file\/d\/([^/?#]+)/);
+  return m?"https://drive.google.com/file/d/"+m[1]+"/preview":String(url||"");
+ }catch(e){return String(url||"");}
+}
+function showPaper(html,result){
+ var res=result.status||"fail",s=$("pr-stat");
+ s.className="stat "+(MSG[res]?MSG[res][0]:"w");
  s.textContent=(MSG[res]?MSG[res][1]:"⚠️ Pengiriman belum berhasil.")+(result.error?" "+result.error:"");
- if(res==="ok"&&result.data&&result.data.pdf){var a=document.createElement("a");a.href=result.data.pdf;a.target="_blank";a.rel="noopener";a.textContent="Buka PDF resmi tersimpan di Google Drive";a.style.display="";a.style.fontWeight="800";a.style.marginTop="8px";s.appendChild(document.createElement("br"));s.appendChild(a);}
- showView("v-print")}
+ OFFICIAL_PDF_URL=(res==="ok"&&result.data&&result.data.pdf)?result.data.pdf:"";
+ if(res==="ok"&&OFFICIAL_PDF_URL){
+  var preview=drivePreviewUrl(OFFICIAL_PDF_URL);
+  $("paper").innerHTML='<div style="padding:18px;text-align:center"><h3>PDF resmi pendaftaran kontingen</h3><p>Dokumen di bawah ini adalah PDF yang sama dengan yang tersimpan di Google Drive dan ditampilkan di Portal Kontingen.</p><p><a href="'+esc(OFFICIAL_PDF_URL)+'" target="_blank" rel="noopener" style="font-weight:800">Buka PDF resmi di Google Drive ↗</a></p><iframe title="PDF resmi pendaftaran" src="'+esc(preview)+'" style="display:block;width:100%;height:75vh;min-height:650px;border:1px solid #dbe3ef;border-radius:10px" loading="lazy"></iframe></div>';
+  $("pr-print").textContent="↗ Buka / Cetak PDF resmi (A4)";
+ }else{
+  $("paper").innerHTML=html;
+  $("pr-print").textContent="🖨️ Cetak / Simpan PDF (A4)";
+ }
+ showView("v-print");
+}
 
 var MAXF=10*1024*1024,MAXT=25*1024*1024;
 function toB64(blob){return new Promise(function(res,rej){var r=new FileReader();r.onload=function(){res(String(r.result).split(",")[1])};r.onerror=function(){rej(new Error("Berkas tidak bisa dibaca."))};r.readAsDataURL(blob)})}
@@ -1091,7 +1109,7 @@ $("fb").addEventListener("submit",function(e){e.preventDefault();var f=e.target,
 document.querySelectorAll('input[name="pin"]').forEach(function(el){
  el.addEventListener('input',function(){this.value=this.value.replace(/\D/g,'').slice(0,6);});
 });
-$("pr-print").onclick=function(){window.print()};
+$("pr-print").onclick=function(){if(OFFICIAL_PDF_URL){window.open(OFFICIAL_PDF_URL,"_blank","noopener");}else{window.print()}};
 $("pr-back").onclick=function(){route()};
 $("pr-home").onclick=function(e){e.preventDefault();if(location.hash==="#beranda"||location.hash===""){route()}else{location.hash="#beranda"}};
 route();
