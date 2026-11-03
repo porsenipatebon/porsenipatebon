@@ -533,6 +533,8 @@ footer b{color:var(--navy)}
   .t small{font-size:.85rem}
 }
 
+
+.pin-print{border:2px solid #183d78;border-radius:8px;text-align:center;padding:9px;margin:10px 0 14px;background:#f1f6ff}.pin-print span{display:block;font-size:10px;font-weight:800;letter-spacing:1.2px}.pin-print b{display:block;font-size:30px;letter-spacing:7px;color:#102b58;line-height:1.3}.pin-print small{font-size:9px}.print-time{text-align:right;font-size:10px;margin-top:10px}.pl th{background:#edf2f8}.pl td,.pl th{font-size:9px;padding:4px}.pl td.c,.pl th.c{text-align:center}
 </style>
 </head>
 <body>
@@ -686,7 +688,8 @@ footer b{color:var(--navy)}
     <label class="fld"><span>KTP ketua kontingen *</span><input type="file" name="f_ktp" accept="application/pdf,.pdf" required></label>
     <label class="fld"><span>Pakta integritas bertanda tangan *</span><input type="file" name="f_pakta" accept="application/pdf,.pdf" required></label>
     <h3>Tanda tangan pengurus (wajib)</h3>
-    <p class="pgsub" style="margin:0 0 12px">Unggah tanda tangan Ketua IPNU dan Ketua IPPNU dalam file PNG asli, maksimal 2 MB per file.</p>
+    <p class="pgsub" style="margin:0 0 12px">Unggah tanda tangan Ketua Kontingen, Ketua IPNU, dan Ketua IPPNU dalam file PNG asli, maksimal 2 MB per file.</p>
+    <label class="fld"><span>Tanda tangan Ketua Kontingen (PNG) *</span><input type="file" name="f_ttd_ketua" accept="image/png,.png" required></label>
     <label class="fld"><span>Tanda tangan Ketua IPNU (PNG) *</span><input type="file" name="f_ttd_ipnu" accept="image/png,.png" required></label>
     <label class="fld"><span>Tanda tangan Ketua IPPNU (PNG) *</span><input type="file" name="f_ttd_ippnu" accept="image/png,.png" required></label>
     <label class="chk" style="margin:6px 0 14px"><input type="checkbox" name="setuju" required><span>Data sudah benar dan kontingen bersedia mengikuti seluruh peraturan PORSENI 2026.</span></label>
@@ -988,15 +991,26 @@ function tr(l,x){return '<tr><td>'+l+'</td><td>'+(x?esc(x):'&nbsp;')+'</td></tr>
 function sign(l,r,nm){return '<div class="sign"><div><p>&nbsp;<br>'+l+',</p><div class="sp"></div><p>( ............................ )</p></div><div><p>Patebon, ................ 2026<br>'+r+',</p><div class="sp"></div><p>( <b>'+esc(nm)+'</b> )</p><small>Tanda tangan dan cap</small></div></div>'}
 var BK=["Bukti pembayaran","KTP ketua kontingen","Pakta integritas","SP / berita acara RAT"];
 function fl(d,l){var f=(d.fl||[]).filter(function(x){return x.label==l})[0];return f?f.name:""}
-function signatureImagesFrom(files){var o={ipnu:{signature:''},ippnu:{signature:''}};var m={'tanda tangan ketua ipnu':['ipnu','signature'],'tanda tangan ketua ippnu':['ippnu','signature']};(files||[]).forEach(function(f){var x=m[String(f.label||'').toLowerCase()];if(x&&f.data)o[x[0]][x[1]]='data:image/png;base64,'+f.data});return o}
-function signature3(d,images){images=images||{};function art(role){var x=images[role]||{};return '<div class="space">'+(x.signature?'<img src="'+x.signature+'" alt="Tanda tangan '+role.toUpperCase()+'" class="sig">':'')+'</div>'}return '<div class="sign3"><div><b>Ketua Kontingen,</b><div class="space"></div><div class="name">( '+esc(d.ketua)+' )</div></div><div><b>Ketua IPNU,</b>'+art('ipnu')+'<div class="name">( ................................ )</div><small>Tanda tangan</small></div><div><b>Ketua IPPNU,</b>'+art('ippnu')+'<div class="name">( ................................ )</div><small>Tanda tangan</small></div></div>'}
+function signatureImagesFrom(files){var o={ketua:{signature:''},ipnu:{signature:''},ippnu:{signature:''}};var m={'tanda tangan ketua kontingen':['ketua','signature'],'tanda tangan ketua ipnu':['ipnu','signature'],'tanda tangan ketua ippnu':['ippnu','signature']};(files||[]).forEach(function(f){var x=m[String(f.label||'').toLowerCase()];if(x&&f.data)o[x[0]][x[1]]='data:image/png;base64,'+f.data});return o}
+function signature3(d,images){images=images||{};function art(role){var x=images[role]||{};return '<div class="space">'+(x.signature?'<img src="'+x.signature+'" alt="Tanda tangan '+role.toUpperCase()+'" class="sig">':'')+'</div>'}return '<div class="sign3"><div><b>Ketua Kontingen,</b>'+art('ketua')+'<div class="name">( '+esc(d.ketua)+' )</div></div><div><b>Ketua IPNU,</b>'+art('ipnu')+'<div class="name">( ................................ )</div><small>Tanda tangan</small></div><div><b>Ketua IPPNU,</b>'+art('ippnu')+'<div class="name">( ................................ )</div><small>Tanda tangan</small></div></div>'}
 function paperK(d,stamps){
- var cb=d.cabang.split("; ");
- return kop("FORMULIR PENDAFTARAN KONTINGEN",d)+'<table>'+tr("Nama kontingen",d.nama)+tr("Ketua kontingen",d.ketua)+tr("Ketua PR IPNU",d.ketua_pr_ipnu)+tr("WhatsApp Ketua IPNU",d.wa_ketua_ipnu)+tr("Ketua PR IPPNU",d.ketua_pr_ippnu)+tr("WhatsApp Ketua IPPNU",d.wa_ketua_ippnu)+tr("Tanggal lahir ketua",d.tanggal_lahir_ketua||"Diambil dari KTP setelah verifikasi server")+tr("WhatsApp ketua",d.wa_ketua)+tr("Email kontingen (tujuan notifikasi)",d.email)+tr("PIN kontingen",d.pin||"-")+tr("Uang mandat","Rp500.000 · "+d.bayar+(d.tgl_bayar?" · "+fmtTgl(d.tgl_bayar):""))+'</table>'
- +'<h4>Cabang lomba dan kategori yang diikuti ('+cb.length+')</h4><ol>'+cb.map(function(c){return '<li>'+esc(c)+'</li>'}).join('')+'</ol>'
- +'<h4>Berkas yang diunggah</h4><ul>'+BK.map(function(b){var n=fl(d,b);return '<li>'+(n?'☑':'☐')+' '+b+(n?' <small>('+esc(n)+')</small>':'')+'</li>'}).join('')+'</ul>'
- +'<p style="margin-top:8px">Dengan ini kontingen menyatakan data di atas benar dan bersedia mengikuti seluruh peraturan PORSENI 2026.</p>'
- +'<p class="note" style="margin-top:12px"><b>SIMPAN PIN KONTINGEN:</b> '+esc(d.pin||'-')+'<br><small>PIN ini digunakan untuk mengumpulkan berkas cabang lomba.</small></p>'+signature3(d,stamps)}
+ var selected=(d.cabang||"").split("; ").filter(Boolean);
+ var catalog=[
+  ["A. AKADEMIK","Duta Pelajar","Tunggal Putra; Tunggal Putri"],["","Khitobah","Tunggal Putra; Tunggal Putri"],["","LCC","Beregu Campuran"],["","Karya Ilmiah","Beregu Campuran"],["","Baca Kitab","Tunggal Putra; Tunggal Putri"],
+  ["B. OLAHRAGA","Badminton","Ganda Campuran"],["","Voli","Beregu Putra"],["","Sprint","Tunggal Putra; Tunggal Putri"],["","Tenis Meja","Tunggal Putra; Tunggal Putri"],["","PES PS3","Tunggal Bebas"],
+  ["C. SENI","Parade Gelar Budaya","Beregu Campuran"],["","Rebana","Beregu Bebas"],["","Paduan Suara","Beregu Campuran"],["","Kaligrafi","Tunggal Putra; Tunggal Putri"],["","Baca Puisi","Tunggal Putra; Tunggal Putri"],["","MTQ","Tunggal Putra; Tunggal Putri"]
+ ];
+ function chosen(l,k){return selected.some(function(x){var z=x.toLowerCase();return z.indexOf(l.toLowerCase()+" (")===0&&z.indexOf(k.toLowerCase())>=0||z===l.toLowerCase()&&k==="";});}
+ var rows=catalog.map(function(row){var cats=row[2].split("; ");return cats.map(function(k,idx){var yes=chosen(row[1],k);return '<tr>'+(idx===0?'<td rowspan="'+cats.length+'">'+esc(row[0]||"")+'</td><td rowspan="'+cats.length+'">'+esc(row[1])+'</td>':'')+'<td>'+esc(k)+'</td><td class="c">'+(yes?'✓':'')+'</td><td class="c">'+(yes?'':'✓')+'</td></tr>';}).join('');}).join('');
+ var when=d.waktu?fmtTgl(d.waktu):fmtTgl(new Date());
+ return kop("FORMULIR PENDAFTARAN KONTINGEN",d)
+ +'<div class="pin-print"><span>PIN PENDAFTARAN</span><b>'+esc(d.pin||"-")+'</b><small>Simpan PIN ini untuk masuk ke portal kontingen dan mengirim berkas cabang lomba.</small></div>'
+ +'<h4>A. IDENTITAS KONTINGEN</h4><table>'+tr("Nama Kontingen",d.nama)+tr("Nama Ketua Kontingen",d.ketua)+tr("No. WA Ketua Kontingen",d.wa_ketua)+tr("Email Kontingen",d.email)+tr("Nama Ketua IPNU",d.ketua_pr_ipnu)+tr("Nama Ketua IPPNU",d.ketua_pr_ippnu)+'</table>'
+ +'<h4>B. CABANG PERLOMBAAN YANG DIIKUTI</h4><p>Berikan tanda centang (✓) pada cabang perlombaan yang diikuti oleh kontingen.</p><table class="pl"><tr><th>KELOMPOK</th><th>LOMBA</th><th>KATEGORI</th><th>YA</th><th>TIDAK</th></tr>'+rows+'</table>'
+ +'<h4>C. KELENGKAPAN ADMINISTRASI</h4><p>Berkas yang diserahkan kepada panitia:</p><ul>'+BK.map(function(b){var n=fl(d,b);return '<li>'+(n?'☑':'☐')+' '+b+'</li>';}).join('')+'</ul>'
+ +'<h4>D. PERNYATAAN PENDAFTARAN</h4><p>Dengan ini kami menyatakan bahwa data yang tercantum dalam formulir pendaftaran kontingen ini telah diisi dengan benar dan dapat dipertanggungjawabkan. Kami bersedia melengkapi persyaratan administrasi serta mengikuti seluruh ketentuan yang telah ditetapkan oleh Panitia Pelaksana PORSENI 2026 PAC IPNU–IPPNU Patebon.</p><p>Demikian formulir pendaftaran ini kami buat untuk digunakan sebagaimana mestinya.</p>'
+ +'<p class="print-time">Waktu pendaftaran: <b>'+esc(when)+'</b></p>'+signature3(d,stamps);
+}
 function paperB(d){
  return kop("FORMULIR PENGUMPULAN BERKAS CABANG LOMBA "+String(d.cabang||"").toUpperCase(),d)+'<table>'+tr("Nama kontingen",d.nama)+tr("Cabang lomba",d.cabang)+tr("Kategori",d.kategori)+tr("Jumlah peserta",String(d.list.length))+tr("Berkas diunggah",(d.fl||[]).map(function(f){return f.name}).join(", "))+tr("Catatan",d.catatan)+'</table>'
  +'<h4>Daftar peserta</h4><table class="pl"><tr><th class="c">No</th><th>Nama peserta</th><th>Tanggal lahir</th><th class="c">L/P</th><th>Alamat rumah</th><th>Peran</th></tr>'+d.list.map(function(p,i){return '<tr><td class="c">'+(i+1)+'</td><td>'+esc(p.n)+'</td><td>'+esc(p.tanggalLahir||"Tidak terbaca")+'</td><td class="c">'+esc(p.l)+'</td><td>'+esc(p.alamat||"Perlu verifikasi manual dari KTP")+'</td><td>'+esc(p.role||"-")+'</td></tr>'}).join('')+'</table>'
@@ -1035,7 +1049,7 @@ fkf.addEventListener("submit",function(e){e.preventDefault();var f=e.target,sel=
  if(!parts.length){alert("Pilih minimal satu cabang lomba.");return}
  var d={type:"kontingen",waktu:new Date().toISOString(),reg:regNo("K"),nama:v(f,"nama"),asal:"",alamat:"",ketua:v(f,"ketua"),wa_ketua:v(f,"wa_ketua"),ketua_pr_ipnu:v(f,"ketua_pr_ipnu"),wa_ketua_ipnu:v(f,"wa_ketua_ipnu"),ketua_pr_ippnu:v(f,"ketua_pr_ippnu"),wa_ketua_ippnu:v(f,"wa_ketua_ippnu"),pendamping:"",wa_pend:"",email:v(f,"email").toLowerCase(),cabang:parts.join("; "),jml:"",bayar:v(f,"bayar"),tgl_bayar:v(f,"tgl_bayar")};
  var items;try{items=[["Bukti pembayaran","f_bukti",["pdf","image"]],["KTP ketua kontingen","f_ktp",["pdf"]],["Pakta integritas","f_pakta",["pdf"]],["SP / berita acara RAT","f_sp",["pdf"]]].filter(function(x){return f.elements[x[1]].files.length}).map(function(x){var file=f.elements[x[1]].files[0];checkFileType(file,x[2],x[0]);return {label:x[0],file:file}});
- [["Tanda tangan Ketua IPNU","f_ttd_ipnu"],["Tanda tangan Ketua IPPNU","f_ttd_ippnu"]].forEach(function(x){var file=f.elements[x[1]].files[0];checkPngOnly(file,x[0]);items.push({label:x[0],file:file,preserve:true})})}catch(er){alert(er.message);return}
+ [["Tanda tangan Ketua Kontingen","f_ttd_ketua"],["Tanda tangan Ketua IPNU","f_ttd_ipnu"],["Tanda tangan Ketua IPPNU","f_ttd_ippnu"]].forEach(function(x){var file=f.elements[x[1]].files[0];checkPngOnly(file,x[0]);items.push({label:x[0],file:file,preserve:true})})}catch(er){alert(er.message);return}
  var b=$("fk-btn");b.disabled=true;b.textContent="Mengunggah…";
  prepFiles(items).then(function(fs){d.fl=meta(fs);var p=JSON.parse(JSON.stringify(d));delete p.fl;p.files=fs;
   send(p,function(r){b.disabled=false;b.textContent="Kirim dan buat formulir A4";if(r.status==="ok"){clearPorseniDraft("fk");loadAvailableContingents();}if(r.status==="ok"&&r.data){d.tanggal_lahir_ketua=r.data.birthDateKetua||d.tanggal_lahir_ketua;d.pin=r.data.pin||"";showPaper(paperK(d,signatureImagesFrom(fs)),r)}else showPaper(paperK(d),r)})})
