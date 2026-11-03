@@ -1,0 +1,76 @@
+PORSENI 2026 PAC IPNU-IPPNU PATEBON — PAKET REVISI
+==================================================
+
+SUMBER KODE
+- index.html: berasal dari unggahan terbaru index(20261103-102020).html.
+- Code.gs: berasal dari unggahan terbaru Code_GS_perbaikan_PORSENI_2026.gs.
+- admin.html: menggunakan file admin.html yang diunggah dalam percakapan ini.
+- kop-porseni-resmi.png: potongan kop asli dari dokumen Word/screenshot yang diunggah; juga sudah ditanamkan (base64) ke Code.gs sehingga proses PDF tidak bergantung pada file PNG terpisah.
+- logo-porseni.png, favicon-porseni.png, favicon.ico: aset identitas website; bukan kode lama.
+
+PERUBAHAN PENTING
+1. Dropdown pendaftaran kontingen mengambil daftar tersedia dari action list_available_contingents. Nama yang sudah tercatat di sheet Kontingen tidak ditampilkan lagi.
+2. Backend memeriksa ulang nama kontingen sebelum menyimpan untuk mencegah pendaftaran ganda, termasuk jika dua orang mengirim hampir bersamaan.
+3. Validasi server mewajibkan bukti pembayaran, SP/RAT, KTP ketua, pakta integritas, dan tiga tanda tangan PNG. Bukti pembayaran menerima PDF/JPG/JPEG/PNG/WebP berdasarkan signature byte file (tidak bergantung pada MIME browser yang kadang kosong/generik).
+4. PDF memakai gambar kop resmi yang ditanamkan, ukuran halaman A4, PIN enam digit, waktu WIB, nama ketiga penanda tangan, serta tanda tangan PNG asli.
+5. Tanggal/waktu pada pratinjau browser diperbaiki agar timestamp ISO tidak menghasilkan Invalid Date.
+6. Portal kontingen menggunakan status Terverifikasi dari sheet. Panel persetujuan lama yang memanggil endpoint yang tidak tersedia dihapus; verifikasi dilakukan dari admin.html.
+7. Backend tetap menyimpan data ke sheet Kontingen/Cabang dan lampiran ke Google Drive sesuai folder proyek.
+
+LANGKAH PEMASANGAN
+A. BACKUP
+1. Duplikat Google Spreadsheet database yang sedang dipakai.
+2. Simpan salinan Code.gs, index.html, dan admin.html yang sekarang aktif.
+
+B. GOOGLE APPS SCRIPT
+1. Buka Spreadsheet database PORSENI > Extensions > Apps Script.
+2. Ganti isi file Code.gs dengan file Code.gs dari paket ini. Jangan membuat project Apps Script baru jika project lama sudah terikat ke Spreadsheet yang benar.
+3. Pada Project Settings, atur Time zone ke (GMT+07:00) Jakarta.
+4. Pada Apps Script, buka Services (+) dan tambahkan Drive API versi 3 (identifier: Drive).
+5. Jika Google Cloud Project meminta aktivasi, aktifkan Google Drive API pada project tersebut.
+6. Buka Project Settings > Script Properties, tambahkan ADMIN_PASSWORD dengan password admin yang kuat. Jangan menaruh password di HTML.
+7. Simpan. Jalankan fungsi authorizeEmailService satu kali dari editor untuk memberikan izin pengiriman email. Ikuti dialog otorisasi.
+8. Jalankan doGet dari deployment setelah deploy untuk memastikan endpoint merespons JSON {ok:true,...}.
+
+C. DEPLOY WEB APP
+1. Klik Deploy > Manage deployments.
+2. Edit deployment Web app yang digunakan website (atau buat deployment baru jika diperlukan).
+3. Pilih Execute as: Me.
+4. Pilih Who has access: Anyone.
+5. Klik Deploy dan salin URL berakhiran /exec.
+6. Jika URL berubah, ganti nilai SCRIPT_URL di index.html dan API di admin.html dengan URL /exec yang sama.
+7. Pastikan izin Spreadsheet dan Drive diberikan ke akun pemilik Apps Script.
+
+D. GITHUB PAGES
+1. Ganti file index.html di root repository dengan index.html dari paket.
+2. Ganti admin.html di root repository dengan admin.html dari paket.
+3. Pastikan logo-porseni.png, favicon-porseni.png, dan favicon.ico berada di root repository yang sama.
+4. Commit dan push ke branch yang dipakai GitHub Pages.
+5. Tunggu deployment GitHub Pages selesai, lalu buka website dengan hard refresh (Ctrl+F5).
+6. Portal admin: https://porsenipatebon.github.io/porsenipatebon/admin.html
+
+E. PENGUJIAN WAJIB SEBELUM DIBUKA KE PESERTA
+1. Buka URL /exec; pastikan muncul JSON endpoint aktif.
+2. Buka halaman pendaftaran; dropdown harus memuat nama kontingen yang belum terdaftar.
+3. Uji action list_available_contingents dan list_registered_contingents dari halaman dengan DevTools Network; keduanya harus merespons {ok:true,names:[...]}.
+4. Lakukan satu pendaftaran uji dengan dokumen valid dan data dummy yang disetujui panitia. Jangan memakai KTP asli peserta tanpa izin.
+5. Pastikan baris baru muncul di sheet Kontingen, PIN muncul di sheet PIN Kontingen, folder dan semua lampiran muncul di Drive, serta tautan PDF dapat dibuka.
+6. Buka PDF dan periksa kop, PIN, tanggal/waktu WIB, serta ketiga gambar tanda tangan dan nama.
+7. Login admin.html menggunakan ADMIN_PASSWORD; pastikan data muncul, detail dapat dibuka, dan status bisa diubah menjadi Terverifikasi/Perlu Revisi/Ditolak.
+8. Pastikan kontingen yang sudah tersimpan hilang dari dropdown pendaftaran baru, tetapi muncul pada dropdown pengumpulan cabang.
+9. Setelah tes, hapus data uji dari sheet/folder Drive secara manual jika tidak diperlukan.
+
+CATATAN PENTING / BATAS PENGUJIAN
+- Kode frontend dan backend sudah diperiksa sintaks JavaScript-nya dan kecocokan action frontend-admin terhadap doPost.
+- Pengujian langsung ke Spreadsheet, Drive, MailApp, OCR KTP, dan deployment akun pemilik tidak dapat dilakukan dari paket lokal ini. Status integrasi eksternal baru boleh dianggap lulus setelah langkah E berhasil di akun Google pemilik.
+- Fitur OCR KTP pada kode membutuhkan Advanced Drive API v3. Tanpa layanan ini, validasi usia dan pembacaan alamat KTP akan gagal dengan pesan yang menjelaskan aktivasi layanan.
+- Jangan menghapus sheet PIN Kontingen. PIN kontingen disimpan di sheet tersebut.
+- Jika sudah ada data lama, kolom Status Verifikasi, Catatan Panitia, Diverifikasi Pada, dan Diverifikasi Oleh akan ditambahkan otomatis oleh halaman admin saat dashboard dibuka.
+
+
+PEMBARUAN FORMULIR DAN UNGGAHAN (3 NOVEMBER 2026)
+- KTP ketua kontingen dan KTP peserta tetap wajib diunggah sebagai PDF, tetapi OCR hanya membantu membaca tanggal lahir dan alamat. Kegagalan OCR tidak otomatis menggagalkan pendaftaran. Bila tidak terbaca, isi tanggal lahir/alamat pada kolom manual yang tersedia.
+- Data tanggal lahir dan alamat ketua kontingen disimpan pada kolom baru “Tanggal Lahir Ketua” dan “Alamat” di sheet Kontingen. Data peserta disimpan pada kolom “Tanggal Lahir Peserta” dan “Alamat Rumah Peserta” di sheet Cabang. Header kolom baru dibuat otomatis oleh backend saat penyimpanan.
+- Keterangan format dan ukuran file ditampilkan di dekat setiap kolom unggah. Indikator progres menampilkan persentase dan jumlah data yang telah dikirim ketika proses upload berlangsung.
+- Halaman formulir cetak hanya ditampilkan setelah server mengonfirmasi pendaftaran berhasil. Jika gagal, formulir tetap terbuka dan pesan kesalahan ditampilkan agar peserta dapat mencoba kembali.
+- Status pemeriksaan keaslian KTP dan bukti transfer tetap dilakukan panitia secara manual melalui halaman admin.
