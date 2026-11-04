@@ -1065,6 +1065,57 @@ html,body{max-width:100%;}
 @media(max-width:600px){.philosophy-hero{grid-template-columns:1fr;padding:14px;gap:15px}.philosophy-logo{min-height:0;padding:10px}.philosophy-logo img{height:145px;width:145px}.philosophy-grid{grid-template-columns:1fr}.philosophy-theme h3{font-size:1.35rem}.philosophy-card{padding:15px}.philosophy-colors{padding:15px}}
 @media(min-width:900px){#v-home>.desk-panel[data-panel="filosofi-logo-tema"]{grid-column:1/-1}#v-home>.desk-panel[data-panel="filosofi-logo-tema"] .philosophy-hero{grid-template-columns:minmax(220px,.62fr) minmax(0,1.38fr);padding:28px 32px}#v-home>.desk-panel[data-panel="filosofi-logo-tema"] .philosophy-logo img{height:230px;width:220px}}
 
+
+/* Halaman mandiri Filosofi Logo & Tema */
+.philosophy-page{display:block;width:100%;max-width:1080px;margin:0 auto 34px;padding:clamp(16px,3vw,34px);border:1px solid #e1eaf7;border-radius:28px;background:rgba(255,255,255,.97);box-shadow:0 16px 44px rgba(11,45,114,.10);}
+.philosophy-page[hidden]{display:none!important}
+.philosophy-topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid #e7eef8}
+.philosophy-topbar>span{font:800 .68rem var(--display);letter-spacing:.14em;color:#7182a0;text-align:right}
+.philosophy-page-header{padding:4px 2px 20px;margin-bottom:18px}
+.philosophy-overline{display:inline-flex;align-items:center;gap:8px;margin:0 0 8px;font:800 .7rem var(--display);letter-spacing:.15em;color:#0a63c9}
+.philosophy-overline:before{content:"";width:24px;height:3px;border-radius:4px;background:linear-gradient(90deg,#f7941d,#12a9e8)}
+.philosophy-page-header h1{margin:0;color:#0b2d72;font:800 clamp(1.55rem,4vw,2.45rem)/1.12 var(--display);letter-spacing:-.025em}
+.philosophy-page-header>p:last-child{max-width:760px;margin:10px 0 0;color:#5b6f91;font-size:clamp(1rem,1.6vw,1.12rem);line-height:1.55}
+.philosophy-page .philosophy-hero{grid-template-columns:minmax(210px,.72fr) minmax(0,1.28fr);gap:clamp(16px,2.5vw,28px);padding:clamp(16px,2.7vw,28px);border-radius:24px}
+.philosophy-page .philosophy-logo{min-height:250px;border:1px solid #edf2fa;box-shadow:inset 0 0 0 8px #f8fbff}
+.philosophy-page .philosophy-logo img{width:min(100%,220px);height:210px}
+.philosophy-page .philosophy-theme{padding:6px 2px}
+.philosophy-page .philosophy-theme h3{font-size:clamp(1.3rem,3.4vw,2.15rem)}
+.philosophy-section-title{display:flex;align-items:flex-start;gap:13px;margin:25px 2px 12px}
+.philosophy-section-title>span{display:grid;place-items:center;flex:none;width:34px;height:34px;border-radius:11px;background:linear-gradient(135deg,#ffc20e,#f7941d);color:#432b00;font:800 .78rem var(--display)}
+.philosophy-section-title b{display:block;color:#0b2d72;font:800 1rem var(--display)}
+.philosophy-section-title p{margin:4px 0 0;color:#7182a0;font-size:.94rem;line-height:1.4}
+.philosophy-page .philosophy-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:0}
+.philosophy-page .philosophy-card{padding:20px;min-height:150px;border-radius:18px;transition:transform .2s,box-shadow .2s}
+.philosophy-page .philosophy-card:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(11,45,114,.09)}
+.philosophy-page .philosophy-card h3{font-size:1rem}
+.philosophy-page .philosophy-card p{font-size:1rem}
+.philosophy-section-title-colors{margin-top:28px}
+.philosophy-page .philosophy-colors{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 24px;padding:18px 22px;border-radius:18px}
+.philosophy-page .philosophy-colors h3{grid-column:1/-1}
+.philosophy-page .color-meaning{min-width:0}
+.philosophy-page .philosophy-closing{margin-top:18px;padding:22px;border-radius:20px}
+.philosophy-page .philosophy-note{margin-top:13px}
+body.is-philosophy-page .page{padding-top:22px}
+body.is-philosophy-page .sw{opacity:.22}
+.desk-nav button:first-of-type{margin-left:0}
+@media(max-width:700px){
+ .philosophy-page{padding:15px;border-radius:21px;margin-bottom:20px}
+ .philosophy-topbar{align-items:flex-start;flex-direction:column;gap:10px;margin-bottom:16px}
+ .philosophy-topbar>span{text-align:left}
+ .philosophy-page-header{padding-bottom:14px;margin-bottom:14px}
+ .philosophy-page .philosophy-hero{grid-template-columns:1fr;padding:14px;gap:14px}
+ .philosophy-page .philosophy-logo{min-height:0;padding:12px}
+ .philosophy-page .philosophy-logo img{width:150px;height:145px}
+ .philosophy-page .philosophy-theme{padding:2px 3px 4px}
+ .philosophy-page .philosophy-grid{grid-template-columns:1fr;gap:10px}
+ .philosophy-page .philosophy-card{min-height:0;padding:15px}
+ .philosophy-page .philosophy-colors{grid-template-columns:1fr;padding:14px}
+ .philosophy-section-title{margin-top:20px}
+ body.is-philosophy-page .page{padding-top:18px}
+}
+@media(min-width:900px){.philosophy-page{margin-top:8px}.philosophy-page .philosophy-hero{grid-template-columns:minmax(250px,.65fr) minmax(0,1.35fr)}}
+
 </style>
 </head>
 <body>
@@ -1107,30 +1158,6 @@ html,body{max-width:100%;}
   </div>
 </div>
 
-<div class="sec">FILOSOFI LOGO &amp; TEMA</div>
-<section class="info-feature info-filosofi" aria-label="Filosofi logo dan tema PORSENI 2026">
-  <a class="back philosophy-back" href="#beranda">‹ Kembali ke Beranda</a>
-  <div class="info-heading"><span class="info-icon">✨</span><div><span class="timeline-kicker">IDENTITAS PORSENI 2026</span><h2>FILOSOFI LOGO &amp; TEMA</h2><p>Makna visual dan semangat yang menyatukan olahraga, seni, kreativitas, serta persaudaraan pelajar NU di Kecamatan Patebon.</p></div></div>
-  <div class="philosophy-hero">
-    <div class="philosophy-logo"><img src="logo-porseni.png" alt="Logo resmi PORSENI 2026"><span>LOGO RESMI PORSENI 2026</span></div>
-    <div class="philosophy-theme"><span class="theme-eyebrow">TEMA PORSENI 2026</span><h3>“UNITAS AD GLORIAM”</h3><p class="theme-translation">Persatuan Menuju Kemuliaan</p><p>Berangkat dari semangat kebersamaan, setiap peserta diberi ruang untuk menunjukkan kemampuan, menghargai perbedaan, dan bertumbuh bersama. Prestasi menjadi lebih bermakna ketika diraih melalui persaudaraan, sportivitas, dan saling mendukung.</p></div>
-  </div>
-  <div class="philosophy-grid">
-    <article class="philosophy-card"><span class="philosophy-mark">🔥</span><h3>Nyala semangat</h3><p>Bentuk menyerupai nyala api menggambarkan tekad, energi, dan keberanian untuk berusaha. Semangat ini mendorong peserta untuk berani tampil serta memberikan kemampuan terbaik.</p></article>
-    <article class="philosophy-card"><span class="philosophy-mark">🏃</span><h3>Gerak dan pertumbuhan</h3><p>Siluet yang bergerak dan lengkungan pita memberi kesan dinamis. Maknanya adalah pelajar yang aktif, terus berkembang, dan menyalurkan potensi melalui olahraga maupun seni.</p></article>
-    <article class="philosophy-card"><span class="philosophy-mark">🏅</span><h3>Prestasi dan tujuan</h3><p>Bulatan keemasan menjadi titik perhatian yang dapat dimaknai sebagai cita-cita, pencapaian, serta tujuan bersama. Prestasi bukan hanya kemenangan, tetapi juga proses belajar dan kedisiplinan.</p></article>
-    <article class="philosophy-card"><span class="philosophy-mark">🤝</span><h3>Persatuan dalam keberagaman</h3><p>Pita-pita warna yang saling terhubung menggambarkan banyak cabang, karakter, dan potensi yang bertemu dalam satu kegiatan. Perbedaan menjadi kekuatan untuk membangun persaudaraan.</p></article>
-  </div>
-  <div class="philosophy-colors">
-    <h3>Makna warna</h3>
-    <div class="color-meaning"><span class="color-dot red"></span><div><b>Merah, jingga, dan kuning</b><small>Energi, keberanian, antusiasme, dan optimisme.</small></div></div>
-    <div class="color-meaning"><span class="color-dot blue"></span><div><b>Biru</b><small>Kepercayaan, keteguhan, tanggung jawab, dan sportivitas.</small></div></div>
-    <div class="color-meaning"><span class="color-dot teal"></span><div><b>Hijau kebiruan</b><small>Kesegaran, harapan, kolaborasi, dan semangat untuk terus tumbuh.</small></div></div>
-    <div class="color-meaning"><span class="color-dot purple"></span><div><b>Ungu</b><small>Kreativitas, keunikan, dan keberanian menampilkan karya.</small></div></div>
-  </div>
-  <div class="philosophy-closing"><b>Unitas Ad Gloriam</b><p>Bersatu dalam semangat, berkompetisi dengan sportif, berkarya dengan kreatif, dan melangkah menuju kemuliaan bersama.</p></div>
-  <p class="philosophy-note">Uraian filosofi ini merupakan rumusan makna visual berdasarkan bentuk dan warna logo PORSENI 2026 untuk membantu pengunjung memahami identitas kegiatan.</p>
-</section>
 
 <div class="sec">KONTINGEN DAN PESERTA YANG TELAH TERDAFTAR</div>
 <div class="recap-grid">
@@ -1239,6 +1266,40 @@ html,body{max-width:100%;}
 </div>
 <div id="contact"></div>
 </div>
+
+<section id="v-filosofi" class="philosophy-page" hidden aria-labelledby="philosophy-page-title">
+  <div class="philosophy-topbar">
+    <a class="back" href="#beranda">‹ Kembali ke Beranda</a>
+    <span>IDENTITAS PORSENI 2026</span>
+  </div>
+  <header class="philosophy-page-header">
+    <p class="philosophy-overline">PAC IPNU-IPPNU PATEBON</p>
+    <h1 id="philosophy-page-title">Filosofi Logo &amp; Tema</h1>
+    <p>Mengenal makna visual, nilai, dan semangat yang menyatukan olahraga, seni, kreativitas, serta persaudaraan pelajar NU di Kecamatan Patebon.</p>
+  </header>
+  <div class="philosophy-hero">
+    <div class="philosophy-logo"><img src="logo-porseni.png" alt="Logo resmi PORSENI 2026"><span>LOGO RESMI PORSENI 2026</span></div>
+    <div class="philosophy-theme"><span class="theme-eyebrow">TEMA PORSENI 2026</span><h3>“UNITAS AD GLORIAM”</h3><p class="theme-translation">Persatuan Menuju Kemuliaan</p><p>Berangkat dari semangat kebersamaan, setiap peserta diberi ruang untuk menunjukkan kemampuan, menghargai perbedaan, dan bertumbuh bersama. Prestasi menjadi lebih bermakna ketika diraih melalui persaudaraan, sportivitas, dan saling mendukung.</p></div>
+  </div>
+  <div class="philosophy-section-title"><span>01</span><div><b>Nilai yang tergambar dalam logo</b><p>Empat unsur visual yang menggambarkan semangat dan karakter PORSENI.</p></div></div>
+  <div class="philosophy-grid">
+    <article class="philosophy-card"><span class="philosophy-mark">🔥</span><h3>Nyala semangat</h3><p>Bentuk menyerupai nyala api menggambarkan tekad, energi, dan keberanian untuk berusaha. Semangat ini mendorong peserta untuk berani tampil serta memberikan kemampuan terbaik.</p></article>
+    <article class="philosophy-card"><span class="philosophy-mark">🏃</span><h3>Gerak dan pertumbuhan</h3><p>Siluet yang bergerak dan lengkungan pita memberi kesan dinamis. Maknanya adalah pelajar yang aktif, terus berkembang, dan menyalurkan potensi melalui olahraga maupun seni.</p></article>
+    <article class="philosophy-card"><span class="philosophy-mark">🏅</span><h3>Prestasi dan tujuan</h3><p>Bulatan keemasan menjadi titik perhatian yang dapat dimaknai sebagai cita-cita, pencapaian, serta tujuan bersama. Prestasi bukan hanya kemenangan, tetapi juga proses belajar dan kedisiplinan.</p></article>
+    <article class="philosophy-card"><span class="philosophy-mark">🤝</span><h3>Persatuan dalam keberagaman</h3><p>Pita-pita warna yang saling terhubung menggambarkan banyak cabang, karakter, dan potensi yang bertemu dalam satu kegiatan. Perbedaan menjadi kekuatan untuk membangun persaudaraan.</p></article>
+  </div>
+  <div class="philosophy-section-title philosophy-section-title-colors"><span>02</span><div><b>Makna warna</b><p>Perpaduan warna merepresentasikan energi, kepercayaan, kreativitas, dan kebersamaan.</p></div></div>
+  <div class="philosophy-colors">
+    <h3>Makna warna</h3>
+    <div class="color-meaning"><span class="color-dot red"></span><div><b>Merah, jingga, dan kuning</b><small>Energi, keberanian, antusiasme, dan optimisme.</small></div></div>
+    <div class="color-meaning"><span class="color-dot blue"></span><div><b>Biru</b><small>Kepercayaan, keteguhan, tanggung jawab, dan sportivitas.</small></div></div>
+    <div class="color-meaning"><span class="color-dot teal"></span><div><b>Hijau kebiruan</b><small>Kesegaran, harapan, kolaborasi, dan semangat untuk terus tumbuh.</small></div></div>
+    <div class="color-meaning"><span class="color-dot purple"></span><div><b>Ungu</b><small>Kreativitas, keunikan, dan keberanian menampilkan karya.</small></div></div>
+  </div>
+  <div class="philosophy-closing"><b>Unitas Ad Gloriam</b><p>Bersatu dalam semangat, berkompetisi dengan sportif, berkarya dengan kreatif, dan melangkah menuju kemuliaan bersama.</p></div>
+  <p class="philosophy-note">Uraian filosofi ini merupakan rumusan makna visual berdasarkan bentuk dan warna logo PORSENI 2026 untuk membantu pengunjung memahami identitas kegiatan.</p>
+
+</section>
 
 <div id="v-rekap-peserta" hidden>
   <a class="back" href="#beranda">‹ Kembali ke Beranda</a>
@@ -1472,8 +1533,8 @@ var PICK="",LAST=null,SELECTED_EVENT=null;
 var ALLC=[];Object.keys(CABANG).forEach(function(k){CABANG[k].forEach(function(x){ALLC.push({n:x.t,g:NM[k]})})});
 var $=function(id){return document.getElementById(id)};
 fillKontingenSelects();
-var VIEWS={"#cabang-lomba":"v-cabang","#daftar-kontingen":"v-kontingen","#berkas-cabang":"v-berkas","#rekap-peserta":"v-rekap-peserta","#portal-kontingen":"v-portal"};
-function showView(id){["v-home","v-rekap-peserta","v-cabang","v-kontingen","v-berkas","v-portal","v-print"].forEach(function(v){var el=$(v),hide=(v!==id);el.hidden=hide;if(hide){el.style.setProperty("display","none","important")}else{el.style.removeProperty("display")}});window.scrollTo(0,0)}
+var VIEWS={"#filosofi":"v-filosofi","#cabang-lomba":"v-cabang","#daftar-kontingen":"v-kontingen","#berkas-cabang":"v-berkas","#rekap-peserta":"v-rekap-peserta","#portal-kontingen":"v-portal"};
+function showView(id){["v-home","v-filosofi","v-rekap-peserta","v-cabang","v-kontingen","v-berkas","v-portal","v-print"].forEach(function(v){var el=$(v);if(!el)return;var hide=(v!==id);el.hidden=hide;if(hide){el.style.setProperty("display","none","important")}else{el.style.removeProperty("display")}});document.body.classList.toggle("is-philosophy-page",id==="v-filosofi");window.scrollTo(0,0)}
 function winState(w){if(FORCE_OPEN)return 0;var t=new Date();return t<new Date(w[0]+"T00:00:00")?-1:(t>new Date(w[1]+"T23:59:59")?1:0)}
 function parsePorseniDate(s){if(!s)return null;if(s instanceof Date)return isNaN(s.getTime())?null:s;var raw=String(s).trim();var d;if(/^\d{4}-\d{2}-\d{2}$/.test(raw))d=new Date(raw+"T00:00:00");else d=new Date(raw);return isNaN(d.getTime())?null:d}
 function fmtTgl(s){var d=parsePorseniDate(s);return d?d.toLocaleDateString("id-ID",{day:"numeric",month:"long",year:"numeric"}):"-"}
@@ -2034,14 +2095,13 @@ renderConnectedTimeline(document.getElementById('tl-duta'),dutaEntries);
    while(n&&!(n.nodeType===1&&n.classList.contains('sec'))){var next=n.nextSibling;panel.appendChild(n);n=next;}
  });
  var nav=document.createElement('nav');nav.className='desk-nav';nav.setAttribute('aria-label','Navigasi cepat');
- nav.innerHTML='<strong>PORSENI 2026</strong><button type="button" data-target="desk-apa-itu-porseni"><span class="nav-ico" aria-hidden="true">⌂</span><span class="nav-label">Beranda</span></button><button type="button" data-target="desk-informasi"><span class="nav-ico" aria-hidden="true">ⓘ</span><span class="nav-label">Informasi</span></button><button type="button" data-target="desk-filosofi-logo-tema"><span class="nav-ico" aria-hidden="true">✨</span><span class="nav-label">Filosofi</span></button><button type="button" data-target="desk-dokumen-penting"><span class="nav-ico" aria-hidden="true">▤</span><span class="nav-label">Dokumen</span></button><button type="button" data-target="desk-pendaftaran"><span class="nav-ico" aria-hidden="true">✎</span><span class="nav-label">Daftar</span></button><button type="button" data-target="desk-hasil-kejuaraan"><span class="nav-ico" aria-hidden="true">🏆</span><span class="nav-label">Hasil</span></button><button type="button" class="nav-register" data-action="kontingen">Daftar Kontingen Sekarang ↗</button><button type="button" class="nav-cta" data-action="cabang">Kumpulkan Berkas ↗</button><button type="button" data-action="portal">Portal Kontingen</button>';
+ nav.innerHTML='<button type="button" data-target="desk-apa-itu-porseni"><span class="nav-ico" aria-hidden="true">⌂</span><span class="nav-label">Beranda</span></button><button type="button" data-target="desk-informasi"><span class="nav-ico" aria-hidden="true">ⓘ</span><span class="nav-label">Informasi</span></button><button type="button" data-target="desk-dokumen-penting"><span class="nav-ico" aria-hidden="true">▤</span><span class="nav-label">Dokumen</span></button><button type="button" data-target="desk-pendaftaran"><span class="nav-ico" aria-hidden="true">✎</span><span class="nav-label">Daftar</span></button><button type="button" data-target="desk-hasil-kejuaraan"><span class="nav-ico" aria-hidden="true">🏆</span><span class="nav-label">Hasil</span></button><button type="button" class="nav-register" data-action="kontingen">Daftar Kontingen Sekarang ↗</button><button type="button" class="nav-cta" data-action="cabang">Kumpulkan Berkas ↗</button><button type="button" data-action="portal">Portal Kontingen</button>';
  var head=home.querySelector('.head'); if(head)head.insertAdjacentElement('afterend',nav);
  var mobileActions=document.createElement('div');mobileActions.className='mobile-quick-actions';mobileActions.setAttribute('aria-label','Aksi cepat PORSENI');mobileActions.innerHTML='<button type="button" data-go="#daftar-kontingen"><span>✍️</span><b>Daftar Kontingen</b></button><button type="button" data-go="#cabang-lomba"><span>📎</span><b>Kumpulkan Berkas</b></button><button type="button" data-go="#portal-kontingen"><span>🔐</span><b>Portal Kontingen</b></button>';nav.insertAdjacentElement('afterend',mobileActions);mobileActions.addEventListener('click',function(e){var b=e.target.closest('button[data-go]');if(!b)return;location.hash=b.dataset.go;});
  var RECAP_PANEL='desk-kontingen-dan-peserta-yang-telah-terdaftar';
  var pageTargets={
    'desk-apa-itu-porseni':'#beranda',
    'desk-informasi':'#informasi',
-   'desk-filosofi-logo-tema':'#filosofi',
    'desk-dokumen-penting':'#dokumen',
    'desk-pendaftaran':'#pendaftaran',
    'desk-kontingen-dan-peserta-yang-telah-terdaftar':'#beranda',
@@ -2090,7 +2150,8 @@ renderConnectedTimeline(document.getElementById('tl-duta'),dutaEntries);
    if(b.dataset.target){activateDeskPage(b.dataset.target,true);}
  },true);
  function pageFromHash(){
-   var map={'#beranda':'desk-apa-itu-porseni','#informasi':'desk-informasi','#filosofi':'desk-filosofi-logo-tema','#dokumen':'desk-dokumen-penting','#pendaftaran':'desk-pendaftaran','#rekap':'desk-kontingen-dan-peserta-yang-telah-terdaftar','#hasil':'desk-hasil-kejuaraan','#hubungi':'desk-hubungi-panitia'};
+   if(location.hash==='#filosofi')return;
+   var map={'#beranda':'desk-apa-itu-porseni','#informasi':'desk-informasi','#dokumen':'desk-dokumen-penting','#pendaftaran':'desk-pendaftaran','#rekap':'desk-kontingen-dan-peserta-yang-telah-terdaftar','#hasil':'desk-hasil-kejuaraan','#hubungi':'desk-hubungi-panitia'};
    var id=map[location.hash]||'desk-apa-itu-porseni';
    activateDeskPage(id,false);
    if(location.hash==='#rekap'){setTimeout(function(){var rp=document.getElementById(RECAP_PANEL);if(rp)rp.scrollIntoView({behavior:'smooth',block:'start'});},80);}
@@ -2098,7 +2159,7 @@ renderConnectedTimeline(document.getElementById('tl-duta'),dutaEntries);
  pageFromHash();
  window.__deskPage=pageFromHash;
  window.addEventListener('hashchange',function(){
-   if(/^#(beranda|informasi|filosofi|dokumen|pendaftaran|rekap|hasil|hubungi)$/.test(location.hash))pageFromHash();
+   if(/^#(beranda|informasi|dokumen|pendaftaran|rekap|hasil|hubungi)$/.test(location.hash))pageFromHash();
  });
 })();
 </script>
