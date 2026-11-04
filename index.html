@@ -107,9 +107,9 @@ a.link.off .arr{font-size:.9rem;color:var(--muted)}
 .btn{display:block;width:100%;border:0;border-radius:999px;padding:14px;margin:0 0 12px;font:800 1rem var(--display);color:#fff;background:linear-gradient(90deg,var(--blue),var(--cyan));box-shadow:0 8px 20px rgba(10,99,201,.28);cursor:pointer}
 .btn.alt{background:#fff;color:var(--navy);box-shadow:0 4px 14px rgba(11,45,114,.14)}.btn:disabled{opacity:.5;cursor:not-allowed}
 .warn{background:#fff4dd;border-radius:16px;padding:10px 14px;margin:0 0 12px;color:#6a4300;font-weight:700}
-.prow{display:grid;grid-template-columns:1fr 64px;gap:6px;margin-bottom:10px;padding:10px;background:#fff;border-radius:16px;border:2px solid #cfe0f7}
+.prow{display:grid;grid-template-columns:minmax(0,1fr);gap:8px;margin-bottom:10px;padding:12px;background:#fff;border-radius:16px;border:2px solid #cfe0f7}
 .prow input,.prow select{width:100%;font:600 1.05rem var(--body);padding:7px 10px;border:2px solid #e3ecfa;border-radius:12px;background:#fff;color:var(--ink)}
-.prow .w{grid-column:1/-1}.prow .ktp{grid-column:1/-1;font-size:.9rem}.prow .rm{border:0;background:#ffe3e1;color:#b3261e;border-radius:12px;font-weight:800;cursor:pointer}
+.prow .w{grid-column:1/-1}.prow .ktp{grid-column:1/-1;font-size:.9rem}.prow .name-field{grid-column:1/-1;max-width:420px}.prow .gender-field{grid-column:1/-1;max-width:260px}.prow .phone-field{grid-column:1/-1;max-width:340px}.prow .rm{justify-self:start;border:0;background:#ffe3e1;color:#b3261e;border-radius:12px;padding:9px 16px;font-weight:800;cursor:pointer}
 .paper{background:#fff;color:#000;border-radius:10px;padding:18px;margin-bottom:14px;box-shadow:0 6px 20px rgba(11,45,114,.15);font:500 .92rem/1.45 "Segoe UI",Arial,sans-serif;overflow-x:auto}
 .paper .kop{text-align:center;border:0;padding:0;margin:0 0 10px}.paper .kop img{display:block;width:100%;max-width:100%;height:auto;max-height:none;object-fit:contain;margin:0 auto 8px}.paper .kop:after{content:none}
 .paper h2{text-align:center;font:800 1.05em Arial,sans-serif;margin:8px 0 2px}.paper .no{text-align:center;margin:0 0 10px;font-size:.9em}
@@ -505,7 +505,7 @@ footer b{color:var(--navy)}
   .chk{padding:8px 10px;min-height:44px}
   .chk span{font-size:.92rem}
   .btn{min-height:48px;padding:12px;font-size:.92rem}
-  .prow{grid-template-columns:1fr 52px;padding:8px;gap:5px}
+  .prow{grid-template-columns:minmax(0,1fr);padding:10px;gap:7px}
   .prow input,.prow select{font-size:16px;min-height:42px}
   .paper{padding:12px 8px;border-radius:8px;font-size:.78rem;overflow-x:auto}
   .paper .sign{gap:8px;font-size:.75rem}
@@ -1265,7 +1265,7 @@ html,body{max-width:100%;}
     <input type="hidden" name="kategori" id="fb-kategori">
     <div id="fb-selected-summary" class="note" hidden></div>
     <h3>Daftar peserta</h3>
-    <p class="pgsub" style="margin:0 0 10px">Lengkapi berkas setiap peserta secara berurutan: nama peserta, pas foto 4×6, lalu identitas diri sesuai juknis (KTP dalam PDF untuk verifikasi usia).</p>
+    <p class="pgsub" style="margin:0 0 10px">Lengkapi data setiap peserta: nama, jenis kelamin, nomor WhatsApp aktif, pas foto 4×6, identitas diri (KTP PDF), tanggal lahir, dan alamat rumah.</p>
     <div id="fb-rule" class="note">Ketentuan jumlah peserta akan tampil setelah cabang lomba dipilih.</div>
     <div id="fb-peserta"></div>
     <button class="btn alt" type="button" id="fb-add">+ Tambah peserta</button>
@@ -1278,9 +1278,15 @@ html,body{max-width:100%;}
       <h3>Berkas Khitobah</h3>
       <label class="fld"><span>Naskah khitobah (PDF) *</span><input type="file" id="fb-khitobah-pdf" name="f_khitobah_pdf" accept="application/pdf,.pdf"></label>
     </div>
+    <div id="fb-duta-files" hidden>
+      <h3>Berkas Khusus Duta Pelajar</h3>
+      <p class="pgsub" style="margin:0 0 10px">Khusus cabang Duta Pelajar: CV wajib diunggah. Berkas pendukung bersifat tidak wajib. Surat Tugas dari PR IPNU-IPPNU tetap wajib di bagian bawah.</p>
+      <label class="fld"><span>CV Peserta Duta Pelajar (PDF/DOC/DOCX) *</span><input type="file" id="fb-duta-cv" name="f_duta_cv" accept="application/pdf,.pdf,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"></label>
+      <label class="fld"><span>Berkas pendukung Duta Pelajar (opsional)</span><input type="file" id="fb-duta-support" name="f_duta_support" accept="application/pdf,.pdf,image/*" multiple></label>
+    </div>
     <h3>Surat tugas kontingen</h3>
     <label class="fld"><span>Surat Tugas dari PR IPNU-IPPNU * (PDF)</span><input type="file" name="f_surat_tugas" id="fb-surat-tugas" accept="application/pdf,.pdf" required></label>
-    <p class="pgsub" style="margin:0 0 12px">Pas foto setiap peserta wajib JPG, PNG, atau WebP. Identitas diri/KTP dan Surat Tugas wajib PDF. Maksimal 10 MB per berkas dan total seluruh berkas maksimal 25 MB.</p>
+    <p class="pgsub" style="margin:0 0 12px">Pas foto setiap peserta wajib berupa gambar yang valid. Identitas diri/KTP dan Surat Tugas kontingen wajib PDF. Khusus Duta Pelajar, CV (PDF/DOC/DOCX) wajib; berkas pendukung opsional. Surat Tugas dari PR IPNU-IPPNU tetap wajib untuk semua cabang. Maksimal 10 MB per berkas dan total seluruh berkas maksimal 25 MB.</p>
     <label class="fld"><span>Catatan</span><textarea name="catatan"></textarea></label>
     <button class="btn" type="submit" id="fb-btn">Kirim dan buat formulir A4</button>
   </form>
@@ -1462,9 +1468,10 @@ var SCHEDULE={
 };
 function deadlineFor(branch){return DEADLINES[branch]||"19 Desember 2026";}
 function configureSpecialFiles(){
- var isKti=PICK==="Karya ilmiah",isKhitobah=PICK==="Khitobah";
- $("fb-kti-files").hidden=!isKti;$("fb-khitobah-files").hidden=!isKhitobah;
+ var isKti=PICK==="Karya ilmiah",isKhitobah=PICK==="Khitobah",isDuta=PICK==="Duta Pelajar";
+ $("fb-kti-files").hidden=!isKti;$("fb-khitobah-files").hidden=!isKhitobah;$("fb-duta-files").hidden=!isDuta;
  $("fb-kti-word").required=isKti;$("fb-kti-ppt").required=isKti;$("fb-khitobah-pdf").required=isKhitobah;
+ $("fb-duta-cv").required=isDuta;
 }
 function configureBranchInfo(){
  var branch=PICK||"";
@@ -1607,17 +1614,27 @@ function participantRule(){
  if(b==="LCC"||b==="Karya ilmiah")return {min:1,max:3,mixed:true,desc:b+": maksimal 3 orang dan wajib terdiri dari putra dan putri."};
  return {min:1,max:1,desc:"Kategori tunggal: maksimal 1 orang peserta."};
 }
+function syncBadmintonGenders(changed){
+ if(PICK!=="Badminton")return;
+ var selects=Array.prototype.slice.call($("fb-peserta").querySelectorAll(".prow [name=pl]"));
+ if(selects.length!==2)return;
+ if(changed===selects[0])selects[1].value=selects[0].value==="L"?"P":"L";
+ else if(changed===selects[1])selects[0].value=selects[1].value==="L"?"P":"L";
+ else if(selects[0].value===selects[1].value)selects[1].value=selects[0].value==="L"?"P":"L";
+}
 function updateParticipantRule(){
  var rule=participantRule(),box=$("fb-peserta"),banner=$("fb-rule");
  banner.textContent=rule.desc;
- Array.prototype.forEach.call(box.querySelectorAll(".prow"),function(row){var role=row.querySelector("[name=pr]"),gender=row.querySelector("[name=pl]");if(role)role.parentNode.hidden=!rule.choir;if(gender)gender.parentNode.hidden=(PICK==="Voli");if(gender&&PICK==="Voli")gender.value="L";if(gender&&PICK==="PES PS3")gender.parentNode.hidden=false;});
+ Array.prototype.forEach.call(box.querySelectorAll(".prow"),function(row){var role=row.querySelector("[name=pr]"),gender=row.querySelector("[name=pl]");if(role)role.parentNode.hidden=!rule.choir;if(gender){gender.parentNode.hidden=(PICK==="Voli");if(PICK==="Voli")gender.value="L";if(PICK==="PES PS3")gender.parentNode.hidden=false;}});
+ syncBadmintonGenders();
  $("fb-add").hidden=box.children.length>=rule.max;
  $("fb-add").textContent="+ Tambah peserta ("+box.children.length+"/"+rule.max+")";
 }
 function resetParticipantRows(){var box=$("fb-peserta");box.innerHTML="";addRow();updateParticipantRule();}
 function addRow(){var box=$("fb-peserta"),rule=participantRule();if(box.children.length>=rule.max)return;var n=box.children.length+1;
  var d=document.createElement("div");d.className="prow";
- d.innerHTML='<h4 class="w" style="margin:0 0 4px">Peserta '+n+'</h4><input name="pn" placeholder="Nama peserta '+n+'" required><label class="fld gender-field"><span>Jenis kelamin *</span><select name="pl" aria-label="Jenis kelamin" required><option value="L">Putra (L)</option><option value="P">Putri (P)</option></select></label><label class="fld w" style="margin:0" hidden><span>Peran dalam paduan suara</span><select name="pr"><option value="Penyanyi">Penyanyi</option><option value="Dirigen">Dirigen</option></select></label><label class="fld w"><span>Pas foto 4×6 peserta '+n+' *</span><input type="file" name="peserta_foto" required></label><label class="fld w ktp"><span>Identitas diri peserta '+n+' (KTP sesuai juknis, PDF) *</span><input type="file" name="peserta_ktp" accept="application/pdf,.pdf" required></label><label class="fld w"><span>Tanggal lahir peserta '+n+' *</span><input type="date" name="tanggal_lahir_manual" required></label><label class="fld w"><span>Alamat rumah peserta '+n+' *</span><textarea name="alamat_manual" rows="2" required maxlength="500" placeholder="Masukkan alamat lengkap sesuai identitas"></textarea></label><button type="button" class="rm w">Hapus peserta</button>';
+ d.innerHTML='<h4 class="w" style="margin:0 0 4px">Peserta '+n+'</h4><label class="fld name-field"><span>Nama peserta *</span><input name="pn" placeholder="Nama lengkap peserta '+n+'" required maxlength="120"></label><label class="fld gender-field"><span>Jenis kelamin *</span><select name="pl" aria-label="Jenis kelamin peserta '+n+'" required><option value="L">Putra (L)</option><option value="P">Putri (P)</option></select></label><label class="fld phone-field"><span>Nomor WhatsApp peserta *</span><input name="wa_manual" type="tel" inputmode="tel" autocomplete="tel" required maxlength="20" pattern="[0-9+() .-]{9,20}" placeholder="08xxxxxxxxxx"></label><label class="fld w" style="margin:0" hidden><span>Peran dalam paduan suara</span><select name="pr"><option value="Penyanyi">Penyanyi</option><option value="Dirigen">Dirigen</option></select></label><label class="fld w"><span>Pas foto 4×6 peserta '+n+' *</span><input type="file" name="peserta_foto" required></label><label class="fld w ktp"><span>Identitas diri peserta '+n+' (KTP sesuai juknis, PDF) *</span><input type="file" name="peserta_ktp" accept="application/pdf,.pdf" required></label><label class="fld w"><span>Tanggal lahir peserta '+n+' *</span><input type="date" name="tanggal_lahir_manual" required></label><label class="fld w"><span>Alamat rumah peserta '+n+' *</span><textarea name="alamat_manual" rows="2" required maxlength="500" placeholder="Masukkan alamat lengkap sesuai identitas"></textarea></label><button type="button" class="rm w">Hapus peserta</button>';
+ var gender=d.querySelector('[name="pl"]');gender.addEventListener("change",function(){syncBadmintonGenders(this);});
  d.querySelector(".rm").onclick=function(){if(box.children.length>1){box.removeChild(d);updateParticipantRule();}};box.appendChild(d);if(typeof addUploadHints==='function')addUploadHints(d);updateParticipantRule();}
 $("fb-add").onclick=addRow;addRow();
 
@@ -1664,7 +1681,7 @@ function paperK(d,stamps){
 }
 function paperB(d){
  return kop("FORMULIR PENGUMPULAN BERKAS CABANG LOMBA "+String(d.cabang||"").toUpperCase(),d)+'<table>'+tr("Nama kontingen",d.nama)+tr("Cabang lomba",prettyBranchName(d.cabang))+tr("Kategori",prettyCategoryLabel(d.cabang,d.kategori,KAT[d.cabang]||[]))+tr("Jumlah peserta",String(d.list.length))+tr("Berkas diunggah",(d.fl||[]).map(function(f){return f.name}).join(", "))+tr("Catatan",d.catatan)+'</table>'
- +'<h4>Daftar peserta</h4><table class="pl"><tr><th class="c">No</th><th>Nama peserta</th><th>Tanggal lahir</th><th class="c">L/P</th><th>Alamat rumah</th><th>Peran</th></tr>'+d.list.map(function(p,i){return '<tr><td class="c">'+(i+1)+'</td><td>'+esc(p.n)+'</td><td>'+esc(p.tanggalLahir||"Tidak terbaca")+'</td><td class="c">'+esc(p.l)+'</td><td>'+esc(p.alamat||"Perlu verifikasi manual dari KTP")+'</td><td>'+esc(p.role||"-")+'</td></tr>'}).join('')+'</table>'
+ +'<h4>Daftar peserta</h4><table class="pl"><tr><th class="c">No</th><th>Nama peserta</th><th>Jenis kelamin</th><th>Nomor WhatsApp</th><th>Tanggal lahir</th><th>Alamat rumah</th><th>Peran</th></tr>'+d.list.map(function(p,i){return '<tr><td class="c">'+(i+1)+'</td><td>'+esc(p.n)+'</td><td class="c">'+esc(p.l==='L'?'Putra':p.l==='P'?'Putri':p.l)+'</td><td>'+esc(p.wa||'-')+'</td><td>'+esc(p.tanggalLahir||"Tidak terbaca")+'</td><td>'+esc(p.alamat||"Perlu verifikasi manual dari KTP")+'</td><td>'+esc(p.role||"-")+'</td></tr>'}).join('')+'</table>'
  +'<p style="margin-top:8px">Batas akhir pengumpulan berkas '+deadlineFor(d.cabang)+'. Jadwal pelaksanaan: '+(SCHEDULE[d.cabang]||'Sabtu, 26 Desember 2026 sesuai susunan acara PORSENI 2026.')+' Sekretariat: A. Fuad Syafi, WA 083836151201.</p>'
  +sign("Sekretariat Penerima","Perwakilan Kontingen","") }
 var MSG={ok:["","✅ Data dan berkas berhasil terkirim ke panitia. Formulir cetak tersedia di bawah."],
@@ -1699,13 +1716,14 @@ var MAXF=10*1024*1024,MAXT=25*1024*1024;
 function toB64(blob){return new Promise(function(res,rej){var r=new FileReader();r.onload=function(){var value=String(r.result||''),comma=value.indexOf(',');if(comma<0){rej(new Error('Berkas tidak dapat dibaca sebagai data upload.'));return;}res(value.slice(comma+1));};r.onerror=function(){rej(new Error('Berkas tidak bisa dibaca.'));};r.readAsDataURL(blob);});}
 function prepFiles(items){var tot=0;return Promise.all(items.map(function(it){var file=it.file;if(!file) return Promise.reject(new Error('Ada kolom berkas yang belum terbaca. Muat ulang halaman lalu pilih kembali berkasnya.'));if(file.size>MAXF) return Promise.reject(new Error('Berkas "'+(file.name||it.label)+'" melebihi 10 MB.'));tot+=file.size;return toB64(file).then(function(b){var o={label:it.label,name:file.name||'lampiran',type:file.type||'',data:b};if(it.participantIndex!==undefined)o.participantIndex=it.participantIndex;return o;});})).then(function(a){if(tot>MAXT)throw new Error('Total ukuran berkas melebihi 25 MB.');return a;});}
 function meta(a){return a.map(function(x){return {label:x.label,name:x.name};});}
+function normalizeWhatsappInput(raw){var digits=String(raw||"").replace(/\D/g,"");if(digits.indexOf("62")===0)digits="0"+digits.slice(2);else if(digits.charAt(0)==="8")digits="0"+digits;if(!/^08[0-9]{8,11}$/.test(digits))return "";return digits;}
 function isPotentialImageFile(file){if(!file)return false;var mime=String(file.type||'').toLowerCase(),name=String(file.name||'').toLowerCase();return mime.indexOf('image/')===0||/\.(jpe?g|png|webp|gif|bmp|svg|tif?f?|avif|heic|heif|ico|apng)$/i.test(name);}
 function checkImageFile(file,label,maxSize){if(!file)throw new Error(label+' wajib diunggah.');if(file.size>(maxSize||MAXF))throw new Error(label+' maksimal '+formatBytes(maxSize||MAXF)+'.');/* Ekstensi/MIME dapat berubah saat file hanya diganti nama. Validasi isi file dilakukan ulang di server dari signature byte. */}
 function checkSignatureImage(file,label){checkImageFile(file,label,2*1024*1024);}
-function checkFileType(file,allowed,label){if(!file)throw new Error(label+' wajib diunggah.');var t=(file.type||'').toLowerCase(),n=(file.name||'').toLowerCase();if(allowed.indexOf('image')>=0){/* Server memeriksa signature byte gambar. */return true;}var ok=allowed.some(function(x){if(x==='pdf')return t==='application/pdf'||/\.pdf$/.test(n);if(x==='word')return /\.(doc|docx)$/.test(n);if(x==='ppt')return /\.(ppt|pptx)$/.test(n);return false;});if(!ok){var desc=allowed.indexOf('word')>=0?'berformat Word DOC/DOCX':allowed.indexOf('ppt')>=0?'berformat PPT/PPTX':'berformat PDF';throw new Error(label+' harus '+desc+'.');}}
+function checkFileType(file,allowed,label){if(!file)throw new Error(label+' wajib diunggah.');var t=(file.type||'').toLowerCase(),n=(file.name||'').toLowerCase();if(allowed.indexOf('image')>=0){/* Server memeriksa signature byte gambar. */return true;}var ok=allowed.some(function(x){if(x==='pdf')return t==='application/pdf'||/\.pdf$/.test(n);if(x==='word')return /\.(doc|docx)$/.test(n);if(x==='ppt')return /\.(ppt|pptx)$/.test(n);return false;});if(!ok){var desc=(allowed.indexOf('pdf')>=0&&allowed.indexOf('word')>=0)?'berformat PDF atau Word DOC/DOCX':allowed.indexOf('word')>=0?'berformat Word DOC/DOCX':allowed.indexOf('ppt')>=0?'berformat PPT/PPTX':'berformat PDF';throw new Error(label+' harus '+desc+'.');}}
 function formatBytes(n){if(n<1024)return n+" B";if(n<1048576)return (n/1024).toFixed(1)+" KB";return (n/1048576).toFixed(2)+" MB";}
 function uploadProgress(formId){var form=document.getElementById(formId),id=formId+"-upload-progress",box=document.getElementById(id);if(!box){box=document.createElement("div");box.id=id;box.style.cssText="display:none;margin:12px 0;padding:12px;border:1px solid #cbd8e8;border-radius:12px;background:#f7faff";box.innerHTML='<div style="display:flex;justify-content:space-between;gap:12px;font-weight:700"><span class="up-label">Menyiapkan berkas…</span><span class="up-step">Tahap 1 dari 3</span></div><div style="display:flex;gap:5px;margin:10px 0"><i class="up-dot" style="height:7px;flex:1;border-radius:8px;background:#1976d2"></i><i class="up-dot" style="height:7px;flex:1;border-radius:8px;background:#e4ebf4"></i><i class="up-dot" style="height:7px;flex:1;border-radius:8px;background:#e4ebf4"></i></div><small class="up-size">Mohon jangan tutup halaman sampai proses selesai.</small>';var btn=form.querySelector('button[type=submit]');form.insertBefore(box,btn);}return {show:function(){box.style.display="block";this.update(1,"Menyiapkan berkas untuk dikirim…");},update:function(step,label){step=Math.max(1,Math.min(3,step));box.querySelector('.up-label').textContent=label;box.querySelector('.up-step').textContent="Tahap "+step+" dari 3";Array.prototype.forEach.call(box.querySelectorAll('.up-dot'),function(dot,i){dot.style.background=i<step?"#1976d2":"#e4ebf4";});box.querySelector('.up-size').textContent=step===1?"Memeriksa dan menyiapkan berkas…":step===2?"Data sedang dikirim. Waktu proses bergantung pada koneksi dan ukuran berkas.":"Server telah merespons. Memeriksa hasil pendaftaran…";},hide:function(){box.style.display="none";}};}
-function addUploadHints(root){(root||document).querySelectorAll('input[type=file]').forEach(function(inp){if(inp.dataset.hintAdded)return;inp.dataset.hintAdded="1";var acc=(inp.getAttribute('accept')||'').toLowerCase(),isSignature=/f_ttd_/.test(inp.name||''),txt=isSignature?'Unggah file gambar asli (format tidak diubah dan tidak dikonversi). Maksimal 2 MB.':acc.indexOf('doc')>=0?'Format: DOC/DOCX. Maksimal 10 MB.':acc.indexOf('ppt')>=0?'Format: PPT/PPTX. Maksimal 10 MB.':acc.indexOf('pdf')>=0&&acc.indexOf('image')>=0?'Format: PDF, JPG, PNG, atau WebP. Maksimal 10 MB.':acc.indexOf('pdf')>=0?'Format: PDF. Maksimal 10 MB.': 'Format gambar yang didukung browser. File asli dipertahankan tanpa konversi. Maksimal 10 MB.';var hint=document.createElement('small');hint.className='hint upload-file-hint';hint.style.cssText='display:block;margin:5px 0 10px';hint.textContent=txt;inp.parentNode.insertBefore(hint,inp.nextSibling);});}
+function addUploadHints(root){(root||document).querySelectorAll('input[type=file]').forEach(function(inp){if(inp.dataset.hintAdded)return;inp.dataset.hintAdded="1";var acc=(inp.getAttribute('accept')||'').toLowerCase(),name=inp.name||'',isSignature=/f_ttd_/.test(name),txt=isSignature?'Unggah file gambar asli (format tidak diubah dan tidak dikonversi). Maksimal 2 MB.':name==='f_duta_cv'?'Format CV: PDF atau Word DOC/DOCX. Maksimal 10 MB.':name==='f_duta_support'?'Opsional. Format yang didukung: PDF atau gambar. Dapat memilih lebih dari satu file; maksimal 10 MB per file.':acc.indexOf('doc')>=0?'Format: DOC/DOCX. Maksimal 10 MB.':acc.indexOf('ppt')>=0?'Format: PPT/PPTX. Maksimal 10 MB.':acc.indexOf('pdf')>=0&&acc.indexOf('image')>=0?'Format: PDF, JPG, PNG, atau WebP. Maksimal 10 MB.':acc.indexOf('pdf')>=0?'Format: PDF. Maksimal 10 MB.': 'Format gambar yang didukung browser. File asli dipertahankan tanpa konversi. Maksimal 10 MB.';var hint=document.createElement('small');hint.className='hint upload-file-hint';hint.style.cssText='display:block;margin:5px 0 10px';hint.textContent=txt;inp.parentNode.insertBefore(hint,inp.nextSibling);});}
 addUploadHints(document);
 var fkf=$("fk");
 fkf.addEventListener("submit",function(e){e.preventDefault();var f=e.target,sel=checks(f,"cabang"),parts=[];
@@ -1724,7 +1742,9 @@ fkf.addEventListener("submit",function(e){e.preventDefault();var f=e.target,sel=
 
 $("fb").addEventListener("submit",function(e){e.preventDefault();var f=e.target,rows=f.querySelectorAll(".prow"),list=[];
  if(!v(f,"cabang")||!v(f,"kategori")){alert("Pilih cabang/kategori dari daftar yang sudah didaftarkan kontingen.");return}
- Array.prototype.forEach.call(rows,function(r){var n=r.querySelector('[name="pn"]').value.trim();if(n)list.push({n:n,l:(PICK==="Voli"?"L":r.querySelector('[name="pl"]').value),role:r.querySelector('[name="pr"]').value,tanggalLahir:r.querySelector('[name="tanggal_lahir_manual"]').value,alamat:r.querySelector('[name="alamat_manual"]').value})});
+ var participantPhoneError="";
+ Array.prototype.forEach.call(rows,function(r){var n=r.querySelector('[name="pn"]').value.trim();if(n){var phoneEl=r.querySelector('[name="wa_manual"]'),wa=normalizeWhatsappInput(phoneEl.value);if(!wa){participantPhoneError="Nomor WhatsApp peserta "+n+" wajib diisi dengan nomor seluler Indonesia yang valid (contoh 081234567890 atau +6281234567890).";return;}phoneEl.value=wa;list.push({n:n,l:(PICK==="Voli"?"L":r.querySelector('[name="pl"]').value),wa:wa,role:r.querySelector('[name="pr"]').value,tanggalLahir:r.querySelector('[name="tanggal_lahir_manual"]').value,alamat:r.querySelector('[name="alamat_manual"]').value})}});
+ if(participantPhoneError){alert(participantPhoneError);return;}
  if(!list.length){alert("Isi minimal satu peserta.");return}
  var rule=participantRule();
  if(list.length<rule.min||list.length>rule.max){alert(rule.exact?"Jumlah peserta wajib tepat "+rule.max+" orang.":"Jumlah peserta minimal "+rule.min+" dan maksimal "+rule.max+" orang.");return}
@@ -1737,7 +1757,7 @@ $("fb").addEventListener("submit",function(e){e.preventDefault();var f=e.target,
   if(!singers.some(function(p){return p.l==="L"})||!singers.some(function(p){return p.l==="P"})){alert("Sepuluh penyanyi wajib campuran putra dan putri (minimal 1 orang berbeda gender).");return}
  }
  var suratTugas=f.elements.f_surat_tugas.files[0];
- var d={type:"cabang",waktu:new Date().toISOString(),reg:regNo("C"),nama:v(f,"nama"),pin:v(f,"pin"),cabang:v(f,"cabang"),kategori:v(f,"kategori"),jml:list.length,catatan:v(f,"catatan"),pesertaList:list.map(function(q){return {nama:q.n,gender:q.l,role:q.role,tanggalLahir:q.tanggalLahir,alamat:q.alamat}})};
+ var d={type:"cabang",waktu:new Date().toISOString(),reg:regNo("C"),nama:v(f,"nama"),pin:v(f,"pin"),cabang:v(f,"cabang"),kategori:v(f,"kategori"),jml:list.length,catatan:v(f,"catatan"),pesertaList:list.map(function(q){return {nama:q.n,gender:q.l,wa:q.wa,role:q.role,tanggalLahir:q.tanggalLahir,alamat:q.alamat}})};
  var items=[],participantNo=0;try{Array.prototype.forEach.call(rows,function(r,i){var nm=r.querySelector('[name="pn"]').value.trim();if(!nm)return;participantNo++;var foto=r.querySelector('[name="peserta_foto"]').files[0],ktp=r.querySelector('[name="peserta_ktp"]').files[0];if(!foto)throw new Error("Pas foto 4×6 wajib diunggah untuk peserta "+nm+".");checkFileType(foto,["image"],"Pas foto peserta "+nm);items.push({label:"Pas foto peserta "+participantNo,participantIndex:participantNo-1,file:foto});if(!ktp)throw new Error("Identitas diri/KTP PDF wajib diunggah untuk peserta "+nm+".");checkFileType(ktp,["pdf"],"Identitas diri peserta "+nm);items.push({label:"KTP peserta "+participantNo,participantIndex:participantNo-1,file:ktp})});
  if(PICK==="Karya ilmiah"){
   var word=f.elements.f_kti_word.files[0],ppt=f.elements.f_kti_ppt.files[0];
@@ -1745,6 +1765,10 @@ $("fb").addEventListener("submit",function(e){e.preventDefault();var f=e.target,
   if(!ppt)throw new Error("File presentasi PPT wajib diunggah.");checkFileType(ppt,["ppt"],"File presentasi KTI");items.push({label:"Presentasi KTI (PPT)",file:ppt,preserve:true});
  }else if(PICK==="Khitobah"){
   var naskah=f.elements.f_khitobah_pdf.files[0];if(!naskah)throw new Error("Naskah khitobah PDF wajib diunggah.");checkFileType(naskah,["pdf"],"Naskah khitobah");items.push({label:"Naskah khitobah (PDF)",file:naskah,preserve:true});
+ }else if(PICK==="Duta Pelajar"){
+  var cv=f.elements.f_duta_cv.files[0],support=f.elements.f_duta_support.files;
+  if(!cv)throw new Error("CV peserta Duta Pelajar wajib diunggah.");checkFileType(cv,["pdf","word"],"CV Duta Pelajar");items.push({label:"CV Duta Pelajar",file:cv,preserve:true});
+  if(support&&support.length){for(var si=0;si<support.length;si++){checkFileType(support[si],["pdf","image"],"Berkas pendukung Duta Pelajar "+(si+1));items.push({label:"Berkas pendukung Duta Pelajar "+(si+1),file:support[si],preserve:true});}}
  }
  if(!suratTugas)throw new Error("Surat Tugas dari PR IPNU-IPPNU wajib diunggah.");checkFileType(suratTugas,["pdf"],"Surat Tugas dari PR IPNU-IPPNU");items.push({label:"Surat Tugas dari PR IPNU-IPPNU",file:suratTugas})}catch(er){alert(er.message);return}
  var b=$("fb-btn"),pg=uploadProgress("fb");b.disabled=true;b.textContent="Menyiapkan…";pg.show();
