@@ -1007,6 +1007,8 @@ html,body{max-width:100%;}
 .info-roadto .roadto-card.voli{border-top:4px solid #f7941d;}
 .info-roadto .roadto-symbol{width:48px;height:48px;flex:0 0 48px;display:grid;place-items:center;border-radius:15px;background:#eaf5ff;font-size:1.55rem;}
 .info-roadto .roadto-card.voli .roadto-symbol{background:#fff3df;}
+.info-roadto .roadto-deadline{margin:10px 0 0;padding:9px 11px;border-radius:10px;background:#f1f6ff;border:1px solid #d7e4f8;color:#173c78;font-size:.9em;line-height:1.5;}
+.info-roadto .roadto-deadline b{font-weight:800;}
 .info-roadto .roadto-content{min-width:0;}
 .info-roadto .roadto-date{display:inline-block;margin:0 0 6px;color:var(--blue);font:800 .68rem var(--display);letter-spacing:.06em;}
 .info-roadto .roadto-content h3{margin:0 0 6px;color:var(--navy);font:800 1rem/1.3 var(--display);}
@@ -1092,24 +1094,11 @@ html,body{max-width:100%;}
   <div class="roadto-grid">
     <article class="roadto-card badminton">
       <div class="roadto-symbol" aria-hidden="true">🏸</div>
-      <div class="roadto-content"><span class="roadto-date">MINGGU · 6 DESEMBER 2026</span><h3>Road to PORSENI Badminton</h3><p>Agenda Road to PORSENI cabang Badminton.</p></div>
+      <div class="roadto-content"><span class="roadto-date">MINGGU · 6 DESEMBER 2026</span><h3>Road to PORSENI Badminton</h3><p>Agenda Road to PORSENI cabang Badminton.</p><p class="roadto-deadline"><b>Batas akhir pengumpulan berkas Badminton:</b> 29 November 2026</p></div>
     </article>
     <article class="roadto-card voli">
       <div class="roadto-symbol" aria-hidden="true">🏐</div>
-      <div class="roadto-content"><span class="roadto-date">MINGGU · 13 DESEMBER 2026</span><h3>Road to PORSENI Voli</h3><p>Agenda Road to PORSENI cabang Voli.</p></div>
-    </article>
-  </div>
-</section>
-<section class="info-feature info-deadlines">
-  <div class="info-heading"><span class="info-icon">📁</span><div><span class="timeline-kicker">JADWAL ADMINISTRASI</span><h2>BATAS PENGUMPULAN BERKAS VOLI &amp; BADMINTON</h2><p>Batas akhir unggah berkas cabang olahraga. Pastikan berkas dikirim melalui formulir Pengumpulan Berkas Cabang Lomba.</p></div></div>
-  <div class="roadto-grid">
-    <article class="roadto-card badminton">
-      <div class="roadto-symbol" aria-hidden="true">🏸</div>
-      <div class="roadto-content"><span class="roadto-date">BATAS AKHIR · 29 NOVEMBER 2026</span><h3>Pengumpulan Berkas Badminton</h3><p>Batas akhir pengumpulan dokumen dan data peserta cabang Badminton.</p></div>
-    </article>
-    <article class="roadto-card voli">
-      <div class="roadto-symbol" aria-hidden="true">🏐</div>
-      <div class="roadto-content"><span class="roadto-date">BATAS AKHIR · 6 DESEMBER 2026</span><h3>Pengumpulan Berkas Voli</h3><p>Batas akhir pengumpulan dokumen dan data peserta cabang Voli.</p></div>
+      <div class="roadto-content"><span class="roadto-date">MINGGU · 13 DESEMBER 2026</span><h3>Road to PORSENI Voli</h3><p>Agenda Road to PORSENI cabang Voli.</p><p class="roadto-deadline"><b>Batas akhir pengumpulan berkas Voli:</b> 6 Desember 2026</p></div>
     </article>
   </div>
 </section>
@@ -1329,7 +1318,7 @@ html,body{max-width:100%;}
 <script>
 /* EDIT DI SINI: isi u dengan tautan Google Drive / Google Form / Instagram. Kosongkan ("") jika belum ada. */
 var DOCS=[
- {i:"📑",t:"Unduh TOR (Term Of Reference) Kegiatan",d:"Dokumen PDF",u:"https://drive.google.com/file/d/1UuoaNBKZ7uZ2uP9bYzKquC-JvrZWttA7/view?usp=sharing"},
+ {i:"📑",t:"Unduh TOR (Term Of Reference) Kegiatan",d:"Dokumen PDF",u:""},
  {i:"📘",t:"Unduh Petunjuk Teknis (Juknis)",d:"Aturan lomba tiap cabang",u:""},
  {i:"🤝",t:"Unduh Pakta Integritas",d:"Wajib dilengkapi kontingen",u:""},
  {i:"📝",t:"Unduh Contoh Berita Acara RAT",d:"File resmi akan diunggah oleh panitia",u:""},
@@ -1728,7 +1717,7 @@ fkf.addEventListener("submit",function(e){e.preventDefault();var f=e.target,sel=
  if(!parts.length){alert("Pilih minimal satu cabang lomba.");return}
  var d={type:"kontingen",waktu:new Date().toISOString(),reg:regNo("K"),nama:v(f,"nama"),asal:"",ketua:v(f,"ketua"),tanggal_lahir_ketua:v(f,"tanggal_lahir_ketua"),alamat:v(f,"alamat_ketua"),wa_ketua:v(f,"wa_ketua"),ketua_pr_ipnu:v(f,"ketua_pr_ipnu"),wa_ketua_ipnu:v(f,"wa_ketua_ipnu"),ketua_pr_ippnu:v(f,"ketua_pr_ippnu"),wa_ketua_ippnu:v(f,"wa_ketua_ippnu"),email:v(f,"email").toLowerCase(),cabang:parts.join("; "),jml:"",bayar:v(f,"bayar"),tgl_bayar:v(f,"tgl_bayar")};
  var items;try{items=[["Bukti pembayaran","f_bukti",["pdf","image"]],["KTP ketua kontingen","f_ktp",["pdf"]],["Pakta integritas","f_pakta",["pdf"]],["SP / berita acara RAT","f_sp",["pdf"]]].filter(function(x){var el=f.elements.namedItem(x[1]);return !!(el&&el.files&&el.files.length);}).map(function(x){var el=f.elements.namedItem(x[1]);if(!el||!el.files||!el.files[0])throw new Error('Kolom '+x[0]+' tidak dapat dibaca. Muat ulang halaman lalu pilih kembali berkas.');var file=el.files[0];checkFileType(file,x[2],x[0]);return {label:x[0],file:file,preserve:true}});
- [["Tanda tangan Ketua Kontingen","f_ttd_ketua"],["Tanda tangan Ketua IPNU","f_ttd_ipnu"],["Tanda tangan Ketua IPPNU","f_ttd_ippnu"]].forEach(function(x){var file=f.elements[x[1]].files[0];checkPngOnly(file,x[0]);items.push({label:x[0],file:file,signature:true})})}catch(er){alert(er.message);return}
+ [["Tanda tangan Ketua Kontingen","f_ttd_ketua"],["Tanda tangan Ketua IPNU","f_ttd_ipnu"],["Tanda tangan Ketua IPPNU","f_ttd_ippnu"]].forEach(function(x){var el=f.elements.namedItem(x[1]);var file=el&&el.files&&el.files.length?el.files[0]:null;checkSignatureImage(file,x[0]);items.push({label:x[0],file:file,signature:true,preserve:true})})}catch(er){alert(er.message);return}
  var b=$("fk-btn"),pg=uploadProgress("fk");b.disabled=true;b.textContent="Menyiapkan…";pg.show();
  prepFiles(items).then(function(fs){d.fl=meta(fs);var p=JSON.parse(JSON.stringify(d));delete p.fl;p.files=fs;b.textContent="Mengirim…";
   pg.update(2,"Mengirim data dan berkas ke server…");send(p,function(r){b.disabled=false;b.textContent="Kirim dan buat formulir A4";pg.hide();if(r.status==="ok"){clearPorseniDraft("fk");loadAvailableContingents();if(r.data){d.tanggal_lahir_ketua=r.data.birthDateKetua||d.tanggal_lahir_ketua;d.alamat=r.data.alamatKetua||d.alamat;d.pin=r.data.pin||"";d.waktu=r.data.waktu||d.waktu;}showPaper(paperK(d,signatureImagesFrom(fs)),r)}else showSubmitError("fk",r)},function(step,label){pg.update(step,label)})}).catch(function(er){b.disabled=false;b.textContent="Kirim dan buat formulir A4";pg.hide();alert(er.message)})});
@@ -1907,7 +1896,9 @@ var T=[
  ["Technical Meeting 1","25 Okt","2026-10-25","2026-10-25"],
  ["Pendaftaran kontingen dan cabang lomba","1–20 Nov","2026-11-01","2026-11-20"],
  ["Technical Meeting 2","22 Nov","2026-11-22","2026-11-22"],
+ ["Batas akhir pengumpulan berkas Badminton","29 Nov","2026-11-29","2026-11-29"],
  ["Road to PORSENI: Badminton","6 Des","2026-12-06","2026-12-06"],
+ ["Batas akhir pengumpulan berkas Voli","6 Des","2026-12-06","2026-12-06"],
  ["Pendaftaran Tahap 1 Duta Pelajar","Batas akhir · 6 Des","2026-12-06","2026-12-06"],
  ["Pengumuman tahap 1 Duta Pelajar","7 Des","2026-12-07","2026-12-07"],
  ["Road to PORSENI: Voli","13 Des","2026-12-13","2026-12-13"],
@@ -1928,6 +1919,8 @@ var mainEntries=T.filter(function(t){return t[0]!=='Grand Final Duta Pelajar';})
  var name=t[0],note='';
  if(name==='Pendaftaran kontingen dan cabang lomba')note='Pendaftaran kontingen dan pilihan cabang lomba dibuka sampai 20 November 2026.';
  else if(name==='Pendaftaran Tahap 1 Duta Pelajar')note='Batas akhir pendaftaran tahap pertama Duta Pelajar adalah 6 Desember 2026.';
+ else if(name==='Batas akhir pengumpulan berkas Badminton')note='Batas akhir pengumpulan berkas cabang Badminton: 29 November 2026.';
+ else if(name==='Batas akhir pengumpulan berkas Voli')note='Batas akhir pengumpulan berkas cabang Voli: 6 Desember 2026.';
  else if(name==='Pembekalan Duta Pelajar')note='Pembekalan Duta Pelajar dilaksanakan pada pagi hari, Jumat 25 Desember 2026.';
  else if(name==='Grand Final Duta Pelajar')note='Grand Final Duta Pelajar dilaksanakan pada Sabtu, 26 Desember 2026.';
  else if(name==='Batas akhir berkas cabang lomba')note='Batas akhir berkas cabang lomba reguler; Duta Pelajar, voli, dan badminton mengikuti jadwal khusus.';
