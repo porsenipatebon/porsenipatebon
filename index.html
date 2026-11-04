@@ -586,7 +586,7 @@ footer b{color:var(--navy)}
 .rundown-event time{font:800 .8rem var(--display);color:var(--blue);padding-left:3px}
 .rundown-event div{padding-left:12px}.rundown-event b{display:block;color:var(--navy);font:800 .82rem/1.35 var(--display)}.rundown-event small{display:block;color:var(--muted);font-size:.9rem;margin-top:3px}
 .recap-h{margin:0 0 8px;color:var(--navy);font:800 .9rem var(--display);letter-spacing:.03em}
-.championship-detail{margin:16px 0 0}.champion-groups{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.champion-card{padding:14px 16px;border:1px solid #e1eafa;border-radius:16px;background:#fff}.champion-card h4{margin:0 0 8px;color:var(--navy);font:800 .86rem var(--display)}.champion-card p{margin:4px 0;font-size:.92rem}.champion-card b{color:var(--blue)}
+.championship-detail{margin:16px 0 0}.champion-groups{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.champion-card{padding:14px 16px;border:1px solid #e1eafa;border-radius:16px;background:#fff}.cache-note{padding:8px 10px;border-radius:9px;background:#fff8e8;color:#79520b}.champion-card h4{margin:0 0 8px;color:var(--navy);font:800 .86rem var(--display)}.champion-card p{margin:4px 0;font-size:.92rem}.champion-card b{color:var(--blue)}
 @media(max-width:599px){
  .timeline-grid.connected-timeline{grid-template-columns:1fr;gap:10px;padding:4px 0 4px 24px}
  .timeline-grid.connected-timeline:before{left:12px;transform:none;width:4px}
@@ -602,6 +602,21 @@ footer b{color:var(--navy)}
 @media(min-width:600px) and (max-width:899px){.timeline-grid.connected-timeline{gap:12px 32px}}
 @media(min-width:900px){#v-home>.desk-panel[data-panel="informasi"]>.info-feature{grid-column:1/-1}.head{min-height:220px;padding-top:38px;padding-bottom:38px}.header-logo{height:148px}.info-feature{margin-top:8px}.info-cabang,.info-rundown{margin-top:20px}}
 
+
+/* Status hasil juara umum dan cetak laporan resmi */
+.championship-status{display:flex;gap:10px;align-items:flex-start;padding:13px 16px;border-radius:14px;margin:0 0 14px;font-size:.95rem;line-height:1.45}
+.championship-status b{flex:none;font:800 .78rem var(--display);letter-spacing:.04em}
+.championship-status.pending{background:#fff4dd;border:1px solid #f3d28b;color:#704900}
+.championship-status.final{background:#e7f7ed;border:1px solid #b8e5c8;color:#14532d}
+.championship-print-action{margin:14px 0 20px;text-align:center}.championship-print-action .btn{max-width:460px;margin:0 auto 8px}
+.champion-groups{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.champion-card{background:#fff;border:1px solid #e2eaf6;border-radius:14px;padding:12px 14px;break-inside:avoid}
+.cache-note{padding:8px 10px;border-radius:9px;background:#fff8e8;color:#79520b}.champion-card h4{margin:0 0 8px;color:var(--navy);font:800 .86rem var(--display)}.champion-card p{margin:5px 0;font-size:.92rem}.not-entered{color:#8492a7;font-style:italic}
+#championship-print{display:none}
+#championship-print h1{text-align:center;font:800 16pt Arial;margin:10px 0 2px}#championship-print h2{font:800 12pt Arial;margin:18px 0 8px;padding-bottom:5px;border-bottom:2px solid #0b2d72}#championship-print .print-kop img{display:block;width:100%;height:auto;object-fit:contain;margin:0 auto 8px}#championship-print .print-meta{text-align:center;margin:0 0 18px;font:10pt Arial}#championship-print .print-table{width:100%;border-collapse:collapse;min-width:0;margin:6px 0 14px;font:9pt Arial;break-inside:avoid}#championship-print .print-table th,#championship-print .print-table td{border:1px solid #333;padding:5px 7px;text-align:left}#championship-print .print-table th{background:#e9eef5!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}#championship-print .print-branch{font:800 10pt Arial;margin:12px 0 4px;color:#0b2d72}#championship-print .print-finalized{text-align:right;font:8.5pt Arial;margin-top:22px}
+.desk-nav{pointer-events:auto;isolation:isolate}.desk-nav button{position:relative;z-index:1;pointer-events:auto;touch-action:manipulation}.desk-nav button:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
+@media(max-width:899px){.desk-nav{display:flex!important;position:sticky;top:8px;z-index:1000;flex-wrap:nowrap;overflow-x:auto;white-space:nowrap;scrollbar-width:thin}.desk-nav strong{display:none}.desk-nav button{flex:0 0 auto;padding:9px 11px}.desk-nav .nav-register{margin-left:0}.champion-groups{grid-template-columns:1fr}}
+@media print{body.print-championship *{visibility:hidden!important}body.print-championship #championship-print,body.print-championship #championship-print *{visibility:visible!important}body.print-championship #championship-print{display:block!important;position:absolute!important;left:0!important;top:0!important;width:100%!important;background:#fff!important;color:#111!important;padding:0!important;margin:0!important}body.print-championship #championship-print .print-table{min-width:0!important}body.print-championship #championship-print .print-table th,body.print-championship #championship-print .print-table td{padding:4px 5px!important}}
 </style>
 </head>
 <body>
@@ -630,7 +645,14 @@ footer b{color:var(--navy)}
   </div>
 </div>
 
-<div class="sec">INFORMASI PORSENI</div>
+<div class="sec">KONTINGEN DAN PESERTA YANG TELAH TERDAFTAR</div>
+<div class="recap-grid">
+  <div id="recap-kontingen" class="about"><h3 class="recap-h">DATA KONTINGEN TERDAFTAR</h3><p class="hint">Memuat data kontingen…</p></div>
+  <div id="recap-cabang" class="about"><h3 class="recap-h">DATA PESERTA CABANG LOMBA</h3><p class="hint">Memuat data peserta cabang lomba…</p></div>
+</div>
+<div class="recap-action"><a class="btn" href="#rekap-peserta" style="text-decoration:none;text-align:center">Lihat Rekap Lengkap Cabang Lomba <span aria-hidden="true">→</span></a></div>
+
+<div class="sec">INFORMASI</div>
 <section class="info-feature info-duta">
   <div class="info-heading"><span class="info-icon">🎓</span><div><span class="timeline-kicker">JALUR SELEKSI</span><h2>TIMELINE DUTA PELAJAR</h2><p>Rangkaian pendaftaran, seleksi, pengumuman, hingga pembekalan Duta Pelajar 2026.</p></div></div>
   <div id="tl-duta" class="timeline-grid connected-timeline duta-timeline" aria-label="Timeline Duta Pelajar"></div>
@@ -686,18 +708,15 @@ footer b{color:var(--navy)}
 <a class="link reveal" href="#cabang-lomba" style="--a:#f7941d;--b:#e8312f"><span class="ic">🏅</span><span class="t"><b>Pengumpulan Berkas Cabang Lomba</b><small>Pilih cabang lomba dan unggah persyaratan</small></span><span class="arr">›</span></a>
 <a class="link reveal" href="#portal-kontingen" style="--a:#0a63c9;--b:#0b2d72"><span class="ic">🔐</span><span class="t"><b>Portal Kontingen</b><small>Cek data pendaftaran dan berkas yang sudah diunggah</small></span><span class="arr">›</span></a>
 
-<div class="sec">DATA KONTINGEN DAN PESERTA</div>
-<div class="recap-grid">
-  <div id="recap-kontingen" class="about"><h3 class="recap-h">DATA KONTINGEN TERDAFTAR</h3><p class="hint">Memuat data kontingen…</p></div>
-  <div id="recap-cabang" class="about"><h3 class="recap-h">DATA PESERTA CABANG LOMBA</h3><p class="hint">Memuat data peserta cabang lomba…</p></div>
-</div>
-<div class="recap-action"><a class="btn" href="#rekap-peserta" style="text-decoration:none;text-align:center">Lihat Rekap Lengkap Cabang Lomba <span aria-hidden="true">→</span></a></div>
-
-<div class="sec">HASIL KEJUARAAN</div>
+<div class="sec">JUARA UMUM PORSENI 2026</div>
+<div id="championship-status" class="championship-status pending"><b>HASIL SEMENTARA</b><span>Hasil juara umum belum difinalisasi oleh admin Portal Panitia. Data dapat berubah sampai admin menekan tombol Finalisasi Juara Umum.</span></div>
 <div id="podium"></div>
 <div class="sub">REKAP PEROLEHAN JUARA</div>
 <div class="rekap" id="rekap"></div>
+<div class="sub">HASIL KEJUARAAN CABANG LOMBA</div>
 <div id="hasil-perlombaan" class="championship-detail"></div>
+<div class="championship-print-action"><button type="button" id="print-championship" class="btn" hidden>🖨 Cetak PDF Hasil Resmi PORSENI 2026</button><p class="hint" id="print-championship-note">Cetak PDF resmi akan tersedia setelah juara umum difinalisasi oleh admin.</p></div>
+<section id="championship-print" hidden aria-hidden="true"></section>
 
 <div class="sec">HUBUNGI PANITIA</div>
 <details><summary><span class="ic" style="--a:#0a63c9;--b:#0b2d72">💬</span><span class="t"><b>Narahubung (contact person)</b><small>Ketua, bendahara, koor. perlombaan, sekretariat</small></span><span class="arr">›</span></summary>
@@ -1201,11 +1220,22 @@ function R(a,id){document.getElementById(id).innerHTML=a.map(function(x,n){var o
 R(DOCS,'docs');R(REG,'reg');R(CONTACT,'contact');
 function esc(v){return String(v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 
+var CHAMPIONSHIP_STATE={finalized:false,finalizedAt:'',finalizedBy:''};
+var CHAMPIONSHIP_CATALOG=Object.keys(KAT).map(function(branch){return {cabang:branch,kategori:KAT[branch].slice()};});
+function applyPublicRecap(recap,fromCache){
+ recap=recap||{};
+ renderPublicRecap(recap);
+ if(recap.finalisasi)CHAMPIONSHIP_STATE=recap.finalisasi;
+ if(recap.katalogLomba&&recap.katalogLomba.length)CHAMPIONSHIP_CATALOG=recap.katalogLomba;
+ if(recap.hasil){MEDALS=recap.hasil.medals||[];UPDATED=new Date().toLocaleDateString('id-ID');renderHasil();renderChampionshipDetails(recap.hasil.detail||[],CHAMPIONSHIP_CATALOG);}
+ if(fromCache){['recap-kontingen','recap-cabang'].forEach(function(id){var el=document.getElementById(id);if(el){var n=document.createElement('p');n.className='hint cache-note';n.textContent='Menampilkan data terakhir yang berhasil dimuat. Hubungkan kembali server untuk memperbarui data.';el.appendChild(n);}});}
+}
 function loadPublicRecap(){
- if(!SCRIPT_URL)return;
+ if(!SCRIPT_URL){var noUrl=document.querySelectorAll('#recap-kontingen,#recap-cabang');noUrl.forEach(function(el){var n=document.createElement('p');n.className='hint';n.textContent='Koneksi data pendaftaran belum dikonfigurasi.';el.appendChild(n);});return;}
  fetch(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'public_recap'})})
- .then(function(r){return r.json()}).then(function(j){if(!j||!j.ok)throw new Error('Rekap belum dapat dimuat.');renderPublicRecap(j.recap||{});if(j.recap&&j.recap.hasil){MEDALS=j.recap.hasil.medals||[];UPDATED=new Date().toLocaleDateString('id-ID');renderHasil();renderChampionshipDetails(j.recap.hasil.detail||[]);}})
- .catch(function(){['recap-kontingen','recap-cabang'].forEach(function(id){var el=document.getElementById(id);if(el)el.innerHTML='<p class="hint">Rekap belum dapat dimuat. Silakan muat ulang halaman.</p>';});});
+ .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
+ .then(function(j){if(!j||!j.ok||!j.recap)throw new Error('Rekap belum dapat dimuat.');var recap=j.recap;applyPublicRecap(recap,false);try{localStorage.setItem('PORSENI_2026_PUBLIC_RECAP',JSON.stringify({savedAt:new Date().toISOString(),recap:recap}));}catch(e){}})
+ .catch(function(){var cached=null;try{cached=JSON.parse(localStorage.getItem('PORSENI_2026_PUBLIC_RECAP')||'null');}catch(e){}if(cached&&cached.recap){applyPublicRecap(cached.recap,true);}else{['recap-kontingen','recap-cabang'].forEach(function(id){var el=document.getElementById(id);if(el){var n=document.createElement('p');n.className='hint';n.textContent='Data belum dapat dimuat. Cek koneksi website atau deploy ulang Google Apps Script.';el.appendChild(n);}});}});
 }
 function summaryRows(rows){
  var html='',i=0,j,k;
@@ -1266,21 +1296,35 @@ function renderParticipantRecap(){
 loadPublicRecap();
 var refreshRecap=document.getElementById("refresh-recap");if(refreshRecap)refreshRecap.addEventListener("click",function(){loadParticipantRecap();loadPublicRecap();});
 function renderHasil(){
-var gold=0,rows=MEDALS.slice().sort(function(x,y){return y.g-x.g||y.s-x.s||y.b-x.b});
-var ICN=['🥇','🥈','🥉'],CL=[['#ffc20e','#f7941d'],['#c3cfe0','#7d8ca5'],['#e8a46a','#b4622a']];
-MEDALS.forEach(function(m){gold+=m.g});
-document.getElementById('podium').innerHTML=[0,1,2].map(function(i){var r=rows[i];
- return '<div class="card reveal" style="--i:'+i+';--a:'+CL[i][0]+';--b:'+CL[i][1]+(r?'':';opacity:.75')+'"><span class="ic">'+ICN[i]+'</span><span class="t"><b>'+(r?esc(r.k):'Belum ada juara')+'</b><small>Juara Umum '+(i+1)+' · '+(r?'🥇'+r.g+' 🥈'+r.s+' 🥉'+r.b:'menunggu hasil lomba')+'</small></span></div>';}).join('')
- +'<p class="hint">Klasemen sementara · '+gold+' dari 24 kategori sudah ada juara 1'+(UPDATED?' · diperbarui '+esc(UPDATED):'')+'</p>';
-document.getElementById('rekap').innerHTML='<table class="tb"><thead><tr><th>#</th><th>Kontingen</th><th>🥇</th><th>🥈</th><th>🥉</th><th>Total</th></tr></thead><tbody>'+
- (rows.length?rows.map(function(r,i){return '<tr><td>'+(i+1)+'</td><td>'+esc(r.k)+'</td><td>'+r.g+'</td><td>'+r.s+'</td><td>'+r.b+'</td><td><b>'+(r.g+r.s+r.b)+'</b></td></tr>'}).join(''):'<tr><td class="emp" colspan="6">Belum ada hasil. Rekap muncul setelah lomba berlangsung (25–26 Desember 2026).</td></tr>')+'</tbody></table>';
+ var gold=0,rows=MEDALS.slice().sort(function(x,y){return y.g-x.g||y.s-x.s||y.b-x.b||String(x.k).localeCompare(String(y.k),'id')});
+ var ICN=['🥇','🥈','🥉'],CL=[['#ffc20e','#f7941d'],['#c3cfe0','#7d8ca5'],['#e8a46a','#b4622a']];
+ MEDALS.forEach(function(m){gold+=Number(m.g)||0});
+ var state=CHAMPIONSHIP_STATE||{finalized:false},status=document.getElementById('championship-status'),printBtn=document.getElementById('print-championship'),printNote=document.getElementById('print-championship-note');
+ if(status){status.className='championship-status '+(state.finalized?'final':'pending');status.innerHTML=state.finalized?'<b>HASIL RESMI · TELAH DIFINALISASI</b><span>Juara umum dan rekap kejuaraan telah ditetapkan oleh admin'+(state.finalizedBy?' ('+esc(state.finalizedBy)+')':'')+(state.finalizedAt?' pada '+esc(state.finalizedAt):'')+'.</span>':'<b>HASIL SEMENTARA</b><span>Hasil juara umum belum difinalisasi oleh admin Portal Panitia. Data dapat berubah sampai admin menekan tombol Finalisasi Juara Umum.</span>';}
+ if(printBtn)printBtn.hidden=!state.finalized;if(printNote)printNote.hidden=!!state.finalized;
+ document.getElementById('podium').innerHTML=[0,1,2].map(function(i){var r=rows[i];return '<div class="card reveal" style="--i:'+i+';--a:'+CL[i][0]+';--b:'+CL[i][1]+(r?'':';opacity:.75')+'"><span class="ic">'+ICN[i]+'</span><span class="t"><b>'+(r?esc(r.k):'Belum ada juara')+'</b><small>Juara Umum '+(i+1)+' · '+(r?'🥇'+r.g+' 🥈'+r.s+' 🥉'+r.b:'menunggu hasil lomba')+'</small></span></div>';}).join('')+'<p class="hint">'+(state.finalized?'Klasemen final':'Klasemen sementara')+' · '+gold+' medali emas tercatat'+(UPDATED?' · diperbarui '+esc(UPDATED):'')+'</p>';
+ document.getElementById('rekap').innerHTML='<table class="tb"><thead><tr><th>#</th><th>Kontingen</th><th>🥇</th><th>🥈</th><th>🥉</th><th>Total</th></tr></thead><tbody>'+(rows.length?rows.map(function(r,i){return '<tr><td>'+(i+1)+'</td><td>'+esc(r.k)+'</td><td>'+r.g+'</td><td>'+r.s+'</td><td>'+r.b+'</td><td><b>'+(r.g+r.s+r.b)+'</b></td></tr>'}).join(''):'<tr><td class="emp" colspan="6">Belum ada hasil yang diinput oleh panitia.</td></tr>')+'</tbody></table>';
 }
 renderHasil();
-function renderChampionshipDetails(items){
+renderChampionshipDetails([],CHAMPIONSHIP_CATALOG);
+function renderChampionshipDetails(items,catalog){
  var root=document.getElementById('hasil-perlombaan');if(!root)return;
- if(!items.length){root.innerHTML='<p class="hint">Rincian juara per cabang dan kategori akan tampil setelah hasil diinput oleh panitia.</p>';return;}
- root.innerHTML='<div class="champion-groups">'+items.map(function(x){return '<article class="champion-card"><h4>'+esc(x.cabang)+' · '+esc(x.kategori)+'</h4>'+(x.juara1?'<p>🥇 <b>Juara 1:</b> '+esc(x.juara1)+'</p>':'')+(x.juara2?'<p>🥈 <b>Juara 2:</b> '+esc(x.juara2)+'</p>':'')+(x.juara3?'<p>🥉 <b>Juara 3:</b> '+esc(x.juara3)+'</p>':'')+'<small class="hint">'+(x.updatedAt?'Diperbarui '+esc(x.updatedAt):'')+'</small></article>';}).join('')+'</div>';
+ window.__championshipDetails=items||[];
+ var saved={};(items||[]).forEach(function(x){saved[String(x.cabang)+'|'+String(x.kategori)]=x;});
+ var list=catalog&&catalog.length?catalog:CHAMPIONSHIP_CATALOG;
+ root.innerHTML='<div class="champion-groups">'+list.map(function(group){return (group.kategori||[]).map(function(category){var x=saved[group.cabang+'|'+category]||{};return '<article class="champion-card"><h4>'+esc(group.cabang)+' · '+esc(category)+'</h4><p>🥇 <b>Juara 1:</b> '+(x.juara1?esc(x.juara1):'<span class="not-entered">Belum diinput</span>')+'</p><p>🥈 <b>Juara 2:</b> '+(x.juara2?esc(x.juara2):'<span class="not-entered">Belum diinput</span>')+'</p><p>🥉 <b>Juara 3:</b> '+(x.juara3?esc(x.juara3):'<span class="not-entered">Belum diinput</span>')+'</p>'+(x.updatedAt?'<small class="hint">Diperbarui '+esc(x.updatedAt)+'</small>':'')+'</article>';}).join('');}).join('')+'</div>';
 }
+function buildChampionshipPrint(){
+ if(!CHAMPIONSHIP_STATE||!CHAMPIONSHIP_STATE.finalized){alert('PDF resmi hanya tersedia setelah juara umum difinalisasi oleh admin.');return;}
+ var rows=MEDALS.slice().sort(function(a,b){return b.g-a.g||b.s-a.s||b.b-a.b||String(a.k).localeCompare(String(b.k),'id');});
+ var medals='<table class="print-table"><thead><tr><th>Juara Umum</th><th>Kontingen</th><th>🥇</th><th>🥈</th><th>🥉</th><th>Total</th></tr></thead><tbody>'+([0,1,2].map(function(i){var x=rows[i];return '<tr><td>'+(i+1)+'</td><td>'+(x?esc(x.k):'—')+'</td><td>'+(x?x.g:0)+'</td><td>'+(x?x.s:0)+'</td><td>'+(x?x.b:0)+'</td><td>'+(x?x.g+x.s+x.b:0)+'</td></tr>';}).join(''))+'</tbody></table>';
+ var tally='<table class="print-table"><thead><tr><th>Urutan</th><th>Kontingen</th><th>🥇 Emas</th><th>🥈 Perak</th><th>🥉 Perunggu</th><th>Total</th></tr></thead><tbody>'+(rows.length?rows.map(function(x,i){return '<tr><td>'+(i+1)+'</td><td>'+esc(x.k)+'</td><td>'+x.g+'</td><td>'+x.s+'</td><td>'+x.b+'</td><td><b>'+(x.g+x.s+x.b)+'</b></td></tr>';}).join(''):'<tr><td colspan="6">Belum ada hasil.</td></tr>')+'</tbody></table>';
+ var details=(function(){var by={};(window.__championshipDetails||[]).forEach(function(x){by[x.cabang+'|'+x.kategori]=x;});return CHAMPIONSHIP_CATALOG.map(function(g){return '<h4 class="print-branch">'+esc(g.cabang)+'</h4><table class="print-table"><thead><tr><th>Kategori</th><th>🥇 Juara 1</th><th>🥈 Juara 2</th><th>🥉 Juara 3</th></tr></thead><tbody>'+g.kategori.map(function(c){var x=by[g.cabang+'|'+c]||{};return '<tr><td>'+esc(c)+'</td><td>'+esc(x.juara1||'—')+'</td><td>'+esc(x.juara2||'—')+'</td><td>'+esc(x.juara3||'—')+'</td></tr>';}).join('')+'</tbody></table>';}).join('');})();
+ var page=document.getElementById('championship-print');page.innerHTML='<div class="print-kop"><img src="kop-porseni-resmi.png" alt="Kop Resmi PORSENI 2026"></div><h1>LAPORAN RESMI HASIL KEJUARAAN PORSENI 2026</h1><p class="print-meta">PAC IPNU-IPPNU PATEBON · Unitas Ad Gloriam</p><h2>JUARA UMUM PORSENI 2026</h2>'+medals+'<h2>REKAP PEROLEHAN JUARA</h2>'+tally+'<h2>HASIL KEJUARAAN CABANG LOMBA</h2>'+details+'<p class="print-finalized">DIFINALISASI OLEH '+esc(CHAMPIONSHIP_STATE.finalizedBy||'ADMIN PANITIA')+' · '+esc(CHAMPIONSHIP_STATE.finalizedAt||'')+'</p>';
+ page.hidden=false;document.body.classList.add('print-championship');window.print();
+}
+window.addEventListener('afterprint',function(){document.body.classList.remove('print-championship');var p=document.getElementById('championship-print');if(p)p.hidden=true;});
+var printResultsButton=document.getElementById('print-championship');if(printResultsButton)printResultsButton.addEventListener('click',buildChampionshipPrint);
 /* Hubungkan ke Google Sheets: isi SHEET_URL dengan link CSV (File > Bagikan > Publikasikan ke web > CSV).
    Kolom: A=Kontingen, B=Emas, C=Perak, D=Perunggu. Baris pertama boleh judul. Kosongkan "" untuk memakai MEDALS di atas. */
 var SHEET_URL="";
@@ -1316,7 +1360,7 @@ renderConnectedTimeline(document.getElementById('tl-duta'),dutaEntries);
    while(n&&!(n.nodeType===1&&n.classList.contains('sec'))){var next=n.nextSibling;panel.appendChild(n);n=next;}
  });
  var nav=document.createElement('nav');nav.className='desk-nav';nav.setAttribute('aria-label','Navigasi cepat');
- nav.innerHTML='<strong>PORSENI 2026</strong><button data-target="desk-apa-itu-porseni">Beranda</button><button data-target="desk-informasi">Informasi</button><button data-target="desk-dokumen-penting">Dokumen</button><button data-target="desk-pendaftaran">Pendaftaran</button><button data-target="desk-hasil-kejuaraan">Hasil</button><button class="nav-register" data-action="kontingen">Daftar Kontingen Sekarang ↗</button><button class="nav-cta" data-action="cabang">Kumpulkan Berkas ↗</button><button data-action="portal">Portal Kontingen</button>';
+ nav.innerHTML='<strong>PORSENI 2026</strong><button type="button" data-target="desk-apa-itu-porseni">Beranda</button><button type="button" data-target="desk-informasi">Informasi</button><button type="button" data-target="desk-dokumen-penting">Dokumen</button><button type="button" data-target="desk-pendaftaran">Pendaftaran</button><button type="button" data-target="desk-hasil-kejuaraan">Hasil</button><button type="button" class="nav-register" data-action="kontingen">Daftar Kontingen Sekarang ↗</button><button type="button" class="nav-cta" data-action="cabang">Kumpulkan Berkas ↗</button><button type="button" data-action="portal">Portal Kontingen</button>';
  var head=home.querySelector('.head'); if(head)head.insertAdjacentElement('afterend',nav);
  var RECAP_PANEL='desk-kontingen-dan-peserta-yang-telah-terdaftar';
  var pageTargets={
@@ -1347,15 +1391,17 @@ renderConnectedTimeline(document.getElementById('tl-duta'),dutaEntries);
    if(updateHash&&pageTargets[targetId]&&location.hash!==pageTargets[targetId])history.replaceState(null,'',pageTargets[targetId]);
    window.scrollTo({top:0,behavior:'smooth'});
  }
- nav.addEventListener('click',function(e){
-   var b=e.target.closest('button');if(!b)return;
-   if(b.dataset.action==='cabang'){location.hash='#cabang-lomba';return;}
-   if(b.dataset.action==='kontingen'){location.hash='#daftar-kontingen';return;}
-   if(b.dataset.action==='portal'){location.hash='#portal-kontingen';return;}
-   if(b.dataset.target)activateDeskPage(b.dataset.target,true);
+ nav.querySelectorAll('button').forEach(function(b){
+   b.addEventListener('click',function(e){
+     e.preventDefault();e.stopPropagation();
+     if(b.dataset.action==='cabang'){location.hash='#cabang-lomba';return;}
+     if(b.dataset.action==='kontingen'){location.hash='#daftar-kontingen';return;}
+     if(b.dataset.action==='portal'){location.hash='#portal-kontingen';return;}
+     if(b.dataset.target){activateDeskPage(b.dataset.target,true);}
+   },true);
  });
  function pageFromHash(){
-   var map={'#beranda':'desk-apa-itu-porseni','#rekap':'desk-apa-itu-porseni','#informasi':'desk-informasi','#dokumen':'desk-dokumen-penting','#pendaftaran':'desk-pendaftaran','#rekap':'desk-kontingen-dan-peserta-yang-telah-terdaftar','#hasil':'desk-hasil-kejuaraan','#hubungi':'desk-hubungi-panitia'};
+   var map={'#beranda':'desk-apa-itu-porseni','#informasi':'desk-informasi','#dokumen':'desk-dokumen-penting','#pendaftaran':'desk-pendaftaran','#rekap':'desk-kontingen-dan-peserta-yang-telah-terdaftar','#hasil':'desk-hasil-kejuaraan','#hubungi':'desk-hubungi-panitia'};
    var id=map[location.hash]||'desk-apa-itu-porseni';
    activateDeskPage(id,false);
    if(location.hash==='#rekap'){setTimeout(function(){var rp=document.getElementById(RECAP_PANEL);if(rp)rp.scrollIntoView({behavior:'smooth',block:'start'});},80);}
