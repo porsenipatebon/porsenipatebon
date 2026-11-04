@@ -641,6 +641,289 @@ footer b{color:var(--navy)}
 .location-placeholder small{display:block;color:var(--muted);line-height:1.5;margin-top:4px}
 @media(max-width:599px){.timeline-grid.connected-timeline{grid-template-columns:minmax(0,1fr)!important;padding-left:34px!important}.info-location .location-placeholder{align-items:flex-start;padding:14px}.location-placeholder-icon{width:44px;height:44px}}
 
+
+
+/* ==========================================================
+   PORSENI 2026 — PREMIUM HEADER + MOBILE TAB DOCK REDESIGN
+   ========================================================== */
+.head{
+  position:relative!important;isolation:isolate!important;overflow:hidden!important;
+  display:flex!important;align-items:center!important;justify-content:flex-start!important;
+  min-height:286px!important;padding:46px 58px!important;margin:0 0 22px!important;
+  text-align:left!important;border-radius:34px!important;
+  color:#fff!important;
+  background:
+    radial-gradient(ellipse at 8% 12%,rgba(255,194,14,.25),transparent 28%),
+    radial-gradient(ellipse at 92% 90%,rgba(18,169,232,.34),transparent 31%),
+    linear-gradient(118deg,#061b49 0%,#082d70 38%,#0a55ae 70%,#079bd0 100%)!important;
+  border:1px solid rgba(255,255,255,.28)!important;
+  box-shadow:0 24px 64px rgba(5,30,78,.25),inset 0 1px 0 rgba(255,255,255,.16)!important;
+}
+.head:before{
+  content:""!important;position:absolute!important;z-index:-1!important;
+  width:500px!important;height:500px!important;right:-145px!important;top:-275px!important;
+  border:46px solid rgba(255,255,255,.10)!important;border-radius:50%!important;
+  box-shadow:0 0 0 28px rgba(255,194,14,.075),0 0 0 74px rgba(255,255,255,.035)!important;
+  pointer-events:none!important;
+}
+.head:after{
+  content:""!important;position:absolute!important;z-index:-1!important;
+  inset:auto 34px 24px 34px!important;height:3px!important;width:auto!important;
+  border:0!important;border-radius:99px!important;
+  background:linear-gradient(90deg,#e8312f 0%,#f7941d 25%,#ffc20e 46%,#12a9e8 73%,rgba(18,169,232,0) 100%)!important;
+  box-shadow:none!important;pointer-events:none!important;
+}
+.header-brand{
+  position:relative!important;z-index:1!important;width:100%!important;max-width:1100px!important;
+  display:flex!important;align-items:center!important;justify-content:flex-start!important;
+  gap:34px!important;margin:0!important;
+}
+.header-logo{
+  display:block!important;flex:0 0 auto!important;width:168px!important;height:168px!important;
+  max-width:none!important;padding:18px!important;object-fit:contain!important;
+  background:linear-gradient(145deg,#fff 0%,#f2f7ff 100%)!important;
+  border:5px solid rgba(255,255,255,.72)!important;border-radius:50%!important;
+  filter:none!important;
+  box-shadow:0 14px 32px rgba(0,0,0,.22),0 0 0 9px rgba(255,255,255,.08),inset 0 1px 5px rgba(11,45,114,.12)!important;
+}
+.header-copy{max-width:none!important;min-width:0!important;text-align:left!important}
+.header-title{
+  display:block!important;margin:0 0 13px!important;white-space:nowrap!important;
+  color:#fff!important;font:800 clamp(2.9rem,5.2vw,4.55rem)/.98 var(--display)!important;
+  letter-spacing:-.055em!important;text-shadow:0 5px 20px rgba(0,0,0,.18)!important;
+}
+.porseni-o{
+  position:relative!important;display:inline-block!important;flex:none!important;
+  width:.84em!important;height:.84em!important;margin:0 .035em!important;
+  vertical-align:-.075em!important;border-radius:50%!important;
+  background:conic-gradient(from -34deg,
+    #ffc20e 0deg 48deg,#fff 48deg 57deg,#f7941d 57deg 112deg,
+    #ed2637 112deg 169deg,#9b238f 169deg 218deg,
+    #1249aa 218deg 267deg,#08b8d5 267deg 316deg,#ffc20e 316deg 360deg)!important;
+  box-shadow:0 5px 13px rgba(0,0,0,.2),0 0 0 2px rgba(255,255,255,.22)!important;
+}
+.porseni-o:before{
+  content:""!important;position:absolute!important;inset:25%!important;
+  border-radius:50%!important;background:#fff!important;
+  box-shadow:inset 0 2px 5px rgba(11,45,114,.14)!important;
+}
+.header-copy .head-subtitle{
+  display:block!important;margin:0!important;color:#fff!important;
+  font:800 clamp(1rem,1.8vw,1.28rem)/1.3 var(--display)!important;
+  letter-spacing:.105em!important;text-transform:uppercase!important;
+}
+.header-copy .tag{
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  margin:15px 0 0!important;padding:7px 16px!important;border-radius:999px!important;
+  border:1px solid rgba(255,224,138,.42)!important;
+  background:rgba(255,255,255,.10)!important;color:#ffe49b!important;
+  font:italic 700 1.1rem/1.2 var(--body)!important;letter-spacing:.075em!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14)!important;
+}
+
+/* Desktop navigation: tidy single-line glass bar with clear active state. */
+.desk-nav{
+  display:flex!important;align-items:center!important;gap:7px!important;flex-wrap:nowrap!important;
+  width:100%!important;padding:9px 12px!important;margin:0 0 24px!important;
+  position:sticky!important;top:10px!important;z-index:1000!important;
+  border:1px solid rgba(198,216,242,.88)!important;border-radius:18px!important;
+  background:rgba(255,255,255,.92)!important;backdrop-filter:blur(18px)!important;
+  box-shadow:0 10px 28px rgba(11,45,114,.10)!important;
+}
+.desk-nav strong{display:block!important;flex:0 0 auto!important;padding:0 15px 0 7px!important;margin-right:4px!important;border-right:1px solid #e3ebf7!important;color:#0b2d72!important;font:800 .76rem var(--display)!important;letter-spacing:.07em!important}
+.desk-nav button{
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:7px!important;
+  flex:0 0 auto!important;min-height:42px!important;padding:9px 13px!important;
+  border:0!important;border-radius:12px!important;background:transparent!important;
+  color:#38527d!important;font:800 .76rem var(--display)!important;white-space:nowrap!important;
+  transition:background .2s,color .2s,transform .2s!important;
+}
+.desk-nav button:hover{transform:translateY(-1px)!important;background:#f1f6ff!important;color:#075bb5!important}
+.desk-nav button.active{background:linear-gradient(115deg,#0b2d72,#126bc1)!important;color:#fff!important;box-shadow:0 5px 14px rgba(10,75,157,.22)!important}
+.desk-nav .nav-ico{display:inline-flex;align-items:center;justify-content:center;min-width:17px;font-size:1rem;line-height:1}
+.desk-nav .nav-register{margin-left:auto!important;background:linear-gradient(100deg,#0876c9,#12a9e8)!important;color:#fff!important;box-shadow:0 5px 14px rgba(10,99,201,.20)!important}
+.desk-nav .nav-cta{background:linear-gradient(100deg,#f7941d,#ffc20e)!important;color:#3f2b06!important;box-shadow:0 5px 14px rgba(247,148,29,.20)!important}
+.desk-nav [data-action="portal"]{background:#eef4fc!important;color:#12386f!important}
+
+/* Tablet */
+@media (min-width:601px) and (max-width:899px){
+  .page{width:100%;max-width:820px;padding:24px 20px 120px!important}
+  .head{min-height:230px!important;padding:30px 28px!important;border-radius:28px!important}
+  .header-logo{width:132px!important;height:132px!important;padding:15px!important}
+  .header-brand{gap:24px!important}
+  .header-title{font-size:clamp(2.45rem,6vw,3.2rem)!important}
+  .desk-nav{position:fixed!important;left:16px!important;right:16px!important;bottom:calc(12px + env(safe-area-inset-bottom))!important;top:auto!important;width:auto!important;justify-content:space-around!important;z-index:1001!important}
+  .desk-nav .nav-register,.desk-nav .nav-cta,.desk-nav [data-action="portal"]{display:none!important}
+}
+
+/* Phones: editorial centered hero + five-button bottom navigation dock. */
+@media (max-width:600px){
+  html{scroll-padding-bottom:110px!important}
+  body{padding-bottom:calc(106px + env(safe-area-inset-bottom))!important}
+  .page{width:100%!important;max-width:560px!important;padding:16px 12px 18px!important}
+  .sw{opacity:.32!important}
+  .head{
+    min-height:unset!important;display:flex!important;align-items:center!important;justify-content:center!important;
+    padding:27px 16px 31px!important;margin:0 0 17px!important;border-radius:26px!important;
+    text-align:center!important;
+    background:
+      radial-gradient(circle at 50% -8%,rgba(255,194,14,.24),transparent 36%),
+      radial-gradient(circle at 100% 95%,rgba(18,169,232,.26),transparent 36%),
+      linear-gradient(145deg,#071d4e 0%,#0a3983 54%,#087fbd 100%)!important;
+    box-shadow:0 15px 35px rgba(5,30,78,.20),inset 0 1px 0 rgba(255,255,255,.17)!important;
+  }
+  .head:before{width:270px!important;height:270px!important;right:-132px!important;top:-160px!important;border-width:25px!important;box-shadow:0 0 0 17px rgba(255,194,14,.07),0 0 0 40px rgba(255,255,255,.03)!important}
+  .head:after{inset:auto 20px 13px 20px!important;height:3px!important}
+  .header-brand{width:100%!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:12px!important;margin:0!important}
+  .header-logo{
+    width:88px!important;height:88px!important;max-width:none!important;padding:10px!important;
+    border-width:4px!important;border-radius:50%!important;
+    box-shadow:0 9px 22px rgba(0,0,0,.20),0 0 0 6px rgba(255,255,255,.07)!important;
+  }
+  .header-copy{width:100%!important;max-width:100%!important;text-align:center!important}
+  .header-title{
+    display:block!important;text-align:center!important;
+    width:100%!important;margin:0 0 9px!important;font-size:clamp(1.95rem,8.5vw,2.65rem)!important;
+    line-height:1!important;letter-spacing:-.055em!important;white-space:nowrap!important;
+  }
+  .porseni-o{width:.82em!important;height:.82em!important;margin:0 .025em!important;vertical-align:-.07em!important}
+  .header-copy .head-subtitle{font-size:clamp(.70rem,3.1vw,.91rem)!important;line-height:1.35!important;letter-spacing:.085em!important}
+  .header-copy .tag{margin-top:11px!important;padding:6px 13px!important;font-size:.98rem!important;letter-spacing:.055em!important}
+
+  .desk-nav{
+    position:fixed!important;left:10px!important;right:10px!important;bottom:calc(9px + env(safe-area-inset-bottom))!important;top:auto!important;
+    display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;align-items:stretch!important;justify-content:stretch!important;
+    gap:3px!important;width:auto!important;max-width:540px!important;margin:0 auto!important;
+    padding:7px 6px calc(7px + env(safe-area-inset-bottom))!important;
+    border:1px solid rgba(255,255,255,.18)!important;border-radius:20px!important;
+    background:rgba(6,28,72,.96)!important;backdrop-filter:blur(20px)!important;-webkit-backdrop-filter:blur(20px)!important;
+    box-shadow:0 12px 34px rgba(3,20,55,.30),inset 0 1px 0 rgba(255,255,255,.12)!important;
+    overflow:visible!important;white-space:normal!important;z-index:10010!important;
+  }
+  .desk-nav strong{display:none!important}
+  .desk-nav button[data-target]{
+    display:flex!important;flex:1 1 0!important;min-width:0!important;min-height:58px!important;
+    flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:4px!important;
+    padding:6px 2px!important;margin:0!important;border:0!important;border-radius:13px!important;
+    background:transparent!important;color:rgba(255,255,255,.76)!important;
+    font:700 .61rem/1.1 var(--display)!important;letter-spacing:0!important;white-space:normal!important;
+    box-shadow:none!important;transform:none!important;touch-action:manipulation!important;
+  }
+  .desk-nav button[data-target] .nav-ico{font-size:1.17rem!important;min-width:0!important;height:21px!important;color:inherit!important}
+  .desk-nav button[data-target] .nav-label{display:block!important;max-width:100%!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
+  .desk-nav button[data-target].active{
+    background:linear-gradient(145deg,#1d69b9,#0c4b99)!important;color:#fff!important;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.16),0 4px 12px rgba(0,0,0,.16)!important;
+  }
+  .desk-nav button[data-target].active .nav-ico{filter:drop-shadow(0 1px 4px rgba(255,255,255,.35))}
+  .desk-nav .nav-register,.desk-nav .nav-cta,.desk-nav [data-action="portal"]{display:none!important}
+  .sec{scroll-margin-top:18px}
+}
+@media (min-width:900px) and (max-width:1100px){
+  .desk-nav{flex-wrap:wrap!important;row-gap:5px!important}
+  .desk-nav .nav-register{margin-left:0!important}
+}
+@media(max-width:360px){
+  .page{padding-left:9px!important;padding-right:9px!important}
+  .head{padding:24px 10px 27px!important}
+  .header-logo{width:80px!important;height:80px!important}
+  .header-title{font-size:1.86rem!important}
+  .desk-nav{left:7px!important;right:7px!important;gap:1px!important;padding-left:4px!important;padding-right:4px!important}
+  .desk-nav button[data-target]{font-size:.56rem!important}
+}
+
+
+
+/* ==========================================================
+   PORSENI 2026 — WHITE EDITORIAL WORDMARK HEADER
+   Composition follows the supplied reference screenshot.
+   ========================================================== */
+.head{
+  position:relative!important;isolation:isolate!important;overflow:hidden!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  min-height:292px!important;padding:54px 28px 46px!important;margin:0 0 22px!important;
+  border:0!important;border-radius:0!important;text-align:center!important;color:#0b2d72!important;
+  background:
+    radial-gradient(ellipse at 17% 78%,rgba(247,148,29,.11),transparent 26%),
+    radial-gradient(ellipse at 86% 58%,rgba(18,169,232,.10),transparent 27%),
+    linear-gradient(180deg,#fff 0%,#fff 74%,#fbfdff 100%)!important;
+  box-shadow:none!important;
+}
+.head:before{
+  content:""!important;position:absolute!important;z-index:-1!important;
+  width:390px!important;height:390px!important;left:50%!important;top:-320px!important;
+  transform:translateX(-50%)!important;border:1px solid rgba(10,99,201,.08)!important;
+  border-radius:50%!important;box-shadow:0 0 0 24px rgba(10,99,201,.025),0 0 0 52px rgba(247,148,29,.025)!important;
+  pointer-events:none!important;
+}
+.head:after{
+  content:""!important;position:absolute!important;z-index:0!important;
+  left:50%!important;bottom:16px!important;transform:translateX(-50%)!important;
+  width:min(340px,46%)!important;height:4px!important;border:0!important;border-radius:99px!important;
+  background:linear-gradient(90deg,#e8312f 0%,#f7941d 24%,#ffc20e 45%,#0a63c9 72%,#12a9e8 100%)!important;
+  box-shadow:0 3px 10px rgba(10,99,201,.12)!important;pointer-events:none!important;
+}
+.hero-ribbons{position:absolute!important;z-index:0!important;display:block!important;pointer-events:none!important}
+.hero-ribbons-top{left:0!important;top:0!important;width:min(47vw,620px)!important;height:235px!important;opacity:.98!important}
+.hero-ribbons-bottom{right:0!important;bottom:0!important;width:min(34vw,450px)!important;height:150px!important;opacity:.88!important}
+.header-brand{
+  position:relative!important;z-index:1!important;width:100%!important;max-width:100%!important;
+  display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;
+  gap:0!important;margin:0!important;text-align:center!important;
+}
+.header-logo{display:none!important}
+.header-copy{width:100%!important;max-width:none!important;min-width:0!important;text-align:center!important}
+.header-title{
+  display:block!important;width:100%!important;margin:0 0 12px!important;padding:0!important;
+  color:#0b2d72!important;font:800 clamp(3.35rem,6.2vw,5.35rem)/.98 var(--display)!important;
+  letter-spacing:-.065em!important;white-space:nowrap!important;text-align:center!important;
+  text-shadow:0 3px 0 rgba(255,255,255,.85),0 8px 24px rgba(11,45,114,.08)!important;
+}
+.porseni-o{
+  position:relative!important;display:inline-block!important;flex:none!important;
+  width:.79em!important;height:.79em!important;margin:0 .035em!important;vertical-align:-.075em!important;
+  border-radius:50%!important;
+  background:conic-gradient(from -42deg,#e8312f 0deg 43deg,#f7941d 43deg 100deg,#ffc20e 100deg 151deg,#12a9e8 151deg 218deg,#0876c9 218deg 270deg,#173a91 270deg 316deg,#e8312f 316deg 360deg)!important;
+  box-shadow:0 3px 8px rgba(11,45,114,.16),inset 0 0 0 1px rgba(255,255,255,.48)!important;
+}
+.porseni-o:before{
+  content:""!important;position:absolute!important;inset:24%!important;border-radius:50%!important;
+  background:linear-gradient(145deg,#fff 0%,#f7fbff 100%)!important;
+  box-shadow:inset 0 2px 5px rgba(11,45,114,.12),0 0 0 1px rgba(255,255,255,.7)!important;
+}
+.porseni-o:after{
+  content:""!important;position:absolute!important;inset:4%!important;border-radius:50%!important;
+  border:1px solid rgba(255,255,255,.34)!important;
+  background:linear-gradient(140deg,rgba(255,255,255,.30),transparent 43%)!important;
+}
+.header-copy .head-subtitle{
+  display:block!important;margin:0!important;color:#102f73!important;
+  font:800 clamp(1rem,1.75vw,1.34rem)/1.3 var(--display)!important;
+  letter-spacing:.075em!important;text-transform:uppercase!important;
+}
+.header-copy .tag{
+  display:inline-block!important;margin:11px 0 0!important;padding:0!important;
+  border:0!important;border-radius:0!important;background:transparent!important;
+  color:#0a63c9!important;font:italic 600 clamp(1.05rem,1.8vw,1.35rem)/1.2 var(--body)!important;
+  letter-spacing:.035em!important;box-shadow:none!important;
+}
+@media(max-width:899px){
+  .head{min-height:246px!important;padding:48px 18px 42px!important;margin-bottom:17px!important}
+  .hero-ribbons-top{width:min(63vw,390px)!important;height:155px!important}
+  .hero-ribbons-bottom{width:min(42vw,260px)!important;height:96px!important;opacity:.65!important}
+  .header-title{font-size:clamp(2.7rem,8.8vw,4.15rem)!important;letter-spacing:-.065em!important;margin-bottom:10px!important}
+  .porseni-o{width:.77em!important;height:.77em!important}
+  .header-copy .head-subtitle{font-size:clamp(.74rem,3.1vw,1.02rem)!important;letter-spacing:.055em!important}
+  .header-copy .tag{font-size:1.04rem!important;margin-top:9px!important}
+  .head:after{bottom:11px!important;width:min(260px,54%)!important}
+}
+@media(max-width:390px){
+  .head{min-height:222px!important;padding:43px 10px 38px!important}
+  .header-title{font-size:clamp(2.35rem,9.3vw,3.05rem)!important}
+  .header-copy .head-subtitle{font-size:.70rem!important;letter-spacing:.035em!important}
+  .header-copy .tag{font-size:.96rem!important}
+}
+
 </style>
 </head>
 <body>
@@ -649,11 +932,24 @@ footer b{color:var(--navy)}
 <main class="page">
 <div id="v-home">
 <header class="head">
+  <svg class="hero-ribbons hero-ribbons-top" viewBox="0 0 620 270" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 0H560C360 36 148 132 0 270Z" fill="#e8312f"/>
+    <path d="M0 0H492C330 38 135 122 0 238Z" fill="#f7941d"/>
+    <path d="M0 0H418C286 38 112 112 0 208Z" fill="#ffc20e"/>
+    <path d="M0 0H340C228 32 92 98 0 174Z" fill="#0a63c9"/>
+    <path d="M0 0H250C174 28 70 82 0 142Z" fill="#12a9e8"/>
+  </svg>
+  <svg class="hero-ribbons hero-ribbons-bottom" viewBox="0 0 520 190" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M520 190H0C168 166 345 82 520 0Z" fill="#0a63c9"/>
+    <path d="M520 190H90C236 160 390 78 520 26Z" fill="#12a9e8"/>
+    <path d="M520 190H208C330 152 438 91 520 54Z" fill="#ffc20e"/>
+    <path d="M520 190H316C410 150 472 110 520 83Z" fill="#f7941d"/>
+  </svg>
   <div class="header-brand">
     <img class="header-logo" src="logo-porseni.png" alt="Logo PORSENI 2026">
     <div class="header-copy">
-      <h1 class="header-title" aria-label="PORSENI 2026">P<span class="porseni-o"><img src="porseni-o-mark.png" alt=""></span>RSENI 2026</h1>
-      <h2 class="head-subtitle">PAC IPNU IPPNU PATEBON</h2>
+      <h1 class="header-title" aria-label="PORSENI 2026">P<span class="porseni-o" aria-hidden="true"></span>RSENI 2026</h1>
+      <h2 class="head-subtitle">PAC IPNU IPPNU PATEBON 2026</h2>
       <p class="tag">“Unitas Ad Gloriam”</p>
     </div>
   </div>
@@ -897,7 +1193,7 @@ var DOCS=[
  {i:"📑",t:"Unduh TOR (Term Of Reference) Kegiatan",d:"Dokumen PDF",u:""},
  {i:"📘",t:"Unduh Petunjuk Teknis (Juknis)",d:"Aturan lomba tiap cabang",u:""},
  {i:"🤝",t:"Unduh Pakta Integritas",d:"Wajib dilengkapi kontingen",u:""},
- {i:"📝",t:"Unduh Contoh Berita Acara RAT",d:"Contoh format DOCX yang dapat diedit; sesuaikan dengan ketentuan organisasi",u:"dokumen-contoh-berita-acara-rat.docx"},
+ {i:"📝",t:"Unduh Contoh Berita Acara RAT",d:"Dokumen akan diunggah sendiri oleh panitia",u:"dokumen-contoh-berita-acara-rat.docx"},
  {i:"📚",t:"Unduh Buku Pedoman Kegiatan PORSENI 2026",d:"Dokumen resmi panitia akan ditautkan setelah berkas pedoman tersedia",u:""}
 ];
 var REG=[
@@ -1425,7 +1721,7 @@ renderConnectedTimeline(document.getElementById('tl-duta'),dutaEntries);
    while(n&&!(n.nodeType===1&&n.classList.contains('sec'))){var next=n.nextSibling;panel.appendChild(n);n=next;}
  });
  var nav=document.createElement('nav');nav.className='desk-nav';nav.setAttribute('aria-label','Navigasi cepat');
- nav.innerHTML='<strong>PORSENI 2026</strong><button type="button" data-target="desk-apa-itu-porseni">Beranda</button><button type="button" data-target="desk-informasi">Informasi</button><button type="button" data-target="desk-dokumen-penting">Dokumen</button><button type="button" data-target="desk-pendaftaran">Pendaftaran</button><button type="button" data-target="desk-hasil-kejuaraan">Hasil</button><button type="button" class="nav-register" data-action="kontingen">Daftar Kontingen Sekarang ↗</button><button type="button" class="nav-cta" data-action="cabang">Kumpulkan Berkas ↗</button><button type="button" data-action="portal">Portal Kontingen</button>';
+ nav.innerHTML='<strong>PORSENI 2026</strong><button type="button" data-target="desk-apa-itu-porseni"><span class="nav-ico" aria-hidden="true">⌂</span><span class="nav-label">Beranda</span></button><button type="button" data-target="desk-informasi"><span class="nav-ico" aria-hidden="true">ⓘ</span><span class="nav-label">Informasi</span></button><button type="button" data-target="desk-dokumen-penting"><span class="nav-ico" aria-hidden="true">▤</span><span class="nav-label">Dokumen</span></button><button type="button" data-target="desk-pendaftaran"><span class="nav-ico" aria-hidden="true">✎</span><span class="nav-label">Daftar</span></button><button type="button" data-target="desk-hasil-kejuaraan"><span class="nav-ico" aria-hidden="true">🏆</span><span class="nav-label">Hasil</span></button><button type="button" class="nav-register" data-action="kontingen">Daftar Kontingen Sekarang ↗</button><button type="button" class="nav-cta" data-action="cabang">Kumpulkan Berkas ↗</button><button type="button" data-action="portal">Portal Kontingen</button>';
  var head=home.querySelector('.head'); if(head)head.insertAdjacentElement('afterend',nav);
  var RECAP_PANEL='desk-kontingen-dan-peserta-yang-telah-terdaftar';
  var pageTargets={
