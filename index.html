@@ -998,6 +998,42 @@ html,body{max-width:100%;}
 }
 @media(min-width:601px){.mobile-quick-actions{display:none!important;}}
 
+
+
+/* ===== Penyempurnaan Informasi: Road to PORSENI dan tabel cabang ===== */
+.info-roadto .roadto-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;}
+.info-roadto .roadto-card{display:flex;align-items:flex-start;gap:14px;min-width:0;padding:18px;border:1px solid #dfe9f7;border-radius:18px;background:linear-gradient(145deg,#fff,#f7faff);box-shadow:0 7px 20px rgba(11,45,114,.06);}
+.info-roadto .roadto-card.badminton{border-top:4px solid #12a9e8;}
+.info-roadto .roadto-card.voli{border-top:4px solid #f7941d;}
+.info-roadto .roadto-symbol{width:48px;height:48px;flex:0 0 48px;display:grid;place-items:center;border-radius:15px;background:#eaf5ff;font-size:1.55rem;}
+.info-roadto .roadto-card.voli .roadto-symbol{background:#fff3df;}
+.info-roadto .roadto-content{min-width:0;}
+.info-roadto .roadto-date{display:inline-block;margin:0 0 6px;color:var(--blue);font:800 .68rem var(--display);letter-spacing:.06em;}
+.info-roadto .roadto-content h3{margin:0 0 6px;color:var(--navy);font:800 1rem/1.3 var(--display);}
+.info-roadto .roadto-content p{margin:0;color:var(--muted);font-size:.9rem;line-height:1.5;}
+.info-cabang #cabdetail{overflow:visible;background:transparent;border:0;border-radius:0;padding:0;}
+.info-cabang .cabang-table-wrap{width:100%;max-width:100%;overflow-x:auto;border:1px solid #e1eafa;border-radius:16px;background:#fff;}
+.info-cabang .cabang-table{width:100%;min-width:520px;table-layout:fixed;border-collapse:separate;border-spacing:0;margin:0;}
+.info-cabang .cabang-table th{padding:12px 14px;background:#0b367f;color:#fff;font-size:.8rem;letter-spacing:.025em;text-align:left;}
+.info-cabang .cabang-table th:first-child,.info-cabang .cabang-table td:first-child{width:58px;text-align:center;}
+.info-cabang .cabang-table th:nth-child(2),.info-cabang .cabang-table td:nth-child(2){width:38%;}
+.info-cabang .cabang-table td{padding:10px 14px;vertical-align:middle;border-bottom:1px solid #eaf0f8;line-height:1.4;font-size:.88rem;}
+.info-cabang .cabang-table tbody tr:last-child td{border-bottom:0;}
+.info-cabang .cabang-table tbody tr:nth-child(even){background:#f7faff;}
+.info-cabang .cabang-table .branch-number{color:var(--blue);font-weight:800;}
+.info-cabang .cabang-table .branch-name{font-weight:750;color:var(--navy);}
+.info-cabang .cabang-table .branch-name small{display:inline-block;margin-top:3px;color:var(--muted);font-weight:600;font-size:.74rem;}
+.info-cabang .category-variants{display:grid;gap:5px;list-style:none;margin:0;padding:0;}
+.info-cabang .category-variants li{display:flex;align-items:center;gap:8px;min-width:0;padding:4px 8px;border:1px solid #e5edf8;border-radius:9px;background:#fff;color:#263c61;font-size:.82rem;}
+.info-cabang .category-letter{display:inline-grid;place-items:center;width:21px;height:21px;flex:0 0 21px;border-radius:7px;background:#e8f2ff;color:#0b4d9d;font-size:.7rem;font-weight:900;}
+.info-cabang .category-single{display:inline-block;padding:5px 9px;border-radius:9px;background:#f0f5fc;color:#263c61;font-size:.82rem;font-weight:650;}
+@media(max-width:700px){
+ .info-roadto .roadto-grid{grid-template-columns:minmax(0,1fr);}
+ .info-roadto .roadto-card{padding:14px;}
+ .info-cabang .cabang-table{min-width:500px;}
+ .info-cabang .cabang-table td{padding:9px 10px;font-size:.82rem;}
+}
+
 </style>
 </head>
 <body>
@@ -1051,12 +1087,25 @@ html,body{max-width:100%;}
   <div class="info-heading"><span class="info-icon">🎓</span><div><span class="timeline-kicker">JALUR SELEKSI</span><h2>TIMELINE DUTA PELAJAR</h2><p>Rangkaian pendaftaran, pembekalan, seleksi, dan pengumuman. Baca berurutan dari atas ke bawah.</p></div></div>
   <div id="tl-duta" class="timeline-grid connected-timeline duta-timeline" aria-label="Timeline Duta Pelajar"></div>
 </section>
+<section class="info-feature info-roadto">
+  <div class="info-heading"><span class="info-icon">🏁</span><div><span class="timeline-kicker">AGENDA PRA-PUNCAK</span><h2>ROAD TO PORSENI: VOLI &amp; BADMINTON</h2><p>Agenda Road to PORSENI untuk cabang olahraga, dipisahkan dari jalur seleksi Duta Pelajar.</p></div></div>
+  <div class="roadto-grid">
+    <article class="roadto-card badminton">
+      <div class="roadto-symbol" aria-hidden="true">🏸</div>
+      <div class="roadto-content"><span class="roadto-date">MINGGU · 6 DESEMBER 2026</span><h3>Road to PORSENI Badminton</h3><p>Agenda Road to PORSENI cabang Badminton.</p></div>
+    </article>
+    <article class="roadto-card voli">
+      <div class="roadto-symbol" aria-hidden="true">🏐</div>
+      <div class="roadto-content"><span class="roadto-date">MINGGU · 13 DESEMBER 2026</span><h3>Road to PORSENI Voli</h3><p>Agenda Road to PORSENI cabang Voli.</p></div>
+    </article>
+  </div>
+</section>
 <section class="info-feature info-cabang">
   <div class="info-heading"><span class="info-icon">🏅</span><div><span class="timeline-kicker">KATEGORI PERLOMBAAN</span><h2>CABANG LOMBA PORSENI 2026</h2><p>Daftar cabang lomba disusun berdasarkan urutan resmi, dimulai dari Duta Pelajar.</p></div></div>
   <div id="cabdetail"></div>
 </section>
 <section class="info-feature info-rundown">
-  <div class="info-heading"><span class="info-icon">🎤</span><div><span class="timeline-kicker">25–26 DESEMBER 2026</span><h2>SUSUNAN ACARA PUNCAK</h2><p>Dua hari rangkaian kegiatan, perlombaan, budaya, dan apresiasi.</p></div></div>
+  <div class="info-heading"><span class="info-icon">🎤</span><div><span class="timeline-kicker">25–26 DESEMBER 2026</span><h2>SUSUNAN ACARA PUNCAK</h2><p>Rangkaian puncak dari timeline PORSENI 2026 pada 25–26 Desember, mulai dari pembekalan hingga perlombaan dan Grand Final Duta Pelajar.</p></div></div>
   <div class="rundown-days">
     <article class="rundown-day"><div class="rundown-date"><b>25</b><span>DES<br>JUMAT</span></div><div class="rundown-events">
       <div class="rundown-event"><time>Pagi</time><div><b>Pembekalan Duta Pelajar</b><small>Pembekalan peserta Duta Pelajar pada Jumat, 25 Desember 2026.</small></div></div>
@@ -1065,7 +1114,8 @@ html,body{max-width:100%;}
       <div class="rundown-event"><time>20.00–23.30</time><div><b>Parade Gelar Budaya</b><small>Ekspresi seni dan budaya kontingen</small></div></div>
     </div></article>
     <article class="rundown-day"><div class="rundown-date blue"><b>26</b><span>DES<br>SABTU</span></div><div class="rundown-events">
-      <div class="rundown-event"><time>08.00–12.00</time><div><b>Perlombaan sesi pagi</b><small>Sprint, tenis meja, kaligrafi, Grand Final Duta Pelajar, paduan suara, dan MTQ</small></div></div>
+      <div class="rundown-event"><time>08.00–12.00</time><div><b>Perlombaan sesi pagi</b><small>Sprint, tenis meja, kaligrafi, paduan suara, dan MTQ</small></div></div>
+      <div class="rundown-event"><time>Setelah perlombaan</time><div><b>Grand Final Duta Pelajar</b><small>Grand Final Duta Pelajar dilaksanakan setelah rangkaian perlombaan.</small></div></div>
       <div class="rundown-event"><time>13.00–15.00</time><div><b>PORSENI Expo</b><small>UMKM, pasar murah, pameran kaligrafi, dan donor darah</small></div></div>
       <div class="rundown-event"><time>13.00–18.00</time><div><b>Perlombaan sesi siang</b><small>Baca puisi, baca kitab, dan khitobah</small></div></div>
       <div class="rundown-event"><time>16.00–18.00</time><div><b>Rebana — sesi 1</b></div></div>
@@ -1376,8 +1426,14 @@ $("fk-cabang").innerHTML=Object.keys(CABANG).map(function(k){return '<div class=
  return '<label class="chk"><input type="checkbox" name="cabang" value="'+esc(x.t)+'"><span>'+esc(prettyBranchName(x.t))+'</span></label>'+(ks.length>1?'<div class="kats" hidden data-k="'+esc(x.t)+'"><b>Kategori '+esc(prettyBranchName(x.t))+' (pilih sesuai ketentuan) *</b>'+ks.map(function(c,ci){return '<label class="chk"><input type="checkbox" name="kat" data-c="'+esc(x.t)+'" value="'+esc(c)+'"><span>'+String.fromCharCode(65+ci)+'. '+esc(c)+'</span></label>'}).join('')+'</div>':'')}).join('')+'</div>'}).join('');
 $("fk-cabang").addEventListener("change",function(e){var t=e.target;if(t.name==="cabang"){var kb=this.querySelector('.kats[data-k="'+t.value+'"]');if(kb){kb.hidden=!t.checked;if(!t.checked)Array.prototype.forEach.call(kb.querySelectorAll("input"),function(c){c.checked=false})}}});
 var cabRows=[],cabNo=0;
-Object.keys(CABANG).forEach(function(k){CABANG[k].forEach(function(x){cabNo++;var ks=KAT[x.t]||[];cabRows.push('<tr><td>'+cabNo+'</td><td>'+esc(prettyBranchName(x.t))+(x.x?' <small>('+esc(x.x.replace(/^ · /,""))+')</small>':'')+'</td><td>'+(ks.length>1?'<ol class="category-variants" type="a">'+ks.map(function(c,ci){return '<li><b>'+String.fromCharCode(65+ci)+'.</b> '+esc(c)+'</li>';}).join('')+'</ol>':esc(ks[0]||'—'))+'</td></tr>')})});
-$("cabdetail").innerHTML='<div style="overflow-x:auto"><table class="tb cabang-table"><thead><tr><th>No.</th><th>Cabang Lomba</th><th>Kategori</th></tr></thead><tbody>'+cabRows.join('')+'</tbody></table></div>';
+Object.keys(CABANG).forEach(function(k){CABANG[k].forEach(function(x){
+ cabNo++;var ks=KAT[x.t]||[];
+ var categoryHtml=ks.length>1
+  ?'<ul class="category-variants">'+ks.map(function(c,ci){return '<li><span class="category-letter">'+String.fromCharCode(65+ci)+'</span><span>'+esc(c)+'</span></li>';}).join('')+'</ul>'
+  :'<span class="category-single">'+esc(ks[0]||'—')+'</span>';
+ cabRows.push('<tr><td class="branch-number">'+cabNo+'</td><td class="branch-name">'+esc(prettyBranchName(x.t))+(x.x?' <small>('+esc(x.x.replace(/^ · /,""))+')</small>':'')+'</td><td class="branch-category">'+categoryHtml+'</td></tr>');
+})});
+$("cabdetail").innerHTML='<div class="cabang-table-wrap"><table class="tb cabang-table"><thead><tr><th>No.</th><th>Cabang Lomba</th><th>Kategori</th></tr></thead><tbody>'+cabRows.join('')+'</tbody></table></div>';
 /* Cabang dipilih dari tombol sebelumnya; kategori hanya dipilih jika lebih dari satu. */
 var REGISTERED_EVENTS=[];
 var DEADLINES={"Duta Pelajar":"6 Desember 2026 (batas akhir pendaftaran tahap 1)","Voli":"6 Desember 2026","Badminton":"29 November 2026"};
@@ -1822,7 +1878,8 @@ var T=[
  ["Road to PORSENI: Badminton","6 Des","2026-12-06","2026-12-06"],
  ["Pendaftaran Tahap 1 Duta Pelajar","Batas akhir · 6 Des","2026-12-06","2026-12-06"],
  ["Pengumuman tahap 1 Duta Pelajar","7 Des","2026-12-07","2026-12-07"],
- ["Road to PORSENI: Voli dan seleksi tahap 2 Duta Pelajar","13 Des","2026-12-13","2026-12-13"],
+ ["Road to PORSENI: Voli","13 Des","2026-12-13","2026-12-13"],
+ ["Seleksi tahap 2 Duta Pelajar","13 Des","2026-12-13","2026-12-13"],
  ["Pengumuman finalis Duta Pelajar","14 Des","2026-12-14","2026-12-14"],
  ["Batas akhir berkas cabang lomba","19 Des","2026-12-19","2026-12-19"],
  ["Pembekalan Duta Pelajar","25 Des · pagi","2026-12-25","2026-12-25"],
@@ -1852,7 +1909,7 @@ var dutaEntries=T.filter(function(t){return /Duta Pelajar/i.test(t[0]);}).map(fu
  else if(name==='Pembekalan Duta Pelajar')note='Pembekalan peserta Duta Pelajar dilaksanakan pada pagi hari, 25 Desember 2026.';
  else if(name==='Grand Final Duta Pelajar')note='Grand Final Duta Pelajar dilaksanakan pada 26 Desember 2026.';
  else if(/tahap 1/i.test(name))note='Pengumuman hasil seleksi tahap pertama.';
- else if(/tahap 2/i.test(name))note='Seleksi tahap kedua berlangsung bersamaan dengan Road to PORSENI: Voli.';
+ else if(/tahap 2/i.test(name))note='Seleksi tahap kedua Duta Pelajar.';
  else if(/finalis/i.test(name))note='Pengumuman peserta yang lolos sebagai finalis.';
  return [name,t[1],t[2],t[3],note];
 });
