@@ -617,6 +617,30 @@ footer b{color:var(--navy)}
 .desk-nav{pointer-events:auto;isolation:isolate}.desk-nav button{position:relative;z-index:1;pointer-events:auto;touch-action:manipulation}.desk-nav button:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
 @media(max-width:899px){.desk-nav{display:flex!important;position:sticky;top:8px;z-index:1000;flex-wrap:nowrap;overflow-x:auto;white-space:nowrap;scrollbar-width:thin}.desk-nav strong{display:none}.desk-nav button{flex:0 0 auto;padding:9px 11px}.desk-nav .nav-register{margin-left:0}.champion-groups{grid-template-columns:1fr}}
 @media print{body.print-championship *{visibility:hidden!important}body.print-championship #championship-print,body.print-championship #championship-print *{visibility:visible!important}body.print-championship #championship-print{display:block!important;position:absolute!important;left:0!important;top:0!important;width:100%!important;background:#fff!important;color:#111!important;padding:0!important;margin:0!important}body.print-championship #championship-print .print-table{min-width:0!important}body.print-championship #championship-print .print-table th,body.print-championship #championship-print .print-table td{padding:4px 5px!important}}
+
+/* Timeline revision: one clear reading direction, top to bottom on every screen. */
+.timeline-heading p:after{content:"  •  Baca dari atas ke bawah";font-weight:800;color:var(--blue)}
+.timeline-grid.connected-timeline{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:12px!important;padding:8px 0 8px 34px!important;position:relative!important}
+.timeline-grid.connected-timeline:before{left:12px!important;right:auto!important;top:8px!important;bottom:8px!important;width:4px!important;transform:none!important}
+.timeline-grid.connected-timeline .timeline-item,
+.timeline-grid.connected-timeline .timeline-item:nth-child(odd),
+.timeline-grid.connected-timeline .timeline-item:nth-child(even){grid-column:1!important;display:flex!important;flex-direction:row!important;text-align:left!important;align-items:center!important;min-height:76px!important;width:100%!important;padding:12px 15px!important;margin:0!important}
+.timeline-grid.connected-timeline .timeline-item:after,
+.timeline-grid.connected-timeline .timeline-item:nth-child(odd):after,
+.timeline-grid.connected-timeline .timeline-item:nth-child(even):after{display:none!important}
+.timeline-grid.connected-timeline .timeline-item:before,
+.timeline-grid.connected-timeline .timeline-item:nth-child(odd):before,
+.timeline-grid.connected-timeline .timeline-item:nth-child(even):before{left:-30px!important;right:auto!important;top:28px!important;transform:none!important;width:16px!important;height:16px!important}
+.timeline-grid.connected-timeline .timeline-item>div{min-width:0;flex:1}
+.timeline-grid.connected-timeline .timeline-item .tl-date,
+.timeline-grid.connected-timeline .timeline-item b,
+.timeline-grid.connected-timeline .timeline-item small{display:block;width:auto!important;text-align:left!important}
+.info-location .location-placeholder{display:flex;gap:15px;align-items:center;padding:18px;border:1px dashed #9db9e3;border-radius:17px;background:linear-gradient(110deg,#f2f7ff,#fff9ed)}
+.location-placeholder-icon{display:grid;place-items:center;flex:none;width:54px;height:54px;border-radius:17px;background:linear-gradient(135deg,#0a63c9,#12a9e8);font-size:1.6rem}
+.location-placeholder b{display:block;color:var(--navy);font:800 .95rem var(--display)}
+.location-placeholder small{display:block;color:var(--muted);line-height:1.5;margin-top:4px}
+@media(max-width:599px){.timeline-grid.connected-timeline{grid-template-columns:minmax(0,1fr)!important;padding-left:34px!important}.info-location .location-placeholder{align-items:flex-start;padding:14px}.location-placeholder-icon{width:44px;height:44px}}
+
 </style>
 </head>
 <body>
@@ -639,7 +663,7 @@ footer b{color:var(--navy)}
 <div class="about">
   <p>PORSENI (Pekan Olahraga dan Seni) adalah ajang kompetisi dan kreativitas pelajar NU se-Kecamatan Patebon yang diadakan setiap tahun sekali, terdiri dari berbagai cabang lomba dalam bidang akademik, olahraga maupun seni. Terdapat beberapa rangkaian acara seperti Road To Porseni, Parade Gelar Budaya, Perlombaan, PORSENI EXPO meliputi Stand UMKM, Pasar Murah, Pameran Karya Seni, Donor Darah.</p>
   <div class="timeline-feature">
-    <div class="timeline-heading"><span class="timeline-kicker">SAVE THE DATE</span><h2>TIMELINE PORSENI 2026</h2><p>Catat setiap tahapannya dan bersiap menjadi bagian dari kemeriahan PORSENI!</p></div>
+    <div class="timeline-heading"><span class="timeline-kicker">SAVE THE DATE</span><h2>TIMELINE PORSENI 2026</h2><p>Ikuti urutan kegiatan dengan membaca dari atas ke bawah.</p></div>
     <div id="timeline-main" class="timeline-grid connected-timeline" aria-label="Timeline kegiatan PORSENI 2026"></div>
     <div class="timeline-footer"><span>🏁</span><b>Puncak PORSENI 2026</b><small>25–26 Desember 2026</small></div>
   </div>
@@ -654,7 +678,7 @@ footer b{color:var(--navy)}
 
 <div class="sec">INFORMASI</div>
 <section class="info-feature info-duta">
-  <div class="info-heading"><span class="info-icon">🎓</span><div><span class="timeline-kicker">JALUR SELEKSI</span><h2>TIMELINE DUTA PELAJAR</h2><p>Rangkaian pendaftaran, seleksi, pengumuman, hingga pembekalan Duta Pelajar 2026.</p></div></div>
+  <div class="info-heading"><span class="info-icon">🎓</span><div><span class="timeline-kicker">JALUR SELEKSI</span><h2>TIMELINE DUTA PELAJAR</h2><p>Rangkaian pendaftaran, pembekalan, seleksi, dan pengumuman. Baca berurutan dari atas ke bawah.</p></div></div>
   <div id="tl-duta" class="timeline-grid connected-timeline duta-timeline" aria-label="Timeline Duta Pelajar"></div>
 </section>
 <section class="info-feature info-cabang">
@@ -677,6 +701,13 @@ footer b{color:var(--navy)}
       <div class="rundown-event"><time>19.30–23.00</time><div><b>Perlombaan sesi malam</b><small>Rebana sesi 2, PES PS3, LCC, dan karya ilmiah</small></div></div>
       <div class="rundown-event"><time>23.00–23.59</time><div><b>Penutupan dan pengumuman juara umum</b><small>Puncak apresiasi bagi seluruh kontingen</small></div></div>
     </div></article>
+  </div>
+</section>
+<section class="info-feature info-location">
+  <div class="info-heading"><span class="info-icon">📍</span><div><span class="timeline-kicker">PETA KEGIATAN</span><h2>DENAH LOKASI & RINCIAN TEMPAT</h2><p>Denah dan daftar titik lokasi akan ditampilkan setelah lokasi setiap kegiatan ditetapkan oleh panitia.</p></div></div>
+  <div class="location-placeholder">
+    <div class="location-placeholder-icon">🗺️</div>
+    <div><b>Denah lokasi segera diperbarui</b><small>Bagian ini akan memuat peta area PORSENI, lokasi masing-masing cabang lomba, panggung utama, sekretariat, registrasi, parkir, dan fasilitas pendukung sesuai data final panitia.</small></div>
   </div>
 </section>
 
@@ -865,7 +896,9 @@ footer b{color:var(--navy)}
 var DOCS=[
  {i:"📑",t:"Unduh TOR (Term Of Reference) Kegiatan",d:"Dokumen PDF",u:""},
  {i:"📘",t:"Unduh Petunjuk Teknis (Juknis)",d:"Aturan lomba tiap cabang",u:""},
- {i:"🤝",t:"Unduh Pakta Integritas",d:"Wajib dilengkapi kontingen",u:""}
+ {i:"🤝",t:"Unduh Pakta Integritas",d:"Wajib dilengkapi kontingen",u:""},
+ {i:"📝",t:"Unduh Contoh Berita Acara RAT",d:"Contoh format DOCX yang dapat diedit; sesuaikan dengan ketentuan organisasi",u:"dokumen-contoh-berita-acara-rat.docx"},
+ {i:"📚",t:"Unduh Buku Pedoman Kegiatan PORSENI 2026",d:"Dokumen resmi panitia akan ditautkan setelah berkas pedoman tersedia",u:""}
 ];
 var REG=[
  {i:"📝",t:"YUK DAFTARKAN KONTINGENMU DISINI",d:"Dibuka 1–20 November 2026 · isi online",u:"#daftar-kontingen"}
@@ -962,7 +995,7 @@ $("cabdetail").innerHTML='<div style="overflow-x:auto"><table class="tb cabang-t
 var REGISTERED_EVENTS=[];
 var DEADLINES={"Duta Pelajar":"6 Desember 2026","Voli":"6 Desember 2026","Badminton":"29 November 2026"};
 var SCHEDULE={
- "Duta Pelajar":"Sabtu, 26 Desember 2026 · 08.00–12.00 WIB. Timeline seleksi, pengumuman, dan pembekalan tersedia di tombol Timeline Duta Pelajar.",
+ "Duta Pelajar":"Sabtu, 26 Desember 2026 · 08.00–12.00 WIB. Pembekalan dilaksanakan terpisah pada 25 November 2026; timeline seleksi tersedia di bagian Informasi.",
  "Badminton":"Road to PORSENI: Minggu, 6 Desember 2026. Waktu pelaksanaan mengikuti informasi panitia.",
  "Voli":"Road to PORSENI: Minggu, 13 Desember 2026. Waktu pelaksanaan mengikuti informasi panitia.",
  "Khitobah":"Sabtu, 26 Desember 2026 · 13.00–18.00 WIB.",
@@ -1335,16 +1368,46 @@ function parseCSV(t){var r=[],row=[],f="",q=false;for(var i=0;i<t.length;i++){va
 if(SHEET_URL){fetch(SHEET_URL+(SHEET_URL.indexOf('?')>-1?'&':'?')+'t='+Date.now()).then(function(r){return r.text()}).then(function(t){
  var d=parseCSV(t).filter(function(r){return r[0]&&r[0].trim()&&!isNaN(parseInt(r[1]))}).map(function(r){return {k:r[0].trim(),g:parseInt(r[1])||0,s:parseInt(r[2])||0,b:parseInt(r[3])||0}});
  MEDALS=d;renderHasil()}).catch(function(){})}
-var T=[["Sosialisasi PORSENI","18 Okt","2026-10-18","2026-10-18"],["Technical Meeting 1","25 Okt","2026-10-25","2026-10-25"],["Pendaftaran kontingen dan cabang lomba","1–20 Nov","2026-11-01","2026-11-20"],["Technical Meeting 2","22 Nov","2026-11-22","2026-11-22"],["Pendaftaran Duta Pelajar","1–6 Des","2026-12-01","2026-12-06"],["Road to PORSENI: Badminton","6 Des","2026-12-06","2026-12-06"],["Pengumuman tahap 1 Duta Pelajar","7 Des","2026-12-07","2026-12-07"],["Road to PORSENI: Voli dan seleksi tahap 2 Duta Pelajar","13 Des","2026-12-13","2026-12-13"],["Pengumuman finalis Duta Pelajar","14 Des","2026-12-14","2026-12-14"],["Batas akhir berkas cabang lomba","19 Des","2026-12-19","2026-12-19"],["PORSENI 2026 (pembekalan Duta Pelajar 25 Des)","25–26 Des","2026-12-25","2026-12-26"]];
+var T=[
+ ["Sosialisasi PORSENI","18 Okt","2026-10-18","2026-10-18"],
+ ["Technical Meeting 1","25 Okt","2026-10-25","2026-10-25"],
+ ["Pendaftaran kontingen dan cabang lomba","1–20 Nov","2026-11-01","2026-11-20"],
+ ["Pendaftaran Duta Pelajar","1 Nov–6 Des","2026-11-01","2026-12-06"],
+ ["Technical Meeting 2","22 Nov","2026-11-22","2026-11-22"],
+ ["Pembekalan Duta Pelajar","25 Nov","2026-11-25","2026-11-25"],
+ ["Road to PORSENI: Badminton","6 Des","2026-12-06","2026-12-06"],
+ ["Pengumuman tahap 1 Duta Pelajar","7 Des","2026-12-07","2026-12-07"],
+ ["Road to PORSENI: Voli dan seleksi tahap 2 Duta Pelajar","13 Des","2026-12-13","2026-12-13"],
+ ["Pengumuman finalis Duta Pelajar","14 Des","2026-12-14","2026-12-14"],
+ ["Batas akhir berkas cabang lomba","19 Des","2026-12-19","2026-12-19"],
+ ["PORSENI 2026 — Puncak Kegiatan","25–26 Des","2026-12-25","2026-12-26"]
+];
 var n=new Date(),p=function(v){return String(v).padStart(2,'0')},today=n.getFullYear()+'-'+p(n.getMonth()+1)+'-'+p(n.getDate());
 function renderConnectedTimeline(el,entries){
  if(!el)return;
  el.innerHTML=entries.map(function(t,i){var done=t[3]<today,active=t[2]<=today&&t[3]>=today;var note=t[4]||'';return '<article class="timeline-item'+(done?' is-done':'')+(active?' is-current':'')+'"><span class="tl-num">'+(done?'✓':String(i+1).padStart(2,'0'))+'</span><div><span class="tl-date">'+t[1]+'</span><b>'+t[0]+'</b>'+(note?'<small>'+note+'</small>':'')+'</div></article>';}).join('');
 }
 var mainTimeline=document.getElementById('timeline-main');
-var mainEntries=T.map(function(t,i){var notes={2:'Pendaftaran kontingen dan cabang lomba dibuka hingga 20 November.',9:'Batas akhir berkas cabang lomba reguler; Duta Pelajar, voli, dan badminton memiliki batas khusus.',10:'Parade Gelar Budaya, perlombaan, PORSENI Expo, serta pembekalan Duta Pelajar.'};return [t[0],t[1],t[2],t[3],notes[i]||''];});
+var mainEntries=T.map(function(t){
+ var name=t[0],note='';
+ if(name==='Pendaftaran kontingen dan cabang lomba')note='Pendaftaran kontingen dan pilihan cabang lomba dibuka sampai 20 November 2026.';
+ else if(name==='Pendaftaran Duta Pelajar')note='Masa pendaftaran Duta Pelajar berlangsung 1 November sampai 6 Desember 2026.';
+ else if(name==='Pembekalan Duta Pelajar')note='Agenda pembekalan tersendiri pada November, terpisah dari acara puncak PORSENI.';
+ else if(name==='Batas akhir berkas cabang lomba')note='Batas akhir berkas cabang lomba reguler; Duta Pelajar, voli, dan badminton mengikuti jadwal khusus.';
+ else if(name.indexOf('Puncak Kegiatan')>-1)note='Registrasi, Parade Gelar Budaya, perlombaan, PORSENI Expo, dan pengumuman juara umum.';
+ return [name,t[1],t[2],t[3],note];
+});
 renderConnectedTimeline(mainTimeline,mainEntries);
-var dutaEntries=T.filter(function(t){return /Duta Pelajar/i.test(t[0]);}).map(function(t){var note=/Pendaftaran Duta/.test(t[0])?'Pendaftaran peserta Duta Pelajar dibuka.':/tahap 1/.test(t[0])?'Pengumuman hasil seleksi tahap pertama.':/tahap 2/.test(t[0])?'Seleksi tahap kedua berlangsung bersamaan dengan Road to PORSENI: Voli.':/finalis/.test(t[0])?'Pengumuman peserta yang lolos sebagai finalis.':'Pembekalan berlangsung pada 25 Desember; penampilan lomba pada 26 Desember.';return [t[0],t[1],t[2],t[3],note];});
+var dutaEntries=T.filter(function(t){return /Duta Pelajar/i.test(t[0]);}).map(function(t){
+ var name=t[0],note='';
+ if(name==='Pendaftaran Duta Pelajar')note='Pendaftaran dibuka mulai 1 November hingga 6 Desember 2026.';
+ else if(name==='Pembekalan Duta Pelajar')note='Pembekalan peserta Duta Pelajar dilaksanakan pada 25 November 2026.';
+ else if(/tahap 1/i.test(name))note='Pengumuman hasil seleksi tahap pertama.';
+ else if(/tahap 2/i.test(name))note='Seleksi tahap kedua berlangsung bersamaan dengan Road to PORSENI: Voli.';
+ else if(/finalis/i.test(name))note='Pengumuman peserta yang lolos sebagai finalis.';
+ return [name,t[1],t[2],t[3],note];
+});
+dutaEntries.push(["Pelaksanaan Duta Pelajar","26 Des","2026-12-26","2026-12-26","Pelaksanaan cabang Duta Pelajar pada sesi perlombaan PORSENI."]);
 renderConnectedTimeline(document.getElementById('tl-duta'),dutaEntries);
 </script>
 
