@@ -1036,6 +1036,35 @@ html,body{max-width:100%;}
  .info-cabang .cabang-table td{padding:9px 10px;font-size:.82rem;}
 }
 
+
+/* Filosofi Logo & Tema PORSENI 2026 */
+.info-filosofi{display:block!important;min-width:0}
+.philosophy-hero{display:grid;grid-template-columns:minmax(170px,.72fr) minmax(0,1.28fr);gap:22px;align-items:center;padding:22px;border-radius:22px;background:linear-gradient(125deg,#09265f 0%,#0b4b9d 58%,#12a9e8 100%);color:#fff;box-shadow:0 12px 30px rgba(11,45,114,.15)}
+.philosophy-logo{min-height:220px;border-radius:18px;background:rgba(255,255,255,.96);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:18px}
+.philosophy-logo img{display:block;width:min(100%,190px);height:190px;object-fit:contain}
+.philosophy-logo span{font:800 9px var(--display);letter-spacing:.12em;color:#183b7a;text-align:center;margin-top:8px}
+.theme-eyebrow{font:800 .72rem var(--display);letter-spacing:.16em;color:#ffdf8b}
+.philosophy-theme h3{font:800 clamp(1.25rem,3vw,2rem)/1.2 var(--display);margin:9px 0;color:#fff;letter-spacing:.04em}
+.philosophy-theme .theme-translation{font:800 1.08rem var(--display);color:#ffe29a;margin:0 0 12px}
+.philosophy-theme p:last-child{font-size:1.08rem;line-height:1.6;margin:0;color:#e8f4ff}
+.philosophy-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;margin:16px 0}
+.philosophy-card{padding:18px;border:1px solid #e2eaf6;border-radius:18px;background:#fff;box-shadow:0 5px 16px rgba(11,45,114,.05)}
+.philosophy-mark{display:grid;place-items:center;width:42px;height:42px;border-radius:13px;background:#edf5ff;font-size:1.35rem;margin-bottom:10px}
+.philosophy-card h3,.philosophy-colors h3{font:800 .94rem var(--display);color:#0b2d72;margin:0 0 7px}
+.philosophy-card p{font-size:1.02rem;line-height:1.5;color:#4b5f8a;margin:0}
+.philosophy-colors{padding:18px 20px;border-radius:18px;background:#f1f6ff;border:1px solid #dce8f8}
+.philosophy-colors h3{margin-bottom:13px}
+.color-meaning{display:flex;align-items:flex-start;gap:11px;padding:9px 0;border-top:1px solid #e0eafa}
+.color-dot{width:18px;height:18px;border-radius:50%;flex:none;margin-top:2px;box-shadow:0 0 0 3px #fff,0 0 0 4px #dbe6f5}
+.color-dot.red{background:linear-gradient(135deg,#e8312f,#ffc20e)}.color-dot.blue{background:#0a63c9}.color-dot.teal{background:#13bea8}.color-dot.purple{background:#8c20aa}
+.color-meaning b{display:block;color:#183b7a;font-size:.95rem}.color-meaning small{display:block;color:#5c6f91;font-size:.9rem;line-height:1.35}
+.philosophy-closing{text-align:center;padding:19px 20px;margin-top:15px;border-radius:18px;background:linear-gradient(90deg,#fff3d8,#eef7ff);border:1px solid #f1e0bc}
+.philosophy-closing b{font:800 1.05rem var(--display);color:#0b2d72;letter-spacing:.06em}.philosophy-closing p{margin:7px 0 0;color:#40577f;line-height:1.5}
+.philosophy-note{font-size:.82rem;line-height:1.4;color:#7182a0;margin:11px 4px 0}
+.about-filosofi-link{margin:12px 0 0!important}.about-filosofi-link a{display:inline-flex;align-items:center;gap:7px;padding:8px 13px;border-radius:999px;background:#eaf4ff;color:#0a63c9!important;font-weight:800;text-decoration:none}
+@media(max-width:600px){.philosophy-hero{grid-template-columns:1fr;padding:14px;gap:15px}.philosophy-logo{min-height:0;padding:10px}.philosophy-logo img{height:145px;width:145px}.philosophy-grid{grid-template-columns:1fr}.philosophy-theme h3{font-size:1.35rem}.philosophy-card{padding:15px}.philosophy-colors{padding:15px}}
+@media(min-width:900px){#v-home>.desk-panel[data-panel="filosofi-logo-tema"]{grid-column:1/-1}#v-home>.desk-panel[data-panel="filosofi-logo-tema"] .philosophy-hero{grid-template-columns:minmax(220px,.62fr) minmax(0,1.38fr);padding:28px 32px}#v-home>.desk-panel[data-panel="filosofi-logo-tema"] .philosophy-logo img{height:230px;width:220px}}
+
 </style>
 </head>
 <body>
@@ -1070,12 +1099,38 @@ html,body{max-width:100%;}
 <div class="sec">APA ITU PORSENI?</div>
 <div class="about">
   <p>PORSENI (Pekan Olahraga dan Seni) adalah ajang kompetisi dan kreativitas pelajar NU se-Kecamatan Patebon yang diadakan setiap tahun sekali, terdiri dari berbagai cabang lomba dalam bidang akademik, olahraga maupun seni. Terdapat beberapa rangkaian acara seperti Road to PORSENI, Parade Gelar Budaya, Perlombaan, PORSENI EXPO meliputi Stand UMKM, Pasar Murah, Pameran Karya Seni, Donor Darah.</p>
+  <p class="about-filosofi-link"><a href="#filosofi" aria-label="Buka filosofi logo dan tema PORSENI 2026">✨ Kenali Filosofi Logo &amp; Tema PORSENI 2026</a></p>
   <div class="timeline-feature">
     <div class="timeline-heading"><span class="timeline-kicker">SAVE THE DATE</span><h2>TIMELINE PORSENI 2026</h2><p>Ikuti urutan kegiatan dengan membaca dari atas ke bawah.</p></div>
     <div id="timeline-main" class="timeline-grid connected-timeline" aria-label="Timeline kegiatan PORSENI 2026"></div>
     <div class="timeline-footer"><span>🏁</span><b>Puncak PORSENI 2026</b><small>25–26 Desember 2026</small></div>
   </div>
 </div>
+
+<div class="sec">FILOSOFI LOGO &amp; TEMA</div>
+<section class="info-feature info-filosofi" aria-label="Filosofi logo dan tema PORSENI 2026">
+  <a class="back philosophy-back" href="#beranda">‹ Kembali ke Beranda</a>
+  <div class="info-heading"><span class="info-icon">✨</span><div><span class="timeline-kicker">IDENTITAS PORSENI 2026</span><h2>FILOSOFI LOGO &amp; TEMA</h2><p>Makna visual dan semangat yang menyatukan olahraga, seni, kreativitas, serta persaudaraan pelajar NU di Kecamatan Patebon.</p></div></div>
+  <div class="philosophy-hero">
+    <div class="philosophy-logo"><img src="logo-porseni.png" alt="Logo resmi PORSENI 2026"><span>LOGO RESMI PORSENI 2026</span></div>
+    <div class="philosophy-theme"><span class="theme-eyebrow">TEMA PORSENI 2026</span><h3>“UNITAS AD GLORIAM”</h3><p class="theme-translation">Persatuan Menuju Kemuliaan</p><p>Berangkat dari semangat kebersamaan, setiap peserta diberi ruang untuk menunjukkan kemampuan, menghargai perbedaan, dan bertumbuh bersama. Prestasi menjadi lebih bermakna ketika diraih melalui persaudaraan, sportivitas, dan saling mendukung.</p></div>
+  </div>
+  <div class="philosophy-grid">
+    <article class="philosophy-card"><span class="philosophy-mark">🔥</span><h3>Nyala semangat</h3><p>Bentuk menyerupai nyala api menggambarkan tekad, energi, dan keberanian untuk berusaha. Semangat ini mendorong peserta untuk berani tampil serta memberikan kemampuan terbaik.</p></article>
+    <article class="philosophy-card"><span class="philosophy-mark">🏃</span><h3>Gerak dan pertumbuhan</h3><p>Siluet yang bergerak dan lengkungan pita memberi kesan dinamis. Maknanya adalah pelajar yang aktif, terus berkembang, dan menyalurkan potensi melalui olahraga maupun seni.</p></article>
+    <article class="philosophy-card"><span class="philosophy-mark">🏅</span><h3>Prestasi dan tujuan</h3><p>Bulatan keemasan menjadi titik perhatian yang dapat dimaknai sebagai cita-cita, pencapaian, serta tujuan bersama. Prestasi bukan hanya kemenangan, tetapi juga proses belajar dan kedisiplinan.</p></article>
+    <article class="philosophy-card"><span class="philosophy-mark">🤝</span><h3>Persatuan dalam keberagaman</h3><p>Pita-pita warna yang saling terhubung menggambarkan banyak cabang, karakter, dan potensi yang bertemu dalam satu kegiatan. Perbedaan menjadi kekuatan untuk membangun persaudaraan.</p></article>
+  </div>
+  <div class="philosophy-colors">
+    <h3>Makna warna</h3>
+    <div class="color-meaning"><span class="color-dot red"></span><div><b>Merah, jingga, dan kuning</b><small>Energi, keberanian, antusiasme, dan optimisme.</small></div></div>
+    <div class="color-meaning"><span class="color-dot blue"></span><div><b>Biru</b><small>Kepercayaan, keteguhan, tanggung jawab, dan sportivitas.</small></div></div>
+    <div class="color-meaning"><span class="color-dot teal"></span><div><b>Hijau kebiruan</b><small>Kesegaran, harapan, kolaborasi, dan semangat untuk terus tumbuh.</small></div></div>
+    <div class="color-meaning"><span class="color-dot purple"></span><div><b>Ungu</b><small>Kreativitas, keunikan, dan keberanian menampilkan karya.</small></div></div>
+  </div>
+  <div class="philosophy-closing"><b>Unitas Ad Gloriam</b><p>Bersatu dalam semangat, berkompetisi dengan sportif, berkarya dengan kreatif, dan melangkah menuju kemuliaan bersama.</p></div>
+  <p class="philosophy-note">Uraian filosofi ini merupakan rumusan makna visual berdasarkan bentuk dan warna logo PORSENI 2026 untuk membantu pengunjung memahami identitas kegiatan.</p>
+</section>
 
 <div class="sec">KONTINGEN DAN PESERTA YANG TELAH TERDAFTAR</div>
 <div class="recap-grid">
@@ -1281,8 +1336,8 @@ html,body{max-width:100%;}
     <div id="fb-duta-files" hidden>
       <h3>Berkas Khusus Duta Pelajar</h3>
       <p class="pgsub" style="margin:0 0 10px">Khusus cabang Duta Pelajar: CV wajib diunggah. Berkas pendukung bersifat tidak wajib. Surat Tugas dari PR IPNU-IPPNU tetap wajib di bagian bawah.</p>
-      <label class="fld"><span>CV Peserta Duta Pelajar (PDF/DOC/DOCX) *</span><input type="file" id="fb-duta-cv" name="f_duta_cv" accept="application/pdf,.pdf,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"></label>
-      <label class="fld"><span>Berkas pendukung Duta Pelajar (Piagam/Sertifikat/Bukti Prestasi)</span><input type="file" id="fb-duta-support" name="f_duta_support" accept="application/pdf,.pdf,image/*" multiple></label>
+      <label class="fld"><span>CV Peserta Duta Pelajar (PDF / Gambar) *</span><input type="file" id="fb-duta-cv" name="f_duta_cv" accept="application/pdf,.pdf,image/*,.jpg,.jpeg,.png,.gif,.bmp,.webp,.tif,.tiff,.avif,.heic,.heif,.svg,.ico"></label>
+      <label class="fld"><span>Berkas pendukung Duta Pelajar (opsional)</span><input type="file" id="fb-duta-support" name="f_duta_support" accept="application/pdf,.pdf,image/*" multiple></label>
     </div>
     <h3>Surat tugas kontingen</h3>
     <label class="fld"><span>Surat Tugas dari PR IPNU-IPPNU * (PDF)</span><input type="file" name="f_surat_tugas" id="fb-surat-tugas" accept="application/pdf,.pdf" required></label>
@@ -1723,7 +1778,7 @@ function checkSignatureImage(file,label){checkImageFile(file,label,2*1024*1024);
 function checkFileType(file,allowed,label){if(!file)throw new Error(label+' wajib diunggah.');var t=(file.type||'').toLowerCase(),n=(file.name||'').toLowerCase();if(allowed.indexOf('image')>=0){/* Server memeriksa signature byte gambar. */return true;}var ok=allowed.some(function(x){if(x==='pdf')return t==='application/pdf'||/\.pdf$/.test(n);if(x==='word')return /\.(doc|docx)$/.test(n);if(x==='ppt')return /\.(ppt|pptx)$/.test(n);return false;});if(!ok){var desc=(allowed.indexOf('pdf')>=0&&allowed.indexOf('word')>=0)?'berformat PDF atau Word DOC/DOCX':allowed.indexOf('word')>=0?'berformat Word DOC/DOCX':allowed.indexOf('ppt')>=0?'berformat PPT/PPTX':'berformat PDF';throw new Error(label+' harus '+desc+'.');}}
 function formatBytes(n){if(n<1024)return n+" B";if(n<1048576)return (n/1024).toFixed(1)+" KB";return (n/1048576).toFixed(2)+" MB";}
 function uploadProgress(formId){var form=document.getElementById(formId),id=formId+"-upload-progress",box=document.getElementById(id);if(!box){box=document.createElement("div");box.id=id;box.style.cssText="display:none;margin:12px 0;padding:12px;border:1px solid #cbd8e8;border-radius:12px;background:#f7faff";box.innerHTML='<div style="display:flex;justify-content:space-between;gap:12px;font-weight:700"><span class="up-label">Menyiapkan berkas…</span><span class="up-step">Tahap 1 dari 3</span></div><div style="display:flex;gap:5px;margin:10px 0"><i class="up-dot" style="height:7px;flex:1;border-radius:8px;background:#1976d2"></i><i class="up-dot" style="height:7px;flex:1;border-radius:8px;background:#e4ebf4"></i><i class="up-dot" style="height:7px;flex:1;border-radius:8px;background:#e4ebf4"></i></div><small class="up-size">Mohon jangan tutup halaman sampai proses selesai.</small>';var btn=form.querySelector('button[type=submit]');form.insertBefore(box,btn);}return {show:function(){box.style.display="block";this.update(1,"Menyiapkan berkas untuk dikirim…");},update:function(step,label){step=Math.max(1,Math.min(3,step));box.querySelector('.up-label').textContent=label;box.querySelector('.up-step').textContent="Tahap "+step+" dari 3";Array.prototype.forEach.call(box.querySelectorAll('.up-dot'),function(dot,i){dot.style.background=i<step?"#1976d2":"#e4ebf4";});box.querySelector('.up-size').textContent=step===1?"Memeriksa dan menyiapkan berkas…":step===2?"Data sedang dikirim. Waktu proses bergantung pada koneksi dan ukuran berkas.":"Server telah merespons. Memeriksa hasil pendaftaran…";},hide:function(){box.style.display="none";}};}
-function addUploadHints(root){(root||document).querySelectorAll('input[type=file]').forEach(function(inp){if(inp.dataset.hintAdded)return;inp.dataset.hintAdded="1";var acc=(inp.getAttribute('accept')||'').toLowerCase(),name=inp.name||'',isSignature=/f_ttd_/.test(name),txt=isSignature?'Unggah file gambar asli (format tidak diubah dan tidak dikonversi). Maksimal 2 MB.':name==='f_duta_cv'?'Format CV: PDF atau Word DOC/DOCX. Maksimal 10 MB.':name==='f_duta_support'?'Opsional. Format yang didukung: PDF atau gambar. Dapat memilih lebih dari satu file; maksimal 10 MB per file.':acc.indexOf('doc')>=0?'Format: DOC/DOCX. Maksimal 10 MB.':acc.indexOf('ppt')>=0?'Format: PPT/PPTX. Maksimal 10 MB.':acc.indexOf('pdf')>=0&&acc.indexOf('image')>=0?'Format: PDF, JPG, PNG, atau WebP. Maksimal 10 MB.':acc.indexOf('pdf')>=0?'Format: PDF. Maksimal 10 MB.': 'Format gambar yang didukung browser. File asli dipertahankan tanpa konversi. Maksimal 10 MB.';var hint=document.createElement('small');hint.className='hint upload-file-hint';hint.style.cssText='display:block;margin:5px 0 10px';hint.textContent=txt;inp.parentNode.insertBefore(hint,inp.nextSibling);});}
+function addUploadHints(root){(root||document).querySelectorAll('input[type=file]').forEach(function(inp){if(inp.dataset.hintAdded)return;inp.dataset.hintAdded="1";var acc=(inp.getAttribute('accept')||'').toLowerCase(),name=inp.name||'',isSignature=/f_ttd_/.test(name),txt=isSignature?'Unggah file gambar asli (format tidak diubah dan tidak dikonversi). Maksimal 2 MB.':name==='f_duta_cv'?'Format CV: PDF atau gambar. File asli dipertahankan tanpa konversi. Maksimal 10 MB.':name==='f_duta_support'?'Opsional. Format yang didukung: PDF atau gambar. Dapat memilih lebih dari satu file; maksimal 10 MB per file.':acc.indexOf('doc')>=0?'Format: DOC/DOCX. Maksimal 10 MB.':acc.indexOf('ppt')>=0?'Format: PPT/PPTX. Maksimal 10 MB.':acc.indexOf('pdf')>=0&&acc.indexOf('image')>=0?'Format: PDF, JPG, PNG, atau WebP. Maksimal 10 MB.':acc.indexOf('pdf')>=0?'Format: PDF. Maksimal 10 MB.': 'Format gambar yang didukung browser. File asli dipertahankan tanpa konversi. Maksimal 10 MB.';var hint=document.createElement('small');hint.className='hint upload-file-hint';hint.style.cssText='display:block;margin:5px 0 10px';hint.textContent=txt;inp.parentNode.insertBefore(hint,inp.nextSibling);});}
 addUploadHints(document);
 var fkf=$("fk");
 fkf.addEventListener("submit",function(e){e.preventDefault();var f=e.target,sel=checks(f,"cabang"),parts=[];
@@ -1767,7 +1822,7 @@ $("fb").addEventListener("submit",function(e){e.preventDefault();var f=e.target,
   var naskah=f.elements.f_khitobah_pdf.files[0];if(!naskah)throw new Error("Naskah khitobah PDF wajib diunggah.");checkFileType(naskah,["pdf"],"Naskah khitobah");items.push({label:"Naskah khitobah (PDF)",file:naskah,preserve:true});
  }else if(PICK==="Duta Pelajar"){
   var cv=f.elements.f_duta_cv.files[0],support=f.elements.f_duta_support.files;
-  if(!cv)throw new Error("CV peserta Duta Pelajar wajib diunggah.");checkFileType(cv,["pdf","word"],"CV Duta Pelajar");items.push({label:"CV Duta Pelajar",file:cv,preserve:true});
+  if(!cv)throw new Error("CV peserta Duta Pelajar wajib diunggah.");checkFileType(cv,["pdf","image"],"CV Duta Pelajar");items.push({label:"CV Duta Pelajar",file:cv,preserve:true});
   if(support&&support.length){for(var si=0;si<support.length;si++){checkFileType(support[si],["pdf","image"],"Berkas pendukung Duta Pelajar "+(si+1));items.push({label:"Berkas pendukung Duta Pelajar "+(si+1),file:support[si],preserve:true});}}
  }
  if(!suratTugas)throw new Error("Surat Tugas dari PR IPNU-IPPNU wajib diunggah.");checkFileType(suratTugas,["pdf"],"Surat Tugas dari PR IPNU-IPPNU");items.push({label:"Surat Tugas dari PR IPNU-IPPNU",file:suratTugas})}catch(er){alert(er.message);return}
@@ -1979,13 +2034,14 @@ renderConnectedTimeline(document.getElementById('tl-duta'),dutaEntries);
    while(n&&!(n.nodeType===1&&n.classList.contains('sec'))){var next=n.nextSibling;panel.appendChild(n);n=next;}
  });
  var nav=document.createElement('nav');nav.className='desk-nav';nav.setAttribute('aria-label','Navigasi cepat');
- nav.innerHTML='<strong>PORSENI 2026</strong><button type="button" data-target="desk-apa-itu-porseni"><span class="nav-ico" aria-hidden="true">⌂</span><span class="nav-label">Beranda</span></button><button type="button" data-target="desk-informasi"><span class="nav-ico" aria-hidden="true">ⓘ</span><span class="nav-label">Informasi</span></button><button type="button" data-target="desk-dokumen-penting"><span class="nav-ico" aria-hidden="true">▤</span><span class="nav-label">Dokumen</span></button><button type="button" data-target="desk-pendaftaran"><span class="nav-ico" aria-hidden="true">✎</span><span class="nav-label">Daftar</span></button><button type="button" data-target="desk-hasil-kejuaraan"><span class="nav-ico" aria-hidden="true">🏆</span><span class="nav-label">Hasil</span></button><button type="button" class="nav-register" data-action="kontingen">Daftar Kontingen Sekarang ↗</button><button type="button" class="nav-cta" data-action="cabang">Kumpulkan Berkas ↗</button><button type="button" data-action="portal">Portal Kontingen</button>';
+ nav.innerHTML='<strong>PORSENI 2026</strong><button type="button" data-target="desk-apa-itu-porseni"><span class="nav-ico" aria-hidden="true">⌂</span><span class="nav-label">Beranda</span></button><button type="button" data-target="desk-informasi"><span class="nav-ico" aria-hidden="true">ⓘ</span><span class="nav-label">Informasi</span></button><button type="button" data-target="desk-filosofi-logo-tema"><span class="nav-ico" aria-hidden="true">✨</span><span class="nav-label">Filosofi</span></button><button type="button" data-target="desk-dokumen-penting"><span class="nav-ico" aria-hidden="true">▤</span><span class="nav-label">Dokumen</span></button><button type="button" data-target="desk-pendaftaran"><span class="nav-ico" aria-hidden="true">✎</span><span class="nav-label">Daftar</span></button><button type="button" data-target="desk-hasil-kejuaraan"><span class="nav-ico" aria-hidden="true">🏆</span><span class="nav-label">Hasil</span></button><button type="button" class="nav-register" data-action="kontingen">Daftar Kontingen Sekarang ↗</button><button type="button" class="nav-cta" data-action="cabang">Kumpulkan Berkas ↗</button><button type="button" data-action="portal">Portal Kontingen</button>';
  var head=home.querySelector('.head'); if(head)head.insertAdjacentElement('afterend',nav);
  var mobileActions=document.createElement('div');mobileActions.className='mobile-quick-actions';mobileActions.setAttribute('aria-label','Aksi cepat PORSENI');mobileActions.innerHTML='<button type="button" data-go="#daftar-kontingen"><span>✍️</span><b>Daftar Kontingen</b></button><button type="button" data-go="#cabang-lomba"><span>📎</span><b>Kumpulkan Berkas</b></button><button type="button" data-go="#portal-kontingen"><span>🔐</span><b>Portal Kontingen</b></button>';nav.insertAdjacentElement('afterend',mobileActions);mobileActions.addEventListener('click',function(e){var b=e.target.closest('button[data-go]');if(!b)return;location.hash=b.dataset.go;});
  var RECAP_PANEL='desk-kontingen-dan-peserta-yang-telah-terdaftar';
  var pageTargets={
    'desk-apa-itu-porseni':'#beranda',
    'desk-informasi':'#informasi',
+   'desk-filosofi-logo-tema':'#filosofi',
    'desk-dokumen-penting':'#dokumen',
    'desk-pendaftaran':'#pendaftaran',
    'desk-kontingen-dan-peserta-yang-telah-terdaftar':'#beranda',
@@ -2034,7 +2090,7 @@ renderConnectedTimeline(document.getElementById('tl-duta'),dutaEntries);
    if(b.dataset.target){activateDeskPage(b.dataset.target,true);}
  },true);
  function pageFromHash(){
-   var map={'#beranda':'desk-apa-itu-porseni','#informasi':'desk-informasi','#dokumen':'desk-dokumen-penting','#pendaftaran':'desk-pendaftaran','#rekap':'desk-kontingen-dan-peserta-yang-telah-terdaftar','#hasil':'desk-hasil-kejuaraan','#hubungi':'desk-hubungi-panitia'};
+   var map={'#beranda':'desk-apa-itu-porseni','#informasi':'desk-informasi','#filosofi':'desk-filosofi-logo-tema','#dokumen':'desk-dokumen-penting','#pendaftaran':'desk-pendaftaran','#rekap':'desk-kontingen-dan-peserta-yang-telah-terdaftar','#hasil':'desk-hasil-kejuaraan','#hubungi':'desk-hubungi-panitia'};
    var id=map[location.hash]||'desk-apa-itu-porseni';
    activateDeskPage(id,false);
    if(location.hash==='#rekap'){setTimeout(function(){var rp=document.getElementById(RECAP_PANEL);if(rp)rp.scrollIntoView({behavior:'smooth',block:'start'});},80);}
@@ -2042,7 +2098,7 @@ renderConnectedTimeline(document.getElementById('tl-duta'),dutaEntries);
  pageFromHash();
  window.__deskPage=pageFromHash;
  window.addEventListener('hashchange',function(){
-   if(/^#(beranda|informasi|dokumen|pendaftaran|rekap|hasil|hubungi)$/.test(location.hash))pageFromHash();
+   if(/^#(beranda|informasi|filosofi|dokumen|pendaftaran|rekap|hasil|hubungi)$/.test(location.hash))pageFromHash();
  });
 })();
 </script>
