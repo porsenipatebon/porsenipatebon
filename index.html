@@ -1354,6 +1354,8 @@ renderConnectedTimeline(document.getElementById('tl-duta'),dutaEntries);
  var secs=Array.prototype.slice.call(home.children).filter(function(el){return el.classList&&el.classList.contains('sec')});
  secs.forEach(function(h){
    var title=h.textContent.trim(),slug=title.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+   /* ID navigasi hasil dikunci berdasarkan teks judul; tahan terhadap variasi judul dan spasi. */
+   if(/juara.*umum|hasil.*kejuaraan/.test(slug))slug='hasil-kejuaraan';
    var panel=document.createElement('section');panel.className='desk-panel';panel.dataset.panel=slug;panel.id='desk-'+slug;
    home.insertBefore(panel,h);panel.appendChild(h);
    var n=panel.nextSibling;
@@ -1375,6 +1377,15 @@ renderConnectedTimeline(document.getElementById('tl-duta'),dutaEntries);
  function activateDeskPage(targetId,updateHash){
    var target=document.getElementById(targetId);
    var panels=home.querySelectorAll('.desk-panel');
+   /* Fallback khusus Hasil: cari panel dari judulnya apabila browser/cache lama
+      atau judul halaman membuat ID panel tidak sama dengan target navigasi. */
+   if(!target&&targetId==='desk-hasil-kejuaraan'){
+     Array.prototype.some.call(panels,function(panel){
+       var heading=panel.querySelector('.sec');
+       if(heading&&/juara.*umum|hasil.*kejuaraan/i.test(heading.textContent)){target=panel;target.id='desk-hasil-kejuaraan';panel.dataset.panel='hasil-kejuaraan';return true;}
+       return false;
+     });
+   }
    if(!target){console.warn('Halaman tidak ditemukan:',targetId);return;}
    home.classList.add('desk-page-mode');
    panels.forEach(function(panel){
@@ -1383,23 +1394,27 @@ renderConnectedTimeline(document.getElementById('tl-duta'),dutaEntries);
      panel.style.setProperty('grid-column','1 / -1','important');
    });
    target.classList.add('desk-page-active');
-   /* Paksa panel terpilih tampil; inline !important mengalahkan aturan grid desktop lama. */
    target.style.setProperty('display',target.dataset.panel==='informasi'?'grid':'block','important');
-   /* Beranda juga menampilkan rekap peserta cabang lomba di bawah pengenalan PORSENI. */
-   if(targetId==='desk-apa-itu-porseni'){var rp=document.getElementById(RECAP_PANEL);if(rp){rp.classList.add('desk-page-active');rp.style.setProperty('display','block','important');}}
+   target.style.setProperty('visibility','visible','important');
+   target.style.setProperty('opacity','1','important');
+   /* Beranda juga menampilkan panel rekap yang bersebelahan dengannya. */
+   if(targetId==='desk-apa-itu-porseni'){
+     var rp=document.getElementById(RECAP_PANEL);
+     if(rp){rp.classList.add('desk-page-active');rp.style.setProperty('display','block','important');rp.style.setProperty('visibility','visible','important');}
+   }
    nav.querySelectorAll('button[data-target]').forEach(function(b){b.classList.toggle('active',b.dataset.target===targetId);});
    if(updateHash&&pageTargets[targetId]&&location.hash!==pageTargets[targetId])history.replaceState(null,'',pageTargets[targetId]);
    window.scrollTo({top:0,behavior:'smooth'});
  }
- nav.querySelectorAll('button').forEach(function(b){
-   b.addEventListener('click',function(e){
-     e.preventDefault();e.stopPropagation();
-     if(b.dataset.action==='cabang'){location.hash='#cabang-lomba';return;}
-     if(b.dataset.action==='kontingen'){location.hash='#daftar-kontingen';return;}
-     if(b.dataset.action==='portal'){location.hash='#portal-kontingen';return;}
-     if(b.dataset.target){activateDeskPage(b.dataset.target,true);}
-   },true);
- });
+ /* Delegasi satu handler mencegah listener tombol tertimpa saat navigasi dibuat ulang. */
+ nav.addEventListener('click',function(e){
+   var b=e.target.closest('button');if(!b||!nav.contains(b))return;
+   e.preventDefault();e.stopPropagation();
+   if(b.dataset.action==='cabang'){location.hash='#cabang-lomba';return;}
+   if(b.dataset.action==='kontingen'){location.hash='#daftar-kontingen';return;}
+   if(b.dataset.action==='portal'){location.hash='#portal-kontingen';return;}
+   if(b.dataset.target){activateDeskPage(b.dataset.target,true);}
+ },true);
  function pageFromHash(){
    var map={'#beranda':'desk-apa-itu-porseni','#informasi':'desk-informasi','#dokumen':'desk-dokumen-penting','#pendaftaran':'desk-pendaftaran','#rekap':'desk-kontingen-dan-peserta-yang-telah-terdaftar','#hasil':'desk-hasil-kejuaraan','#hubungi':'desk-hubungi-panitia'};
    var id=map[location.hash]||'desk-apa-itu-porseni';
@@ -1412,6 +1427,30 @@ renderConnectedTimeline(document.getElementById('tl-duta'),dutaEntries);
    if(/^#(beranda|informasi|dokumen|pendaftaran|rekap|hasil|hubungi)$/.test(location.hash))pageFromHash();
  });
 })();
+</script>
+
+<script>
+/* Pengaman navigasi tab Hasil. Menggunakan judul seksi sebagai sumber target,
+   sehingga tetap bekerja walau ID panel berubah akibat revisi judul. */
+document.addEventListener('click',function(e){
+ var button=e.target.closest&&e.target.closest('.desk-nav button[data-target="desk-hasil-kejuaraan"]');
+ if(!button)return;
+ setTimeout(function(){
+   var home=document.getElementById('v-home');if(!home)return;
+   var heading=Array.prototype.slice.call(home.querySelectorAll('.sec')).filter(function(x){return /juara\s+umum|hasil\s+kejuaraan/i.test(x.textContent);})[0];
+   if(!heading)return;
+   var panel=heading.closest('.desk-panel')||heading.parentElement;
+   home.classList.add('desk-page-mode');
+   Array.prototype.forEach.call(home.querySelectorAll(':scope > .desk-panel'),function(x){
+     x.classList.remove('desk-page-active');x.style.setProperty('display','none','important');
+   });
+   panel.id='desk-hasil-kejuaraan';panel.dataset.panel='hasil-kejuaraan';
+   panel.classList.add('desk-page-active');panel.style.setProperty('display','block','important');
+   panel.style.setProperty('visibility','visible','important');panel.style.setProperty('opacity','1','important');
+   button.classList.add('active');
+   history.replaceState(null,'','#hasil');
+ },0);
+},true);
 </script>
 
 <script>
