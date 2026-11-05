@@ -1334,10 +1334,10 @@ body.is-philosophy-page .sw{opacity:.22}
     <label class="fld"><span>Nama kontingen *</span><select name="nama" required><option value="">Pilih nama kontingen…</option></select></label>
     <h3>Ketua kontingen</h3>
     <label class="fld"><span>Nama ketua kontingen *</span><input name="ketua" required></label>
-    <p class="hint">Isi data identitas secara manual sesuai KTP. Panitia akan mencocokkan data dan dokumen melalui Portal Admin; tidak ada pembacaan OCR atau penolakan otomatis berdasarkan usia.</p>
-    <label class="fld"><span>Tempat lahir ketua kontingen *</span><input name="tempat_lahir_ketua" required maxlength="120" placeholder="Contoh: Kendal"></label>
+    <p class="hint">Isi data identitas secara manual sesuai KTP. Sistem menyimpan data apa adanya tanpa validasi isi, panjang, format, atau usia. Pemeriksaan dilakukan manual oleh panitia melalui Portal Admin.</p>
+    <label class="fld"><span>Tempat lahir ketua kontingen *</span><input name="tempat_lahir_ketua" required placeholder="Contoh: Kendal"></label>
     <label class="fld"><span>Tanggal lahir ketua kontingen *</span><input name="tanggal_lahir_ketua" type="date" required></label>
-    <label class="fld"><span>Alamat rumah sesuai KTP *</span><textarea name="alamat_ketua" rows="2" required maxlength="500" placeholder="Masukkan alamat lengkap sesuai KTP"></textarea></label>
+    <label class="fld"><span>Alamat rumah sesuai KTP *</span><textarea name="alamat_ketua" rows="2" required placeholder="Masukkan alamat lengkap sesuai KTP"></textarea></label>
     <label class="fld"><span>No. WhatsApp ketua *</span><input name="wa_ketua" type="tel" inputmode="tel" required placeholder="08xxxxxxxxxx"></label>
     <label class="fld"><span>Email kontingen (untuk seluruh notifikasi) *</span><input name="email" type="email" inputmode="email" autocomplete="email" required maxlength="120" placeholder="nama@email.com"><small class="hint">Gunakan satu alamat email aktif. Semua pemberitahuan verifikasi kontingen dan berkas cabang lomba akan dikirim ke alamat ini.</small></label>
     <label class="fld"><span>Nama Ketua PR IPNU *</span><input name="ketua_pr_ipnu" required></label>
@@ -1751,7 +1751,7 @@ function updateParticipantRule(){
 function resetParticipantRows(){var box=$("fb-peserta");box.innerHTML="";addRow();updateParticipantRule();}
 function addRow(){var box=$("fb-peserta"),rule=participantRule();if(box.children.length>=rule.max)return;var n=box.children.length+1;
  var d=document.createElement("div");d.className="prow";
- d.innerHTML='<h4 class="w" style="margin:0 0 4px">Peserta '+n+'</h4><label class="fld name-field"><span>Nama peserta *</span><input name="pn" placeholder="Nama lengkap peserta '+n+'" required maxlength="120"></label><label class="fld gender-field"><span>Jenis kelamin *</span><select name="pl" aria-label="Jenis kelamin peserta '+n+'" required><option value="L">Putra (L)</option><option value="P">Putri (P)</option></select></label><label class="fld phone-field"><span>Nomor WhatsApp peserta *</span><input name="wa_manual" type="tel" inputmode="tel" autocomplete="tel" required maxlength="20" pattern="[0-9+() .-]{9,20}" placeholder="08xxxxxxxxxx"></label><label class="fld w" style="margin:0" hidden><span>Peran dalam paduan suara</span><select name="pr"><option value="Penyanyi">Penyanyi</option><option value="Dirigen">Dirigen</option></select></label><label class="fld w"><span>Pas foto 4×6 peserta '+n+' *</span><input type="file" name="peserta_foto" required></label><label class="fld w ktp"><span>Identitas diri peserta '+n+' (KTP untuk verifikasi manual) *</span><input type="file" name="peserta_ktp" accept="application/pdf,.pdf,image/*" required></label><label class="fld w"><span>Tempat lahir peserta '+n+' *</span><input type="text" name="tempat_lahir_manual" required maxlength="120" placeholder="Contoh: Kendal"></label><label class="fld w"><span>Tanggal lahir peserta '+n+' *</span><input type="date" name="tanggal_lahir_manual" required></label><label class="fld w"><span>Alamat rumah sesuai KTP peserta '+n+' *</span><textarea name="alamat_manual" rows="2" required maxlength="500" placeholder="Masukkan alamat lengkap sesuai KTP"></textarea></label><button type="button" class="rm w">Hapus peserta</button>';
+ d.innerHTML='<h4 class="w" style="margin:0 0 4px">Peserta '+n+'</h4><label class="fld name-field"><span>Nama peserta *</span><input name="pn" placeholder="Nama lengkap peserta '+n+'" required maxlength="120"></label><label class="fld gender-field"><span>Jenis kelamin *</span><select name="pl" aria-label="Jenis kelamin peserta '+n+'" required><option value="L">Putra (L)</option><option value="P">Putri (P)</option></select></label><label class="fld phone-field"><span>Nomor WhatsApp peserta *</span><input name="wa_manual" type="tel" inputmode="tel" autocomplete="tel" required maxlength="20" pattern="[0-9+() .-]{9,20}" placeholder="08xxxxxxxxxx"></label><label class="fld w" style="margin:0" hidden><span>Peran dalam paduan suara</span><select name="pr"><option value="Penyanyi">Penyanyi</option><option value="Dirigen">Dirigen</option></select></label><label class="fld w"><span>Pas foto 4×6 peserta '+n+' *</span><input type="file" name="peserta_foto" required></label><label class="fld w ktp"><span>Identitas diri peserta '+n+' (KTP untuk verifikasi manual) *</span><input type="file" name="peserta_ktp" accept="application/pdf,.pdf,image/*" required></label><label class="fld w"><span>Tempat lahir peserta '+n+' *</span><input type="text" name="tempat_lahir_manual" required placeholder="Contoh: Kendal"></label><label class="fld w"><span>Tanggal lahir peserta '+n+' *</span><input type="date" name="tanggal_lahir_manual" required></label><label class="fld w"><span>Alamat rumah sesuai KTP peserta '+n+' *</span><textarea name="alamat_manual" rows="2" required placeholder="Masukkan alamat lengkap sesuai KTP"></textarea></label><button type="button" class="rm w">Hapus peserta</button>';
  var gender=d.querySelector('[name="pl"]');gender.addEventListener("change",function(){syncBadmintonGenders(this);});
  d.querySelector(".rm").onclick=function(){if(box.children.length>1){box.removeChild(d);updateParticipantRule();}};box.appendChild(d);if(typeof addUploadHints==='function')addUploadHints(d);updateParticipantRule();}
 $("fb-add").onclick=addRow;addRow();
@@ -1845,14 +1845,10 @@ function addUploadHints(root){(root||document).querySelectorAll('input[type=file
 addUploadHints(document);
 var fkf=$("fk");
 fkf.addEventListener("submit",function(e){e.preventDefault();var f=e.target;
- var tempatKetuaInput=v(f,"tempat_lahir_ketua"),dobKetuaInput=v(f,"tanggal_lahir_ketua"),alamatKetuaInput=v(f,"alamat_ketua"),ktpInput=f.elements.namedItem("f_ktp");
- if(!tempatKetuaInput||tempatKetuaInput.length>120){alert("Tempat lahir ketua kontingen wajib diisi (maksimal 120 karakter).");return;}
- if(!dobKetuaInput||!/^\d{4}-\d{2}-\d{2}$/.test(dobKetuaInput)){alert("Tanggal lahir ketua kontingen wajib diisi dengan tanggal yang valid.");return;}
- var dobParts=dobKetuaInput.split("-").map(Number),dobCheck=new Date(dobParts[0],dobParts[1]-1,dobParts[2],12,0,0,0);
- if(dobCheck.getFullYear()!==dobParts[0]||dobCheck.getMonth()!==dobParts[1]-1||dobCheck.getDate()!==dobParts[2]){alert("Tanggal lahir ketua kontingen tidak valid. Periksa kembali tanggal, bulan, dan tahun.");return;}
- if(!alamatKetuaInput){alert("Alamat rumah ketua kontingen wajib diisi.");return;}
- if(alamatKetuaInput.length>500){alert("Alamat rumah ketua kontingen maksimal 500 karakter.");return;}
- if(!ktpInput||!ktpInput.files||!ktpInput.files[0]){alert("KTP ketua kontingen wajib diunggah dalam format PDF atau gambar yang valid.");return;}
+ var ktpInput=f.elements.namedItem("f_ktp");
+ // Tempat lahir, tanggal lahir, dan alamat cukup diisi manual pada form (atribut required).
+ // Tidak ada pemeriksaan panjang, format, kecocokan KTP, atau usia di JavaScript.
+ if(!ktpInput||!ktpInput.files||!ktpInput.files[0]){alert("KTP ketua kontingen wajib diunggah untuk pemeriksaan manual panitia.");return;}
  var sel=checks(f,"cabang"),parts=[];
  for(var i=0;i<sel.length;i++){var c=sel[i],ks=KAT[c]||[],pick=[];
   if(ks.length===1)pick.push(ks[0]);
@@ -1872,8 +1868,8 @@ $("fb").addEventListener("submit",function(e){e.preventDefault();var f=e.target,
  var participantPhoneError="";
  Array.prototype.forEach.call(rows,function(r){var n=r.querySelector('[name="pn"]').value.trim();if(n){var phoneEl=r.querySelector('[name="wa_manual"]'),wa=normalizeWhatsappInput(phoneEl.value);if(!wa){participantPhoneError="Nomor WhatsApp peserta "+n+" wajib diisi dengan nomor seluler Indonesia yang valid (contoh 081234567890 atau +6281234567890).";return;}phoneEl.value=wa;list.push({n:n,l:(PICK==="Voli"?"L":r.querySelector('[name="pl"]').value),wa:wa,role:r.querySelector('[name="pr"]').value,tempatLahir:r.querySelector('[name="tempat_lahir_manual"]').value.trim(),tanggalLahir:r.querySelector('[name="tanggal_lahir_manual"]').value,alamat:r.querySelector('[name="alamat_manual"]').value})}});
  if(participantPhoneError){alert(participantPhoneError);return;}
- var badIdentity=list.filter(function(p){return !p.tempatLahir||p.tempatLahir.length>120||!/^\d{4}-\d{2}-\d{2}$/.test(p.tanggalLahir)||!p.alamat||p.alamat.length>500;});
- if(badIdentity.length){alert("Lengkapi tempat lahir, tanggal lahir, dan alamat sesuai KTP untuk peserta "+badIdentity[0].n+". Data akan diperiksa manual oleh panitia.");return;}
+ var badIdentity=list.filter(function(p){return !p.tempatLahir||!p.tanggalLahir||!p.alamat;});
+ if(badIdentity.length){alert("Kolom tempat lahir, tanggal lahir, dan alamat rumah peserta "+badIdentity[0].n+" wajib diisi. Kebenaran data akan diperiksa manual oleh panitia.");return;}
  if(!list.length){alert("Isi minimal satu peserta.");return}
  var rule=participantRule();
  if(list.length<rule.min||list.length>rule.max){alert(rule.exact?"Jumlah peserta wajib tepat "+rule.max+" orang.":"Jumlah peserta minimal "+rule.min+" dan maksimal "+rule.max+" orang.");return}
