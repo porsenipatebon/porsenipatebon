@@ -1642,6 +1642,7 @@ function updateParticipantRule(){
 }
 function resetParticipantRows(){var box=$("fb-peserta");box.innerHTML="";addRow();updateParticipantRule();}
 function addRow(){var box=$("fb-peserta"),rule=participantRule();if(box.children.length>=rule.max)return;var n=box.children.length+1;
+ var d=document.createElement("div");d.className="prow";
  var existingRows=Array.prototype.slice.call(box.querySelectorAll(".prow"));
  var genderDefault="L";
  if(PICK==="Badminton"&&n>1){var firstGender=existingRows[0]&&existingRows[0].querySelector("[name=pl]")?existingRows[0].querySelector("[name=pl]").value:"L";genderDefault=firstGender==="L"?"P":"L";}
