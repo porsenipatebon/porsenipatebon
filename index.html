@@ -1334,15 +1334,26 @@ html,body{max-width:100%;}
 </footer>
 <script>
 /* EDIT DI SINI: isi u dengan tautan Google Drive / Google Form / Instagram. Kosongkan ("") jika belum ada. */
-var DOCS=[
- {i:"📑",t:"Unduh TOR (Term Of Reference) Kegiatan",d:"Dokumen PDF",u:""},
- {i:"📘",t:"Unduh Petunjuk Teknis (Juknis)",d:"Aturan lomba tiap cabang",u:""},
- {i:"🤝",t:"Unduh Pakta Integritas",d:"Wajib dilengkapi kontingen",u:""},
- {i:"📝",t:"Unduh Contoh Berita Acara RAT",d:"File resmi akan diunggah oleh panitia",u:""},
- {i:"📚",t:"Unduh Buku Pedoman Kegiatan PORSENI 2026",d:"Buku pedoman resmi kegiatan",u:""},
- {i:"📨",t:"Unduh Contoh Surat Mandat Kontingen",d:"Format surat mandat untuk kontingen",u:""},
- {i:"🏛️",t:"Unduh SK Kepanitiaan PORSENI 2026",d:"Surat keputusan panitia PORSENI 2026",u:""}
+var DOC_GROUPS=[
+ {title:"PETUNJUK KEGIATAN",description:"Dokumen acuan dan ketentuan resmi pelaksanaan PORSENI 2026.",items:[
+  {i:"📑",t:"Term of Reference (TOR) Kegiatan",d:"Kerangka acuan kegiatan PORSENI 2026",u:""},
+  {i:"📘",t:"Petunjuk Teknis (Juknis)",d:"Ketentuan dan aturan setiap cabang lomba",u:""},
+  {i:"📚",t:"Pedoman Kegiatan PORSENI 2026",d:"Pedoman umum pelaksanaan kegiatan",u:""},
+  {i:"🏛️",t:"SK Kepanitiaan PORSENI 2026",d:"Surat keputusan kepanitiaan",u:""}
+ ]},
+ {title:"CONTOH BERKAS",description:"Format dokumen yang perlu disiapkan dan dilengkapi oleh kontingen.",items:[
+  {i:"🤝",t:"Pakta Integritas",d:"Format pakta integritas kontingen",u:""},
+  {i:"📨",t:"Contoh Surat Mandat / Surat Tugas Kontingen",d:"Format surat mandat atau surat tugas dari kontingen",u:""},
+  {i:"📝",t:"Contoh Berita Acara RAT",d:"Contoh berita acara Rapat Anggota Tahunan",u:""}
+ ]}
 ];
+function renderDocs(){
+ var root=document.getElementById('docs');if(!root)return;
+ root.innerHTML=DOC_GROUPS.map(function(group,gi){
+  return '<section class="docs-group"><div class="docs-group-head"><h3>'+esc(group.title)+'</h3><p>'+esc(group.description)+'</p></div><div class="docs-list">'+group.items.map(function(x,n){var on=!!x.u;return '<a class="link reveal'+(on?'':' off')+'" style="--i:'+(gi*10+n)+'" '+(on?'href="'+x.u+'" target="_blank" rel="noopener noreferrer"':'aria-disabled="true"')+'><span class="ic">'+x.i+'</span><span class="t"><b>'+esc(x.t)+'</b><small>'+esc(x.d)+'</small></span><span class="arr">'+(on?'Unduh':'Belum diunggah')+'</span></a>';}).join('')+'</div></section>';
+ }).join('');
+}
+
 var REG=[
  {i:"📝",t:"Yuk, Daftarkan Kontingenmu di Sini",d:"Dibuka 1–20 November 2026 · isi online",u:"#daftar-kontingen"}
 ];
@@ -1797,7 +1808,7 @@ var CONTACT=[
 function R(a,id){document.getElementById(id).innerHTML=a.map(function(x,n){var on=x.u!=="";
  var title=x.branch?prettyBranchName(x.branch):x.t;
  return '<a class="link reveal'+(on?'':' off')+'" style="--i:'+n+(x.c?';--a:'+x.c[0]+';--b:'+x.c[1]:'')+'" '+(on?'href="'+x.u+'"'+(x.branch?' data-branch="'+esc(x.branch)+'"':'')+(x.u.charAt(0)=="#"?'':' target="_blank" rel="noopener"'):'aria-disabled="true"')+'><span class="ic">'+x.i+'</span><span class="t"><b>'+esc(title)+'</b><small>'+esc(x.d)+'</small></span><span class="arr">'+(on?'›':'Segera')+'</span></a>';}).join('');}
-R(DOCS,'docs');R(REG,'reg');R(CONTACT,'contact');
+renderDocs();R(REG,'reg');R(CONTACT,'contact');
 function esc(v){return String(v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 
 var CHAMPIONSHIP_STATE={finalized:false,finalizedAt:'',finalizedBy:''};
@@ -1814,8 +1825,8 @@ function loadPublicRecap(){
  if(!SCRIPT_URL){var noUrl=document.querySelectorAll('#recap-kontingen,#recap-cabang');noUrl.forEach(function(el){var n=document.createElement('p');n.className='hint';n.textContent='Koneksi data pendaftaran belum dikonfigurasi.';el.appendChild(n);});return;}
  fetch(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'public_recap'})})
  .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
- .then(function(j){if(!j||!j.ok||!j.recap)throw new Error('Rekap belum dapat dimuat.');var recap=j.recap;applyPublicRecap(recap,false);try{localStorage.setItem('PORSENI_2026_PUBLIC_RECAP',JSON.stringify({savedAt:new Date().toISOString(),recap:recap}));}catch(e){}})
- .catch(function(){var cached=null;try{cached=JSON.parse(localStorage.getItem('PORSENI_2026_PUBLIC_RECAP')||'null');}catch(e){}if(cached&&cached.recap){applyPublicRecap(cached.recap,true);}else{['recap-kontingen','recap-cabang'].forEach(function(id){var el=document.getElementById(id);if(el){var n=document.createElement('p');n.className='hint';n.textContent='Data belum dapat dimuat. Cek koneksi website atau deploy ulang Google Apps Script.';el.appendChild(n);}});}});
+ .then(function(j){if(!j||!j.ok||!j.recap)throw new Error((j&&j.error)||'Server tidak mengirim data rekap.');var recap=j.recap;applyPublicRecap(recap,false);try{localStorage.setItem('PORSENI_2026_PUBLIC_RECAP',JSON.stringify({savedAt:new Date().toISOString(),recap:recap}));}catch(e){}})
+ .catch(function(err){var cached=null;try{cached=JSON.parse(localStorage.getItem('PORSENI_2026_PUBLIC_RECAP')||'null');}catch(e){}if(cached&&cached.recap){applyPublicRecap(cached.recap,true);}else{['recap-kontingen','recap-cabang'].forEach(function(id){var el=document.getElementById(id);if(el){var n=document.createElement('p');n.className='hint';n.textContent='Data belum dapat dimuat: '+(err&&err.message?err.message:'koneksi ke Apps Script gagal')+'. Periksa deployment dan izin akses Google Apps Script.';el.appendChild(n);}});}});
 }
 function summaryRows(rows){
  var html='',i=0,j,k;
@@ -1830,9 +1841,9 @@ function summaryRows(rows){
 }
 function renderPublicRecap(d){
  var k=d.kontingen||[],a=document.getElementById('recap-kontingen');
- if(a)a.innerHTML='<h3 class="recap-h">DATA KONTINGEN TERDAFTAR</h3><p class="recap-count"><b style="font-size:1.35rem">'+(d.jumlahKontingen||0)+'</b> kontingen terverifikasi</p>'+(k.length?'<ol style="margin:0;padding-left:22px">'+k.map(function(n){return '<li>'+esc(n)+'</li>';}).join('')+'</ol>':'<p class="hint">Belum ada kontingen yang terverifikasi.</p>');
+ if(a)a.innerHTML='<h3 class="recap-h">DATA KONTINGEN TERVERIFIKASI</h3><p class="recap-count"><b style="font-size:1.35rem">'+(d.jumlahKontingen||0)+'</b> kontingen terverifikasi</p>'+(k.length?'<ol style="margin:0;padding-left:22px">'+k.map(function(n){return '<li>'+esc(n)+'</li>';}).join('')+'</ol>':'<p class="hint">Belum ada kontingen terverifikasi yang diterima oleh rekap publik. Jika Portal Panitia sudah menampilkan status Terverifikasi, periksa apakah Apps Script V18 sudah di-deploy dan URL SCRIPT_URL mengarah ke deployment tersebut.</p>');
  var rows=d.ringkasan||[],b=document.getElementById('recap-cabang');
- if(b)b.innerHTML='<h3 class="recap-h">DATA PESERTA CABANG LOMBA</h3>'+(rows.length?'<div class="recap-summary"><table><colgroup><col class="c-cab"><col class="c-kat"><col class="c-jml"></colgroup><thead><tr><th>Cabang lomba</th><th>Kategori</th><th>Jumlah peserta</th></tr></thead><tbody>'+summaryRows(rows)+'</tbody></table><p class="hint">Hanya kontingen yang sudah terverifikasi panitia yang ditampilkan. Kontingen yang belum mengumpulkan berkas cabang tetap dihitung sebagai 1 keterwakilan.</p></div>':'<p class="hint">Belum ada kontingen terverifikasi yang memilih cabang lomba.</p>');
+ if(b)b.innerHTML='<h3 class="recap-h">DATA PESERTA CABANG LOMBA (KONTINGEN TERVERIFIKASI)</h3>'+(rows.length?'<div class="recap-summary"><table><colgroup><col class="c-cab"><col class="c-kat"><col class="c-jml"></colgroup><thead><tr><th>Cabang lomba</th><th>Kategori</th><th>Jumlah peserta</th></tr></thead><tbody>'+summaryRows(rows)+'</tbody></table><p class="hint">Hanya kontingen yang sudah terverifikasi panitia yang ditampilkan. Kontingen yang belum mengumpulkan berkas cabang tetap dihitung sebagai 1 keterwakilan.</p></div>':'<p class="hint">Belum ada data cabang pada rekap publik. Jika data sudah terverifikasi di Portal Panitia, pastikan Apps Script V18 sudah di-deploy.</p>');
 }
 var RK=null;
 function loadParticipantRecap(){
@@ -1840,8 +1851,8 @@ function loadParticipantRecap(){
  if(!SCRIPT_URL){root.innerHTML='<div class="recap-empty">Formulir belum terhubung ke Google Sheets.</div>';return;}
  root.innerHTML='<div class="recap-empty">Memuat data rekap…</div>';
  fetch(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'public_recap'})})
- .then(function(r){return r.json()}).then(function(j){if(!j||!j.ok)throw new Error('x');RK=j.recap||{};rkFillFilter();renderParticipantRecap();})
- .catch(function(){root.innerHTML='<div class="recap-empty">Rekap belum dapat dimuat. Klik “Perbarui Rekap” atau muat ulang halaman.</div>';});
+ .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(function(j){if(!j||!j.ok)throw new Error((j&&j.error)||'Server tidak mengirim data rekap.');RK=j.recap||{};rkFillFilter();renderParticipantRecap();})
+ .catch(function(err){root.innerHTML='<div class="recap-empty">Rekap belum dapat dimuat: '+esc(err&&err.message?err.message:'koneksi Apps Script gagal')+'. Periksa deployment dan izin akses.</div>';});
 }
 function rkFillFilter(){
  var sel=document.getElementById('rk-cabang'),cur=sel.value,gs=(RK&&RK.cabang)||[];
@@ -1853,7 +1864,7 @@ function renderParticipantRecap(){
  var fc=document.getElementById('rk-cabang').value,q=(document.getElementById('rk-q').value||'').trim().toLowerCase();
  var nKat=0;groups.forEach(function(g){nKat+=g.kategori.length;});
  document.getElementById('rk-stats').innerHTML='<span><b>'+(d.jumlahKontingen||0)+'</b> kontingen terverifikasi</span><span><b>'+groups.length+'</b> cabang lomba</span><span><b>'+nKat+'</b> kategori</span>';
- if(!groups.length){root.innerHTML='<div class="recap-empty">Belum ada kontingen terverifikasi yang memilih cabang lomba.</div>';return;}
+ if(!groups.length){root.innerHTML='<div class="recap-empty">Belum ada data cabang pada rekap publik. Jika data sudah terverifikasi di Portal Panitia, pastikan Apps Script V18 sudah di-deploy.</div>';return;}
  var html='';
  groups.forEach(function(g){
   if(fc&&g.cabang!==fc)return;
