@@ -20,6 +20,8 @@
 .change-request-placeholder{padding:16px;border-bottom:1px solid var(--line)}.result-item .field.compact{margin:8px 0}.result-item textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:9px}
 .final-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.final-actions .btn{white-space:normal}@media(max-width:650px){.final-actions{display:grid;grid-template-columns:1fr}.final-actions .btn{width:100%}}
 .test-actions{display:flex;gap:7px;flex-wrap:wrap;align-items:center;justify-content:flex-end}.test-actions .btn{font-size:11px;padding:9px 11px;white-space:nowrap}@media(max-width:900px){.test-actions{justify-content:flex-start}.page-head{align-items:flex-start;flex-wrap:wrap}}@media(max-width:600px){.test-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%}.test-actions .btn{width:100%;white-space:normal}.test-actions [data-test-pdf="all"]{grid-column:1/-1}}
+
+.test-preview-frame{width:min(1180px,96vw);height:min(94vh,900px);background:#fff;border-radius:18px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 28px 90px rgba(0,0,0,.35)}.test-preview-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 18px;background:linear-gradient(110deg,#102b58,#0a63c9,#12a9e8);color:#fff}.test-preview-head h2{font:800 16px Manrope;margin:0}.test-preview-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.test-preview-tools select{border:1px solid #dbe7f7;border-radius:9px;padding:8px;max-width:260px}.test-preview-frame iframe{width:100%;height:100%;border:0;background:#eef2f8}.test-preview-status{padding:9px 16px;background:#f5f8fd;color:#43536c;font-size:12px;border-bottom:1px solid var(--line)}@media(max-width:700px){.test-preview-frame{width:100%;height:96vh}.test-preview-head{align-items:flex-start;flex-direction:column}.test-preview-tools{width:100%}.test-preview-tools select{flex:1;min-width:0}}
 </style>
 </head>
 <body>
@@ -63,7 +65,7 @@
   </section>
  </main></div>
 </section>
-<div id="detailOverlay" class="overlay hidden"><section class="drawer"><header class="drawer-head"><h2>Detail & Kontrol Pendaftaran</h2><button id="closeDrawer" class="close" aria-label="Tutup">×</button></header><div id="drawerBody" class="drawer-body"></div></section></div><div id="toast" class="toast hidden"></div>
+<div id="testPreviewOverlay" class="overlay hidden"><section class="test-preview-frame"><header class="test-preview-head"><h2>Preview PDF Uji Coba PORSENI 2026</h2><div class="test-preview-tools"><select id="testPreviewSelect" class="hidden" aria-label="Pilih PDF uji coba"></select><button id="testPreviewClose" class="close" type="button" aria-label="Tutup preview">×</button></div></header><div id="testPreviewStatus" class="test-preview-status">Menyiapkan PDF…</div><iframe id="testPreviewFrame" title="Pratinjau PDF uji coba" src="about:blank"></iframe></section></div><div id="detailOverlay" class="overlay hidden"><section class="drawer"><header class="drawer-head"><h2>Detail & Kontrol Pendaftaran</h2><button id="closeDrawer" class="close" aria-label="Tutup">×</button></header><div id="drawerBody" class="drawer-body"></div></section></div><div id="toast" class="toast hidden"></div>
 <script>
 (function(){
 'use strict';
@@ -119,8 +121,30 @@ document.addEventListener('click',function(e){
  if(ap){var t=ap.dataset.changeApply,n=document.querySelector('[data-change-note="'+t+'"]');if(!window.confirm('Setujui dan terapkan perubahan data untuk tiket '+t+'?\n\nData kontingen akan diperbarui dan PDF formulir dibuat ulang.'))return;ap.disabled=true;call({action:'admin_apply_change_request',token:token,ticket:t,note:n?n.value:''}).then(function(j){toast(j.message);return loadData();}).catch(function(err){toast(err.message);}).finally(function(){ap.disabled=false;});return;}
  if(rj){var t2=rj.dataset.changeReject,n2=document.querySelector('[data-change-note="'+t2+'"]');if(!n2||n2.value.trim().length<5){toast('Isi catatan alasan penolakan terlebih dahulu.');return;}if(!window.confirm('Tolak permohonan '+t2+'? Data tidak akan diubah.'))return;rj.disabled=true;call({action:'admin_update_change_request',token:token,ticket:t2,status:'Tidak Dapat Dipenuhi',note:n2.value}).then(function(j){toast(j.message);return loadData();}).catch(function(err){toast(err.message);}).finally(function(){rj.disabled=false;});return;}
  if(rp){if(!selected||selected.type!=='kontingen'){toast('Reset PIN hanya tersedia untuk data kontingen.');return;}if(!window.confirm('Buat PIN baru untuk '+selected.nama+'?\n\nPIN lama langsung tidak berlaku. PIN baru hanya ditampilkan sekali.'))return;rp.disabled=true;call({action:'admin_reset_pin',token:token,nama:selected.nama}).then(function(j){window.prompt('PIN baru untuk '+selected.nama+' (salin dan sampaikan hanya kepada ketua kontingen):',j.pin);}).catch(function(err){toast(err.message);}).finally(function(){rp.disabled=false;});return;}
- if(tp){var kind=tp.getAttribute('data-test-pdf');tp.disabled=true;toast(kind==='all'?'Membuat empat PDF uji coba…':'Membuat PDF uji coba…');call({action:'admin_test_pdf',token:token,kind:kind}).then(function(j){var files=j.files||{},keys=Object.keys(files);if(!keys.length)throw new Error('PDF uji coba tidak menghasilkan file.');toast(j.message|| (kind==='all'?'Empat PDF uji coba dibuat. Penggabungan PDF sedang diproses.':'PDF uji '+kind+' dibuat. Penggabungan PDF sedang diproses.'));if(j.folderUrl)window.open(j.folderUrl,'_blank','noopener');}).catch(function(err){toast(err.message);}).finally(function(){tp.disabled=false;});}
+ if(tp){var kind=tp.getAttribute('data-test-pdf');tp.disabled=true;startTestPdfPreview(kind,tp).catch(function(err){toast(err.message);}).finally(function(){tp.disabled=false;});}
 });
+var testPreviewJobs={},testPreviewTimer=null;
+function startTestPdfPreview(kind,button){
+ $('testPreviewOverlay').classList.remove('hidden');$('testPreviewFrame').src='about:blank';$('testPreviewStatus').textContent='Membuat formulir dan mengonversi lampiran menjadi halaman PDF…';$('testPreviewSelect').classList.add('hidden');$('testPreviewSelect').innerHTML='';testPreviewJobs={};
+ return call({action:'admin_test_pdf',token:token,kind:kind}).then(function(j){
+  if(!j.jobs||!Object.keys(j.jobs).length)throw new Error('Pekerjaan PDF uji coba tidak berhasil dibuat.');
+  testPreviewJobs=j.jobs;var names=Object.keys(testPreviewJobs);$('testPreviewStatus').textContent=j.message||'PDF sedang digabungkan. Preview akan tampil otomatis setelah selesai.';
+  var started=Date.now();function poll(){var keys=Object.keys(testPreviewJobs),done=0,failed=0,ready=[];
+   return Promise.all(keys.map(function(k){var job=testPreviewJobs[k];if(job.state==='ready'||job.state==='error'){done++;if(job.state==='ready')ready.push({key:k,job:job});else failed++;return Promise.resolve();}
+    return call({action:'admin_test_pdf_status',token:token,jobId:job.jobId}).then(function(st){testPreviewJobs[k]=Object.assign({},job,st);if(st.state==='ready'||st.state==='error')done++;if(st.state==='error')failed++;if(st.state==='ready')ready.push({key:k,job:st});}).catch(function(){});
+   })).then(function(){
+    if(ready.length){var select=$('testPreviewSelect');select.innerHTML=ready.map(function(x){return '<option value="'+esc(x.job.previewUrl)+'">'+esc(testPdfLabel(x.key))+'</option>';}).join('');select.classList.toggle('hidden',ready.length<2);showTestPdf(ready[0].job.previewUrl);select.onchange=function(){showTestPdf(select.value);};}
+    if(done===keys.length){$('testPreviewStatus').textContent=failed?('Selesai dengan '+failed+' PDF gagal. PDF yang berhasil tersedia pada pilihan preview.'):'Semua PDF final selesai dibuat. Dokumen yang tampil sudah menyatukan formulir dan lampiran.';return;}
+    if(Date.now()-started>180000){$('testPreviewStatus').textContent='Proses masih berjalan di server. Tutup preview dan coba muat ulang beberapa saat lagi.';return;}
+    $('testPreviewStatus').textContent='Menggabungkan PDF… '+ready.length+' dari '+keys.length+' siap dipratinjau.';testPreviewTimer=setTimeout(poll,5000);
+   });}
+  return poll();
+ });
+}
+function testPdfLabel(k){return ({kontingen:'PDF Kontingen',duta:'PDF Duta Pelajar',tunggal:'PDF Tunggal',beregu:'PDF Beregu'})[k]||k;}
+function showTestPdf(url){$('testPreviewFrame').src=url;}
+function closeTestPreview(){if(testPreviewTimer)clearTimeout(testPreviewTimer);$('testPreviewFrame').src='about:blank';$('testPreviewOverlay').classList.add('hidden');}
+$('testPreviewClose').addEventListener('click',closeTestPreview);$('testPreviewOverlay').addEventListener('click',function(e){if(e.target===$('testPreviewOverlay'))closeTestPreview();});
 function deleteRecord(){if(!selected)return;var label=selected.nama+(selected.type==='cabang'?' · '+selected.cabang+' / '+selected.kategori:'');if(!window.confirm('Hapus data pendaftaran berikut dari Google Sheets?\n\n'+label+'\n\nData aktif akan diarsipkan untuk pemulihan, data cabang terkait dan PIN dihapus dari daftar aktif, serta akses pratinjau email kontingen dicabut. Tindakan ini hanya dapat dipulihkan pemilik database.'))return;var btn=$('deleteRecord');btn.disabled=true;call({action:'admin_delete_record',token:token,type:selected.type,rowNumber:selected.rowNumber,recordId:selected.recordId}).then(function(j){toast(j.message);$('detailOverlay').classList.add('hidden');return loadData();}).catch(function(err){toast(err.message);}).finally(function(){btn.disabled=false;});}
 function setTab(next){
  tab=next;document.querySelectorAll('.navbtn').forEach(function(b){b.classList.toggle('active',b.dataset.tab===tab);});
