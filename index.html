@@ -2063,6 +2063,20 @@ a:focus-visible,button:focus-visible,summary:focus-visible{
   </section>
 </div>
 
+
+<div id="v-portal-change" hidden class="agenda-page portal-change-page">
+ <a class="back" href="#portal-kontingen">‹ Kembali ke Portal Kontingen</a>
+ <h2 class="pg">FORMULIR PENGAJUAN PERUBAHAN DATA</h2>
+ <p class="pgsub">Lengkapi seluruh identitas dan kontak seperti pada formulir pendaftaran awal.</p>
+ <div class="note-banner">Batas pengajuan perubahan data: <b>20 November 2026</b>.</div>
+ <form id="portal-data-form" class="formbox" novalidate>
+  <h3>Identitas dan Kontak Kontingen</h3><div id="portal-change-fields" class="portal-change-fields"></div>
+  <label class="fld" id="portal-change-reason-wrap"><span>Alasan perubahan *</span><textarea name="alasan" rows="3" minlength="10" maxlength="1000" placeholder="Jelaskan alasan perubahan (minimal 10 karakter)"></textarea></label>
+  <div class="actions"><button class="btn" type="submit" id="portal-data-btn">Kirim Permohonan Perubahan</button></div>
+  <div id="portal-data-feedback" aria-live="polite"></div>
+ </form>
+</div>
+
 <div id="v-print" hidden>
   <div class="noprint">
     <a class="back" href="#beranda" id="pr-home">‹ Beranda</a>
@@ -2154,7 +2168,7 @@ var PORTAL_AUTH=null,PORTAL_ACTIVITY_TIMER=null,PORTAL_HEARTBEAT_TIMER=null;
 function touchContingentActivity(){if(PORTAL_AUTH)PORTAL_AUTH.lastActivity=Date.now();}
 ['click','keydown','touchstart','scroll','pointerdown'].forEach(function(evt){document.addEventListener(evt,touchContingentActivity,{passive:true});});
 function startContingentSessionWatch(){if(PORTAL_ACTIVITY_TIMER)clearInterval(PORTAL_ACTIVITY_TIMER);if(PORTAL_HEARTBEAT_TIMER)clearInterval(PORTAL_HEARTBEAT_TIMER);PORTAL_ACTIVITY_TIMER=setInterval(function(){if(PORTAL_AUTH&&Date.now()-(PORTAL_AUTH.lastActivity||0)>3600000){logoutContingentPortal();var out=document.getElementById('portal-result');if(out)out.innerHTML='<p class="warn" style="display:block">Sesi berakhir setelah 60 menit tidak aktif. Silakan login kembali.</p>'; }},30000);PORTAL_HEARTBEAT_TIMER=setInterval(function(){if(!PORTAL_AUTH)return;if(Date.now()-(PORTAL_AUTH.lastActivity||0)>600000)return;fetch(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'contingent_session_ping',sessionToken:PORTAL_AUTH.sessionToken})}).then(function(r){return r.json();}).then(function(j){if(!j||!j.ok)throw new Error(j&&j.error||'Sesi berakhir');}).catch(function(){logoutContingentPortal();var out=document.getElementById('portal-result');if(out)out.innerHTML='<p class="warn" style="display:block">Sesi Portal Kontingen berakhir. Silakan login kembali.</p>';});},300000);}
-function logoutContingentPortal(){var token=PORTAL_AUTH&&PORTAL_AUTH.sessionToken;try{sessionStorage.removeItem('porseni_contingent_session')}catch(e){}PORTAL_AUTH=null;if(PORTAL_ACTIVITY_TIMER)clearInterval(PORTAL_ACTIVITY_TIMER);if(PORTAL_HEARTBEAT_TIMER)clearInterval(PORTAL_HEARTBEAT_TIMER);PORTAL_ACTIVITY_TIMER=null;PORTAL_HEARTBEAT_TIMER=null;try{fetch(SCRIPT_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action:"contingent_logout",sessionToken:token||""})});}catch(e){}var form=document.getElementById("fp-portal");if(form)form.style.display="";var out=document.getElementById("portal-result");if(out)out.innerHTML="";}
+function logoutContingentPortal(){var token=PORTAL_AUTH&&PORTAL_AUTH.sessionToken;try{sessionStorage.removeItem('porseni_contingent_session')}catch(e){}PORTAL_AUTH=null;document.body.classList.remove('portal-logged-in');if(PORTAL_ACTIVITY_TIMER)clearInterval(PORTAL_ACTIVITY_TIMER);if(PORTAL_HEARTBEAT_TIMER)clearInterval(PORTAL_HEARTBEAT_TIMER);PORTAL_ACTIVITY_TIMER=null;PORTAL_HEARTBEAT_TIMER=null;try{fetch(SCRIPT_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action:"contingent_logout",sessionToken:token||""})});}catch(e){}var form=document.getElementById("fp-portal");if(form)form.style.display="";var out=document.getElementById("portal-result");if(out)out.innerHTML="";}
 var PORTAL_PREVIEW_OBJECT_URL=null;
 /* Ubah ke true untuk menguji formulir di luar masa pendaftaran. */
 var FORCE_OPEN=false;
@@ -2191,8 +2205,8 @@ var PICK="",LAST=null,SELECTED_EVENT=null;
 var ALLC=[];Object.keys(CABANG).forEach(function(k){CABANG[k].forEach(function(x){ALLC.push({n:x.t,g:NM[k]})})});
 var $=function(id){return document.getElementById(id)};
 fillKontingenSelects();
-var VIEWS={"#cabang-lomba":"v-cabang","#daftar-kontingen":"v-kontingen","#berkas-cabang":"v-berkas","#rekap-peserta":"v-rekap-peserta","#portal-kontingen":"v-portal","#filosofi":"v-filosofi","#panduan-pendaftaran":"v-panduan-pendaftaran"};
-function showView(id){["v-home","v-filosofi","v-rekap-peserta","v-cabang","v-kontingen","v-berkas","v-portal","v-print","v-panduan-pendaftaran"].forEach(function(v){var el=$(v);if(!el)return;var hide=(v!==id);el.hidden=hide;if(hide){el.style.setProperty("display","none","important")}else{el.style.removeProperty("display")}});window.scrollTo(0,0)}
+var VIEWS={"#cabang-lomba":"v-cabang","#daftar-kontingen":"v-kontingen","#berkas-cabang":"v-berkas","#rekap-peserta":"v-rekap-peserta","#portal-kontingen":"v-portal","#portal-perubahan-data":"v-portal-change","#filosofi":"v-filosofi","#panduan-pendaftaran":"v-panduan-pendaftaran"};
+function showView(id){["v-home","v-filosofi","v-rekap-peserta","v-cabang","v-kontingen","v-berkas","v-portal","v-portal-change","v-print","v-panduan-pendaftaran"].forEach(function(v){var el=$(v);if(!el)return;var hide=(v!==id);el.hidden=hide;if(hide){el.style.setProperty("display","none","important")}else{el.style.removeProperty("display")}});window.scrollTo(0,0)}
 function winState(w){if(FORCE_OPEN)return 0;var t=new Date();return t<new Date(w[0]+"T00:00:00")?-1:(t>new Date(w[1]+"T23:59:59")?1:0)}
 function parsePorseniDate(s){if(!s)return null;if(s instanceof Date)return isNaN(s.getTime())?null:s;var raw=String(s).trim();var d;if(/^\d{4}-\d{2}-\d{2}$/.test(raw))d=new Date(raw+"T00:00:00");else d=new Date(raw);return isNaN(d.getTime())?null:d}
 function fmtTgl(s){var d=parsePorseniDate(s);return d?d.toLocaleDateString("id-ID",{day:"numeric",month:"long",year:"numeric"}):"-"}
@@ -2200,7 +2214,7 @@ function fmtTglWaktu(s){var d=parsePorseniDate(s);return d?d.toLocaleString("id-
 function setState(el,btn,w,txt){var st=winState(w);el.hidden=(st===0);btn.disabled=(st!==0);if(st<0)el.textContent="Pendaftaran dibuka "+txt[0]+".";if(st>0)el.textContent="Pendaftaran sudah ditutup ("+txt[1]+").";}
 function route(){if(location.hash==='#berita'||location.hash==='#berita-detail'){showView('v-home');var bp=document.getElementById('v-berita');if(bp){bp.hidden=false;document.getElementById('v-home').hidden=true;}return;}var id=VIEWS[location.hash]||"v-home";showView(id);
  if(id==="v-berkas"){configureBranchInfo();loadRegisteredContingents();if($("fb-nama").value)lookupEvents($("fb-nama").value)}
- if(id==="v-portal"){loadPortalNames();}
+ if(id==="v-portal"){loadPortalNames();}if(id==="v-portal-change"){renderPortalChangePage();}
  if(id==="v-rekap-peserta"){loadParticipantRecap();}
  if(id==="v-kontingen")setState($("k-state"),$("fk-btn"),WIN.k,["1 November 2026","20 November 2026"])}
 window.addEventListener('hashchange',route);
@@ -2330,26 +2344,50 @@ function openPortalFilePreview(fileId,label){
   }
  }).catch(function(err){body.textContent=err.message||'Gagal memuat pratinjau.';});
 }
-function portalChangeDeadline(data){var raw=String((data.registrasi&&data.registrasi.cabang)||'');var branches=raw.split(/;\s*/).map(function(x){return x.replace(/\s*\(.*/, '').trim();}).filter(Boolean);var dates=branches.map(function(b){return b==='Badminton'?new Date('2026-11-29T23:59:59+07:00'):((b==='Duta Pelajar'||b==='Voli')?new Date('2026-12-06T23:59:59+07:00'):new Date('2026-12-19T23:59:59+07:00'));});return dates.length?new Date(Math.min.apply(null,dates.map(function(d){return d.getTime();}))):new Date('2026-12-19T23:59:59+07:00');}
-function portalDateLabel(date){return date.toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric',timeZone:'Asia/Jakarta'});}
+function portalChangeDeadline(data){return new Date('2026-11-20T23:59:59+07:00');}
 var KFIELDS=[["ketua","Nama ketua kontingen","text"],["tempat_lahir_ketua","Tempat lahir ketua","text"],["tanggal_lahir_ketua","Tanggal lahir ketua","date"],["alamat","Alamat rumah ketua","textarea"],["wa_ketua","No. WhatsApp ketua","tel"],["email","Email kontingen","email"],["ketua_pr_ipnu","Nama Ketua PR IPNU","text"],["wa_ketua_ipnu","No. WhatsApp Ketua IPNU","tel"],["ketua_pr_ippnu","Nama Ketua PR IPPNU","text"],["wa_ketua_ippnu","No. WhatsApp Ketua IPPNU","tel"]];
 function portalDataSection(data){
- var d=data.dataKontingen||{},verified=(data.approval&&data.approval.status)==="Terverifikasi";
- var changeDeadline=portalChangeDeadline(data),closed=Date.now()>changeDeadline.getTime();
+ var verified=(data.approval&&data.approval.status)==="Terverifikasi";
+ var closed=Date.now()>portalChangeDeadline(data).getTime();
  var h='<section class="formbox" id="portal-data-box"><h3>Data Pendaftaran Kontingen</h3><p class="pgsub">Data identitas dan kontak kontingen.</p>';
- if(closed){h+='<p class="note">Batas perubahan data kegiatan kontingen telah berakhir pada '+esc(portalDateLabel(changeDeadline))+'.</p>';}
- else{
-  h+='<p class="hint">Batas pengajuan perubahan data: '+esc(portalDateLabel(changeDeadline))+'. Perubahan yang diajukan setelah diverifikasi harus disetujui panitia.</p>';
-  h+='<button type="button" class="btn alt" id="portal-toggle-data">'+(verified?'Ajukan Perubahan Data':'Ubah Data Kontingen')+'</button><div id="portal-data-editor" hidden>';
-  h+='<form id="portal-data-form" novalidate>'+KFIELDS.map(function(f){var val=esc(d[f[0]]||"");var control;if(f[2]==="textarea"){control='<textarea name="'+f[0]+'" rows="2" minlength="10" maxlength="250" required>'+val+'</textarea>';}else{var extra=f[2]==="tel"?' inputmode="tel" pattern="(\\+62|62|0)8[0-9]{8,12}" title="Format 08xxxxxxxxxx"':'';control='<input name="'+f[0]+'" type="'+f[2]+'" value="'+val+'" required maxlength="120"'+extra+'>';}return '<label class="fld"><span>'+f[1]+'</span>'+control+'</label>';}).join('');
-  if(verified)h+='<label class="fld"><span>Alasan perubahan *</span><textarea name="alasan" rows="3" minlength="10" maxlength="1000" placeholder="Jelaskan alasan perubahan data"></textarea></label>';
-  h+='<button class="btn" type="submit" id="portal-data-btn">'+(verified?'Kirim Permohonan Perubahan':'Simpan Perubahan')+'</button><div id="portal-data-feedback" aria-live="polite"></div></form></div>';
- }
+ if(closed)h+='<p class="note">Batas pengajuan perubahan data telah berakhir pada 20 November 2026.</p>';
+ else h+='<p class="hint">Batas pengajuan perubahan data: <b>20 November 2026</b>. '+(verified?'Permohonan akan diperiksa dan disetujui panitia sebelum diterapkan.':'Data dapat diperbarui langsung selama belum terverifikasi.')+'</p><a class="btn alt" href="#portal-perubahan-data">'+(verified?'Ajukan Perubahan Data':'Perbarui Data Kontingen')+' →</a>';
  return h+'</section>';
 }
 function reloadPortal(){
  if(!PORTAL_AUTH||!PORTAL_AUTH.sessionToken)return;
  fetch(SCRIPT_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action:"contingent_portal_session",sessionToken:PORTAL_AUTH.sessionToken})}).then(function(r){return r.json()}).then(function(j){if(j&&j.ok){PORTAL_AUTH.nama=j.data.nama;PORTAL_AUTH.lastActivity=Date.now();renderPortalData(j.data)}else throw new Error(j&&j.error||'Sesi tidak valid')}).catch(function(){try{sessionStorage.removeItem('porseni_contingent_session')}catch(e){}logoutContingentPortal();});
+}
+function renderPortalChangePage(){
+ var data=PORTAL_DATA_CURRENT;
+ if(!PORTAL_AUTH||!data){location.hash='#portal-kontingen';return;}
+ var verified=(data.approval&&data.approval.status)==='Terverifikasi',cur=data.dataKontingen||{},fields=$('portal-change-fields'),form=$('portal-data-form');
+ if(!fields||!form)return;
+ fields.innerHTML=KFIELDS.map(function(f){
+  var val=esc(cur[f[0]]||''),control='';
+  if(f[2]==='textarea')control='<textarea name="'+f[0]+'" rows="3" minlength="10" maxlength="250" required>'+val+'</textarea>';
+  else{var extra=f[2]==='tel'?' inputmode="tel" pattern="(\\+62|62|0)8[0-9]{8,12}" title="Format 08xxxxxxxxxx"':'';control='<input name="'+f[0]+'" type="'+f[2]+'" value="'+val+'" required maxlength="120"'+extra+'>';}
+  return '<label class="fld"><span>'+f[1]+' *</span>'+control+'</label>';
+ }).join('');
+ $('portal-change-reason-wrap').hidden=!verified;
+ $('portal-data-btn').textContent=verified?'Kirim Permohonan Perubahan':'Simpan Perubahan Data';
+ form.onsubmit=function(e){
+  e.preventDefault();var feedback=$('portal-data-feedback'),btn=$('portal-data-btn'),changes={};
+  if(Date.now()>portalChangeDeadline(data).getTime()){feedback.innerHTML='<p class="warn">Batas pengajuan perubahan data telah berakhir pada 20 November 2026.</p>';return;}
+  for(var i=0;i<KFIELDS.length;i++){var el=form.elements[KFIELDS[i][0]];if(!el||!el.value.trim()||!el.checkValidity()){if(el)el.reportValidity();return;}}
+  KFIELDS.forEach(function(k){var val=form.elements[k[0]].value.trim();if(val!==String(cur[k[0]]||''))changes[k[0]]=val;});
+  if(!Object.keys(changes).length){feedback.innerHTML='<p class="note">Tidak ada perubahan data yang dimasukkan.</p>';return;}
+  var alasan=verified?form.elements.alasan.value.trim():'';
+  if(verified&&alasan.length<10){form.elements.alasan.focus();feedback.innerHTML='<p class="warn">Alasan perubahan wajib diisi minimal 10 karakter.</p>';return;}
+  var labels=Object.keys(changes).map(function(k){return KFIELDS.filter(function(x){return x[0]===k})[0][1];});
+  pgDialog({title:verified?'Kirim permohonan perubahan?':'Simpan perubahan data?',html:'<p>Data yang akan diubah:</p><ul class="pg-list">'+labels.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ul>'+(verified?'<div class="pg-warn">Perubahan baru berlaku setelah disetujui panitia.</div>':'<div class="pg-warn">PDF formulir pendaftaran akan dibuat ulang.</div>'),ok:verified?'Kirim Permohonan':'Simpan',cancel:'Periksa Lagi'}).then(function(yes){
+   if(!yes)return;btn.disabled=true;btn.textContent='Memproses…';
+   fetch(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:verified?'contingent_request_data_change':'contingent_update_data',sessionToken:PORTAL_AUTH.sessionToken,changes:changes,alasan:alasan})})
+   .then(function(r){return r.json();}).then(function(j){if(!j||!j.ok)throw new Error(j&&j.error||'Gagal memproses perubahan.');feedback.innerHTML='<p class="stat">'+esc(j.message)+(j.ticket?' Nomor tiket: <b>'+esc(j.ticket)+'</b>':'')+'</p>';if(!verified)setTimeout(function(){location.hash='#portal-kontingen';reloadPortal();},1200);})
+   .catch(function(err){feedback.innerHTML='<p class="warn">'+esc(err.message||'Gagal memproses.')+'</p>';})
+   .finally(function(){btn.disabled=false;btn.textContent=verified?'Kirim Permohonan Perubahan':'Simpan Perubahan Data';});
+  });
+ };
 }
 function bindPortalDataForm(data){
  var toggle=$("portal-toggle-data"),editor=$("portal-data-editor"),f=$("portal-data-form");
@@ -2374,7 +2412,9 @@ function bindPortalDataForm(data){
   });
  });
 }
+var PORTAL_DATA_CURRENT=null;
 function renderPortalData(data){
+ PORTAL_DATA_CURRENT=data;document.body.classList.add('portal-logged-in');
  var r=data.registrasi||{},ap=data.approval||{status:'Menunggu Verifikasi',catatan:''},verified=ap.status==='Terverifikasi';
  var html='<div style="display:flex;justify-content:flex-end;margin:8px 0"><button type="button" class="btn alt" id="portal-logout" style="width:auto">Keluar dari Portal</button></div>';
  html+='<section class="formbox"><h3>Status Persetujuan Kontingen</h3><p><b>'+esc(ap.status)+'</b></p>'+(ap.catatan?'<p>Catatan panitia: '+esc(ap.catatan)+'</p>':'')+(ap.waktu?'<p>Waktu pemeriksaan: '+esc(ap.waktu)+'</p>':'')+(verified?'<p class="stat">Kontingen telah diverifikasi. Pengumpulan berkas cabang sudah dibuka.</p>':'<p class="warn">Pengumpulan berkas cabang hanya tersedia setelah kontingen diverifikasi panitia.</p>')+'</section>';
@@ -2393,8 +2433,6 @@ function renderPortalData(data){
  $('portal-result').onclick=function(e){
   var preview=e.target.closest('[data-portal-preview-id]');if(preview){openPortalFilePreview(preview.getAttribute('data-portal-preview-id'),preview.getAttribute('data-portal-preview-label')||'Pratinjau berkas');return;}
   var dl=e.target.closest('[data-portal-download-id]');if(dl){downloadPortalFile(dl.getAttribute('data-portal-download-id'),dl.getAttribute('data-portal-download-name')||'formulir.pdf');return;}
-  if(e.target.closest('#portal-open-change-page')){var page=$('portal-change-page');if(page){page.hidden=false;Array.prototype.forEach.call($('portal-result').querySelectorAll('.formbox'),function(s){if(s.id!=='portal-change-page')s.hidden=true;});}return;}
-  if(e.target.closest('#portal-back-main')){var page=$('portal-change-page');if(page)page.hidden=true;Array.prototype.forEach.call($('portal-result').querySelectorAll('.formbox'),function(s){s.hidden=false;});return;}
   if(e.target.closest('#portal-submit-branch')){location.hash='#cabang-lomba';return;}
   var edit=e.target.closest('[data-portal-edit-branch]');
   if(edit){
@@ -3209,4 +3247,24 @@ document.addEventListener('click',function(e){
   .desk-nav .nav-portal{margin-left:auto!important;}
   .desk-nav .nav-register{margin-left:8px!important;}
 }
+</style>
+
+<style id="desktop-duta-card-width">
+@media(min-width:900px){
+ .info-roadto .roadto-grid .roadto-card.roadto-duta-toggle{grid-column:1/-1!important;width:100%!important;max-width:none!important}
+ .info-roadto .roadto-grid .roadto-card.roadto-duta-toggle .roadto-content{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;column-gap:24px}
+ .info-roadto .roadto-grid .roadto-card.roadto-duta-toggle .roadto-duta-text{grid-column:1}
+ .info-roadto .roadto-grid .roadto-card.roadto-duta-toggle .roadto-duta-button-wrap{grid-column:2;grid-row:1;align-self:center}.info-roadto .roadto-grid .roadto-card.roadto-duta-toggle #inline-timeline-duta{grid-column:1/-1}
+}
+</style>
+<style id="portal-auth-nav-state">
+body.portal-logged-in .nav-register,body.portal-logged-in .portal-register-prompt,body.portal-logged-in [data-nav-register]{display:none!important}
+</style>
+
+<style id="desktop-portal-change-polish">
+.portal-change-page{max-width:1120px;margin:24px auto 48px;padding:34px 38px;background:rgba(255,255,255,.97);border:1px solid #dce8f8;border-radius:26px;box-shadow:0 18px 48px rgba(11,45,114,.09)}
+.portal-change-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 22px}
+.portal-change-fields .fld:nth-child(4){grid-column:1/-1}
+.portal-change-page .formbox{margin-top:20px}
+@media(max-width:899px){.portal-change-page{margin:12px;padding:20px 15px}.portal-change-fields{grid-template-columns:1fr}.portal-change-fields .fld:nth-child(4){grid-column:auto}}
 </style>
