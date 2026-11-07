@@ -4240,3 +4240,26 @@ body.portal-logged-in .nav-register,body.portal-logged-in .portal-register-promp
 }
 </style>
 
+
+
+<style id="mobile-no-navbar-bottom-padding-zero">
+/* Halaman mandiri di HP tidak menyisakan ruang kosong untuk navbar Beranda. */
+@media (max-width: 899px) {
+  body:not(:has(#v-home.desk-page-mode)) {
+    padding-bottom: 0 !important;
+  }
+  body:not(:has(#v-home.desk-page-mode)) .page,
+  body:not(:has(#v-home.desk-page-mode)) footer,
+  body:not(:has(#v-home.desk-page-mode)) #v-portal,
+  body:not(:has(#v-home.desk-page-mode)) #v-cabang,
+  body:not(:has(#v-home.desk-page-mode)) #v-kontingen,
+  body:not(:has(#v-home.desk-page-mode)) #v-berkas,
+  body:not(:has(#v-home.desk-page-mode)) #v-rekap-peserta,
+  body:not(:has(#v-home.desk-page-mode)) #v-print,
+  body:not(:has(#v-home.desk-page-mode)) #v-panduan-pendaftaran,
+  body:not(:has(#v-home.desk-page-mode)) #v-filosofi,
+  body:not(:has(#v-home.desk-page-mode)) #v-berita {
+    padding-bottom: 0 !important;
+  }
+}
+</style>
