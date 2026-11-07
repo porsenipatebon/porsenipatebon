@@ -3135,8 +3135,34 @@ var MAXF=10*1024*1024,MAXT=25*1024*1024;
 function toB64(blob){return new Promise(function(res,rej){var r=new FileReader();r.onload=function(){res(String(r.result).split(",")[1])};r.onerror=function(){rej(new Error("Berkas tidak bisa dibaca."))};r.readAsDataURL(blob)})}
 function shrink(file){return Promise.resolve(file)}
 function normalizeSignature(file){return Promise.resolve(file)}
+// Auto-trim aman untuk foto KTP: hanya memotong latar luar kartu jika batasnya terdeteksi jelas.
+// Tidak melakukan crop paksa/perspektif; jika ragu, file asli dipakai agar data identitas tidak hilang.
+function autoCropKtp(file){
+ if(!file||!/^image\/(jpeg|png)$/i.test(file.type||''))return Promise.resolve(file);
+ return new Promise(function(resolve){
+  var url=URL.createObjectURL(file),img=new Image();
+  img.onload=function(){try{
+   var maxSide=1000,scale=Math.min(1,maxSide/Math.max(img.naturalWidth,img.naturalHeight));
+   var w=Math.max(1,Math.round(img.naturalWidth*scale)),h=Math.max(1,Math.round(img.naturalHeight*scale));
+   var cv=document.createElement('canvas');cv.width=w;cv.height=h;var cx=cv.getContext('2d',{willReadFrequently:true});cx.drawImage(img,0,0,w,h);
+   var data=cx.getImageData(0,0,w,h).data,pts=[];
+   function sample(x0,y0){var rr=0,gg=0,bb=0,n=0;for(var yy=y0;yy<y0+Math.max(1,Math.floor(h*.025));yy+=2)for(var xx=x0;xx<x0+Math.max(1,Math.floor(w*.025));xx+=2){var k=(yy*w+xx)*4;rr+=data[k];gg+=data[k+1];bb+=data[k+2];n++;}return [rr/n,gg/n,bb/n];}
+   var corners=[sample(0,0),sample(w-Math.floor(w*.025),0),sample(0,h-Math.floor(h*.025)),sample(w-Math.floor(w*.025),h-Math.floor(h*.025))];
+   var bg=[0,0,0];corners.forEach(function(c){for(var q=0;q<3;q++)bg[q]+=c[q]/4;});
+   var rowMin=Math.max(3,Math.floor(w*.035)),colMin=Math.max(3,Math.floor(h*.035)),top=h,left=w,right=-1,bottom=-1;
+   for(var y=0;y<h;y++){var hits=0;for(var x=0;x<w;x+=2){var k=(y*w+x)*4,dist=Math.abs(data[k]-bg[0])+Math.abs(data[k+1]-bg[1])+Math.abs(data[k+2]-bg[2]);if(dist>75)hits++;}if(hits>=rowMin){top=Math.min(top,y);bottom=Math.max(bottom,y);}}
+   for(var x2=0;x2<w;x2++){var hits2=0;for(var y2=0;y2<h;y2+=2){var k2=(y2*w+x2)*4,dist2=Math.abs(data[k2]-bg[0])+Math.abs(data[k2+1]-bg[1])+Math.abs(data[k2+2]-bg[2]);if(dist2>75)hits2++;}if(hits2>=colMin){left=Math.min(left,x2);right=Math.max(right,x2);}}
+   var bw=right-left+1,bh=bottom-top+1,ratio=bw/bh,coverage=(bw*bh)/(w*h),margins=left>w*.02&&top>h*.02&&(w-1-right)>w*.02&&(h-1-bottom)>h*.02;
+   if(!margins||ratio<1.25||ratio>2.15||coverage<.28||coverage>.96) {URL.revokeObjectURL(url);resolve(file);return;}
+   var pad=Math.round(Math.min(bw,bh)*.018),sx=Math.max(0,left-pad),sy=Math.max(0,top-pad),sw=Math.min(w-sx,bw+2*pad),sh=Math.min(h-sy,bh+2*pad);
+   var out=document.createElement('canvas');out.width=sw;out.height=sh;out.getContext('2d').drawImage(cv,sx,sy,sw,sh,0,0,sw,sh);
+   out.toBlob(function(blob){URL.revokeObjectURL(url);if(!blob||blob.size>=file.size){resolve(file);return;}try{resolve(new File([blob],file.name.replace(/\.[^.]+$/,'')+'_rapi.jpg',{type:'image/jpeg',lastModified:Date.now()}));}catch(e){resolve(file);}},'image/jpeg',.94);
+  }catch(e){URL.revokeObjectURL(url);resolve(file);}};
+  img.onerror=function(){URL.revokeObjectURL(url);resolve(file);};img.src=url;
+ });
+}
 function checkFileType(file,allowed,label){var n=(file.name||"").toLowerCase();var ok=allowed.some(function(x){if(x==="pdf")return /\.pdf$/i.test(n)||(file.type||"").toLowerCase()==="application/pdf";if(x==="image")return /\.(jpe?g|png)$/i.test(n)||/^image\/(jpeg|png)$/i.test((file.type||"").toLowerCase());if(x==="sig")return /\.(png|jpe?g)$/i.test(n)||/^image\/(png|jpeg)$/i.test((file.type||"").toLowerCase());if(x==="word")return /\.(doc|docx)$/i.test(n);if(x==="ppt")return /\.(ppt|pptx)$/i.test(n);return false});if(!ok)throw new Error(label+" tidak sesuai. Gunakan PDF, JPG, atau PNG (HEIC/WebP tidak didukung).");}
-function prepFiles(items){var tot=0;return Promise.all(items.map(function(it){return (it.signature?normalizeSignature(it.file):(it.preserve?Promise.resolve(it.file):shrink(it.file))).then(function(f){
+function prepFiles(items){var tot=0;return Promise.all(items.map(function(it){var isKtp=/^KTP peserta\s+\d+/i.test(String(it.label||''));var prep=it.signature?normalizeSignature(it.file):(isKtp?autoCropKtp(it.file):(it.preserve?Promise.resolve(it.file):shrink(it.file)));return prep.then(function(f){
  if(f.size>MAXF)throw new Error('Berkas "'+it.file.name+'" melebihi 10 MB.');tot+=f.size;
  return toB64(f).then(function(b){var o={label:it.label,name:f.name,type:f.type,data:b};if(it.participantIndex!==undefined)o.participantIndex=it.participantIndex;return o})})})).then(function(a){if(tot>MAXT)throw new Error("Total ukuran berkas melebihi 25 MB.");return a})}
 function meta(a){return a.map(function(x){return {label:x.label,name:x.name}})}
@@ -4130,6 +4156,41 @@ nav.desk-nav button {
 }
 </style>
 
+
+
+<style id="mobile-footer-and-no-nav-bottom-fix-v29">
+/* Mobile-only: footer Beranda tidak tertutup dock; halaman tanpa dock tidak menyisakan ruang. */
+@media (max-width: 899px) {
+  /* Beranda: beri ruang gulir setelah footer agar teks terakhir berada di atas navbar. */
+  body:has(#v-home.desk-page-mode) footer {
+    padding-bottom: calc(112px + env(safe-area-inset-bottom)) !important;
+    margin-bottom: 0 !important;
+    box-sizing: border-box !important;
+  }
+  body:has(#v-home.desk-page-mode) {
+    padding-bottom: calc(88px + env(safe-area-inset-bottom)) !important;
+  }
+
+  /* Halaman selain Beranda: tidak ada navbar, jadi jangan sisakan ruang dock. */
+  body:not(:has(#v-home.desk-page-mode)) {
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
+    min-height: 0 !important;
+  }
+  body:not(:has(#v-home.desk-page-mode)) main.page {
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
+    min-height: 0 !important;
+  }
+  body:not(:has(#v-home.desk-page-mode)) footer {
+    padding-bottom: 16px !important;
+    margin-bottom: 0 !important;
+    min-height: 0 !important;
+  }
+  body::after { display: none !important; content: none !important; }
+}
+</style>
+
 </body>
 </html>
 
@@ -4240,26 +4301,3 @@ body.portal-logged-in .nav-register,body.portal-logged-in .portal-register-promp
 }
 </style>
 
-
-
-<style id="mobile-no-navbar-bottom-padding-zero">
-/* Halaman mandiri di HP tidak menyisakan ruang kosong untuk navbar Beranda. */
-@media (max-width: 899px) {
-  body:not(:has(#v-home.desk-page-mode)) {
-    padding-bottom: 0 !important;
-  }
-  body:not(:has(#v-home.desk-page-mode)) .page,
-  body:not(:has(#v-home.desk-page-mode)) footer,
-  body:not(:has(#v-home.desk-page-mode)) #v-portal,
-  body:not(:has(#v-home.desk-page-mode)) #v-cabang,
-  body:not(:has(#v-home.desk-page-mode)) #v-kontingen,
-  body:not(:has(#v-home.desk-page-mode)) #v-berkas,
-  body:not(:has(#v-home.desk-page-mode)) #v-rekap-peserta,
-  body:not(:has(#v-home.desk-page-mode)) #v-print,
-  body:not(:has(#v-home.desk-page-mode)) #v-panduan-pendaftaran,
-  body:not(:has(#v-home.desk-page-mode)) #v-filosofi,
-  body:not(:has(#v-home.desk-page-mode)) #v-berita {
-    padding-bottom: 0 !important;
-  }
-}
-</style>
