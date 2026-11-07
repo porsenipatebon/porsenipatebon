@@ -2036,6 +2036,11 @@ a:focus-visible,button:focus-visible,summary:focus-visible{
     padding:18px 16px 16px;
     border-radius:19px;
   }
+  /* Judul pendaftaran sejajar dengan isi utama kartu formulir. */
+  #v-kontingen .kontingen-hero-copy{
+    margin-left:64px;
+    max-width:calc(100% - 64px);
+  }
   #v-kontingen .pg{font-size:1.42rem;line-height:1.2}
   #v-kontingen .pgsub{font-size:.88rem}
   #v-kontingen .kontingen-draft-note{padding:10px 11px}
@@ -4191,6 +4196,41 @@ nav.desk-nav button {
 }
 </style>
 
+
+<style id="recap-title-alignment-final">
+/* Sejajarkan judul dan subjudul rekap dengan inset konten, di semua ukuran layar. */
+#v-rekap-peserta > .pg,
+#v-rekap-peserta > .pgsub{
+  box-sizing:border-box!important;
+  margin-left:24px!important;
+  margin-right:24px!important;
+  padding-left:0!important;
+  padding-right:0!important;
+}
+@media(max-width:899px){
+  #v-rekap-peserta > .pg,
+  #v-rekap-peserta > .pgsub{
+    margin-left:12px!important;
+    margin-right:12px!important;
+  }
+}
+</style>
+
+
+<style id="desktop-recap-content-inset-fix">
+/* Desktop: jaga statistik, filter Cabang Lomba, dan daftar rekap tetap proporsional di dalam kartu putih. */
+@media (min-width: 900px) {
+  #v-rekap-peserta > #rk-stats,
+  #v-rekap-peserta > .rk-toolbar,
+  #v-rekap-peserta > #recap-detail {
+    width: auto !important;
+    max-width: none !important;
+    margin-left: 24px !important;
+    margin-right: 24px !important;
+    box-sizing: border-box !important;
+  }
+}
+</style>
 </body>
 </html>
 
