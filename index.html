@@ -1265,14 +1265,10 @@ body.pg-lock{overflow:hidden}
     <h3>Unggah berkas</h3><p class="hint">Format dan batas ukuran setiap file tercantum tepat di bawah kolom unggah. Pastikan dokumen terbaca jelas.</p>
     <label class="fld"><span>Bukti transfer / kwitansi pembayaran uang mandat *</span><input type="file" name="f_bukti" accept="application/pdf,.pdf,image/png,image/jpeg,.png,.jpg,.jpeg" required></label>
     <label class="fld"><span>SP / berita acara Rapat Anggota Tahunan PR/PK *</span><input type="file" name="f_sp" accept="application/pdf,.pdf" required></label>
-    <p class="pgsub" style="margin:0 0 12px">Setelah mengunggah SP, lengkapi berkas berikut. KTP dapat berupa PDF atau gambar. Pakta integritas dan SP tetap berupa PDF. Gambar wajib JPG atau PNG (HEIC/WebP tidak didukung; foto iPhone: pilih "Paling Kompatibel"). Seluruh berkas digabung otomatis ke PDF resmi, sehingga pada hari-H daftar ulang cukup dengan tanda tangan manual.</p>
-    <label class="fld"><span>KTP ketua kontingen *</span><input type="file" name="f_ktp" accept="application/pdf,.pdf,image/png,image/jpeg,.png,.jpg,.jpeg" required></label>
+    <p class="pgsub" style="margin:0 0 12px">Setelah mengunggah SP, lengkapi berkas berikut. KTP wajib berupa gambar JPG atau PNG. Pakta integritas dan SP tetap berupa PDF. Gambar wajib JPG atau PNG (HEIC/WebP tidak didukung; foto iPhone: pilih "Paling Kompatibel"). Seluruh berkas digabung otomatis ke PDF resmi, sehingga pada hari-H daftar ulang cukup dengan tanda tangan manual.</p>
+    <label class="fld"><span>KTP ketua kontingen *</span><input type="file" name="f_ktp" accept="image/png,image/jpeg,.png,.jpg,.jpeg" required></label>
     <label class="fld"><span>Pakta integritas bertanda tangan *</span><input type="file" name="f_pakta" accept="application/pdf,.pdf" required></label>
-    <h3>Tanda tangan pengurus (wajib)</h3>
-    <p class="pgsub" style="margin:0 0 12px">Unggah tanda tangan Ketua Kontingen, Ketua IPNU, dan Ketua IPPNU dalam format PNG atau JPG (latar putih/transparan) agar tampil pada formulir PDF resmi.</p>
-    <label class="fld"><span>Tanda tangan Ketua Kontingen (PNG/JPG) *</span><input type="file" name="f_ttd_ketua" accept="image/png,image/jpeg" required></label>
-    <label class="fld"><span>Tanda tangan Ketua IPNU (PNG/JPG) *</span><input type="file" name="f_ttd_ipnu" accept="image/png,image/jpeg" required></label>
-    <label class="fld"><span>Tanda tangan Ketua IPPNU (PNG/JPG) *</span><input type="file" name="f_ttd_ippnu" accept="image/png,image/jpeg" required></label>
+    <p class="hint">Kolom tanda tangan tidak perlu diunggah. Area tanda tangan Ketua Kontingen, Ketua IPNU, dan Ketua IPPNU tetap tersedia pada formulir cetak untuk ditandatangani secara manual.</p>
     <label class="chk" style="margin:6px 0 14px"><input type="checkbox" name="setuju" required><span>Data sudah benar dan kontingen bersedia mengikuti seluruh peraturan PORSENI 2026.</span></label>
     <button class="btn" type="submit" id="fk-btn">Daftar</button>
   </form>
@@ -1588,8 +1584,14 @@ function openPortalFilePreview(fileId,label){
   var blob=new Blob([bytes],{type:f.mimeType||'application/octet-stream'});PORTAL_PREVIEW_OBJECT_URL=URL.createObjectURL(blob);body.innerHTML='';
   var mime=String(f.mimeType||'').toLowerCase();
   if(mime==='application/pdf'){
-   var frame=document.createElement('iframe');frame.title=f.name||'Pratinjau PDF';frame.src=PORTAL_PREVIEW_OBJECT_URL;frame.style.cssText='border:0;width:100%;height:100%;min-height:65vh;';body.appendChild(frame);
-  }else if(mime.indexOf('image/')===0){
+    body.style.cssText='flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;padding:6px;';
+    var tools=document.createElement('div');tools.style.cssText='display:flex;gap:8px;flex-wrap:wrap;justify-content:center;padding:10px;width:100%;';
+    var open=document.createElement('a');open.href=PORTAL_PREVIEW_OBJECT_URL;open.target='_blank';open.rel='noopener';open.className='btn';open.textContent='Buka PDF di tab baru';
+    var download=document.createElement('a');download.href=PORTAL_PREVIEW_OBJECT_URL;download.download=f.name||'formulir-porseni.pdf';download.className='btn alt';download.textContent='Unduh PDF';
+    tools.appendChild(open);tools.appendChild(download);
+    var frame=document.createElement('iframe');frame.title=f.name||'Pratinjau PDF';frame.src=PORTAL_PREVIEW_OBJECT_URL;frame.style.cssText='border:0;width:100%;height:calc(100% - 62px);min-height:55vh;flex:1;';
+    body.appendChild(tools);body.appendChild(frame);
+   }else if(mime.indexOf('image/')===0){
    var img=document.createElement('img');img.src=PORTAL_PREVIEW_OBJECT_URL;img.alt=f.name||'Lampiran kontingen';img.style.cssText='display:block;max-width:100%;max-height:100%;object-fit:contain;';img.onerror=function(){body.innerHTML='';var note=document.createElement('div');note.style.cssText='text-align:center;padding:22px;';var p=document.createElement('p');p.textContent='Browser ini tidak mendukung pratinjau format gambar tersebut. File asli tetap tersimpan dan dapat diunduh setelah PIN tervalidasi.';var a=document.createElement('a');a.href=PORTAL_PREVIEW_OBJECT_URL;a.download=f.name||'lampiran-gambar';a.className='btn';a.textContent='Unduh gambar asli';note.appendChild(p);note.appendChild(a);body.appendChild(note);};body.appendChild(img);
   }else{
    var note=document.createElement('div');note.style.cssText='text-align:center;padding:22px;';var p=document.createElement('p');p.textContent='Format ini tidak dapat ditampilkan langsung di browser. Unduh melalui tombol di bawah setelah PIN tervalidasi.';var a=document.createElement('a');a.href=PORTAL_PREVIEW_OBJECT_URL;a.download=f.name||'berkas-kontingen';a.className='btn';a.textContent='Unduh berkas';note.appendChild(p);note.appendChild(a);body.appendChild(note);
@@ -1598,87 +1600,96 @@ function openPortalFilePreview(fileId,label){
 }
 var KFIELDS=[["ketua","Nama ketua kontingen","text"],["tempat_lahir_ketua","Tempat lahir ketua","text"],["tanggal_lahir_ketua","Tanggal lahir ketua","date"],["alamat","Alamat rumah ketua","textarea"],["wa_ketua","No. WhatsApp ketua","tel"],["email","Email kontingen","email"],["ketua_pr_ipnu","Nama Ketua PR IPNU","text"],["wa_ketua_ipnu","No. WhatsApp Ketua IPNU","tel"],["ketua_pr_ippnu","Nama Ketua PR IPPNU","text"],["wa_ketua_ippnu","No. WhatsApp Ketua IPPNU","tel"]];
 function portalDataSection(data){
- var d=data.dataKontingen||{},locked=(data.approval&&data.approval.status)==="Terverifikasi";
- var h='<section class="formbox" id="portal-data-box"><h3>Data Ketua &amp; Kontak Kontingen</h3>';
- h+=locked?'<p class="note">Data sudah terverifikasi dan terkunci. Ubah isian yang perlu diperbaiki, lalu ajukan permohonan. Perubahan berlaku setelah disetujui panitia.</p>':'<p class="pgsub">Selama belum diverifikasi panitia, data dapat diubah langsung. PDF formulir dibuat ulang otomatis. Nama kontingen dan PIN tidak dapat diubah.</p>';
- h+='<form id="portal-data-form" novalidate>'+KFIELDS.map(function(f){var val=esc(d[f[0]]||"");return '<label class="fld"><span>'+f[1]+'</span>'+(f[2]==="textarea"?'<textarea name="'+f[0]+'" rows="2" minlength="10" maxlength="250" required>'+val+'</textarea>':'<input name="'+f[0]+'" type="'+f[2]+'" value="'+val+'" required maxlength="120"'+(f[2]==="tel"?' inputmode="tel" pattern="(\\+62|62|0)8[0-9]{8,12}" title="Format 08xxxxxxxxxx"':'')+'>')+'</label>';}).join("");
- if(locked)h+='<label class="fld"><span>Alasan perubahan *</span><textarea name="alasan" rows="3" minlength="10" maxlength="1000" placeholder="Jelaskan alasan perubahan data"></textarea></label>';
- return h+'<button class="btn" type="submit" id="portal-data-btn">'+(locked?"Ajukan Perubahan Data":"Simpan Perubahan")+'</button><div id="portal-data-feedback" aria-live="polite"></div></form></section>';
+  var d=data.dataKontingen||{},verified=(data.approval&&data.approval.status)==="Terverifikasi";
+  var closed=Date.now()>new Date('2026-11-20T23:59:59+07:00').getTime();
+  var h='<section class="formbox" id="portal-data-box"><h3>Data Pendaftaran Kontingen</h3><p class="pgsub">Data identitas dan kontak kontingen.</p>';
+  if(closed)h+='<p class="note">Perubahan data kontingen sudah ditutup setelah 20 November 2026.</p>';
+  else{
+   h+='<button type="button" class="btn alt" id="portal-toggle-data">'+(verified?'Ajukan Perubahan Data':'Ubah Data Kontingen')+'</button><div id="portal-data-editor" hidden>';
+   h+='<form id="portal-data-form" novalidate>'+KFIELDS.map(function(f){var val=esc(d[f[0]]||"");var control;if(f[2]==="textarea"){control='<textarea name="'+f[0]+'" rows="2" minlength="10" maxlength="250" required>'+val+'</textarea>';}else{var extra=f[2]==="tel"?' inputmode="tel" pattern="(\\+62|62|0)8[0-9]{8,12}" title="Format 08xxxxxxxxxx"':'';control='<input name="'+f[0]+'" type="'+f[2]+'" value="'+val+'" required maxlength="120"'+extra+'>';}return '<label class="fld"><span>'+f[1]+'</span>'+control+'</label>';}).join('');
+   if(verified)h+='<label class="fld"><span>Alasan perubahan *</span><textarea name="alasan" rows="3" minlength="10" maxlength="1000" placeholder="Jelaskan alasan perubahan data"></textarea></label>';
+   h+='<button class="btn" type="submit" id="portal-data-btn">'+(verified?'Kirim Permohonan Perubahan':'Simpan Perubahan')+'</button><div id="portal-data-feedback" aria-live="polite"></div></form></div>';
+  }
+  return h+'</section>';
 }
 function reloadPortal(){
  if(!PORTAL_AUTH||!PORTAL_AUTH.pin)return;
  fetch(SCRIPT_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action:"contingent_portal",nama:PORTAL_AUTH.nama,pin:PORTAL_AUTH.pin})}).then(function(r){return r.json()}).then(function(j){if(j&&j.ok){PORTAL_AUTH.sessionToken=j.data.sessionToken;renderPortalData(j.data)}}).catch(function(){});
 }
 function bindPortalDataForm(data){
- var f=$("portal-data-form");if(!f)return;var locked=(data.approval&&data.approval.status)==="Terverifikasi";
+ var toggle=$("portal-toggle-data"),editor=$("portal-data-editor"),f=$("portal-data-form");
+ if(toggle&&editor)toggle.addEventListener('click',function(){editor.hidden=!editor.hidden;toggle.textContent=editor.hidden?(data.approval&&data.approval.status==="Terverifikasi"?'Ajukan Perubahan Data':'Ubah Data Kontingen'):'Tutup Formulir';});
+ if(!f)return;
+ var locked=(data.approval&&data.approval.status)==="Terverifikasi";
  f.addEventListener("submit",function(e){
   e.preventDefault();var cur=data.dataKontingen||{},changes={},fb=$("portal-data-feedback"),btn=$("portal-data-btn");
-  fb.innerHTML="";
+  if(Date.now()>new Date('2026-11-20T23:59:59+07:00').getTime()){fb.innerHTML='<p class="warn">Batas perubahan data telah berakhir pada 20 November 2026.</p>';return;}
   for(var i=0;i<KFIELDS.length;i++){var el=f.elements[KFIELDS[i][0]];if(!el.value.trim()||!el.checkValidity()){el.reportValidity();return}}
   KFIELDS.forEach(function(k){var val=f.elements[k[0]].value.trim();if(val!==String(cur[k[0]]||""))changes[k[0]]=val;});
   if(!Object.keys(changes).length){fb.innerHTML='<p class="note">Belum ada data yang diubah.</p>';return}
   var alasan=locked?f.elements.alasan.value.trim():"";
-  if(locked&&alasan.length<10){f.elements.alasan.focus();fb.innerHTML='<p class="warn" style="display:block">Alasan perubahan wajib diisi (minimal 10 karakter).</p>';return}
+  if(locked&&alasan.length<10){f.elements.alasan.focus();fb.innerHTML='<p class="warn">Alasan perubahan wajib diisi (minimal 10 karakter).</p>';return}
   var labels=Object.keys(changes).map(function(k){return KFIELDS.filter(function(x){return x[0]===k})[0][1]});
   pgDialog({title:locked?"Ajukan perubahan data?":"Simpan perubahan data?",html:'<p>Data yang diubah:</p><ul class="pg-list">'+labels.map(function(l){return "<li>"+esc(l)+"</li>"}).join("")+"</ul>"+(locked?'<div class="pg-warn">Perubahan baru berlaku setelah disetujui panitia.</div>':'<div class="pg-warn">PDF formulir akan dibuat ulang dengan data terbaru.</div>'),ok:locked?"Ya, ajukan":"Ya, simpan",cancel:"Periksa lagi"}).then(function(yes){
    if(!yes)return;btn.disabled=true;btn.textContent="Memproses…";
    fetch(SCRIPT_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action:locked?"contingent_request_data_change":"contingent_update_data",sessionToken:PORTAL_AUTH&&PORTAL_AUTH.sessionToken,changes:changes,alasan:alasan})})
-   .then(function(r){return r.json()}).then(function(j){
-    if(!j||!j.ok)throw new Error(j&&j.error||"Gagal memproses.");
-    fb.innerHTML='<p class="stat">'+esc(j.message)+(j.ticket?" Nomor tiket: <b>"+esc(j.ticket)+"</b>":"")+"</p>";
-    if(!locked)setTimeout(reloadPortal,1200);else f.elements.alasan.value="";
-   }).catch(function(err){fb.innerHTML='<p class="warn" style="display:block">'+esc(err.message||"Gagal memproses.")+"</p>"})
-   .finally(function(){btn.disabled=false;btn.textContent=locked?"Ajukan Perubahan Data":"Simpan Perubahan"});
+   .then(function(r){return r.json()}).then(function(j){if(!j||!j.ok)throw new Error(j&&j.error||"Gagal memproses.");fb.innerHTML='<p class="stat">'+esc(j.message)+(j.ticket?" Nomor tiket: <b>"+esc(j.ticket)+"</b>":"")+"</p>";if(!locked)setTimeout(reloadPortal,1200);else f.elements.alasan.value="";})
+   .catch(function(err){fb.innerHTML='<p class="warn">'+esc(err.message||"Gagal memproses.")+"</p>"})
+   .finally(function(){btn.disabled=false;btn.textContent=locked?"Kirim Permohonan Perubahan":"Simpan Perubahan"});
   });
  });
 }
 function renderPortalData(data){
- var r=data.registrasi||{},ap=data.approval||{status:'Menunggu Verifikasi',catatan:''};
- var html='<div style="display:flex;justify-content:flex-end;margin:8px 0"><button type="button" class="btn alt" id="portal-logout" style="width:auto">Keluar dari Portal</button></div><section class="formbox"><h3>Status Persetujuan Kontingen</h3><p><b>'+esc(ap.status)+'</b></p>'+(ap.catatan?'<p>Catatan panitia: '+esc(ap.catatan)+'</p>':'')+(ap.waktu?'<p>Waktu pemeriksaan: '+esc(ap.waktu)+'</p>':'')+(ap.status==='Terverifikasi'?'<p class="stat">Kontingen telah disetujui. Pengumpulan berkas cabang mengikuti daftar jadwal di bawah.</p>':'<p class="warn" style="display:block">Berkas cabang belum dapat dikirim sampai pendaftaran disetujui panitia.</p><p class="note">Selama belum diverifikasi, perubahan dilakukan langsung melalui portal ini. Setelah terverifikasi, pengubahan data harus diajukan terlebih dahulu kepada panitia.</p>')+'</section>';
- html+='<section class="formbox"><h3>Data Pendaftaran Kontingen</h3><p><b>'+esc(data.nama)+'</b></p><p>No. registrasi: '+esc(r.nomor||'-')+'<br>Waktu pendaftaran: '+esc(r.waktu||'-')+'</p><p>'+portalPreviewButton(r.pdfId,'Formulir Kontingen (PDF)','btn')+'</p>'+(r.mergePending?'<p class="note">Formulir final (lengkap dengan seluruh lampiran) sedang disusun. Muat ulang portal dalam beberapa menit; pratinjau yang tersedia sekarang masih versi awal.</p>':'')+'<h4>Berkas yang diunggah</h4>'+portalFileList(r.berkas)+'</section>';
+ var r=data.registrasi||{},ap=data.approval||{status:'Menunggu Verifikasi',catatan:''},verified=ap.status==='Terverifikasi';
+ var html='<div style="display:flex;justify-content:flex-end;margin:8px 0"><button type="button" class="btn alt" id="portal-logout" style="width:auto">Keluar dari Portal</button></div>';
+ html+='<section class="formbox"><h3>Status Persetujuan Kontingen</h3><p><b>'+esc(ap.status)+'</b></p>'+(ap.catatan?'<p>Catatan panitia: '+esc(ap.catatan)+'</p>':'')+(ap.waktu?'<p>Waktu pemeriksaan: '+esc(ap.waktu)+'</p>':'')+(verified?'<p class="stat">Kontingen telah diverifikasi. Pengumpulan berkas cabang sudah dibuka.</p>':'<p class="warn">Pengumpulan berkas cabang hanya tersedia setelah kontingen diverifikasi panitia.</p>')+'</section>';
+ html+='<section class="formbox"><h3>Formulir Pendaftaran Kontingen</h3><p><b>'+esc(data.nama)+'</b></p><p>No. registrasi: '+esc(r.nomor||'-')+'<br>Waktu pendaftaran: '+esc(r.waktu||'-')+'</p>'+portalPreviewButton(r.pdfId,'Lihat Formulir Kontingen','btn light')+(r.pdfId?'<button type="button" class="btn alt" data-portal-download-id="'+esc(r.pdfId)+'" data-portal-download-name="Formulir Kontingen.pdf">Unduh Formulir Kontingen</button>':'')+(r.mergePending?'<p class="note">Formulir final beserta lampiran sedang disusun. Muat ulang portal beberapa menit lagi.</p>':'')+'</section>';
  html+=portalDataSection(data);
- html+='<section class="formbox"><h3>Cabang Lomba yang Diikuti</h3><p class="pgsub">Daftar kategori, batas waktu pengumpulan, dan status berkas berdasarkan pendaftaran kontingen. Kontingen hanya dapat membuka pratinjau dokumen miliknya; folder arsip panitia tetap tertutup.</p>';
- if(!data.statusCabang||!data.statusCabang.length)html+='<p class="note">Belum ada cabang lomba yang tercatat pada pendaftaran kontingen.</p>';
- else data.statusCabang.forEach(function(g){
-  var deadlineLabel=g.cabang==='Duta Pelajar'?'Batas akhir pendaftaran tahap 1: ':'Batas pengumpulan berkas: ';
-  var categoryNames=g.kategori.map(function(z){return z.nama;});
-  html+='<article class="portal-event-card"><h4>'+esc(prettyBranchName(g.cabang))+'</h4><div class="portal-event-meta"><span class="portal-pill">'+deadlineLabel+esc(g.batasAkhir||'-')+'</span></div><ul>'+g.kategori.map(function(k){var ok=k.status==='Sudah dikirim',vs=k.statusVerifikasi||'Menunggu Verifikasi',editable=!ok||vs!=='Terverifikasi';return '<li><b>'+esc(prettyCategoryLabel(g.cabang,k.nama,categoryNames))+'</b> — <span class="portal-pill '+(vs==='Terverifikasi'?'ok':(vs==='Perlu Revisi'||vs==='Ditolak'?'revise':''))+'">'+esc(ok?vs:k.status)+'</span>'+(k.catatanPanitia?'<small style="display:block;color:var(--muted)">Catatan panitia: '+esc(k.catatanPanitia)+'</small>':'')+(k.waktuKirim?'<small style="display:block;color:var(--muted)">Dikirim: '+esc(k.waktuKirim)+'</small>':'')+(k.pdfId?'<small style="display:block">'+portalPreviewButton(k.pdfId,'formulir kategori ini')+'</small>':'')+(editable?'<small style="display:block;margin-top:8px"><button type="button" class="btn light" data-portal-edit-branch="'+esc(g.cabang)+'" data-portal-edit-category="'+esc(k.nama)+'">'+(ok?'Edit / kirim ulang data peserta':'Lengkapi / kirim berkas')+'</button></small>':'<small style="display:block;color:var(--muted);margin-top:6px">Terkunci karena sudah terverifikasi. Gunakan formulir permohonan perubahan di bawah jika perlu koreksi.</small>')+'</li>';}).join('')+'</ul></article>';
- });
- html+='</section>';
- html+='<section class="formbox"><h3>Formulir Cabang Lomba yang Sudah Dikirim</h3>';
- if(!data.berkasCabang||!data.berkasCabang.length)html+='<p class="note">Belum ada formulir cabang lomba yang dikirim.</p>';
- else data.berkasCabang.forEach(function(x){html+='<article class="portal-event-card"><h4>'+esc(prettyBranchName(x.cabang))+' — '+esc(prettyCategoryLabel(x.cabang,x.kategori,KAT[x.cabang]||[]))+'</h4><p>No. registrasi: '+esc(x.nomor||'-')+'<br>Waktu pengiriman: '+esc(x.waktu||'-')+'<br>Jumlah peserta: '+esc(x.jumlah||'-')+'</p><p>'+portalPreviewButton(x.pdfId,'Formulir & Data Peserta (PDF)','btn light')+'</p>'+(x.mergePending?'<p class="note">Formulir final dengan lampiran sedang disusun. Muat ulang dalam beberapa menit.</p>':'')+'<p class="hint">'+esc(x.jumlah||'0')+' peserta tercatat. Nama peserta, identitas, dan lampiran dapat diperiksa melalui pratinjau formulir milik kontingen.</p><h4>Lampiran yang diunggah</h4>'+portalFileList(x.berkas)+'</article>';});
- html+='</section>';
- html+='<section class="portal-change-box"><h3>Ajukan Perubahan Berkas Cabang Lomba</h3><p class="pgsub">Gunakan formulir ini hanya untuk data atau kategori yang sudah TERVERIFIKASI. Untuk berkas yang masih menunggu verifikasi atau perlu revisi, gunakan tombol Edit / kirim ulang pada kategori terkait. Permohonan akan masuk ke panitia dan tidak mengubah data secara otomatis.</p><label class="fld"><span>Jenis permohonan</span><select id="portal-change-type"><option value="Berkas cabang lomba">Perbaikan berkas cabang lomba</option></select></label><label class="fld"><span>Cabang / kategori terkait (bila ada)</span><select id="portal-change-event"><option value="">Tidak terkait cabang tertentu</option>'+((data.statusCabang||[]).map(function(g){return g.kategori.filter(function(k){return k.statusVerifikasi==='Terverifikasi';}).map(function(k){return '<option value="'+esc(g.cabang+' — '+k.nama)+'">'+esc(prettyBranchName(g.cabang)+' — '+prettyCategoryLabel(g.cabang,k.nama,g.kategori.map(function(z){return z.nama;})))+'</option>';}).join('');}).join(''))+'</select></label><label class="fld"><span>Nama kolom atau berkas yang ingin diubah</span><input id="portal-change-target" maxlength="120" placeholder="Contoh: alamat ketua / KTP peserta 2"></label><label class="fld"><span>Alasan dan keterangan perubahan</span><textarea id="portal-change-reason" rows="3" maxlength="1000" placeholder="Jelaskan data yang perlu diperbaiki dan perubahan yang benar…"></textarea></label><button id="portal-change-submit" class="btn" type="button">Kirim Permohonan Perubahan</button><div id="portal-change-feedback" aria-live="polite"></div></section>';
- $('portal-result').innerHTML=html;
- $('fp-portal').style.display='none';$('portal-logout').addEventListener('click',logoutContingentPortal);bindPortalDataForm(data);
+ if(verified){
+  html+='<section class="formbox"><h3>Cabang Lomba yang Diikuti</h3><p class="pgsub">Berkas cabang hanya tersedia setelah kontingen terverifikasi.</p>';
+  if(!data.statusCabang||!data.statusCabang.length)html+='<p class="note">Belum ada cabang lomba yang tercatat.</p>';
+  else data.statusCabang.forEach(function(g){
+   var categoryNames=g.kategori.map(function(z){return z.nama;});
+   html+='<article class="portal-event-card"><h4>'+esc(prettyBranchName(g.cabang))+'</h4><ul>'+g.kategori.map(function(k){
+    var sent=k.status==='Sudah dikirim',vs=k.statusVerifikasi||'Belum dikirim',isVerified=vs==='Terverifikasi';
+    return '<li><b>'+esc(prettyCategoryLabel(g.cabang,k.nama,categoryNames))+'</b> — <span class="portal-pill '+(isVerified?'ok':(vs==='Perlu Revisi'||vs==='Ditolak'?'revise':''))+'">'+esc(sent?vs:'Belum dikirim')+'</span>'+(k.catatanPanitia?'<small style="display:block;color:var(--muted)">Catatan panitia: '+esc(k.catatanPanitia)+'</small>':'')+(k.waktuKirim?'<small style="display:block;color:var(--muted)">Dikirim: '+esc(k.waktuKirim)+'</small>':'')+(!isVerified?'<div style="margin-top:9px"><button type="button" class="btn light" data-portal-edit-branch="'+esc(g.cabang)+'" data-portal-edit-category="'+esc(k.nama)+'">'+(sent?'Ubah / Kirim Ulang Berkas':'Kirim Berkas Cabang')+'</button></div>':'<small style="display:block;color:var(--muted);margin-top:6px">Sudah diverifikasi panitia.</small>')+'</li>';
+   }).join('')+'</ul></article>';
+  });
+  var verifiedEvents=[];data.statusCabang.forEach(function(g){g.kategori.forEach(function(k){if(k.statusVerifikasi==='Terverifikasi')verifiedEvents.push({branch:g.cabang,category:k.nama,label:prettyBranchName(g.cabang)+' — '+prettyCategoryLabel(g.cabang,k.nama,g.kategori.map(function(z){return z.nama;}))});});});
+  if(verifiedEvents.length){
+   html+='<section class="formbox"><h3>Permohonan Perubahan Berkas Cabang</h3><p class="pgsub">Pengajuan perubahan berkas yang sudah diverifikasi dilakukan melalui halaman khusus.</p><button type="button" class="btn" id="portal-open-change-page">Ajukan Perubahan Berkas Cabang</button></section>';
+   html+='<section class="formbox" id="portal-change-page" hidden><button type="button" class="btn alt" id="portal-back-main">‹ Kembali ke Portal Kontingen</button><h3>Ajukan Perubahan Berkas Cabang</h3><label class="fld"><span>Cabang / kategori terverifikasi</span><select id="portal-change-event"><option value="">Pilih cabang dan kategori…</option>'+verifiedEvents.map(function(x){return '<option value="'+esc(x.branch+' — '+x.category)+'">'+esc(x.label)+'</option>';}).join('')+'</select></label><label class="fld"><span>Nama data atau berkas yang ingin diubah</span><input id="portal-change-target" maxlength="120" placeholder="Contoh: KTP peserta 2"></label><label class="fld"><span>Alasan perubahan</span><textarea id="portal-change-reason" rows="3" maxlength="1000" placeholder="Jelaskan perubahan yang diperlukan…"></textarea></label><button id="portal-change-submit" class="btn" type="button">Kirim Permohonan Perubahan</button><div id="portal-change-feedback" aria-live="polite"></div></section>';
+  }
+ }else html+='<section class="formbox"><h3>Cabang Lomba</h3><p class="note">Daftar pengumpulan berkas cabang akan muncul setelah status kontingen menjadi Terverifikasi.</p></section>';
+ $('portal-result').innerHTML=html;$('fp-portal').style.display='none';bindPortalDataForm(data);$('portal-logout').addEventListener('click',logoutContingentPortal);
  $('portal-result').onclick=function(e){
   var preview=e.target.closest('[data-portal-preview-id]');if(preview){openPortalFilePreview(preview.getAttribute('data-portal-preview-id'),preview.getAttribute('data-portal-preview-label')||'Pratinjau berkas');return;}
-  var edit=e.target.closest('[data-portal-edit-branch]');if(edit){
+  var dl=e.target.closest('[data-portal-download-id]');if(dl){downloadPortalFile(dl.getAttribute('data-portal-download-id'),dl.getAttribute('data-portal-download-name')||'formulir.pdf');return;}
+  if(e.target.closest('#portal-open-change-page')){var page=$('portal-change-page');if(page){page.hidden=false;Array.prototype.forEach.call($('portal-result').querySelectorAll('.formbox'),function(s){if(s.id!=='portal-change-page')s.hidden=true;});}return;}
+  if(e.target.closest('#portal-back-main')){var page=$('portal-change-page');if(page)page.hidden=true;Array.prototype.forEach.call($('portal-result').querySelectorAll('.formbox'),function(s){s.hidden=false;});return;}
+  var edit=e.target.closest('[data-portal-edit-branch]');
+  if(edit){
    var branch=edit.getAttribute('data-portal-edit-branch'),category=edit.getAttribute('data-portal-edit-category');
-   if(!PORTAL_AUTH||!PORTAL_AUTH.pin){alert('Sesi PIN tidak tersedia. Silakan login kembali ke Portal Kontingen.');return;}
+   if(!PORTAL_AUTH||!PORTAL_AUTH.pin){alert('Sesi PIN tidak tersedia. Silakan login kembali.');return;}
    PICK=branch;resetParticipantRows();configureSpecialFiles();location.hash='#berkas-cabang';
-   setTimeout(function(){
-    var nameSelect=$('fb-nama');if(!Array.prototype.some.call(nameSelect.options,function(o){return o.value===PORTAL_AUTH.nama;})){var nameOption=document.createElement('option');nameOption.value=PORTAL_AUTH.nama;nameOption.textContent=PORTAL_AUTH.nama;nameSelect.appendChild(nameOption);}
-    nameSelect.value=PORTAL_AUTH.nama;$('fb').elements.pin.value=PORTAL_AUTH.pin;
-    lookupEvents(PORTAL_AUTH.nama,function(){
-     $('fb-cabang').value=branch;$('fb-kategori').value=category;
-     var sel=$('fb-category-select');if(sel){sel.value=category;sel.dispatchEvent(new Event('change',{bubbles:true}));}
-     $('fb-selected-summary').innerHTML='<b>Perbarui data:</b> '+esc(prettyBranchName(branch))+' — '+esc(prettyCategoryLabel(branch,category,KAT[branch]||[]));$('fb-selected-summary').hidden=false;
-     $('fb-info').insertAdjacentHTML('beforeend','<p class="note" style="margin-top:10px"><b>Mode pembaruan:</b> lengkapi kembali seluruh data peserta dan unggah ulang lampiran wajib. Data lama akan digantikan setelah server menerima pembaruan. Status kembali menjadi Menunggu Verifikasi.</p>');
-    });
-   },180);
+   setTimeout(function(){var nameSelect=$('fb-nama');if(!Array.prototype.some.call(nameSelect.options,function(o){return o.value===PORTAL_AUTH.nama;})){var op=document.createElement('option');op.value=PORTAL_AUTH.nama;op.textContent=PORTAL_AUTH.nama;nameSelect.appendChild(op);}nameSelect.value=PORTAL_AUTH.nama;$('fb').elements.pin.value=PORTAL_AUTH.pin;lookupEvents(PORTAL_AUTH.nama,function(){$('fb-cabang').value=branch;$('fb-kategori').value=category;var sel=$('fb-category-select');if(sel){sel.value=category;sel.dispatchEvent(new Event('change',{bubbles:true}));}$('fb-selected-summary').innerHTML='<b>Perbarui data:</b> '+esc(prettyBranchName(branch))+' — '+esc(prettyCategoryLabel(branch,category,KAT[branch]||[]));$('fb-selected-summary').hidden=false;$('fb-info').insertAdjacentHTML('beforeend','<p class="note" style="margin-top:10px"><b>Mode pembaruan:</b> lengkapi data peserta dan unggah ulang lampiran wajib.</p>');});},180);return;
+  }
+  if(e.target.closest('#portal-change-submit')){
+   var btn=$('portal-change-submit'),feedback=$('portal-change-feedback'),event=$('portal-change-event').value,target=$('portal-change-target').value.trim(),reason=$('portal-change-reason').value.trim();
+   if(!event||!target||!reason){feedback.innerHTML='<p class="warn">Pilih cabang/kategori, isi nama berkas, dan alasan perubahan.</p>';return;}
+   btn.disabled=true;btn.textContent='Mengirim…';
+   fetch(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'contingent_request_change',sessionToken:PORTAL_AUTH&&PORTAL_AUTH.sessionToken,jenis:'Berkas cabang lomba',target:event+' | '+target,alasan:reason})})
+   .then(function(resp){return resp.json();}).then(function(j){if(!j||!j.ok)throw new Error(j&&j.error||'Permohonan tidak dapat dikirim.');feedback.innerHTML='<p class="stat">Permohonan terkirim. Nomor tiket: <b>'+esc(j.ticket||'-')+'</b>.</p>';$('portal-change-target').value='';$('portal-change-reason').value='';})
+   .catch(function(err){feedback.innerHTML='<p class="warn">'+esc(err.message)+'</p>';})
+   .finally(function(){btn.disabled=false;btn.textContent='Kirim Permohonan Perubahan';});
   }
  };
- $('portal-change-submit').addEventListener('click',function(){
-  var btn=this,feedback=$('portal-change-feedback'),kind=$('portal-change-type').value,event=$('portal-change-event').value,target=$('portal-change-target').value.trim(),reason=$('portal-change-reason').value.trim();
-  if(!target||!reason){feedback.innerHTML='<p class="warn" style="display:block">Lengkapi nama data/berkas dan alasan perubahan.</p>';return;}
-  btn.disabled=true;btn.textContent='Mengirim…';
-  fetch(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'contingent_request_change',sessionToken:PORTAL_AUTH&&PORTAL_AUTH.sessionToken,jenis:kind,target:event?event+' | '+target:target,alasan:reason})})
-   .then(function(resp){return resp.json();}).then(function(j){if(!j||!j.ok)throw new Error(j&&j.error||'Permohonan tidak dapat dikirim.');feedback.innerHTML='<p class="stat">Permohonan terkirim. Nomor tiket: <b>'+esc(j.ticket||'-')+'</b>. Panitia akan menindaklanjuti.</p>'; $('portal-change-target').value='';$('portal-change-reason').value='';})
-   .catch(function(err){feedback.innerHTML='<p class="warn" style="display:block">'+esc(err.message)+'</p>';})
-   .finally(function(){btn.disabled=false;btn.textContent='Kirim Permohonan Perubahan';});
- });
+}
+function downloadPortalFile(fileId,fileName){
+ if(!PORTAL_AUTH||!PORTAL_AUTH.sessionToken){alert('Sesi Portal Kontingen tidak tersedia.');return;}
+ fetch(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'contingent_preview_file',sessionToken:PORTAL_AUTH.sessionToken,fileId:fileId})})
+ .then(function(r){return r.json();}).then(function(j){if(!j||!j.ok)throw new Error(j&&j.error||'PDF tidak dapat diunduh.');var raw=atob(j.file.base64||''),bytes=new Uint8Array(raw.length);for(var i=0;i<raw.length;i++)bytes[i]=raw.charCodeAt(i);var blob=new Blob([bytes],{type:j.file.mimeType||'application/pdf'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=fileName||j.file.name||'formulir.pdf';document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(url);},60000);})
+ .catch(function(err){alert(err.message||'Unduh PDF gagal.');});
 }
 $('fp-portal').addEventListener('submit',function(e){e.preventDefault();var f=e.target,b=$('portal-btn'),out=$('portal-result'),nama=v(f,'nama'),pin=v(f,'pin');b.disabled=true;b.textContent='Memeriksa PIN…';out.innerHTML='<p class="hint">Mengambil data kontingen…</p>';PORTAL_AUTH=null;fetch(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'contingent_portal',nama:nama,pin:pin})}).then(function(r){return r.json();}).then(function(j){if(!j||!j.ok)throw new Error(j.error||'Data tidak dapat diakses.');PORTAL_AUTH={nama:nama,pin:pin,sessionToken:j.data.sessionToken,lastActivity:Date.now()};startContingentSessionWatch();renderPortalData(j.data);}).catch(function(err){out.innerHTML='<p class="warn" style="display:block">'+esc(err.message||'Gagal memuat data.')+'</p>';}).finally(function(){b.disabled=false;b.textContent='Periksa data kontingen';});});
 
@@ -1733,8 +1744,8 @@ function tr(l,x){return '<tr><td>'+l+'</td><td>'+(x?esc(x):'&nbsp;')+'</td></tr>
 function sign(l,r,nm){return '<div class="sign"><div><p>&nbsp;<br>'+l+',</p><div class="sp"></div><p>( ............................ )</p></div><div><p>Patebon, ................ 2026<br>'+r+',</p><div class="sp"></div><p>( <b>'+esc(nm)+'</b> )</p><small>Tanda tangan dan cap</small></div></div>'}
 var BK=["Bukti pembayaran","KTP ketua kontingen","Pakta integritas","SP / berita acara RAT"];
 function fl(d,l){var f=(d.fl||[]).filter(function(x){return x.label==l})[0];return f?f.name:""}
-function signatureImagesFrom(files){var o={ketua:{signature:''},ipnu:{signature:''},ippnu:{signature:''}};var m={'tanda tangan ketua kontingen':['ketua','signature'],'tanda tangan ketua ipnu':['ipnu','signature'],'tanda tangan ketua ippnu':['ippnu','signature']};(files||[]).forEach(function(f){var x=m[String(f.label||'').toLowerCase()];if(x&&f.data)o[x[0]][x[1]]='data:'+(f.type||'application/octet-stream')+';base64,'+f.data});return o}
-function signature3(d,images){images=images||{};function art(role){var x=images[role]||{};return '<div class="space">'+(x.signature?'<img src="'+x.signature+'" alt="Tanda tangan '+role.toUpperCase()+'" class="sig">':'')+'</div>'}return '<div class="sign3"><div><b>Ketua Kontingen,</b>'+art('ketua')+'<div class="name">( '+esc(d.ketua)+' )</div></div><div><b>Ketua IPNU,</b>'+art('ipnu')+'<div class="name">( '+esc(d.ketua_pr_ipnu||'')+' )</div><small>Tanda tangan</small></div><div><b>Ketua IPPNU,</b>'+art('ippnu')+'<div class="name">( '+esc(d.ketua_pr_ippnu||'')+' )</div><small>Tanda tangan</small></div></div>'}
+function signatureImagesFrom(files){return {ketua:{signature:""},ipnu:{signature:""},ippnu:{signature:""}}}
+ function signature3(d,images){images=images||{};function art(role){var x=images[role]||{};return '<div class="space">'+(x.signature?'<img src="'+x.signature+'" alt="Tanda tangan '+role.toUpperCase()+'" class="sig">':'')+'</div>'}return '<div class="sign3"><div><b>Ketua Kontingen,</b>'+art('ketua')+'<div class="name">( '+esc(d.ketua)+' )</div></div><div><b>Ketua IPNU,</b>'+art('ipnu')+'<div class="name">( '+esc(d.ketua_pr_ipnu||'')+' )</div><small>Tanda tangan</small></div><div><b>Ketua IPPNU,</b>'+art('ippnu')+'<div class="name">( '+esc(d.ketua_pr_ippnu||'')+' )</div><small>Tanda tangan</small></div></div>'}
 function paperK(d,stamps){
  var selected=(d.cabang||"").split("; ").filter(Boolean);
  var catalog=[
@@ -1794,7 +1805,7 @@ function showPaper(html,result){
   loadOfficialPdf(result.data,SUBMIT_CTX).then(function(url){
    OFFICIAL_BLOB_URL=url;OFFICIAL_PDF_URL=url;
    var note=$("official-note");if(note)note.remove();
-   var box=$("official-frame-box");if(box)box.innerHTML='<p><a href="'+esc(url)+'" target="_blank" rel="noopener" style="font-weight:800">Buka PDF di tab baru ↗</a></p><iframe title="PDF resmi pendaftaran" src="'+esc(url)+'" style="display:block;width:100%;height:75vh;min-height:650px;border:1px solid #dbe3ef;border-radius:10px"></iframe>';
+   var box=$("official-frame-box");if(box)box.innerHTML='<div style="display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 12px"><a href="'+esc(url)+'" target="_blank" rel="noopener" style="font-weight:800">Buka PDF di tab baru ↗</a><a href="'+esc(url)+'" download="Formulir_Pendaftaran_PORSENI_2026.pdf" style="font-weight:800">Unduh PDF ↓</a></div><iframe title="PDF resmi pendaftaran" src="'+esc(url)+'" style="display:block;width:100%;height:70vh;min-height:420px;border:1px solid #dbe3ef;border-radius:10px"></iframe>';
   }).catch(function(err){
    $("paper").innerHTML='<p class="note noprint" style="margin:0 0 12px"><b>PDF resmi sudah tersimpan di server panitia.</b> Buka dari <a href="#portal-kontingen">Portal Kontingen</a> (login dengan PIN) untuk pratinjau dan unduh. Di bawah ini salinan formulir untuk dicetak sementara.</p>'+html;
    $("pr-print").textContent="🖨️ Cetak / Simpan PDF (A4)";
@@ -1867,8 +1878,8 @@ fkf.addEventListener("submit",function(e){e.preventDefault();var f=e.target,sel=
   parts.push(c+(pick.length?" ("+pick.join(", ")+")":""))}
  if(!parts.length){alert("Pilih minimal satu cabang lomba.");return}
  var d={type:"kontingen",waktu:new Date().toISOString(),reg:regNo("K"),nama:v(f,"nama"),asal:"",ketua:v(f,"ketua"),tempat_lahir_ketua:v(f,"tempat_lahir_ketua"),tanggal_lahir_ketua:v(f,"tanggal_lahir_ketua"),alamat:v(f,"alamat_ketua"),wa_ketua:v(f,"wa_ketua"),ketua_pr_ipnu:v(f,"ketua_pr_ipnu"),wa_ketua_ipnu:v(f,"wa_ketua_ipnu"),ketua_pr_ippnu:v(f,"ketua_pr_ippnu"),wa_ketua_ippnu:v(f,"wa_ketua_ippnu"),email:v(f,"email").toLowerCase(),cabang:parts.join("; "),jml:"",bayar:v(f,"bayar"),tgl_bayar:v(f,"tgl_bayar")};
- var items;try{items=[["Bukti pembayaran","f_bukti",["pdf","image"]],["KTP ketua kontingen","f_ktp",["pdf","image"]],["Pakta integritas","f_pakta",["pdf"]],["SP / berita acara RAT","f_sp",["pdf"]]].filter(function(x){return f.elements[x[1]].files.length}).map(function(x){var file=f.elements[x[1]].files[0];checkFileType(file,x[2],x[0]);return {label:x[0],file:file}});
- [["Tanda tangan Ketua Kontingen","f_ttd_ketua"],["Tanda tangan Ketua IPNU","f_ttd_ipnu"],["Tanda tangan Ketua IPPNU","f_ttd_ippnu"]].forEach(function(x){var file=f.elements[x[1]].files[0];checkImageRequired(file,x[0]);checkFileType(file,["sig"],x[0]+" harus PNG atau JPG");items.push({label:x[0],file:file,signature:true})})}catch(er){alert(er.message);return}
+ var items;try{items=[["Bukti pembayaran","f_bukti",["pdf","image"]],["KTP ketua kontingen","f_ktp",["image"]],["Pakta integritas","f_pakta",["pdf"]],["SP / berita acara RAT","f_sp",["pdf"]]].filter(function(x){return f.elements[x[1]].files.length}).map(function(x){var file=f.elements[x[1]].files[0];checkFileType(file,x[2],x[0]);return {label:x[0],file:file}});
+ }catch(er){alert(er.message);return}
  var cabangList=d.cabang.split("; ").map(function(x){return '<li>'+esc(x)+'</li>'}).join("");
  pgDialog({title:"Konfirmasi pendaftaran",html:dlgRows([["Kontingen",d.nama],["Ketua kontingen",d.ketua],["Email",d.email]])+'<p class="pg-sub">Cabang lomba yang diikuti:</p><ul class="pg-list">'+cabangList+'</ul><div class="pg-warn"><b>Periksa kembali sebelum mendaftar.</b> Setelah terkirim, data tidak dapat diubah dari formulir ini. Perubahan dilakukan melalui Portal Kontingen selama belum diverifikasi panitia. Jika sudah diverifikasi, pengubahan data harus diajukan terlebih dahulu.</div>',ok:"Ya, daftar sekarang",cancel:"Periksa lagi"}).then(function(yes){
   if(!yes)return;
