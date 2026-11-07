@@ -2720,9 +2720,9 @@ function renderPublicRecap(d){
  var mode=d.modeRekapPublik==='terverifikasi'?'terverifikasi':'terdaftar';
  var rows=mode==='terverifikasi'?(d.ringkasan||[]):(d.ringkasanPendaftaran||[]);
  var b=document.getElementById('recap-cabang');
- var heading=mode==='terverifikasi'?'PESERTA CABANG LOMBA YANG SUDAH TERVERIFIKASI':'PESERTA CABANG LOMBA YANG SUDAH TERDAFTAR';
- var countHeading=mode==='terverifikasi'?'Peserta terverifikasi':'Kontingen terdaftar';
- var note=mode==='terverifikasi'?'Data ini hanya memuat cabang/kategori dari kontingen yang sudah dinyatakan Terverifikasi oleh panitia.':'Jumlah dihitung dari pendaftaran cabang/kategori pada formulir kontingen, termasuk kontingen yang belum mengumpulkan berkas lomba maupun yang masih menunggu verifikasi panitia.';
+ var heading=mode==='terverifikasi'?'REKAP CABANG LOMBA — KONTINGEN TERVERIFIKASI':'REKAP CABANG LOMBA — SEMUA KONTINGEN TERDAFTAR';
+ var countHeading=mode==='terverifikasi'?'Kontingen terverifikasi':'Kontingen terdaftar';
+ var note=mode==='terverifikasi'?'Hanya kontingen dengan status pendaftaran Terverifikasi yang dihitung. Status checklist berkas cabang lomba tetap dikelola terpisah.':'Menampilkan seluruh kontingen yang telah mendaftarkan cabang/kategori, tanpa melihat status verifikasi pendaftaran. Status checklist berkas cabang lomba tetap dikelola terpisah.';
  if(b)b.innerHTML='<h3 class="recap-h">'+heading+'</h3>'+(rows.length?'<div class="recap-summary"><table><colgroup><col class="c-cab"><col class="c-kat"><col class="c-jml"></colgroup><thead><tr><th>Cabang lomba</th><th>Kategori</th><th>'+countHeading+'</th></tr></thead><tbody>'+summaryRows(rows)+'</tbody></table><p class="hint">'+note+'</p></div>':'<p class="hint">Belum ada data cabang lomba untuk pilihan tampilan ini.</p>');
 }
 var RK=null;
@@ -2743,8 +2743,8 @@ function renderParticipantRecap(){
  var root=document.getElementById('recap-detail'),d=RK||{},groups=d.cabang||[];
  var fc=document.getElementById('rk-cabang').value,q=(document.getElementById('rk-q').value||'').trim().toLowerCase();
  var nKat=0;groups.forEach(function(g){nKat+=g.kategori.length;});
- document.getElementById('rk-stats').innerHTML='<span><b>'+(d.jumlahKontingen||0)+'</b> kontingen terverifikasi</span><span><b>'+groups.length+'</b> cabang lomba</span><span><b>'+nKat+'</b> kategori</span>';
- if(!groups.length){root.innerHTML='<div class="recap-empty">Belum ada data cabang pada rekap publik. Jika data sudah terverifikasi di Portal Panitia, pastikan Apps Script V18 sudah di-deploy.</div>';return;}
+ var mode=d.modeRekapPublik==='terverifikasi'?'terverifikasi':'terdaftar';var modeCount=0;groups.forEach(function(g){g.kategori.forEach(function(c){modeCount+=(c.kontingen||[]).length;});});document.getElementById('rk-stats').innerHTML='<span><b>'+modeCount+'</b> kontingen '+(mode==='terverifikasi'?'terverifikasi':'terdaftar')+'</span><span><b>'+groups.length+'</b> cabang lomba</span><span><b>'+nKat+'</b> kategori</span>';
+ if(!groups.length){root.innerHTML='<div class="recap-empty">Belum ada data cabang lomba untuk mode tampilan yang dipilih Admin.</div>';return;}
  var html='';
  groups.forEach(function(g){
   if(fc&&g.cabang!==fc)return;
