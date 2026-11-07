@@ -47,8 +47,8 @@
    <div class="recap-head"><div><div class="eyebrow">PENGATURAN BERANDA</div><h3>Tampilan Peserta Cabang Lomba</h3></div><span class="recap-icon">⚙</span></div>
    <p class="muted" style="font-size:12px;margin:8px 0 12px">Pilih data yang ditampilkan pada halaman utama website. Perubahan berlaku untuk semua pengunjung setelah data beranda dimuat ulang.</p>
    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-    <button type="button" class="btn warm" id="modeRegisteredBtn">Tampilkan yang Sudah Terdaftar</button>
-    <button type="button" class="btn light" id="modeVerifiedBtn">Tampilkan yang Sudah Terverifikasi</button>
+    <button type="button" class="btn warm" id="modeRegisteredBtn">A. Peserta dari Kontingen Terverifikasi</button>
+    <button type="button" class="btn light" id="modeVerifiedBtn">B. Berkas Cabang Lomba Terverifikasi</button>
     <span id="publicRecapModeStatus" class="muted" style="font-size:11px">Mode aktif: memuat…</span>
    </div>
   </section>
@@ -101,7 +101,7 @@ function renderPublicRecapMode(){
  var mode=data.modeRekapPublik==='terverifikasi'?'terverifikasi':'terdaftar';
  $('modeRegisteredBtn').className='btn '+(mode==='terdaftar'?'warm':'light');
  $('modeVerifiedBtn').className='btn '+(mode==='terverifikasi'?'warm':'light');
- $('publicRecapModeStatus').textContent='Mode aktif: '+(mode==='terdaftar'?'Sudah Terdaftar':'Sudah Terverifikasi');
+ $('publicRecapModeStatus').textContent='Mode aktif: '+(mode==='terdaftar'?'A — Peserta dari Kontingen Terverifikasi':'B — Berkas Cabang Lomba Terverifikasi');
 }
 function setPublicRecapMode(mode){
  var buttons=[$('modeRegisteredBtn'),$('modeVerifiedBtn')];buttons.forEach(function(b){b.disabled=true;});
