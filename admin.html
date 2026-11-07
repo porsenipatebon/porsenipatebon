@@ -48,9 +48,9 @@
 </form></section>
 <section id="appView" class="shell hidden">
  <header class="topbar"><div class="topbrand"><img src="logo-porseni.png" alt=""><span>PORTAL PANITIA<small>PORSENI 2026 · PATEBON</small></span></div><div class="top-right"><span class="admin-pill" id="adminIdentity">PETUGAS</span><button id="logoutBtn" class="btn light">Keluar</button></div></header>
- <div class="layout"><aside class="sidebar"><div class="side-label">MENU PENGELOLAAN</div><button class="navbtn active" data-tab="kontingen">Data Kontingen <small id="navKont">0</small></button><button class="navbtn" data-tab="cabang">Data Cabang Lomba <small id="navCab">0</small></button><button class="navbtn" data-tab="berita">Kelola Berita <small>✎</small></button><button class="navbtn" data-tab="hasil">Hasil Kejuaraan <small>✦</small></button><button class="navbtn" data-tab="permohonan">Permohonan Perubahan <small id="navRequests">0</small></button><button class="navbtn" data-tab="log">Log Aktivitas <small>●</small></button></aside>
+ <div class="layout"><aside class="sidebar"><div class="side-label">MENU PENGELOLAAN</div><button class="navbtn active" data-tab="kontingen">Data Kontingen <small id="navKont">0</small></button><button class="navbtn" data-tab="cabang">Data Cabang Lomba <small id="navCab">0</small></button><button class="navbtn" data-tab="berita">Kelola Berita <small>✎</small></button><button class="navbtn" data-tab="hasil">Hasil Kejuaraan <small>✦</small></button><button class="navbtn" data-tab="permohonan">Permohonan Perubahan <small id="navRequests">0</small></button><button class="navbtn" data-tab="log">Log Aktivitas <small>●</small></button><button class="navbtn" data-tab="uji">Uji Cetak PDF <small>PDF</small></button></aside>
  <main class="main">
-  <div class="page-head"><div><div class="eyebrow">PANEL KENDALI PORSENI 2026</div><h1 id="pageTitle">Data Kontingen</h1><p id="pageDesc">Kelola data, dokumen, dan proses verifikasi kontingen.</p></div><div class="test-actions" aria-label="Uji cetak PDF"><button class="btn light" type="button" data-test-pdf="kontingen">Uji Kontingen</button><button class="btn light" type="button" data-test-pdf="duta">Uji Duta Pelajar</button><button class="btn light" type="button" data-test-pdf="tunggal">Uji Tunggal</button><button class="btn light" type="button" data-test-pdf="beregu">Uji Beregu</button><button class="btn warm" type="button" data-test-pdf="all">Cetak Semua Uji Coba</button></div><button id="refreshBtn" class="btn warm">↻ Muat ulang data</button></div>
+  <div class="page-head"><div><div class="eyebrow">PANEL KENDALI PORSENI 2026</div><h1 id="pageTitle">Data Kontingen</h1><p id="pageDesc">Kelola data, dokumen, dan proses verifikasi kontingen.</p></div><button id="refreshBtn" class="btn warm">↻ Muat ulang data</button></div>
   <div class="cards"><div class="metric"><span>Total pendaftaran</span><strong id="mTotal">0</strong></div><div class="metric"><span>Menunggu verifikasi</span><strong id="mWait">0</strong></div><div class="metric"><span>Terverifikasi</span><strong id="mOk">0</strong></div><div class="metric"><span>Perlu revisi / ditolak</span><strong id="mIssue">0</strong></div></div>
   <section class="recap-grid" id="adminRecap">
    <div class="panel recap-panel"><div class="recap-head"><div><div class="eyebrow">DATA TERKENDALI</div><h3>Kontingen Terverifikasi</h3></div><span class="recap-icon">✓</span></div><strong class="recap-number" id="recVerified">0</strong><div id="recVerifiedNames" class="recap-list">Belum ada kontingen terverifikasi.</div></div>
@@ -82,6 +82,25 @@
   </section>
   <section id="changeRequestsPanel" class="hidden">
    <section class="panel"><div class="toolbar" style="justify-content:space-between"><div><div class="eyebrow">LAYANAN KONTINGEN</div><b style="color:var(--navy)">Permohonan perubahan data / berkas</b></div><button id="refreshRequests" class="btn light">↻ Perbarui</button></div><p class="note-banner">Permohonan dari kontingen yang datanya sudah terverifikasi ditindaklanjuti di sini. Panitia memeriksa alasan dan bukti, lalu mencatat hasilnya sebagai Selesai atau Tidak Dapat Dipenuhi. Persetujuan permohonan tidak mengubah data secara otomatis; pembaruan dilakukan melalui pemeriksaan dan pencatatan panitia.</p><div id="changeRequestsList" class="result-list"><div class="empty">Memuat permohonan…</div></div></section>
+  </section>
+  <section id="testPdfPanel" class="hidden">
+   <div class="panel recap-panel">
+    <div class="eyebrow">PENGUJIAN DOKUMEN</div>
+    <h2 style="font:800 18px Manrope;color:var(--navy);margin:5px 0">Uji Cetak PDF PORSENI 2026</h2>
+    <p class="muted" style="font-size:12px;margin:0 0 14px">Seluruh tombol uji cetak dikumpulkan di halaman ini agar area kerja utama lebih rapi. PDF uji dibuat oleh Google Apps Script dan disimpan pada folder UJI COBA di Google Drive.</p>
+    <h3 class="section-title">UJI PDF PENDAFTARAN</h3>
+    <div class="test-actions" aria-label="Uji PDF pendaftaran">
+     <button class="btn light" type="button" data-test-pdf="kontingen">Uji Kontingen</button>
+     <button class="btn light" type="button" data-test-pdf="duta">Uji Duta Pelajar</button>
+     <button class="btn light" type="button" data-test-pdf="tunggal">Uji Tunggal</button>
+     <button class="btn light" type="button" data-test-pdf="beregu">Uji Beregu</button>
+     <button class="btn warm" type="button" data-test-pdf="all">Cetak Semua Uji Coba</button>
+    </div>
+    <h3 class="section-title">UJI PDF HASIL KEJUARAAN</h3>
+    <p class="muted" style="font-size:12px">Menguji layout Surat Keputusan Hasil Kejuaraan, penetapan Juara Umum, kolom tanda tangan, dan lampiran rekap juara menggunakan data hasil yang tersimpan saat ini. Dokumen diberi penanda UJI COBA dan tidak mengubah status finalisasi.</p>
+    <button id="testChampionshipPdfBtn" class="btn warm" type="button">Uji Cetak PDF SK Hasil Kejuaraan</button>
+    <div id="testChampionshipPdfNote" class="note-banner">PDF uji akan dibuat langsung oleh Apps Script. Tidak perlu menunggu proses penggabungan PDFApp.</div>
+   </div>
   </section>
   <section id="activityLogPanel" class="hidden">
    <section class="panel"><div class="toolbar" style="justify-content:space-between"><div><div class="eyebrow">AUDIT DAN KEAMANAN</div><b style="color:var(--navy)">Riwayat Aktivitas Kontingen dan Panitia</b><p class="muted" style="font-size:11px;margin:3px 0 0">Login berhasil/gagal, pratinjau, unggah, penggantian, penghapusan, dan perubahan data admin.</p></div><div class="log-tools"><button id="refreshActivityLogs" class="btn light" type="button">↻ Perbarui log</button><button id="scrollActivityLogsDown" class="btn" type="button">↓ Scroll ke bawah</button></div></div><div class="table-wrap activity-log-wrap" id="activityLogScroll"><table class="activity-log-table"><thead><tr><th>Waktu</th><th>Aktor</th><th>Aktivitas</th><th>Status</th><th>Detail</th></tr></thead><tbody id="activityLogRows"><tr><td colspan="5" class="empty">Memuat riwayat aktivitas…</td></tr></tbody></table></div><div class="footnote">Riwayat terbaru ditampilkan hingga 300 aktivitas. Log disimpan di Google Sheets oleh Apps Script.</div></section>
@@ -152,12 +171,25 @@ var FLABEL={ketua:'Nama ketua',tempat_lahir_ketua:'Tempat lahir ketua',tanggal_l
 function changeDiff(x){if(!x.perubahan)return '';var p;try{p=JSON.parse(x.perubahan);}catch(e){return '';}var old=x.lama||{};return '<div style="background:#f3f6fa;border-radius:10px;padding:8px 10px;margin:6px 0">'+Object.keys(p).map(function(k){return '<div style="font-size:12px;margin:3px 0"><b>'+esc(FLABEL[k]||k)+'</b>: '+(old[k]!==undefined?'<s style="color:#8a94a6">'+esc(old[k]||'-')+'</s> &rarr; ':'')+'<b style="color:#0a7a3d">'+esc(p[k])+'</b></div>';}).join('')+'</div>';}
 function canApply(x){return !!x.perubahan&&(x.status==='Menunggu Tindak Lanjut'||x.status==='Sedang Diproses');}
 document.addEventListener('click',function(e){
- var ap=e.target.closest('[data-change-apply]'),rj=e.target.closest('[data-change-reject]'),rp=e.target.closest('#resetPin'),tp=e.target.closest('[data-test-pdf]'),rm=e.target.closest('#retryMerge');
+ var ap=e.target.closest('[data-change-apply]'),rj=e.target.closest('[data-change-reject]'),rp=e.target.closest('#resetPin'),tp=e.target.closest('[data-test-pdf]'),skp=e.target.closest('#testChampionshipPdfBtn'),rm=e.target.closest('#retryMerge');
  if(rm){if(!selected){toast('Pilih data pendaftaran terlebih dahulu.');return;}if(!window.confirm('Gabungkan ulang formulir dengan seluruh lampiran PDF untuk '+selected.nama+'?\n\nGunakan hanya jika PDF belum menyatu dengan lampirannya.'))return;rm.disabled=true;call({action:'admin_retry_pdf_merge',token:token,type:selected.type,recordId:selected.recordId}).then(function(j){toast(j.message);}).catch(function(err){toast(err.message);}).finally(function(){rm.disabled=false;});return;}
  if(ap){var t=ap.dataset.changeApply,n=document.querySelector('[data-change-note="'+t+'"]');if(!window.confirm('Setujui dan terapkan perubahan data untuk tiket '+t+'?\n\nData kontingen akan diperbarui dan PDF formulir dibuat ulang.'))return;ap.disabled=true;call({action:'admin_apply_change_request',token:token,ticket:t,note:n?n.value:''}).then(function(j){toast(j.message);return loadData();}).catch(function(err){toast(err.message);}).finally(function(){ap.disabled=false;});return;}
  if(rj){var t2=rj.dataset.changeReject,n2=document.querySelector('[data-change-note="'+t2+'"]');if(!n2||n2.value.trim().length<5){toast('Isi catatan alasan penolakan terlebih dahulu.');return;}if(!window.confirm('Tolak permohonan '+t2+'? Data tidak akan diubah.'))return;rj.disabled=true;call({action:'admin_update_change_request',token:token,ticket:t2,status:'Tidak Dapat Dipenuhi',note:n2.value}).then(function(j){toast(j.message);return loadData();}).catch(function(err){toast(err.message);}).finally(function(){rj.disabled=false;});return;}
  if(rp){if(!selected||selected.type!=='kontingen'){toast('Reset PIN hanya tersedia untuk data kontingen.');return;}if(!window.confirm('Buat PIN baru untuk '+selected.nama+'?\n\nPIN lama langsung tidak berlaku. PIN baru hanya ditampilkan sekali.'))return;rp.disabled=true;call({action:'admin_reset_pin',token:token,nama:selected.nama}).then(function(j){window.prompt('PIN baru untuk '+selected.nama+' (salin dan sampaikan hanya kepada ketua kontingen):',j.pin);}).catch(function(err){toast(err.message);}).finally(function(){rp.disabled=false;});return;}
  if(tp){var kind=tp.getAttribute('data-test-pdf');tp.disabled=true;startTestPdfPreview(kind,tp).catch(function(err){toast(err.message);}).finally(function(){tp.disabled=false;});}
+ if(skp){skp.disabled=true;skp.textContent='Membuat PDF SK…';$('testChampionshipPdfNote').textContent='Apps Script sedang menyusun Surat Keputusan dan lampirannya…';
+  call({action:'admin_test_championship_pdf',token:token}).then(function(j){
+   var f=j.file||{},raw=atob(f.base64||''),u=new Uint8Array(raw.length);for(var i=0;i<raw.length;i++)u[i]=raw.charCodeAt(i);
+   if(testPdfObjectUrl)URL.revokeObjectURL(testPdfObjectUrl);
+   testPdfObjectUrl=URL.createObjectURL(new Blob([u],{type:'application/pdf'}));
+   $('testPreviewOverlay').classList.remove('hidden');$('testPreviewSelect').classList.add('hidden');
+   $('testPreviewStatus').textContent=(j.message||'PDF SK uji siap.')+' · '+(f.name||'');
+   $('testPreviewFrame').src=testPdfObjectUrl;
+   $('testChampionshipPdfNote').textContent='PDF uji berhasil dibuat oleh Apps Script dan disimpan di folder UJI COBA Google Drive.';
+   toast('PDF SK hasil kejuaraan berhasil dibuat.');
+  }).catch(function(err){$('testChampionshipPdfNote').textContent='Gagal membuat PDF: '+err.message;toast(err.message);})
+   .finally(function(){skp.disabled=false;skp.textContent='Uji Cetak PDF SK Hasil Kejuaraan';});return;
+ }
 });
 var testPreviewJobs={},testPreviewTimer=null;
 function startTestPdfPreview(kind,button){
@@ -209,16 +241,16 @@ function loadNewsAdmin(){ $('newsAdminList').innerHTML='<div class="empty">Memua
 function saveNewsAdmin(){var btn=$('saveNews');btn.disabled=true;call({action:'admin_news_save',token:token,news:{id:$('newsId').value,tanggal:$('newsDate').value,kategori:$('newsCategory').value,judul:$('newsTitle').value,ringkasan:$('newsSummary').value,isi:cleanNewsHtml($('newsBody').innerHTML),gambar:$('newsImage').value,status:$('newsStatus').value}}).then(function(j){toast(j.message);resetNewsForm();loadNewsAdmin();}).catch(function(e){toast(e.message);}).finally(function(){btn.disabled=false;});}
 function setTab(next){
  tab=next;document.querySelectorAll('.navbtn').forEach(function(b){b.classList.toggle('active',b.dataset.tab===tab);});
- var isResults=tab==='hasil',isRequests=tab==='permohonan',isLogs=tab==='log',isNews=tab==='berita';
+ var isResults=tab==='hasil',isRequests=tab==='permohonan',isLogs=tab==='log',isNews=tab==='berita',isTest=tab==='uji';
  $('recordsPanel').classList.toggle('hidden',isResults||isRequests||isLogs||isNews);
  $('resultsPanel').classList.toggle('hidden',!isResults);
  $('changeRequestsPanel').classList.toggle('hidden',!isRequests);
- $('activityLogPanel').classList.toggle('hidden',!isLogs);if($('newsAdminPanel'))$('newsAdminPanel').classList.toggle('hidden',!isNews);
- $('adminRecap').classList.toggle('hidden',isResults||isRequests||isLogs||isNews);if($('publicRecapModePanel'))$('publicRecapModePanel').classList.toggle('hidden',isResults||isRequests||isLogs||isNews);
+ $('activityLogPanel').classList.toggle('hidden',!isLogs);if($('newsAdminPanel'))$('newsAdminPanel').classList.toggle('hidden',!isNews);if($('testPdfPanel'))$('testPdfPanel').classList.toggle('hidden',!isTest);
+ $('adminRecap').classList.toggle('hidden',isResults||isRequests||isLogs||isNews||isTest);if($('publicRecapModePanel'))$('publicRecapModePanel').classList.toggle('hidden',isResults||isRequests||isLogs||isNews||isTest);
  $('searchInput').value='';$('statusFilter').value='';
- $('pageTitle').textContent=tab==='kontingen'?'Data Kontingen':tab==='cabang'?'Data Cabang Lomba':isNews?'Kelola Kabar PORSENI':isResults?'Hasil Kejuaraan PORSENI 2026':isRequests?'Permohonan Perubahan':'Log Aktivitas';
- $('pageDesc').textContent=tab==='kontingen'?'Kelola data, dokumen, dan proses verifikasi kontingen.':tab==='cabang'?'Kelola data peserta, kategori, dokumen, serta status verifikasi cabang lomba.':isNews?'Tulis, edit, dan publikasikan berita yang akan tampil otomatis di website utama.':isResults?'Input juara setiap cabang lomba dan perbarui klasemen website utama.':isRequests?'Tinjau dan tindak lanjuti permohonan perubahan dari kontingen.':'Periksa riwayat login, unggah, pratinjau dokumen, dan perubahan oleh panitia.';
- if(isRequests)renderChangeRequests();else if(isResults)loadResults();else if(isLogs)loadActivityLogs();else if(isNews)loadNewsAdmin();else renderTable();
+ $('pageTitle').textContent=tab==='kontingen'?'Data Kontingen':tab==='cabang'?'Data Cabang Lomba':isNews?'Kelola Kabar PORSENI':isResults?'Hasil Kejuaraan PORSENI 2026':isRequests?'Permohonan Perubahan':isTest?'Uji Cetak PDF':'Log Aktivitas';
+ $('pageDesc').textContent=tab==='kontingen'?'Kelola data, dokumen, dan proses verifikasi kontingen.':tab==='cabang'?'Kelola data peserta, kategori, dokumen, serta status verifikasi cabang lomba.':isNews?'Tulis, edit, dan publikasikan berita yang akan tampil otomatis di website utama.':isResults?'Input juara setiap cabang lomba dan perbarui klasemen website utama.':isRequests?'Tinjau dan tindak lanjuti permohonan perubahan dari kontingen.':isTest?'Jalankan pengujian seluruh format PDF, termasuk Surat Keputusan Hasil Kejuaraan.':'Periksa riwayat login, unggah, pratinjau dokumen, dan perubahan oleh panitia.';
+ if(isRequests)renderChangeRequests();else if(isResults)loadResults();else if(isLogs)loadActivityLogs();else if(isNews)loadNewsAdmin();else if(!isTest)renderTable();
 }
 function loadActivityLogs(){var body=$('activityLogRows');body.innerHTML='<tr><td colspan="5" class="empty">Memuat riwayat aktivitas…</td></tr>';return call({action:'admin_security_logs',token:token}).then(function(j){var rows=j.logs||[];body.innerHTML=rows.length?rows.map(function(x){return '<tr><td>'+esc(x.waktu)+'</td><td>'+esc(x.aktor)+'</td><td>'+esc(x.aktivitas)+'</td><td><span class="status '+(x.status==='BERHASIL'?'ok':x.status==='GAGAL'||x.status==='DIKUNCI'?'no':'wait')+'">'+esc(x.status)+'</span></td><td>'+esc(x.detail)+'</td></tr>';}).join(''):'<tr><td colspan="5" class="empty">Belum ada aktivitas tercatat.</td></tr>';}).catch(function(err){body.innerHTML='<tr><td colspan="5" class="empty">'+esc(err.message)+'</td></tr>';});}
 
