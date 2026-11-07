@@ -1749,6 +1749,483 @@ a:focus-visible,button:focus-visible,summary:focus-visible{
 }
 </style>
 
+
+
+
+<style id="agenda-layout-clean-v9">
+/* Layar lebar: konten di kiri, tombol di kanan. */
+.info-roadto .roadto-card.roadto-duta-toggle,
+.info-roadto .roadto-card.agenda-puncak-card{
+  display:grid!important;
+  grid-template-columns:minmax(300px,1fr) auto!important;
+  align-items:center!important;
+  column-gap:24px!important;
+}
+.info-roadto .roadto-duta-main,
+.info-roadto .agenda-puncak-main{
+  grid-column:1!important;
+  min-width:0!important;
+  display:grid!important;
+  grid-template-columns:48px minmax(0,1fr)!important;
+  grid-template-rows:auto auto!important;
+  column-gap:14px!important;
+  row-gap:6px!important;
+  align-items:start!important;
+}
+.info-roadto .roadto-duta-main .roadto-heading,
+.info-roadto .agenda-puncak-main .roadto-heading{
+  grid-column:1/-1!important;
+  grid-row:1!important;
+  display:grid!important;
+  grid-template-columns:48px minmax(0,1fr)!important;
+  column-gap:14px!important;
+  align-items:center!important;
+  min-width:0!important;
+  margin:0!important;
+}
+.info-roadto .roadto-duta-main .roadto-symbol,
+.info-roadto .agenda-puncak-main .roadto-symbol{
+  grid-column:1!important;
+  grid-row:1!important;
+  width:48px!important;
+  height:48px!important;
+  margin:0!important;
+}
+.info-roadto .roadto-duta-main .roadto-heading h3,
+.info-roadto .agenda-puncak-main .roadto-heading h3{
+  grid-column:2!important;
+  grid-row:1!important;
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important;
+  margin:0!important;
+  text-align:left!important;
+}
+.info-roadto .roadto-duta-main .roadto-duta-text,
+.info-roadto .agenda-puncak-main .agenda-puncak-text{
+  grid-column:2!important;
+  grid-row:2!important;
+  width:auto!important;
+  max-width:none!important;
+  min-width:0!important;
+  margin:0!important;
+  padding:0!important;
+  text-align:left!important;
+}
+.info-roadto .agenda-puncak-main .agenda-puncak-text .roadto-date{
+  display:block!important;
+  margin:0 0 5px!important;
+}
+.info-roadto .roadto-duta-button-wrap,
+.info-roadto .agenda-puncak-button-wrap{
+  grid-column:2!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-end!important;
+  width:auto!important;
+  margin:0!important;
+}
+.info-roadto .roadto-duta-button-wrap .btn,
+.info-roadto .agenda-puncak-button-wrap .btn{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:auto!important;
+  max-width:100%!important;
+  margin:0!important;
+  white-space:normal!important;
+  text-align:center!important;
+}
+.info-roadto #inline-timeline-duta,
+.info-roadto #inline-susunan-puncak{
+  grid-column:1/-1!important;
+  width:100%!important;
+  margin-top:14px!important;
+}
+
+/* Pada area yang lebih sempit (termasuk preview/editor), tombol turun ke bawah
+   agar kolom keterangan tidak terjepit. */
+@media(max-width:1100px){
+  .info-roadto .roadto-card.roadto-duta-toggle,
+  .info-roadto .roadto-card.agenda-puncak-card{
+    display:block!important;
+  }
+  .info-roadto .roadto-duta-main,
+  .info-roadto .agenda-puncak-main{
+    display:grid!important;
+    grid-template-columns:48px minmax(0,1fr)!important;
+    grid-template-rows:auto auto!important;
+    column-gap:14px!important;
+    row-gap:6px!important;
+  }
+  .info-roadto .roadto-duta-main .roadto-heading,
+  .info-roadto .agenda-puncak-main .roadto-heading{
+    display:grid!important;
+    grid-template-columns:48px minmax(0,1fr)!important;
+    grid-column:1/-1!important;
+    grid-row:1!important;
+    column-gap:14px!important;
+    align-items:center!important;
+  }
+  .info-roadto .roadto-duta-main .roadto-heading h3,
+  .info-roadto .agenda-puncak-main .roadto-heading h3{
+    display:block!important;
+    grid-column:2!important;
+    grid-row:1!important;
+    visibility:visible!important;
+    opacity:1!important;
+  }
+  .info-roadto .roadto-duta-main .roadto-duta-text,
+  .info-roadto .agenda-puncak-main .agenda-puncak-text{
+    grid-column:2!important;
+    grid-row:2!important;
+    margin:0!important;
+  }
+  .info-roadto .roadto-duta-button-wrap,
+  .info-roadto .agenda-puncak-button-wrap{
+    display:flex!important;
+    justify-content:flex-start!important;
+    width:calc(100% - 62px)!important;
+    margin:12px 0 0 62px!important;
+  }
+  .info-roadto .roadto-duta-button-wrap .btn,
+  .info-roadto .agenda-puncak-button-wrap .btn{
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    width:100%!important;
+    min-height:46px!important;
+    box-sizing:border-box!important;
+    padding:12px 16px!important;
+    text-align:center!important;
+    white-space:normal!important;
+  }
+}
+</style>
+
+
+<style id="agenda-duta-match-puncak-v10">
+/* Duta Pelajar dan Acara Puncak memakai lebar kartu yang sama. */
+.info-roadto .roadto-grid .roadto-card.roadto-duta-toggle{
+  grid-column:1/-1!important;
+  width:100%!important;
+  max-width:none!important;
+  box-sizing:border-box!important;
+}
+/* Tombol Duta memakai varian visual dan perilaku tombol Acara Puncak. */
+.info-roadto #toggle-timeline-duta{
+  width:100%!important;
+  max-width:100%!important;
+  box-sizing:border-box!important;
+}
+</style>
+
+
+<style id="location-full-width-v11">
+/* Denah lokasi membentang selebar area konten utama. */
+.info-location{
+  display:block!important;
+  grid-column:1/-1!important;
+  width:100%!important;
+  max-width:none!important;
+  min-width:0!important;
+  box-sizing:border-box!important;
+  justify-self:stretch!important;
+}
+.info-location .info-heading,
+.info-location .location-placeholder{
+  width:100%!important;
+  max-width:none!important;
+  box-sizing:border-box!important;
+}
+@media(min-width:900px){
+  #v-home .info-location,
+  #v-home>.desk-panel[data-panel="informasi"] .info-location{
+    grid-column:1/-1!important;
+    width:100%!important;
+    max-width:none!important;
+  }
+}
+</style>
+
+
+<style id="kontingen-registration-header-polish-v12">
+/* Header halaman pendaftaran: ringkas, berhierarki, dan menyatu dengan formulir. */
+#v-kontingen .kontingen-page-hero{
+  position:relative;
+  display:grid;
+  grid-template-columns:minmax(0,1fr);
+  gap:14px;
+  margin:0 0 18px;
+  padding:22px 24px 20px;
+  overflow:hidden;
+  border:1px solid #dce8f8;
+  border-radius:24px;
+  background:
+    radial-gradient(circle at 95% 5%,rgba(38,174,220,.13),transparent 32%),
+    linear-gradient(135deg,#fff 0%,#f4f8ff 72%,#fffaf0 100%);
+  box-shadow:0 10px 28px rgba(11,45,114,.07);
+}
+#v-kontingen .kontingen-page-hero:before{
+  content:"";
+  position:absolute;
+  top:0;left:0;right:0;height:4px;
+  background:linear-gradient(90deg,#173d87,#1686d2,#21b8d1);
+}
+#v-kontingen .kontingen-page-hero .back{
+  justify-self:start;
+  padding:7px 14px;
+  box-shadow:0 3px 10px rgba(11,45,114,.09);
+}
+#v-kontingen .kontingen-hero-copy{max-width:900px}
+#v-kontingen .kontingen-eyebrow{
+  display:inline-flex;
+  align-items:center;
+  margin:2px 0 7px;
+  padding:5px 10px;
+  border-radius:999px;
+  background:#e7f2ff;
+  color:#1769b5;
+  font:800 .68rem/1.2 var(--display);
+  letter-spacing:.12em;
+}
+#v-kontingen .pg{
+  margin:0 0 7px;
+  color:#173879;
+  font:800 clamp(1.45rem,3vw,2rem)/1.16 var(--display);
+  letter-spacing:-.025em;
+}
+#v-kontingen .pgsub{
+  max-width:780px;
+  margin:0;
+  color:#667b9e;
+  font:600 .96rem/1.55 var(--body);
+}
+#v-kontingen .kontingen-draft-note{
+  display:flex;
+  align-items:flex-start;
+  gap:11px;
+  max-width:900px;
+  padding:11px 14px;
+  border:1px solid #dce9fa;
+  border-radius:14px;
+  background:rgba(255,255,255,.78);
+}
+#v-kontingen .kontingen-note-icon{
+  flex:0 0 30px;
+  display:grid;
+  place-items:center;
+  width:30px;height:30px;
+  border-radius:10px;
+  background:#eaf3ff;
+}
+#v-kontingen .kontingen-draft-note p{
+  margin:0;
+  color:#7183a1;
+  font:500 .78rem/1.5 var(--body);
+}
+#v-kontingen .kontingen-draft-note b{
+  color:#244578;
+  font-weight:800;
+}
+#v-kontingen #fk.formbox{margin-top:0}
+@media(max-width:700px){
+  #v-kontingen .kontingen-page-hero{
+    gap:11px;
+    margin-bottom:14px;
+    padding:18px 16px 16px;
+    border-radius:19px;
+  }
+  #v-kontingen .pg{font-size:1.42rem;line-height:1.2}
+  #v-kontingen .pgsub{font-size:.88rem}
+  #v-kontingen .kontingen-draft-note{padding:10px 11px}
+}
+</style>
+
+
+<style id="registration-guide-page-spacing-v13">
+/* Beri ruang napas pada judul dan subjudul halaman panduan. */
+.registration-instruction-page{
+  box-sizing:border-box!important;
+  padding:30px 40px 40px!important;
+}
+.registration-instruction-page>.back{
+  margin-left:0!important;
+  margin-bottom:14px!important;
+}
+.registration-instruction-page>.pg{
+  margin:0 0 10px!important;
+  padding:0!important;
+  line-height:1.16!important;
+}
+.registration-instruction-page>.pgsub{
+  margin:0 0 22px!important;
+  max-width:760px!important;
+  line-height:1.55!important;
+}
+.registration-instruction-page>.registration-guide{
+  margin:0!important;
+}
+@media(max-width:700px){
+  .registration-instruction-page{
+    width:calc(100% - 20px)!important;
+    padding:22px 18px 28px!important;
+    border-radius:18px!important;
+  }
+  .registration-instruction-page>.pg{
+    font-size:1.35rem!important;
+    line-height:1.22!important;
+  }
+  .registration-instruction-page>.pgsub{
+    margin-bottom:16px!important;
+  }
+}
+</style>
+
+
+<style id="registration-guide-remove-title-card-v14">
+/* Hilangkan kartu/latar besar di belakang judul tata cara pendaftaran. */
+.registration-instruction-page .registration-guide{
+  background:transparent!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  padding:0!important;
+  margin:0!important;
+}
+.registration-instruction-page .registration-guide .guide-title{
+  display:block!important;
+  margin:0 0 16px!important;
+  padding:0!important;
+  background:transparent!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+}
+.registration-instruction-page .registration-guide .box{
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  padding:0!important;
+}
+@media(max-width:700px){
+  .registration-instruction-page .registration-guide .guide-title{
+    margin-bottom:13px!important;
+  }
+}
+</style>
+
+
+<style id="registration-guide-content-inset-v15">
+/* Paksa jarak isi halaman dari tepi panel putih, termasuk di preview. */
+#v-panduan-pendaftaran.registration-instruction-page{
+  padding:30px 42px 42px!important;
+}
+#v-panduan-pendaftaran.registration-instruction-page > .back,
+#v-panduan-pendaftaran.registration-instruction-page > .pg,
+#v-panduan-pendaftaran.registration-instruction-page > .pgsub,
+#v-panduan-pendaftaran.registration-instruction-page > .registration-guide{
+  margin-left:0!important;
+  margin-right:0!important;
+}
+#v-panduan-pendaftaran.registration-instruction-page > .pg,
+#v-panduan-pendaftaran.registration-instruction-page > .pgsub,
+#v-panduan-pendaftaran.registration-instruction-page > .registration-guide{
+  width:100%!important;
+  max-width:100%!important;
+  box-sizing:border-box!important;
+}
+#v-panduan-pendaftaran.registration-instruction-page > .pg{
+  padding-left:0!important;
+}
+#v-panduan-pendaftaran.registration-instruction-page > .pgsub{
+  padding-left:0!important;
+  margin-bottom:22px!important;
+}
+#v-panduan-pendaftaran.registration-instruction-page > .registration-guide{
+  padding-left:0!important;
+}
+@media(max-width:700px){
+  #v-panduan-pendaftaran.registration-instruction-page{
+    width:calc(100% - 20px)!important;
+    padding:22px 20px 28px!important;
+  }
+}
+</style>
+
+
+<style id="competition-location-table-v16">
+.info-location .location-table-wrap{
+  width:100%;
+  overflow-x:auto;
+  border:1px solid #dce8f8;
+  border-radius:16px;
+  background:#fff;
+}
+.info-location .competition-location-table{
+  width:100%;
+  min-width:680px;
+  border-collapse:separate;
+  border-spacing:0;
+  color:#29446f;
+  font:600 .9rem/1.45 var(--body);
+}
+.info-location .competition-location-table th{
+  padding:13px 15px;
+  background:#edf5ff;
+  color:#173d87;
+  font:800 .82rem/1.3 var(--display);
+  text-align:left;
+  white-space:nowrap;
+  border-bottom:1px solid #dce8f8;
+}
+.info-location .competition-location-table td{
+  padding:12px 15px;
+  border-bottom:1px solid #edf1f7;
+  vertical-align:middle;
+}
+.info-location .competition-location-table tbody tr:last-child td{border-bottom:0}
+.info-location .competition-location-table tbody tr:nth-child(even){background:#f9fbff}
+.info-location .competition-location-table td:nth-child(3){white-space:nowrap;font-variant-numeric:tabular-nums}
+.info-location .competition-location-table .place-pending{min-width:130px}
+@media(max-width:700px){
+  .info-location .competition-location-table{font-size:.82rem}
+  .info-location .competition-location-table th,
+  .info-location .competition-location-table td{padding:10px 12px}
+}
+</style>
+
+
+<style id="location-table-fixed-venues-v17">
+.info-location .competition-location-table .place-fixed{
+  display:inline-flex;
+  align-items:center;
+  color:#1769b5;
+  font-weight:800;
+  text-decoration:none;
+}
+</style>
+
+
+<style id="location-google-maps-link-style">
+.info-location .competition-location-table .location-map-link{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  color:#1769b5;
+  font-weight:800;
+  text-decoration:none;
+}
+.info-location .competition-location-table .location-map-link:after{
+  content:"↗";
+  font-size:.9em;
+}
+.info-location .competition-location-table .location-map-link:hover{
+  color:#0b4c91;
+  text-decoration:underline;
+}
+</style>
+
 </head>
 <body>
 <i class="blob b1"></i><i class="blob b2"></i><i class="blob b3"></i>
@@ -1819,31 +2296,24 @@ a:focus-visible,button:focus-visible,summary:focus-visible{
       <div class="roadto-content"><span class="roadto-date">MINGGU · 13 DESEMBER 2026</span><h3>Road to PORSENI Voli</h3><p>Agenda Road to PORSENI cabang Voli.</p><p class="roadto-deadline"><b>Batas akhir pengumpulan berkas Voli:</b> 6 Desember 2026.</p></div>
     </article>
     <article class="roadto-card roadto-duta-toggle">
-      <div class="roadto-heading">
-        <div class="roadto-symbol" aria-hidden="true">🎓</div>
-        <h3>Duta Pelajar</h3>
-      </div>
-      <div class="roadto-content">
+      <div class="roadto-duta-main">
+        <div class="roadto-heading"><div class="roadto-symbol" aria-hidden="true">🎓</div><h3>Duta Pelajar</h3></div>
         <div class="roadto-duta-text">
           <p>Rangkaian pendaftaran, seleksi, pembekalan, dan pengumuman Duta Pelajar.</p>
-          <p class="roadto-deadline">Untuk melihat timeline, klik tombol di bawah ini.</p>
+          <p class="roadto-deadline">Untuk melihat timeline, klik tombol di samping.</p>
         </div>
-        <div class="roadto-duta-button-wrap">
-          <button class="btn" type="button" id="toggle-timeline-duta" aria-expanded="false" aria-controls="inline-timeline-duta">🎓 Lihat Timeline Duta Pelajar</button>
-        </div>
-        <div id="inline-timeline-duta" hidden></div>
       </div>
+      <div class="roadto-duta-button-wrap"><button class="btn alt" type="button" id="toggle-timeline-duta" aria-expanded="false" aria-controls="inline-timeline-duta">🎓 Lihat Timeline Duta Pelajar</button></div>
+      <div id="inline-timeline-duta" hidden></div>
     </article>
   </div>
   <div class="roadto-grid agenda-puncak-grid">
     <article class="roadto-card agenda-puncak-card">
-      <div class="roadto-symbol" aria-hidden="true">🎤</div>
-      <div class="roadto-content">
-        <span class="roadto-date">25–26 DESEMBER 2026</span>
-        <h3>Acara Puncak PORSENI</h3>
-        <p>Rangkaian acara puncak PORSENI 2026, mulai dari pembukaan hingga pengumuman juara umum.</p>
-        <button class="btn alt" type="button" id="toggle-susunan-puncak" aria-expanded="false" aria-controls="inline-susunan-puncak">🎤 Lihat Acara Puncak PORSENI</button>
+      <div class="agenda-puncak-main">
+        <div class="roadto-heading"><div class="roadto-symbol" aria-hidden="true">🎤</div><h3>Acara Puncak PORSENI</h3></div>
+        <div class="agenda-puncak-text"><span class="roadto-date">25–26 DESEMBER 2026</span><p>Rangkaian acara puncak PORSENI 2026, mulai dari pembukaan hingga pengumuman juara umum.</p></div>
       </div>
+      <div class="agenda-puncak-button-wrap"><button class="btn alt" type="button" id="toggle-susunan-puncak" aria-expanded="false" aria-controls="inline-susunan-puncak">🎤 Lihat Acara Puncak PORSENI</button></div>
     </article>
   </div>
   <div id="inline-susunan-puncak" hidden></div>
@@ -1870,10 +2340,40 @@ a:focus-visible,button:focus-visible,summary:focus-visible{
   </div>
 </section>
 <section class="info-feature info-location">
-  <div class="info-heading"><span class="info-icon">📍</span><div><span class="timeline-kicker">PETA KEGIATAN</span><h2>DENAH LOKASI & RINCIAN TEMPAT</h2><p>Denah dan daftar titik lokasi akan ditampilkan setelah lokasi setiap kegiatan ditetapkan oleh panitia.</p></div></div>
-  <div class="location-placeholder">
-    <div class="location-placeholder-icon">🗺️</div>
-    <div><b>Denah lokasi segera diperbarui</b><small>Bagian ini akan memuat peta area PORSENI, lokasi masing-masing cabang lomba, panggung utama, sekretariat, registrasi, parkir, dan fasilitas pendukung sesuai data final panitia.</small></div>
+  <div class="info-heading"><span class="info-icon">📍</span><div><span class="timeline-kicker">JADWAL KEGIATAN</span><h2>JADWAL CABANG LOMBA & LOKASI</h2><p>Jadwal disusun berdasarkan rundown PORSENI 2026 dan diurutkan menurut waktu pelaksanaan. Informasi tempat akan dilengkapi kemudian.</p></div></div>
+  <div class="location-table-wrap">
+    <table class="competition-location-table">
+      <thead><tr><th>Cabang lomba</th><th>Hari, tanggal</th><th>Jam</th><th>Tempat</th></tr></thead>
+      <tbody>
+        <tr><td>Badminton</td><td>Minggu, 6 Desember 2026</td><td>08.00–17.30</td><td class="place-pending"></td></tr>
+        <tr><td>Voli</td><td>Minggu, 13 Desember 2026</td><td>08.00–17.30</td><td class="place-pending"></td></tr>
+        <tr><td>Parade Gelar Budaya</td><td>Jumat, 25 Desember 2026</td><td>19.00–23.30</td><td class="place-pending"></td></tr>
+        <tr><td>Sprint</td><td>Sabtu, 26 Desember 2026</td><td>08.00–12.00</td><td class="place-pending"></td></tr>
+        <tr><td>Tenis Meja</td><td>Sabtu, 26 Desember 2026</td><td>08.00–12.00</td><td class="place-pending"></td></tr>
+        <tr><td>Kaligrafi</td><td>Sabtu, 26 Desember 2026</td><td>08.00–12.00</td><td class="place-pending"></td></tr>
+        <tr><td>Paduan Suara</td><td>Sabtu, 26 Desember 2026</td><td>08.00–12.00</td><td class="place-pending"></td></tr>
+        <tr><td>MTQ</td><td>Sabtu, 26 Desember 2026</td><td>08.00–12.00</td><td class="place-pending"></td></tr>
+        <tr><td>Grand Final Duta Pelajar</td><td>Sabtu, 26 Desember 2026</td><td>08.00–12.00</td><td><span class="place-fixed">Panggung Utama</span></td></tr>
+        <tr><td>Baca Puisi</td><td>Sabtu, 26 Desember 2026</td><td>13.00–18.00</td><td class="place-pending"></td></tr>
+        <tr><td>Baca Kitab</td><td>Sabtu, 26 Desember 2026</td><td>13.00–18.00</td><td class="place-pending"></td></tr>
+        <tr><td>Khitobah</td><td>Sabtu, 26 Desember 2026</td><td>13.00–18.00</td><td class="place-pending"></td></tr>
+        <tr><td>Rebana</td><td>Sabtu, 26 Desember 2026</td><td>16.00–23.00</td><td><span class="place-fixed">Panggung Utama</span></td></tr>
+        <tr><td>PES PS3</td><td>Sabtu, 26 Desember 2026</td><td>19.30–23.00</td><td class="place-pending"></td></tr>
+        <tr><td>LCC</td><td>Sabtu, 26 Desember 2026</td><td>19.30–23.00</td><td class="place-pending"></td></tr>
+        <tr><td>Karya Ilmiah</td><td>Sabtu, 26 Desember 2026</td><td>19.30–23.00</td><td class="place-pending"></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="info-feature info-location-map" id="denah-lokasi-porseni">
+  <div class="info-heading">
+    <span class="info-icon">🗺️</span>
+    <div>
+      <span class="timeline-kicker">INFORMASI LOKASI</span>
+      <h2>DENAH LOKASI PORSENI 2026</h2>
+      <p>Denah lokasi PORSENI 2026 akan segera ditambahkan.</p>
+    </div>
   </div>
 </section>
 
@@ -1960,10 +2460,15 @@ a:focus-visible,button:focus-visible,summary:focus-visible{
 </div>
 
 <div id="v-kontingen" hidden>
-  <a class="back" href="#beranda">‹ Kembali</a>
-  <h2 class="pg">Pendaftaran Kontingen</h2>
-  <p class="pgsub">Isi data dan unggah berkas kontingen. Setelah dikirim, formulir A4 siap dicetak dan ditandatangani.</p>
-  <p class="hint">Draft tersimpan otomatis di perangkat ini, termasuk file yang dipilih, dan dihapus otomatis setelah 7 hari. Jangan gunakan perangkat umum/bersama. PIN tidak disimpan.</p>
+  <header class="kontingen-page-hero">
+    <a class="back" href="#beranda">‹ Kembali</a>
+    <div class="kontingen-hero-copy">
+      <span class="kontingen-eyebrow">FORMULIR RESMI · PORSENI 2026</span>
+      <h2 class="pg">Pendaftaran Kontingen</h2>
+      <p class="pgsub">Lengkapi data dan unggah berkas kontingen. Setelah dikirim, formulir A4 siap dicetak dan ditandatangani.</p>
+    </div>
+    <div class="kontingen-draft-note"><span class="kontingen-note-icon">🔒</span><p><b>Draft tersimpan otomatis</b><br>Data dan file pilihan tersimpan di perangkat ini, lalu dihapus otomatis setelah 7 hari. Hindari perangkat umum/bersama. PIN tidak disimpan.</p></div>
+  </header>
   <p class="warn" id="k-state" hidden></p>
   <form id="fk" class="formbox">
     <h3>Data kontingen</h3>
@@ -2933,7 +3438,7 @@ renderConnectedTimeline(document.getElementById('tl-duta'),dutaEntries);
    guidePage.id='v-panduan-pendaftaran';
    guidePage.hidden=true;
    guidePage.className='registration-instruction-page';
-   guidePage.style.cssText='max-width:1180px;margin:0 auto;padding:24px 18px 40px;background:#fff;border-radius:24px;box-shadow:0 14px 42px rgba(11,45,114,.10)';
+   guidePage.style.cssText='max-width:1180px;width:calc(100% - 36px);box-sizing:border-box;margin:0 auto;padding:30px 40px 40px;background:#fff;border-radius:24px;box-shadow:0 14px 42px rgba(11,45,114,.10)';
    guidePage.innerHTML='<a class="back" href="#beranda">‹ Kembali ke Beranda</a><h2 class="pg">TATA CARA PENDAFTARAN KONTINGEN</h2><p class="pgsub">Informasi alur pendaftaran dan uang mandat PORSENI 2026.</p>';
    guidePage.appendChild(regGuide);
    document.querySelector('main.page').appendChild(guidePage);
@@ -3201,6 +3706,139 @@ document.addEventListener('click',function(e){
   setupInlineToggle('toggle-susunan-puncak','susunan-acara-puncak','inline-susunan-puncak');
 })();
 </script>
+
+<script id="location-cells-google-maps-links">
+(function(){
+  function linkLocationCells(){
+    var cells=document.querySelectorAll('.info-location .competition-location-table tbody td:last-child');
+    cells.forEach(function(cell){
+      if(cell.querySelector('a')) return;
+      var venue=cell.textContent.trim();
+      if(!venue) return;
+      var link=document.createElement('a');
+      link.className='location-map-link';
+      link.href='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(venue);
+      link.target='_blank';
+      link.rel='noopener noreferrer';
+      link.textContent=venue;
+      cell.textContent='';
+      cell.appendChild(link);
+    });
+  }
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',linkLocationCells);
+  }else{
+    linkLocationCells();
+  }
+})();
+</script>
+
+
+<style id="viewport-fit-horizontal-overflow-fix">
+/* Pastikan halaman tidak melebar melebihi viewport. */
+html, body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip !important;
+}
+body { min-width: 0 !important; }
+*, *::before, *::after { box-sizing: border-box; }
+.page, #v-home, main, header, footer, section, .desk-panel {
+  min-width: 0;
+  max-width: 100%;
+}
+img, video, iframe, canvas, svg {
+  max-width: 100%;
+}
+pre, code { overflow-wrap: anywhere; }
+
+/* Navbar mengikuti lebar layar dan tidak menyediakan scroll horizontal. */
+nav.desk-nav {
+  box-sizing: border-box !important;
+  max-width: calc(100vw - 24px) !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  white-space: normal !important;
+  flex-wrap: wrap !important;
+}
+nav.desk-nav button {
+  min-width: 0 !important;
+  max-width: 100%;
+  white-space: normal !important;
+  overflow-wrap: anywhere;
+}
+@media (min-width: 601px) {
+  nav.desk-nav {
+    left: 12px !important;
+    right: 12px !important;
+    width: auto !important;
+    justify-content: center !important;
+    gap: 4px !important;
+  }
+}
+@media (max-width: 600px) {
+  nav.desk-nav {
+    left: 8px !important;
+    right: 8px !important;
+    width: auto !important;
+    max-width: calc(100vw - 16px) !important;
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    overflow: hidden !important;
+  }
+  nav.desk-nav button {
+    padding-left: 3px !important;
+    padding-right: 3px !important;
+    font-size: clamp(.55rem, 2.4vw, .72rem) !important;
+  }
+}
+</style>
+
+
+<style id="responsive-location-table-no-horizontal-scroll">
+/* Tabel jadwal lokasi: seluruh kolom dibungkus agar tidak perlu scroll ke samping. */
+.info-location .location-table-wrap {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+}
+.info-location .competition-location-table {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  table-layout: fixed !important;
+  border-collapse: separate;
+}
+.info-location .competition-location-table th,
+.info-location .competition-location-table td {
+  min-width: 0 !important;
+  padding: 11px 9px !important;
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+  word-break: normal !important;
+}
+.info-location .competition-location-table th:nth-child(1),
+.info-location .competition-location-table td:nth-child(1) { width: 29% !important; }
+.info-location .competition-location-table th:nth-child(2),
+.info-location .competition-location-table td:nth-child(2) { width: 34% !important; }
+.info-location .competition-location-table th:nth-child(3),
+.info-location .competition-location-table td:nth-child(3) { width: 18% !important; }
+.info-location .competition-location-table th:nth-child(4),
+.info-location .competition-location-table td:nth-child(4) { width: 19% !important; }
+.info-location .competition-location-table td a {
+  overflow-wrap: anywhere !important;
+}
+@media (max-width: 600px) {
+  .info-location .competition-location-table {
+    font-size: .72rem !important;
+  }
+  .info-location .competition-location-table th,
+  .info-location .competition-location-table td {
+    padding: 9px 5px !important;
+    line-height: 1.3 !important;
+  }
+}
+</style>
+
 </body>
 </html>
 
@@ -3270,14 +3908,6 @@ document.addEventListener('click',function(e){
 }
 </style>
 
-<style id="desktop-duta-card-width">
-@media(min-width:900px){
- .info-roadto .roadto-grid .roadto-card.roadto-duta-toggle{grid-column:1/-1!important;width:100%!important;max-width:none!important}
- .info-roadto .roadto-grid .roadto-card.roadto-duta-toggle .roadto-content{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;column-gap:24px}
- .info-roadto .roadto-grid .roadto-card.roadto-duta-toggle .roadto-duta-text{grid-column:1}
- .info-roadto .roadto-grid .roadto-card.roadto-duta-toggle .roadto-duta-button-wrap{grid-column:2;grid-row:1;align-self:center}.info-roadto .roadto-grid .roadto-card.roadto-duta-toggle #inline-timeline-duta{grid-column:1/-1}
-}
-</style>
 <style id="portal-auth-nav-state">
 body.portal-logged-in .nav-register,body.portal-logged-in .portal-register-prompt,body.portal-logged-in [data-nav-register]{display:none!important}
 </style>
@@ -3318,3 +3948,4 @@ body.portal-logged-in .nav-register,body.portal-logged-in .portal-register-promp
  #fk>h3{margin-top:18px;padding-bottom:8px;border-bottom:1px solid #e3ebf6}
 }
 </style>
+
