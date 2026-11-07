@@ -3517,7 +3517,10 @@ renderConnectedTimeline(document.getElementById('tl-duta'),dutaEntries);
      if(rp){rp.classList.add('desk-page-active');rp.style.setProperty('display','block','important');rp.style.setProperty('visibility','visible','important');}
    }
    nav.querySelectorAll('button[data-target]').forEach(function(b){b.classList.toggle('active',b.dataset.target===targetId);});
-   if(updateHash&&pageTargets[targetId]&&location.hash!==pageTargets[targetId])history.replaceState(null,'',pageTargets[targetId]);
+   if(updateHash&&pageTargets[targetId]&&location.hash!==pageTargets[targetId]){
+     history.pushState({porseniPage:pageTargets[targetId]},'',pageTargets[targetId]);
+     try{localStorage.setItem('porseni_last_public_page',pageTargets[targetId]);}catch(_){}
+   }
    window.scrollTo({top:0,behavior:'smooth'});
  }
  /* Delegasi satu handler mencegah listener tombol tertimpa saat navigasi dibuat ulang. */
@@ -3564,7 +3567,10 @@ document.addEventListener('click',function(e){
    panel.classList.add('desk-page-active');panel.style.setProperty('display','block','important');
    panel.style.setProperty('visibility','visible','important');panel.style.setProperty('opacity','1','important');
    button.classList.add('active');
-   history.replaceState(null,'','#hasil');
+   if(location.hash!=='#hasil'){
+     history.pushState({porseniPage:'#hasil'},'','#hasil');
+     try{localStorage.setItem('porseni_last_public_page','#hasil');}catch(_){}
+   }
  },0);
 },true);
 </script>
@@ -3835,6 +3841,215 @@ nav.desk-nav button {
   .info-location .competition-location-table td {
     padding: 9px 5px !important;
     line-height: 1.3 !important;
+  }
+}
+</style>
+
+
+<script id="persistent-public-page-navigation">
+(function(){
+  var KEY='porseni_last_public_page';
+  var valid=/^#(beranda|lokasi|dokumen|rekap|hasil|hubungi|cabang-lomba|daftar-kontingen|berkas-cabang|rekap-peserta|portal-kontingen|portal-perubahan-data|filosofi|panduan-pendaftaran|berita|berita-detail)$/;
+  function currentPage(){
+    if(valid.test(location.hash))return location.hash;
+    return '#beranda';
+  }
+  function savePage(){
+    var h=currentPage();
+    try{localStorage.setItem(KEY,h);}catch(_){}
+  }
+  /* Jika URL tidak membawa halaman, pulihkan halaman publik terakhir yang dibuka. */
+  if(!location.hash){
+    try{
+      var saved=localStorage.getItem(KEY);
+      if(saved&&valid.test(saved)){
+        history.replaceState({porseniPage:saved},'',saved);
+      }
+    }catch(_){}
+  }
+  savePage();
+
+  window.addEventListener('hashchange',function(){
+    savePage();
+    if(typeof route==='function')route();
+    if(window.__deskPage&&/^#(beranda|lokasi|dokumen|rekap|hasil|hubungi)$/.test(location.hash)){
+      window.__deskPage();
+    }
+  });
+  window.addEventListener('popstate',function(){
+    savePage();
+    if(typeof route==='function')route();
+    if(window.__deskPage&&/^#(beranda|lokasi|dokumen|rekap|hasil|hubungi)$/.test(location.hash)){
+      window.__deskPage();
+    }
+  });
+})();
+</script>
+
+
+<style id="mobile-layout-final-unified-v27">
+/* Perbaikan final tampilan ponsel: satu aturan konsisten untuk navbar dan padding. */
+@media (max-width: 899px) {
+  html, body {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: clip !important;
+  }
+  main.page {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 auto !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    box-sizing: border-box !important;
+  }
+  main.page > * {
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+  #v-home {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+  #v-home > .head {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  /* Hanya halaman Beranda yang menampilkan dock navigasi bawah. */
+  nav.desk-nav {
+    display: none !important;
+  }
+  #v-home.desk-page-mode nav.desk-nav {
+    display: grid !important;
+    position: fixed !important;
+    left: 10px !important;
+    right: 10px !important;
+    bottom: calc(10px + env(safe-area-inset-bottom)) !important;
+    top: auto !important;
+    width: auto !important;
+    max-width: 560px !important;
+    min-width: 0 !important;
+    margin: 0 auto !important;
+    padding: 7px !important;
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    align-items: stretch !important;
+    gap: 4px !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+    white-space: normal !important;
+    background: #08265f !important;
+    border: 1px solid rgba(255,255,255,.22) !important;
+    border-radius: 18px !important;
+    box-shadow: 0 8px 28px rgba(3,20,55,.28) !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    z-index: 10050 !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  #v-home.desk-page-mode nav.desk-nav strong,
+  #v-home.desk-page-mode nav.desk-nav .nav-register,
+  #v-home.desk-page-mode nav.desk-nav .nav-cta {
+    display: none !important;
+  }
+  #v-home.desk-page-mode nav.desk-nav button[data-target],
+  #v-home.desk-page-mode nav.desk-nav button[data-action="portal"] {
+    display: flex !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 58px !important;
+    margin: 0 !important;
+    padding: 5px 2px !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 4px !important;
+    border: 0 !important;
+    border-radius: 12px !important;
+    background: transparent !important;
+    color: #fff !important;
+    font: 700 .62rem/1.15 var(--display) !important;
+    text-align: center !important;
+    white-space: normal !important;
+    box-shadow: none !important;
+    overflow: hidden !important;
+  }
+  #v-home.desk-page-mode nav.desk-nav button .nav-ico {
+    display: flex !important;
+    height: 23px !important;
+    min-width: 0 !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 1.2rem !important;
+    line-height: 1 !important;
+  }
+  #v-home.desk-page-mode nav.desk-nav button .nav-label {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    font-size: .58rem !important;
+  }
+  #v-home.desk-page-mode nav.desk-nav button.active {
+    background: #1769b5 !important;
+    color: #fff !important;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.2) !important;
+  }
+
+  /* Ruang bawah hanya pada Beranda saat dock memang aktif. */
+  body:has(#v-home.desk-page-mode) {
+    padding-bottom: calc(88px + env(safe-area-inset-bottom)) !important;
+  }
+  #v-home.desk-page-mode {
+    padding-bottom: 12px !important;
+  }
+  body::after { display: none !important; content: none !important; }
+
+  /* Halaman mandiri tanpa navbar: padding cukup, tanpa ruang kosong dock. */
+  body:not(:has(#v-home.desk-page-mode)) {
+    padding-bottom: 16px !important;
+  }
+  #v-portal, #v-cabang, #v-kontingen, #v-berkas,
+  #v-rekap-peserta, #v-print, #v-panduan-pendaftaran,
+  #v-filosofi {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding: 16px !important;
+    border-radius: 18px !important;
+    box-sizing: border-box !important;
+  }
+  #v-home .desk-panel,
+  #v-home .desk-panel > * {
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+  #v-home .desk-panel > .sec {
+    margin-top: 18px !important;
+  }
+  footer {
+    padding-bottom: 20px !important;
+  }
+}
+@media (max-width: 380px) {
+  main.page { padding-left: 12px !important; padding-right: 12px !important; }
+  #v-home.desk-page-mode nav.desk-nav {
+    left: 7px !important; right: 7px !important; padding: 6px !important; gap: 2px !important;
+  }
+  #v-home.desk-page-mode nav.desk-nav button[data-target],
+  #v-home.desk-page-mode nav.desk-nav button[data-action="portal"] {
+    min-height: 54px !important;
+  }
+  #v-home.desk-page-mode nav.desk-nav button .nav-label { font-size: .54rem !important; }
+  #v-portal, #v-cabang, #v-kontingen, #v-berkas,
+  #v-rekap-peserta, #v-print, #v-panduan-pendaftaran, #v-filosofi {
+    padding: 13px !important;
   }
 }
 </style>
