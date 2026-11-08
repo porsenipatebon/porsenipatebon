@@ -2503,6 +2503,12 @@ a:focus-visible,button:focus-visible,summary:focus-visible{
     <label class="fld"><span>No. WhatsApp Ketua IPNU *</span><input name="wa_ketua_ipnu" type="tel" inputmode="tel" autocomplete="tel" required placeholder="08xxxxxxxxxx"></label>
     <label class="fld"><span>Nama Ketua PR IPPNU *</span><input name="ketua_pr_ippnu" required></label>
     <label class="fld"><span>No. WhatsApp Ketua IPPNU *</span><input name="wa_ketua_ippnu" type="tel" inputmode="tel" autocomplete="tel" required placeholder="08xxxxxxxxxx"></label>
+    <h3>Akun Instagram</h3>
+    <p class="hint">Masukkan username Instagram (contoh: @namapengguna). Informasi ini hanya untuk data panitia dan tidak dicetak pada PDF formulir.</p>
+    <label class="fld"><span>Instagram Ketua Kontingen</span><input name="ig_ketua" type="text" maxlength="150" autocomplete="off" placeholder="@username"></label>
+    <label class="fld"><span>Instagram Ketua PR/PK IPNU</span><input name="ig_ketua_ipnu" type="text" maxlength="150" autocomplete="off" placeholder="@username"></label>
+    <label class="fld"><span>Instagram Ketua PR/PK IPPNU</span><input name="ig_ketua_ippnu" type="text" maxlength="150" autocomplete="off" placeholder="@username"></label>
+    <label class="fld"><span>Akun Instagram PR/PK IPNU-IPPNU</span><input name="ig_organisasi" type="text" maxlength="150" autocomplete="off" placeholder="@akun_organisasi"></label>
     <h3>Cabang lomba yang diikuti *</h3>
     <div id="fk-cabang"></div>
     <h3>Uang mandat (Rp500.000)</h3>
@@ -3161,7 +3167,7 @@ fkf.addEventListener("submit",function(e){e.preventDefault();var f=e.target,sel=
    if(!pick.length){alert("Pilih minimal satu kategori untuk "+c+".");return}}
   parts.push(c+(pick.length?" ("+pick.join(", ")+")":""))}
  if(!parts.length){alert("Pilih minimal satu cabang lomba.");return}
- var d={type:"kontingen",waktu:new Date().toISOString(),reg:regNo("K"),nama:v(f,"nama"),asal:"",ketua:v(f,"ketua"),tempat_lahir_ketua:v(f,"tempat_lahir_ketua"),tanggal_lahir_ketua:v(f,"tanggal_lahir_ketua"),alamat:v(f,"alamat_ketua"),wa_ketua:v(f,"wa_ketua"),ketua_pr_ipnu:v(f,"ketua_pr_ipnu"),wa_ketua_ipnu:v(f,"wa_ketua_ipnu"),ketua_pr_ippnu:v(f,"ketua_pr_ippnu"),wa_ketua_ippnu:v(f,"wa_ketua_ippnu"),email:v(f,"email").toLowerCase(),cabang:parts.join("; "),jml:"",bayar:v(f,"bayar"),tgl_bayar:v(f,"tgl_bayar")};
+ var d={type:"kontingen",waktu:new Date().toISOString(),reg:regNo("K"),nama:v(f,"nama"),asal:"",ketua:v(f,"ketua"),tempat_lahir_ketua:v(f,"tempat_lahir_ketua"),tanggal_lahir_ketua:v(f,"tanggal_lahir_ketua"),alamat:v(f,"alamat_ketua"),wa_ketua:v(f,"wa_ketua"),ketua_pr_ipnu:v(f,"ketua_pr_ipnu"),wa_ketua_ipnu:v(f,"wa_ketua_ipnu"),ketua_pr_ippnu:v(f,"ketua_pr_ippnu"),wa_ketua_ippnu:v(f,"wa_ketua_ippnu"),ig_ketua:v(f,"ig_ketua").trim(),ig_ketua_ipnu:v(f,"ig_ketua_ipnu").trim(),ig_ketua_ippnu:v(f,"ig_ketua_ippnu").trim(),ig_organisasi:v(f,"ig_organisasi").trim(),email:v(f,"email").toLowerCase(),cabang:parts.join("; "),jml:"",bayar:v(f,"bayar"),tgl_bayar:v(f,"tgl_bayar")};
  var items;try{items=[["Bukti pembayaran","f_bukti",["pdf","image"]],["KTP ketua kontingen","f_ktp",["image"]],["Pakta integritas","f_pakta",["pdf"]],["SP / berita acara RAT","f_sp",["pdf"]]].filter(function(x){return f.elements[x[1]].files.length}).map(function(x){var file=f.elements[x[1]].files[0];checkFileType(file,x[2],x[0]);return {label:x[0],file:file}});
  }catch(er){alert(er.message);return}
  var cabangList=d.cabang.split("; ").map(function(x){return '<li>'+esc(x)+'</li>'}).join("");
