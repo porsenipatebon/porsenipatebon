@@ -2720,13 +2720,31 @@ var KON=[
  "PR IPNU IPPNU TAMBAKREJO",
  "PR IPNU IPPNU WONOSARI"
 ];
-function fillKontingenSelects(){loadAvailableContingents();loadRegisteredContingents();}
-function loadAvailableContingents(){var el=$("fk").elements.nama;el.disabled=true;el.innerHTML='<option value="">Memuat kontingen yang tersedia…</option>';fetch(SCRIPT_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action:"list_available_contingents"})}).then(function(r){return r.json()}).then(function(j){if(!j||!j.ok)throw new Error((j&&j.error)||"Daftar kontingen gagal dimuat.");var names=j.names||[];el.innerHTML='<option value="">'+(names.length?'Pilih nama kontingen…':'Semua kontingen sudah mendaftar')+'</option>'+names.map(function(n){return '<option value="'+esc(n)+'">'+esc(n)+'</option>'}).join('');el.disabled=!names.length;}).catch(function(){el.innerHTML='<option value="">Gagal memuat daftar. Muat ulang halaman.</option>';el.disabled=true;});}
-function loadRegisteredContingents(){var el=$("fb-nama"),previous=el.value;el.innerHTML='<option value="">Memuat kontingen terdaftar…</option>';fetch(SCRIPT_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action:"list_registered_contingents"})}).then(function(r){return r.json()}).then(function(j){if(!j||!j.ok)throw new Error((j&&j.error)||"Daftar kontingen gagal dimuat.");var names=j.names||[];el.innerHTML='<option value="">'+(names.length?'Pilih nama kontingen…':'Belum ada kontingen terdaftar')+'</option>'+names.map(function(n){return '<option value="'+esc(n)+'">'+esc(n)+'</option>'}).join('');if(names.indexOf(previous)>=0){el.value=previous;lookupEvents(previous);}}).catch(function(){el.innerHTML='<option value="">Gagal memuat kontingen. Muat ulang halaman.</option>';});}
+function fillKontingenSelects(){return Promise.all([loadAvailableContingents(),loadRegisteredContingents()]);}
+function loadAvailableContingents(force){
+ var form=$("fk"),el=form&&form.elements&&form.elements.nama;if(!el)return Promise.resolve([]);
+ if(force)resetContingentListCache('available');
+ if(CONTINGENT_LIST_REQUESTS.available){return CONTINGENT_LIST_REQUESTS.available;}
+ el.disabled=true;el.innerHTML='<option value="">Memuat kontingen yang tersedia…</option>';
+ CONTINGENT_LIST_REQUESTS.available=fetch(SCRIPT_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action:"list_available_contingents"})})
+ .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(function(j){if(!j||!j.ok)throw new Error((j&&j.error)||"Daftar kontingen gagal dimuat.");var names=j.names||[];el.innerHTML='<option value="">'+(names.length?'Pilih nama kontingen…':'Semua kontingen sudah mendaftar')+'</option>'+names.map(function(n){return '<option value="'+esc(n)+'">'+esc(n)+'</option>'}).join('');el.disabled=!names.length;return names;})
+ .catch(function(err){CONTINGENT_LIST_REQUESTS.available=null;el.innerHTML='<option value="">Gagal memuat daftar. Muat ulang halaman.</option>';el.disabled=true;throw err;});
+ return CONTINGENT_LIST_REQUESTS.available;
+}
+function loadRegisteredContingents(force){
+ var el=$("fb-nama");if(!el)return Promise.resolve([]);if(force)resetContingentListCache('registered');
+ if(CONTINGENT_LIST_REQUESTS.registered)return CONTINGENT_LIST_REQUESTS.registered;
+ var previous=el.value;el.innerHTML='<option value="">Memuat kontingen terdaftar…</option>';
+ CONTINGENT_LIST_REQUESTS.registered=fetch(SCRIPT_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action:"list_registered_contingents"})})
+ .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(function(j){if(!j||!j.ok)throw new Error((j&&j.error)||"Daftar kontingen gagal dimuat.");var names=j.names||[];el.innerHTML='<option value="">'+(names.length?'Pilih nama kontingen…':'Belum ada kontingen terdaftar')+'</option>'+names.map(function(n){return '<option value="'+esc(n)+'">'+esc(n)+'</option>'}).join('');if(names.indexOf(previous)>=0){el.value=previous;lookupEvents(previous);}return names;})
+ .catch(function(err){CONTINGENT_LIST_REQUESTS.registered=null;el.innerHTML='<option value="">Gagal memuat kontingen. Muat ulang halaman.</option>';throw err;});
+ return CONTINGENT_LIST_REQUESTS.registered;
+}
 var PICK="",LAST=null,SELECTED_EVENT=null;
 var ALLC=[];Object.keys(CABANG).forEach(function(k){CABANG[k].forEach(function(x){ALLC.push({n:x.t,g:NM[k]})})});
 var $=function(id){return document.getElementById(id)};
-fillKontingenSelects();
+var CONTINGENT_LIST_REQUESTS={available:null,registered:null};
+function resetContingentListCache(which){if(!which||which==='available')CONTINGENT_LIST_REQUESTS.available=null;if(!which||which==='registered')CONTINGENT_LIST_REQUESTS.registered=null;}
 var VIEWS={"#cabang-lomba":"v-cabang","#daftar-kontingen":"v-kontingen","#berkas-cabang":"v-berkas","#rekap-peserta":"v-rekap-peserta","#portal-kontingen":"v-portal","#filosofi":"v-filosofi","#panduan-pendaftaran":"v-panduan-pendaftaran"};
 function showView(id){["v-home","v-filosofi","v-rekap-peserta","v-cabang","v-kontingen","v-berkas","v-portal","v-print","v-panduan-pendaftaran","v-berita"].forEach(function(v){var el=$(v);if(!el)return;var hide=(v!==id);el.hidden=hide;if(hide){el.style.setProperty("display","none","important")}else{el.style.removeProperty("display")}});var newsHome=$("kabar-porseni");if(newsHome){newsHome.style.removeProperty("display");newsHome.style.removeProperty("visibility");}window.scrollTo(0,0)}
 function winState(w,type){if(type==='cabang'&&REGISTRATION_CONTROL.maintenanceCabang===true)return 1;if(type&&REGISTRATION_CONTROL[type]===true)return 0;if(FORCE_OPEN)return 0;var t=new Date();return t<new Date(w[0]+"T00:00:00")?-1:(t>new Date(w[1]+"T23:59:59")?1:0)}
@@ -2734,11 +2752,11 @@ function parsePorseniDate(s){if(!s)return null;if(s instanceof Date)return isNaN
 function fmtTgl(s){var d=parsePorseniDate(s);return d?d.toLocaleDateString("id-ID",{day:"numeric",month:"long",year:"numeric"}):"-"}
 function fmtTglWaktu(s){var d=parsePorseniDate(s);return d?d.toLocaleString("id-ID",{day:"numeric",month:"long",year:"numeric",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false,timeZone:"Asia/Jakarta"}):"Waktu belum tersedia"}
 function setState(el,btn,w,txt,type){var maintenance=type==='cabang'&&REGISTRATION_CONTROL.maintenanceCabang===true,manual=!!(type&&REGISTRATION_CONTROL[type]===true),st=winState(w,type);el.hidden=(st===0&&!manual);btn.disabled=(st!==0);if(maintenance)el.textContent="Pendaftaran cabang lomba sedang ditutup sementara karena pemeliharaan/perbaikan sistem. Silakan kembali setelah panitia membuka pendaftaran.";else if(manual)el.textContent="Pendaftaran dibuka oleh panitia tanpa mengikuti batas tanggal.";else if(st<0)el.textContent="Pendaftaran dibuka "+txt[0]+".";else if(st>0)el.textContent="Pendaftaran sudah ditutup ("+txt[1]+").";}
-function route(){if(location.hash==='#berita'||location.hash==='#berita-detail'){showView('v-berita');var bp=document.getElementById('v-berita');if(bp){bp.hidden=false;bp.style.removeProperty('display');}return;}var id=VIEWS[location.hash]||"v-home";showView(id);
- if(id==="v-berkas"){configureBranchInfo();loadRegisteredContingents();if($("fb-nama").value)lookupEvents($("fb-nama").value)}
+function route(){if(location.hash==='#berita'||location.hash==='#berita-detail'){loadPublicNews();showView('v-berita');var bp=document.getElementById('v-berita');if(bp){bp.hidden=false;bp.style.removeProperty('display');}return;}var id=VIEWS[location.hash]||"v-home";showView(id);
+ if(id==="v-berkas"){configureBranchInfo();loadRegisteredContingents().then(function(){if($("fb-nama").value)lookupEvents($("fb-nama").value);}).catch(function(){});}
  if(id==="v-portal"){loadPortalNames();}
  if(id==="v-rekap-peserta"){loadParticipantRecap();}
- if(id==="v-kontingen")setState($("k-state"),$("fk-btn"),WIN.k,["1 November 2026","20 November 2026"],"kontingen")}
+ if(id==="v-kontingen"){loadAvailableContingents().catch(function(){});setState($("k-state"),$("fk-btn"),WIN.k,["1 November 2026","20 November 2026"],"kontingen");}}
 window.addEventListener('hashchange',route);
 $("v-cabang").addEventListener("click",function(e){var a=e.target.closest("a.link[data-branch]");if(a){PICK=a.getAttribute("data-branch");try{localStorage.setItem("porseni_last_branch",PICK)}catch(_){}SELECTED_EVENT=null;resetParticipantRows();configureSpecialFiles();}});
 
@@ -2988,7 +3006,8 @@ var OFFICIAL_PDF_URL="",OFFICIAL_BLOB_URL="",SUBMIT_CTX=null;
 function apiPostJson(o){return fetch(SCRIPT_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(o)}).then(function(r){return r.json()});}
 function sanitizePublicNewsHtml(html){var box=document.createElement('div');box.innerHTML=String(html||'');box.querySelectorAll('script,style,iframe,object,embed,form,input,button').forEach(function(n){n.remove();});box.querySelectorAll('*').forEach(function(n){var tag=n.tagName.toLowerCase();if(!['p','br','div','h2','h3','h4','strong','b','em','i','u','ul','ol','li','blockquote','a','img'].includes(tag)){n.replaceWith(document.createTextNode(n.textContent||''));return;}Array.from(n.attributes).forEach(function(at){if(tag==='a'&&at.name==='href'){if(!/^https:\/\//i.test(at.value))n.removeAttribute('href');}else if(tag==='img'&&['src','alt','width'].includes(at.name)){if(at.name==='src'&&!/^https:\/\//i.test(at.value))n.removeAttribute('src');}else n.removeAttribute(at.name);});if(tag==='img')n.setAttribute('style','max-width:100%;height:auto;display:block;margin:12px auto;border-radius:10px');});return box.innerHTML;}
 function renderNewsCards(items,target){var el=document.getElementById(target);if(!el)return;if(!items||!items.length){el.innerHTML='<div class="news-empty">Belum ada berita yang dipublikasikan.</div>';return;}el.innerHTML=items.map(function(n){return '<article class="news-card">'+(n.gambar?'<img src="'+esc(n.gambar)+'" alt="'+esc(n.judul)+'" loading="lazy" decoding="async">':'<div style="display:grid;place-items:center;background:#eaf2ff;font-size:2rem">📰</div>')+'<div class="news-card-body"><div class="news-meta">'+esc(n.kategori)+' · '+esc(fmtTgl(n.tanggal))+'</div><h3>'+esc(n.judul)+'</h3><p>'+esc(n.ringkasan||String(n.isi||'').slice(0,150))+'</p><button type="button" data-news-open="'+esc(n.id)+'">Baca selengkapnya →</button></div></article>';}).join('');el.querySelectorAll('[data-news-open]').forEach(function(b){b.addEventListener('click',function(){var n=items.filter(function(x){return x.id===b.dataset.newsOpen;})[0];if(!n)return;var page=document.getElementById('v-berita');showView('v-berita');page.hidden=false;page.style.removeProperty('display');document.getElementById('news-archive-list').innerHTML='<article class="news-article"><a class="back" href="#berita">‹ Kembali ke berita</a><div class="news-meta">'+esc(n.kategori)+' · '+esc(fmtTgl(n.tanggal))+'</div><h1>'+esc(n.judul)+'</h1>'+(n.gambar?'<img src="'+esc(n.gambar)+'" alt="'+esc(n.judul)+'" loading="lazy" decoding="async">':'')+'<div class="news-detail">'+sanitizePublicNewsHtml(n.isi)+'</div></article>';history.pushState(null,'','#berita-detail');window.scrollTo(0,0);});});}
-function loadPublicNews(){apiPostJson({action:'public_news'}).then(function(j){if(!j||!j.ok)throw new Error(j.error||'Berita gagal dimuat');renderNewsCards(j.news,'public-news-list');}).catch(function(){var el=document.getElementById('public-news-list');if(el)el.innerHTML='<div class="news-empty">Kabar PORSENI belum dapat dimuat.</div>';});}
+var PUBLIC_NEWS_LOADED=false,PUBLIC_NEWS_PENDING=null;
+function loadPublicNews(force){if(PUBLIC_NEWS_LOADED&&!force)return Promise.resolve();if(PUBLIC_NEWS_PENDING)return PUBLIC_NEWS_PENDING;PUBLIC_NEWS_PENDING=apiPostJson({action:'public_news'}).then(function(j){if(!j||!j.ok)throw new Error(j.error||'Berita gagal dimuat');renderNewsCards(j.news,'public-news-list');PUBLIC_NEWS_LOADED=true;}).catch(function(){var el=document.getElementById('public-news-list');if(el)el.innerHTML='<div class="news-empty">Kabar PORSENI belum dapat dimuat.</div>';}).then(function(){PUBLIC_NEWS_PENDING=null;});return PUBLIC_NEWS_PENDING;}
 
 function base64ToBlobChunked(b64,mime){
  var parts=[],source=String(b64||''),chunkSize=65536;
@@ -3175,7 +3194,7 @@ fkf.addEventListener("submit",function(e){e.preventDefault();var f=e.target,sel=
   if(!yes)return;
   startSubmission({formId:"fk",btnId:"fk-btn",idle:"Daftar",noun:"pendaftaran",items:items,
    payload:function(fs){d.fl=meta(fs);var p=JSON.parse(JSON.stringify(d));delete p.fl;p.files=fs;return p},
-   onOk:function(r,fs){clearPorseniDraft("fk");loadAvailableContingents();if(r.data){d.tanggal_lahir_ketua=r.data.birthDateKetua||d.tanggal_lahir_ketua;d.alamat=r.data.alamatKetua||d.alamat;d.pin=r.data.pin||"";d.waktu=r.data.waktu||d.waktu;}SUBMIT_CTX={type:"kontingen",nama:d.nama,pin:d.pin||""};showPaper(paperK(d,signatureImagesFrom(fs)),r);try{f.reset()}catch(_){}}});
+   onOk:function(r,fs){clearPorseniDraft("fk");loadAvailableContingents(true).catch(function(){});if(r.data){d.tanggal_lahir_ketua=r.data.birthDateKetua||d.tanggal_lahir_ketua;d.alamat=r.data.alamatKetua||d.alamat;d.pin=r.data.pin||"";d.waktu=r.data.waktu||d.waktu;}SUBMIT_CTX={type:"kontingen",nama:d.nama,pin:d.pin||""};showPaper(paperK(d,signatureImagesFrom(fs)),r);try{f.reset()}catch(_){}}});
  });
 });
 
@@ -3250,12 +3269,15 @@ function applyPublicRecap(recap,fromCache){
  if(recap.hasil){MEDALS=recap.hasil.medals||[];UPDATED=new Date().toLocaleDateString('id-ID');renderHasil();renderChampionshipDetails(recap.hasil.detail||[],CHAMPIONSHIP_CATALOG);}
  if(fromCache){['recap-kontingen','recap-cabang'].forEach(function(id){var el=document.getElementById(id);if(el){var n=document.createElement('p');n.className='hint cache-note';n.textContent='Menampilkan data terakhir yang berhasil dimuat. Hubungkan kembali server untuk memperbarui data.';el.appendChild(n);}});}
 }
-function loadPublicRecap(){
+var PUBLIC_RECAP_LOADED=false,PUBLIC_RECAP_PENDING=null;
+function loadPublicRecap(force){
+ if(PUBLIC_RECAP_LOADED&&!force)return Promise.resolve();if(PUBLIC_RECAP_PENDING)return PUBLIC_RECAP_PENDING;
  if(!SCRIPT_URL){var noUrl=document.querySelectorAll('#recap-kontingen,#recap-cabang');noUrl.forEach(function(el){var n=document.createElement('p');n.className='hint';n.textContent='Koneksi data pendaftaran belum dikonfigurasi.';el.appendChild(n);});return;}
- fetch(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'public_recap'})})
+ PUBLIC_RECAP_PENDING=fetch(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'public_recap'})})
  .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
- .then(function(j){if(!j||!j.ok||!j.recap)throw new Error((j&&j.error)||'Server tidak mengirim data rekap.');var recap=j.recap;applyPublicRecap(recap,false);try{localStorage.setItem('PORSENI_2026_PUBLIC_RECAP',JSON.stringify({savedAt:new Date().toISOString(),recap:recap}));}catch(e){}})
- .catch(function(err){var cached=null;try{cached=JSON.parse(localStorage.getItem('PORSENI_2026_PUBLIC_RECAP')||'null');}catch(e){}if(cached&&cached.recap){applyPublicRecap(cached.recap,true);}else{['recap-kontingen','recap-cabang'].forEach(function(id){var el=document.getElementById(id);if(el){var n=document.createElement('p');n.className='hint';n.textContent='Data belum dapat dimuat: '+(err&&err.message?err.message:'koneksi ke Apps Script gagal')+'. Periksa deployment dan izin akses Google Apps Script.';el.appendChild(n);}});}});
+ .then(function(j){if(!j||!j.ok||!j.recap)throw new Error((j&&j.error)||'Server tidak mengirim data rekap.');var recap=j.recap;applyPublicRecap(recap,false);PUBLIC_RECAP_LOADED=true;try{localStorage.setItem('PORSENI_2026_PUBLIC_RECAP',JSON.stringify({savedAt:new Date().toISOString(),recap:recap}));}catch(e){}})
+ .catch(function(err){var cached=null;try{cached=JSON.parse(localStorage.getItem('PORSENI_2026_PUBLIC_RECAP')||'null');}catch(e){}if(cached&&cached.recap){applyPublicRecap(cached.recap,true);PUBLIC_RECAP_LOADED=true;}else{['recap-kontingen','recap-cabang'].forEach(function(id){var el=document.getElementById(id);if(el){var n=document.createElement('p');n.className='hint';n.textContent='Data belum dapat dimuat: '+(err&&err.message?err.message:'koneksi ke Apps Script gagal')+'. Periksa deployment dan izin akses Google Apps Script.';el.appendChild(n);}});}}).then(function(){PUBLIC_RECAP_PENDING=null;});
+ return PUBLIC_RECAP_PENDING;
 }
 function summaryRows(rows){
  var html='',i=0,j,k;
@@ -3321,8 +3343,16 @@ function renderParticipantRecap(){
  if(q)q.addEventListener('input',renderParticipantRecap);
 })();
 
-loadPublicRecap();loadPublicNews();
-var refreshRecap=document.getElementById("refresh-recap");if(refreshRecap)refreshRecap.addEventListener("click",function(){loadParticipantRecap();loadPublicRecap();});
+// Muat rekap dan berita mendekati viewport; jangan menahan render halaman awal.
+(function lazyPublicSections(){
+ var news=document.getElementById('kabar-porseni')||document.getElementById('public-news-list');
+ var recap=document.getElementById('recap-kontingen')||document.getElementById('recap-cabang');
+ if(!('IntersectionObserver' in window)){loadPublicRecap();loadPublicNews();return;}
+ var observer=new IntersectionObserver(function(entries){entries.forEach(function(entry){if(!entry.isIntersecting)return;var el=entry.target;observer.unobserve(el);if(el===news||el.id==='public-news-list')loadPublicNews();else loadPublicRecap();});},{rootMargin:'450px 0px'});
+ if(news)observer.observe(news);else loadPublicNews();
+ if(recap)observer.observe(recap);else loadPublicRecap();
+})();
+var refreshRecap=document.getElementById("refresh-recap");if(refreshRecap)refreshRecap.addEventListener("click",function(){loadParticipantRecap();loadPublicRecap(true);});
 function renderHasil(){
  var gold=0,rows=MEDALS.slice().sort(function(x,y){return (Number(y.points)||((y.g||0)*5+(y.s||0)*3+(y.b||0)))-(Number(x.points)||((x.g||0)*5+(x.s||0)*3+(x.b||0)))||y.g-x.g||y.s-x.s||y.b-x.b||String(x.k).localeCompare(String(y.k),'id')});
  var ICN=['🥇','🥈','🥉'],CL=[['#ffc20e','#f7941d'],['#c3cfe0','#7d8ca5'],['#e8a46a','#b4622a']];
