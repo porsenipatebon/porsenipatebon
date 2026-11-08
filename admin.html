@@ -174,7 +174,25 @@ function rebuildRegistrationPdf(){
  .catch(function(err){toast(err.message);})
  .finally(function(){if($('rebuildPdf')){$('rebuildPdf').disabled=false;$('rebuildPdf').textContent='Bangun Ulang PDF';}});
 }
-function fileToPayload(file){return new Promise(function(resolve,reject){var reader=new FileReader();reader.onload=function(){var result=String(reader.result||''),part=result.split(',');resolve({fileData:part[1]||'',mimeType:file.type||'application/octet-stream',name:file.name});};reader.onerror=function(){reject(new Error('Gagal membaca berkas.'));};reader.readAsDataURL(file);});}
+function compressAdminImage(file){
+ if(!file||!/^image\/(jpeg|png)$/i.test(file.type||''))return Promise.resolve(file);
+ return new Promise(function(resolve){
+  var url=URL.createObjectURL(file),img=new Image();
+  img.onload=function(){try{
+   var maxSide=2200,scale=Math.min(1,maxSide/Math.max(img.naturalWidth,img.naturalHeight));
+   var w=Math.max(1,Math.round(img.naturalWidth*scale)),h=Math.max(1,Math.round(img.naturalHeight*scale));
+   var canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
+   var ctx=canvas.getContext('2d');if(!ctx)throw new Error('Canvas tidak tersedia');
+   ctx.fillStyle='#fff';ctx.fillRect(0,0,w,h);ctx.drawImage(img,0,0,w,h);
+   canvas.toBlob(function(blob){URL.revokeObjectURL(url);
+    if(!blob||blob.size>=file.size){resolve(file);return;}
+    try{resolve(new File([blob],file.name.replace(/\.[^.]+$/,'')+'_optimized.jpg',{type:'image/jpeg',lastModified:Date.now()}));}catch(e){resolve(file);}
+   },'image/jpeg',.92);
+  }catch(e){URL.revokeObjectURL(url);resolve(file);}};
+  img.onerror=function(){URL.revokeObjectURL(url);resolve(file);};img.src=url;
+ });
+}
+function fileToPayload(file){return compressAdminImage(file).then(function(prepared){return new Promise(function(resolve,reject){var reader=new FileReader();reader.onload=function(){var result=String(reader.result||''),part=result.split(',');resolve({fileData:part[1]||'',mimeType:prepared.type||'application/octet-stream',name:prepared.name});};reader.onerror=function(){reject(new Error('Gagal membaca berkas.'));};reader.readAsDataURL(prepared);});});}
 function replaceFiles(){if(!selected)return;var tasks=[];document.querySelectorAll('[data-replace-file]').forEach(function(input){var file=input.files&&input.files[0];if(!file)return;var idx=input.dataset.replaceFile,label=document.querySelector('[data-replace-label="'+idx+'"]').value;tasks.push(function(){return fileToPayload(file).then(function(f){return call({action:'admin_replace_file',token:token,type:selected.type,rowNumber:selected.rowNumber,recordId:selected.recordId,label:label,fileData:f.fileData,mimeType:f.mimeType,name:f.name});});});});if(!tasks.length){toast('Pilih minimal satu berkas yang akan diganti.');return;}var btn=$('replaceFiles');btn.disabled=true;btn.textContent='Mengunggah…';tasks.reduce(function(p,task){return p.then(task);},Promise.resolve()).then(function(){return call({action:'admin_rebuild_registration_pdf',token:token,type:selected.type,rowNumber:selected.rowNumber,recordId:selected.recordId});}).then(function(j){toast('Berkas diperbarui. '+j.message);return loadData();}).then(function(){$('detailOverlay').classList.add('hidden');}).catch(function(err){toast(err.message);}).finally(function(){btn.disabled=false;btn.textContent='Terapkan penggantian berkas';});}
 function addNewAttachment(){var file=$('newAttachment').files[0];if(!file||!selected)return;var label=$('newAttachmentLabel').value.trim();if(!label){toast('Isi label berkas terlebih dahulu.');$('newAttachmentLabel').focus();return;}fileToPayload(file).then(function(f){return call({action:'admin_replace_file',token:token,type:selected.type,rowNumber:selected.rowNumber,recordId:selected.recordId,label:label,fileData:f.fileData,mimeType:f.mimeType,name:f.name});}).then(function(j){return call({action:'admin_rebuild_registration_pdf',token:token,type:selected.type,rowNumber:selected.rowNumber,recordId:selected.recordId}).then(function(rb){toast(j.message+' '+rb.message);});}).then(function(){return loadData();}).then(function(){$('detailOverlay').classList.add('hidden');}).catch(function(err){toast(err.message);});}
 function deleteAttachment(btn){if(!selected)return;var fileId=btn.dataset.deleteFile,label=btn.dataset.deleteLabel,type=selected.type,recordId=selected.recordId;if(!window.confirm('Hapus berkas '+label+'? File akan dipindahkan ke Trash Google Drive dan tidak lagi dapat dipratinjau kontingen.'))return;btn.disabled=true;btn.textContent='Menghapus…';call({action:'admin_delete_file',token:token,type:type,recordId:recordId,fileId:fileId,label:label}).then(function(j){toast(j.message);return loadData();}).then(function(){var list=type==='kontingen'?data.kontingen:data.cabang,latest=list.filter(function(x){return x.recordId===recordId;})[0];if(latest)openDetail(type,latest.rowNumber);else $('detailOverlay').classList.add('hidden');}).catch(function(err){toast(err.message);btn.disabled=false;btn.textContent='Hapus berkas';});}
