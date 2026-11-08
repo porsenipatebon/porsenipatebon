@@ -2254,7 +2254,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{
     <path d="M520 190H316C410 150 472 110 520 83Z" fill="#f7941d"/>
   </svg>
   <div class="header-brand">
-    <img class="header-logo" src="logo-porseni.png" alt="Logo PORSENI 2026">
+    <img class="header-logo" src="logo-porseni.png" alt="Logo PORSENI 2026" fetchpriority="high" decoding="async">
     <div class="header-copy">
       <h1 class="header-title" aria-label="PORSENI 2026">P<span class="porseni-o" aria-hidden="true"></span>RSENI 2026</h1>
       <h2 class="head-subtitle">PAC IPNU IPPNU PATEBON 2026</h2>
@@ -2385,14 +2385,14 @@ a:focus-visible,button:focus-visible,summary:focus-visible{
       CARA MENAMBAHKAN DENAH:
       1. Upload gambar denah ke repository (misalnya folder assets).
       2. Ganti GANTI_DENGAN_PATH_GAMBAR_DENAH dengan path gambar.
-      3. Contoh: <img src="assets/denah-porseni-2026.jpg" alt="Denah Lokasi PORSENI 2026">
+      3. Contoh: <img src="assets/denah-porseni-2026.jpg" alt="Denah Lokasi PORSENI 2026" loading="lazy" decoding="async">
     -->
     <div class="denah-empty-state">
       <span aria-hidden="true">🗺️</span>
       <strong>Denah lokasi segera tersedia</strong>
       <small>Gambar denah akan ditampilkan di area ini.</small>
     </div>
-    <!-- <img class="denah-image" src="GANTI_DENGAN_PATH_GAMBAR_DENAH" alt="Denah Lokasi PORSENI 2026"> -->
+    <!-- <img class="denah-image" src="GANTI_DENGAN_PATH_GAMBAR_DENAH" alt="Denah Lokasi PORSENI 2026" loading="lazy" decoding="async"> -->
   </div>
 </section>
 
@@ -2449,7 +2449,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{
 
 <div id="v-filosofi" hidden class="philosophy-page">
 <a class="back" href="#beranda">‹ Kembali ke Beranda</a>
-<header class="philosophy-hero"><img src="logo-porseni.png" alt="Logo resmi PORSENI 2026"><div><span class="timeline-kicker">IDENTITAS &amp; SEMANGAT KEGIATAN</span><h1>Filosofi Logo dan Tema</h1><p class="philosophy-motto">“Unitas Ad Gloriam”</p><p class="philosophy-translation">Bersatu untuk meraih kemuliaan dan prestasi.</p></div></header>
+<header class="philosophy-hero"><img src="logo-porseni.png" alt="Logo resmi PORSENI 2026" fetchpriority="high" decoding="async"><div><span class="timeline-kicker">IDENTITAS &amp; SEMANGAT KEGIATAN</span><h1>Filosofi Logo dan Tema</h1><p class="philosophy-motto">“Unitas Ad Gloriam”</p><p class="philosophy-translation">Bersatu untuk meraih kemuliaan dan prestasi.</p></div></header>
 <section class="philosophy-intro"><h2>Makna umum</h2><p>Logo PORSENI 2026 memadukan simbol nyala api, gerak manusia, dan lingkaran warna. Secara visual, unsur-unsur tersebut menggambarkan semangat, energi, kreativitas, persatuan, dan tekad untuk berprestasi melalui kegiatan olahraga dan seni.</p></section>
 <section class="philosophy-grid"><article><span class="philosophy-symbol">🔥</span><h3>Nyala Api</h3><p>Melambangkan semangat yang terus menyala, keberanian untuk mencoba, dan tekad untuk memberikan kemampuan terbaik.</p></article><article><span class="philosophy-symbol">🏃</span><h3>Gerak dan Sosok Manusia</h3><p>Menggambarkan dinamika, partisipasi, sportivitas, serta perkembangan potensi pelajar melalui olahraga dan seni.</p></article><article><span class="philosophy-symbol">🌐</span><h3>Lingkaran dan Pita Warna</h3><p>Melambangkan kebersamaan berbagai kontingen dan cabang kegiatan yang disatukan dalam satu perhelatan.</p></article><article><span class="philosophy-symbol">✨</span><h3>Cahaya dan Arah ke Atas</h3><p>Menggambarkan harapan, cita-cita, dan dorongan untuk tumbuh menjadi pribadi yang berprestasi serta bermanfaat.</p></article></section>
 <section class="philosophy-colors"><h2>Makna warna</h2><div class="color-key"><i style="background:#ed1c24"></i><span><b>Merah</b> — keberanian dan semangat.</span></div><div class="color-key"><i style="background:#f7941d"></i><span><b>Oranye</b> — energi, antusiasme, dan kreativitas.</span></div><div class="color-key"><i style="background:#ffc20e"></i><span><b>Kuning</b> — optimisme dan harapan.</span></div><div class="color-key"><i style="background:#0a63c9"></i><span><b>Biru</b> — kepercayaan, kedisiplinan, dan sportivitas.</span></div><div class="color-key"><i style="background:#12a9e8"></i><span><b>Sian</b> — keterbukaan dan semangat muda.</span></div><div class="color-key"><i style="background:#7410a8"></i><span><b>Ungu</b> — kreativitas dan keunikan.</span></div></section>
@@ -2544,8 +2544,10 @@ a:focus-visible,button:focus-visible,summary:focus-visible{
     <button class="btn alt" type="button" id="fb-add">+ Tambah peserta</button>
     <div id="fb-kti-files" hidden>
       <h3>Berkas Karya Tulis Ilmiah</h3>
-      <label class="fld"><span>Soft file makalah (Word: DOC/DOCX) *</span><input type="file" id="fb-kti-word" name="f_kti_word" accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"></label>
+      <label class="fld"><span>Makalah (Word: DOC/DOCX) *</span><input type="file" id="fb-kti-word" name="f_kti_word" accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"></label>
+      <label class="fld"><span>Makalah (PDF) *</span><input type="file" id="fb-kti-pdf" name="f_kti_pdf" accept="application/pdf,.pdf"></label>
       <label class="fld"><span>File presentasi (PPT/PPTX) *</span><input type="file" id="fb-kti-ppt" name="f_kti_ppt" accept=".ppt,.pptx,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation"></label>
+      <p class="hint">Makalah Word, makalah PDF, dan PPT disimpan sebagai dokumen terpisah di Google Drive. Ketiganya tidak dimasukkan ke PDF formulir cabang lomba dan dapat diunduh oleh panitia melalui Portal Admin.</p>
     </div>
     <div id="fb-duta-files" hidden>
       <h3>Berkas Duta Pelajar</h3>
@@ -2555,6 +2557,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{
     <div id="fb-khitobah-files" hidden>
       <h3>Berkas Khitobah</h3>
       <label class="fld"><span>Naskah khitobah (PDF) *</span><input type="file" id="fb-khitobah-pdf" name="f_khitobah_pdf" accept="application/pdf,.pdf"></label>
+      <p class="hint">Naskah khitobah disimpan sebagai dokumen terpisah di Google Drive, tidak dimasukkan ke PDF formulir cabang lomba, dan dapat diunduh panitia melalui Portal Admin.</p>
     </div>
     <h3>Surat tugas kontingen</h3>
     <label class="fld"><span>Surat Tugas dari PR IPNU-IPPNU * (PDF)</span><input type="file" name="f_surat_tugas" id="fb-surat-tugas" accept="application/pdf,.pdf" required></label>
@@ -2771,7 +2774,7 @@ function deadlineFor(branch){return DEADLINES[branch]||"19 Desember 2026";}
 function configureSpecialFiles(){
  var isKti=PICK==="Karya ilmiah",isKhitobah=PICK==="Khitobah",isDuta=PICK==="Duta Pelajar";
  $("fb-kti-files").hidden=!isKti;$("fb-khitobah-files").hidden=!isKhitobah;$("fb-duta-files").hidden=!isDuta;
- $("fb-kti-word").required=isKti;$("fb-kti-ppt").required=isKti;$("fb-khitobah-pdf").required=isKhitobah;
+ $("fb-kti-word").required=isKti;$("fb-kti-pdf").required=isKti;$("fb-kti-ppt").required=isKti;$("fb-khitobah-pdf").required=isKhitobah;
  $("fb-duta-cv").required=isDuta;$("fb-duta-support").required=isDuta;
 }
 function configureBranchInfo(){
@@ -2839,8 +2842,8 @@ function openPortalFilePreview(fileId,label){
  fetch(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'contingent_preview_file',sessionToken:PORTAL_AUTH.sessionToken,fileId:fileId})})
  .then(function(r){return r.json();}).then(function(j){
   if(!j||!j.ok)throw new Error(j&&j.error||'Pratinjau tidak dapat dibuka.');
-  var f=j.file||{},raw=atob(f.base64||''),bytes=new Uint8Array(raw.length);for(var i=0;i<raw.length;i++)bytes[i]=raw.charCodeAt(i);
-  var blob=new Blob([bytes],{type:f.mimeType||'application/octet-stream'});PORTAL_PREVIEW_OBJECT_URL=URL.createObjectURL(blob);body.innerHTML='';
+  var f=j.file||{},blob=base64ToBlobChunked(f.base64,f.mimeType||'application/octet-stream');
+  PORTAL_PREVIEW_OBJECT_URL=URL.createObjectURL(blob);body.innerHTML='';
   var mime=String(f.mimeType||'').toLowerCase();
   if(mime==='application/pdf'){
     body.style.cssText='flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;padding:6px;';
@@ -2886,7 +2889,7 @@ function renderPortalData(data){
 function downloadPortalFile(fileId,fileName){
  if(!PORTAL_AUTH||!PORTAL_AUTH.sessionToken){alert('Sesi Portal Kontingen tidak tersedia.');return;}
  fetch(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'contingent_preview_file',sessionToken:PORTAL_AUTH.sessionToken,fileId:fileId})})
- .then(function(r){return r.json();}).then(function(j){if(!j||!j.ok)throw new Error(j&&j.error||'PDF tidak dapat diunduh.');var raw=atob(j.file.base64||''),bytes=new Uint8Array(raw.length);for(var i=0;i<raw.length;i++)bytes[i]=raw.charCodeAt(i);var blob=new Blob([bytes],{type:j.file.mimeType||'application/pdf'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=fileName||j.file.name||'formulir.pdf';document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(url);},60000);})
+ .then(function(r){return r.json();}).then(function(j){if(!j||!j.ok)throw new Error(j&&j.error||'PDF tidak dapat diunduh.');var blob=base64ToBlobChunked(j.file.base64,j.file.mimeType||'application/pdf'),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=fileName||j.file.name||'formulir.pdf';document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(url);},60000);})
  .catch(function(err){alert(err.message||'Unduh PDF gagal.');});
 }
 $('fp-portal').addEventListener('submit',function(e){e.preventDefault();var f=e.target,b=$('portal-btn'),out=$('portal-result'),nama=v(f,'nama'),pin=v(f,'pin');b.disabled=true;b.textContent='Memeriksa PIN…';out.innerHTML='<p class="hint">Mengambil data kontingen…</p>';PORTAL_AUTH=null;fetch(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'contingent_portal',nama:nama,pin:pin})}).then(function(r){return r.json();}).then(function(j){if(!j||!j.ok)throw new Error(j.error||'Data tidak dapat diakses.');PORTAL_AUTH={nama:nama,pin:pin,sessionToken:j.data.sessionToken,lastActivity:Date.now()};try{sessionStorage.setItem('porseni_contingent_session',JSON.stringify({nama:nama,sessionToken:j.data.sessionToken}))}catch(e){}startContingentSessionWatch();renderPortalData(j.data);}).catch(function(err){out.innerHTML='<p class="warn" style="display:block">'+esc(err.message||'Gagal memuat data.')+'</p>';}).finally(function(){b.disabled=false;b.textContent='Periksa data kontingen';});});
@@ -2978,10 +2981,20 @@ function showSubmitError(formId,result){var box=document.getElementById(formId);
 var OFFICIAL_PDF_URL="",OFFICIAL_BLOB_URL="",SUBMIT_CTX=null;
 function apiPostJson(o){return fetch(SCRIPT_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(o)}).then(function(r){return r.json()});}
 function sanitizePublicNewsHtml(html){var box=document.createElement('div');box.innerHTML=String(html||'');box.querySelectorAll('script,style,iframe,object,embed,form,input,button').forEach(function(n){n.remove();});box.querySelectorAll('*').forEach(function(n){var tag=n.tagName.toLowerCase();if(!['p','br','div','h2','h3','h4','strong','b','em','i','u','ul','ol','li','blockquote','a','img'].includes(tag)){n.replaceWith(document.createTextNode(n.textContent||''));return;}Array.from(n.attributes).forEach(function(at){if(tag==='a'&&at.name==='href'){if(!/^https:\/\//i.test(at.value))n.removeAttribute('href');}else if(tag==='img'&&['src','alt','width'].includes(at.name)){if(at.name==='src'&&!/^https:\/\//i.test(at.value))n.removeAttribute('src');}else n.removeAttribute(at.name);});if(tag==='img')n.setAttribute('style','max-width:100%;height:auto;display:block;margin:12px auto;border-radius:10px');});return box.innerHTML;}
-function renderNewsCards(items,target){var el=document.getElementById(target);if(!el)return;if(!items||!items.length){el.innerHTML='<div class="news-empty">Belum ada berita yang dipublikasikan.</div>';return;}el.innerHTML=items.map(function(n){return '<article class="news-card">'+(n.gambar?'<img src="'+esc(n.gambar)+'" alt="'+esc(n.judul)+'" loading="lazy">':'<div style="display:grid;place-items:center;background:#eaf2ff;font-size:2rem">📰</div>')+'<div class="news-card-body"><div class="news-meta">'+esc(n.kategori)+' · '+esc(fmtTgl(n.tanggal))+'</div><h3>'+esc(n.judul)+'</h3><p>'+esc(n.ringkasan||String(n.isi||'').slice(0,150))+'</p><button type="button" data-news-open="'+esc(n.id)+'">Baca selengkapnya →</button></div></article>';}).join('');el.querySelectorAll('[data-news-open]').forEach(function(b){b.addEventListener('click',function(){var n=items.filter(function(x){return x.id===b.dataset.newsOpen;})[0];if(!n)return;var page=document.getElementById('v-berita');showView('v-berita');page.hidden=false;page.style.removeProperty('display');document.getElementById('news-archive-list').innerHTML='<article class="news-article"><a class="back" href="#berita">‹ Kembali ke berita</a><div class="news-meta">'+esc(n.kategori)+' · '+esc(fmtTgl(n.tanggal))+'</div><h1>'+esc(n.judul)+'</h1>'+(n.gambar?'<img src="'+esc(n.gambar)+'" alt="'+esc(n.judul)+'">':'')+'<div class="news-detail">'+sanitizePublicNewsHtml(n.isi)+'</div></article>';history.pushState(null,'','#berita-detail');window.scrollTo(0,0);});});}
+function renderNewsCards(items,target){var el=document.getElementById(target);if(!el)return;if(!items||!items.length){el.innerHTML='<div class="news-empty">Belum ada berita yang dipublikasikan.</div>';return;}el.innerHTML=items.map(function(n){return '<article class="news-card">'+(n.gambar?'<img src="'+esc(n.gambar)+'" alt="'+esc(n.judul)+'" loading="lazy" decoding="async">':'<div style="display:grid;place-items:center;background:#eaf2ff;font-size:2rem">📰</div>')+'<div class="news-card-body"><div class="news-meta">'+esc(n.kategori)+' · '+esc(fmtTgl(n.tanggal))+'</div><h3>'+esc(n.judul)+'</h3><p>'+esc(n.ringkasan||String(n.isi||'').slice(0,150))+'</p><button type="button" data-news-open="'+esc(n.id)+'">Baca selengkapnya →</button></div></article>';}).join('');el.querySelectorAll('[data-news-open]').forEach(function(b){b.addEventListener('click',function(){var n=items.filter(function(x){return x.id===b.dataset.newsOpen;})[0];if(!n)return;var page=document.getElementById('v-berita');showView('v-berita');page.hidden=false;page.style.removeProperty('display');document.getElementById('news-archive-list').innerHTML='<article class="news-article"><a class="back" href="#berita">‹ Kembali ke berita</a><div class="news-meta">'+esc(n.kategori)+' · '+esc(fmtTgl(n.tanggal))+'</div><h1>'+esc(n.judul)+'</h1>'+(n.gambar?'<img src="'+esc(n.gambar)+'" alt="'+esc(n.judul)+'" loading="lazy" decoding="async">':'')+'<div class="news-detail">'+sanitizePublicNewsHtml(n.isi)+'</div></article>';history.pushState(null,'','#berita-detail');window.scrollTo(0,0);});});}
 function loadPublicNews(){apiPostJson({action:'public_news'}).then(function(j){if(!j||!j.ok)throw new Error(j.error||'Berita gagal dimuat');renderNewsCards(j.news,'public-news-list');}).catch(function(){var el=document.getElementById('public-news-list');if(el)el.innerHTML='<div class="news-empty">Kabar PORSENI belum dapat dimuat.</div>';});}
 
-function b64ToBlobUrl(b64,mime){var raw=atob(b64||""),u=new Uint8Array(raw.length);for(var i=0;i<raw.length;i++)u[i]=raw.charCodeAt(i);return URL.createObjectURL(new Blob([u],{type:mime||"application/pdf"}));}
+function base64ToBlobChunked(b64,mime){
+ var parts=[],source=String(b64||''),chunkSize=65536;
+ // Potong pada kelipatan 4 agar setiap potongan Base64 tetap valid.
+ for(var offset=0;offset<source.length;offset+=chunkSize){
+  var raw=atob(source.slice(offset,offset+chunkSize)),bytes=new Uint8Array(raw.length);
+  for(var i=0;i<raw.length;i++)bytes[i]=raw.charCodeAt(i);
+  parts.push(bytes);
+ }
+ return new Blob(parts,{type:mime||'application/pdf'});
+}
+function b64ToBlobUrl(b64,mime){return URL.createObjectURL(base64ToBlobChunked(b64,mime));}
 // Memuat PDF resmi memakai sesi PIN yang baru dipakai mendaftar; Drive tetap privat.
 function loadOfficialPdf(data,ctx){
  if(!ctx||!ctx.nama||!/^\d{6}$/.test(String(ctx.pin||"")))return Promise.reject(new Error("PIN tidak tersedia."));
@@ -3178,11 +3191,12 @@ $("fb").addEventListener("submit",function(e){e.preventDefault();var f=e.target,
  var d={type:"cabang",waktu:new Date().toISOString(),reg:regNo("C"),nama:v(f,"nama"),pin:v(f,"pin"),cabang:v(f,"cabang"),kategori:v(f,"kategori"),jml:list.length,catatan:v(f,"catatan"),pesertaList:list.map(function(q){return {nama:q.n,gender:q.l,role:q.role,tempatLahir:q.tempatLahir,tanggalLahir:q.tanggalLahir,alamat:q.alamat,wa:q.wa}})};
  var items=[],participantNo=0;try{Array.prototype.forEach.call(rows,function(r,i){var nm=r.querySelector('[name="pn"]').value.trim();if(!nm)return;participantNo++;var foto=r.querySelector('[name="peserta_foto"]').files[0],ktp=r.querySelector('[name="peserta_ktp"]').files[0];if(!foto)throw new Error("Pas foto 4×6 wajib diunggah untuk peserta "+nm+".");checkFileType(foto,["image"],"Pas foto peserta "+nm);items.push({label:"Pas foto peserta "+participantNo,participantIndex:participantNo-1,file:foto});if(!ktp)throw new Error("KTP peserta wajib diunggah untuk peserta "+nm+".");checkFileType(ktp,["image"],"KTP peserta "+nm);items.push({label:"KTP peserta "+participantNo,participantIndex:participantNo-1,file:ktp})});
  if(PICK==="Karya ilmiah"){
-  var word=f.elements.f_kti_word.files[0],ppt=f.elements.f_kti_ppt.files[0];
-  if(!word)throw new Error("Soft file makalah Word wajib diunggah.");checkFileType(word,["word"],"Soft file makalah KTI");items.push({label:"Soft file makalah KTI (Word)",file:word,preserve:true});
+  var word=f.elements.f_kti_word.files[0],paperPdf=f.elements.f_kti_pdf.files[0],ppt=f.elements.f_kti_ppt.files[0];
+  if(!word)throw new Error("Makalah KTI dalam format Word wajib diunggah.");checkFileType(word,["word"],"Makalah KTI Word");items.push({label:"Makalah KTI (Word)",file:word,preserve:true});
+  if(!paperPdf)throw new Error("Makalah KTI dalam format PDF wajib diunggah.");checkFileType(paperPdf,["pdf"],"Makalah KTI PDF");items.push({label:"Makalah KTI (PDF)",file:paperPdf,preserve:true});
   if(!ppt)throw new Error("File presentasi PPT wajib diunggah.");checkFileType(ppt,["ppt"],"File presentasi KTI");items.push({label:"Presentasi KTI (PPT)",file:ppt,preserve:true});
  }else if(PICK==="Khitobah"){
-  var naskah=f.elements.f_khitobah_pdf.files[0];if(!naskah)throw new Error("Naskah khitobah PDF wajib diunggah.");checkFileType(naskah,["pdf"],"Naskah khitobah");items.push({label:"Naskah khitobah (PDF)",file:naskah,preserve:true});
+  var naskah=f.elements.f_khitobah_pdf.files[0];if(!naskah)throw new Error("Naskah khitobah PDF wajib diunggah.");checkFileType(naskah,["pdf"],"Naskah khitobah");items.push({label:"Naskah Khitobah (PDF)",file:naskah,preserve:true});
  }
  if(PICK==="Duta Pelajar"){
   var cv=f.elements.f_duta_cv.files[0],support=f.elements.f_duta_support.files[0];
