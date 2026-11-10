@@ -1,0 +1,7 @@
+﻿
+# Temporary Apps Script clone
+/gas-source-temp/
+
+# Local credentials
+/.clasprc.json
+node_modules/
