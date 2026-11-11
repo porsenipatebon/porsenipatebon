@@ -42,6 +42,29 @@
 .pagination-actions button:disabled{opacity:.4;cursor:not-allowed}
 .pagination-actions .page-indicator{min-width:88px;text-align:center;font-weight:700;color:#12336b}
 @media(max-width:600px){.pagination-bar{align-items:flex-start}.pagination-actions{width:100%;justify-content:space-between}}
+
+/* Control Center editor upgrade */
+.devops-panel-wide{width:100%;max-width:none!important}
+#devopsPanel .panel{width:100%;max-width:none}
+.code-tools{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin:8px 0}
+.code-tools input{flex:1;min-width:180px;border:1px solid #d5dfec;border-radius:9px;padding:9px 11px}
+.code-tools .code-count{font-size:11px;color:#52627a;min-width:90px}
+.code-editor-shell{display:grid;grid-template-columns:54px minmax(0,1fr);height:620px;min-height:420px;max-height:78vh;border:1px solid #cbd8e8;border-radius:12px;overflow:hidden;background:#0d1728}
+.code-gutter{margin:0;padding:12px 10px 12px 0;overflow:hidden;text-align:right;background:#142238;color:#8193ad;border-right:1px solid #263a56;font:12px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre;user-select:none}
+.code-editor-shell textarea{width:100%;height:100%;min-height:0;resize:none;border:0!important;border-radius:0!important;outline:none!important;box-shadow:none!important;padding:12px 14px!important;background:#0d1728!important;color:#e7efff!important;font:12px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace!important;white-space:pre!important;overflow:auto;tab-size:2}
+.code-editor-shell textarea:focus{box-shadow:none!important}
+.devops-file-actions{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.workflow-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin:12px 0}
+.workflow-metric{border:1px solid #e1eaf7;border-radius:11px;padding:11px;background:#fbfdff}
+.workflow-metric b{display:block;color:#102b58;font:800 18px Manrope}
+.workflow-metric small{font-size:10px;color:#7182a0}
+.workflow-run-card{border:1px solid #e1eaf7;border-radius:12px;padding:13px;background:#fff}
+.workflow-run-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.workflow-run-meta{font-size:11px;color:#7182a0;line-height:1.7;margin-top:7px}
+.workflow-state{display:inline-flex;padding:5px 9px;border-radius:30px;font-size:10px;font-weight:900;background:#fff5df;color:#9b6500}
+.workflow-state.success{background:#e8f6ee;color:#16794b}.workflow-state.failure{background:#ffeded;color:#b42318}.workflow-state.running{background:#eaf2ff;color:#0a63c9}
+@media(max-width:700px){.code-editor-shell{grid-template-columns:42px minmax(0,1fr);height:480px}.workflow-summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
 </style>
 </head>
 <body>
@@ -167,8 +190,10 @@
     <div class="field">
      <label for="devopsEditor">Isi halaman HTML</label>
      <div id="devopsEditorSource" class="note-banner" style="margin:0 0 8px">Editor menampilkan: belum ada file dimuat.</div>
-     <textarea id="devopsEditor" rows="12" spellcheck="false" style="font:12px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre;overflow:auto" placeholder="Muat halaman dari GitHub atau unggah file HTML baru di sini…"></textarea>
+     <div class="code-tools"><input id="devopsSearchHtml" type="search" placeholder="Cari kata/frasa dalam HTML…"><button class="btn light" type="button" id="devopsFindHtmlPrev">↑ Sebelumnya</button><button class="btn light" type="button" id="devopsFindHtmlNext">↓ Berikutnya</button><span id="devopsSearchHtmlCount" class="code-count">0 hasil</span></div>
+     <div class="code-editor-shell"><pre id="devopsHtmlGutter" class="code-gutter">1</pre><textarea id="devopsEditor" spellcheck="false" wrap="off" placeholder="Muat halaman dari GitHub atau unggah file HTML baru di sini…"></textarea></div>
     </div>
+    <div class="devops-file-actions"><button id="devopsDownloadIndex" class="btn light" type="button">↓ Unduh source index.html</button><button id="devopsDownloadAdmin" class="btn light" type="button">↓ Unduh source admin.html</button></div>
     <input id="devopsFilePath" type="hidden" value="index.html">
     <input id="devopsCommitMessage" type="hidden" value="Update halaman melalui PORSENI Control Center">
     <div class="actions">
@@ -181,8 +206,10 @@
     <h3 style="font:800 17px Manrope;color:var(--navy);margin:5px 0">Ganti kode Apps Script</h3>
     <p class="muted" style="font-size:12px;margin:0 0 12px">Tempel seluruh kode backend terbaru ke kotak ini. Tekan tombol di bawah untuk menyimpan ke GitHub, membuat backup otomatis, lalu menerbitkan ke Web App produksi.</p>
     <div class="field">
-     <label for="devopsBackendEditor">Tempel seluruh kode Apps Script terbaru</label>
-     <textarea id="devopsBackendEditor" rows="17" spellcheck="false" style="font:12px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre;overflow:auto" placeholder="Tempel seluruh kode Apps Script di sini…"></textarea>
+     <label for="devopsBackendEditor">Source Apps Script (gas/backend/Kode.js)</label>
+     <div class="devops-file-actions"><button id="devopsLoadBackend" class="btn light" type="button">↻ Muat source deployment Apps Script</button><button id="devopsDownloadBackend" class="btn light" type="button">↓ Unduh source Apps Script</button><span id="devopsBackendMeta" class="muted" style="font-size:11px;align-self:center">Belum dimuat.</span></div>
+     <div class="code-tools"><input id="devopsSearchGs" type="search" placeholder="Cari kata/frasa dalam Apps Script…"><button class="btn light" type="button" id="devopsFindGsPrev">↑ Sebelumnya</button><button class="btn light" type="button" id="devopsFindGsNext">↓ Berikutnya</button><span id="devopsSearchGsCount" class="code-count">0 hasil</span></div>
+     <div class="code-editor-shell"><pre id="devopsGsGutter" class="code-gutter">1</pre><textarea id="devopsBackendEditor" spellcheck="false" wrap="off" placeholder="Klik Muat source deployment Apps Script atau tempel kode baru…"></textarea></div>
     </div>
     <div class="note-banner" style="margin:8px 0 12px">Sebelum deploy, sistem akan menyimpan kode ke repository dan workflow akan membuat backup versi Apps Script. Deployment Web App yang sama diperbarui; URL tetap.</div>
     <div class="actions">
@@ -212,9 +239,10 @@
    </section>
    <section class="panel" style="padding:16px">
     <div class="toolbar" style="justify-content:space-between;align-items:center">
-     <div><div class="eyebrow">RIWAYAT PEMBARUAN</div><b style="color:var(--navy)">Status GitHub Actions</b></div>
-     <button id="devopsRefreshRuns" class="btn light" type="button" disabled>↻ Perbarui riwayat</button>
+     <div><div class="eyebrow">RIWAYAT PEMBARUAN</div><b style="color:var(--navy)">Preview Workflow & Status Deployment</b><p class="muted" style="font-size:11px;margin:4px 0 0">Pantau antrean, proses berjalan, berhasil, atau gagal beserta waktu dan durasi.</p></div>
+     <div class="devops-file-actions"><button id="devopsRefreshRuns" class="btn light" type="button" disabled>↻ Perbarui status</button><a id="devopsActionsLink" class="btn light" href="#" target="_blank" rel="noopener" style="text-decoration:none">Buka GitHub Actions ↗</a></div>
     </div>
+    <div id="devopsWorkflowSummary" class="workflow-summary"></div>
     <div id="devopsRuns" class="result-list" style="padding:10px 0"><div class="empty">Riwayat belum dimuat.</div></div>
     <div id="devopsDeployStatus" class="hidden" aria-hidden="true"></div>
    </section>
@@ -513,8 +541,14 @@ function devOpsShowStatus(status){
  }
  ['devopsSaveFile','devopsSaveDeployBackend','devopsRefreshRuns'].forEach(function(id){if($(id))$(id).disabled=!devOpsReady;});
 }
-function devOpsRenderRuns(rows){var box=$('devopsRuns');rows=rows||[];if(!rows.length){box.innerHTML='<div class="empty">Belum ada riwayat workflow.</div>';return;}box.innerHTML=rows.map(function(r){var status=String(r.conclusion||r.status||'unknown').toUpperCase(),ok=status==='SUCCESS';return '<article class="file-card"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><b>'+esc(r.name||'PORSENI Apps Script')+'</b><span class="status '+(ok?'ok':(status==='FAILURE'?'no':'wait'))+'">'+esc(status)+'</span></div><p class="muted" style="font-size:11px;margin:5px 0">'+esc(r.branch||'')+' · '+esc(r.sha||'')+' · '+esc(r.event||'')+' · '+esc(r.createdAt||'')+'</p>'+(r.url?'<a class="file-link" href="'+esc(r.url)+'" target="_blank" rel="noopener">Buka log workflow ↗</a>':'')+'</article>';}).join('');}
-function devOpsLoadRuns(){if(!devOpsReady)return Promise.resolve();$('devopsRuns').innerHTML='<div class="empty">Memuat riwayat workflow…</div>';return callWithTimeout({action:'admin_devops_workflow_runs',token:token},30000).then(function(j){devOpsRenderRuns(j.runs||[]);$('devopsDeployStatus').dataset.actionsUrl=j.actionsUrl||'';return j;}).catch(function(e){$('devopsRuns').innerHTML='<div class="empty">Gagal memuat riwayat: '+esc(e.message)+'</div>';throw e;});}
+function devOpsFormatDate(value){if(!value)return '—';var d=new Date(value);if(isNaN(d.getTime()))return String(value);return new Intl.DateTimeFormat('id-ID',{timeZone:'Asia/Jakarta',day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(d)+' WIB';}
+function devOpsDuration(start,end){if(!start)return '—';var a=new Date(start).getTime(),b=end?new Date(end).getTime():Date.now();if(!isFinite(a)||!isFinite(b)||b<a)return '—';var sec=Math.floor((b-a)/1000),h=Math.floor(sec/3600),m=Math.floor(sec%3600/60),s=sec%60;return (h?h+'j ':'')+(m?m+'m ':'')+s+'dtk';}
+function devOpsRenderRuns(rows){var box=$('devopsRuns');rows=rows||[];var summary=$('devopsWorkflowSummary');var counts={success:0,failure:0,running:0,queued:0};rows.forEach(function(r){var st=String(r.status||'').toLowerCase(),co=String(r.conclusion||'').toLowerCase();if(co==='success')counts.success++;else if(['failure','cancelled','timed_out','action_required'].indexOf(co)>=0)counts.failure++;else if(st==='in_progress')counts.running++;else if(st==='queued'||st==='requested'||st==='waiting'||st==='pending')counts.queued++;});summary.innerHTML=[['Berhasil',counts.success],['Gagal',counts.failure],['Berjalan',counts.running],['Antrean',counts.queued]].map(function(x){return '<div class="workflow-metric"><b>'+x[1]+'</b><small>'+x[0]+'</small></div>';}).join('');if(!rows.length){box.innerHTML='<div class="empty">Belum ada riwayat workflow pada branch ini.</div>';return;}box.innerHTML=rows.map(function(r){var co=String(r.conclusion||'').toLowerCase(),st=String(r.status||'').toLowerCase(),status=co?co.toUpperCase():st.toUpperCase(),kind=co==='success'?'success':(['failure','cancelled','timed_out','action_required'].indexOf(co)>=0?'failure':(st==='in_progress'?'running':''));var finish=r.updatedAt&&st==='completed'?r.updatedAt:'';return '<article class="workflow-run-card"><div class="workflow-run-head"><b>'+esc(r.name||'PORSENI Apps Script')+'</b><span class="workflow-state '+kind+'">'+esc(status||'UNKNOWN')+'</span></div><div class="workflow-run-meta">Branch: '+esc(r.branch||'—')+' · Commit: '+esc(r.sha||'—')+' · Mode: '+esc(r.mode||r.event||'—')+'<br>Mulai: '+esc(devOpsFormatDate(r.createdAt))+'<br>Terakhir diperbarui / selesai: '+esc(devOpsFormatDate(r.updatedAt))+'<br>Durasi: '+esc(devOpsDuration(r.createdAt,finish||(st==='in_progress'?null:(!co?r.updatedAt:null))))+'</div>'+(r.url?'<a class="file-link" href="'+esc(r.url)+'" target="_blank" rel="noopener">Buka detail log dan langkah workflow ↗</a>':'')+'</article>';}).join('');}
+function devOpsLoadRuns(){if(!devOpsReady)return Promise.resolve();$('devopsRuns').innerHTML='<div class="empty">Memeriksa status workflow…</div>';return callWithTimeout({action:'admin_devops_workflow_runs',token:token},30000).then(function(j){devOpsRenderRuns(j.runs||[]);$('devopsActionsLink').href=j.actionsUrl||'#';return j;}).catch(function(e){$('devopsRuns').innerHTML='<div class="empty">Gagal memuat riwayat: '+esc(e.message)+'</div>';throw e;});}
+function devOpsDownloadFile(path,filename){if(!devOpsReady){toast('Hubungkan GitHub terlebih dahulu.');return;}callWithTimeout({action:'admin_devops_read_file',token:token,path:path},45000).then(function(j){var blob=new Blob([j.content],{type:'text/plain;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=filename||path.split('/').pop();document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(url);},1500);toast('File '+a.download+' berhasil disiapkan untuk diunduh.');}).catch(function(e){toast('Unduh gagal: '+e.message);});}
+function devOpsLineNumbers(editorId,gutterId){var el=$(editorId),gut=$(gutterId);if(!el||!gut)return;var n=Math.max(1,el.value.split('\n').length),lines=[];for(var i=1;i<=n;i++)lines.push(i);gut.textContent=lines.join('\n');gut.scrollTop=el.scrollTop;}
+function devOpsFind(editorId,inputId,countId,direction){var el=$(editorId),q=String($(inputId).value||'');if(!q){$(countId).textContent='0 hasil';return;}var src=el.value.toLowerCase(),needle=q.toLowerCase(),matches=[],pos=0;while((pos=src.indexOf(needle,pos))!==-1){matches.push(pos);pos+=Math.max(1,needle.length);}$(countId).textContent=matches.length+' hasil';if(!matches.length){toast('Kata tidak ditemukan.');return;}var idx=Number(el.dataset.findIndex||-1);idx=direction>0?(idx+1)%matches.length:(idx<=0?matches.length-1:idx-1);el.dataset.findIndex=idx;el.focus();el.setSelectionRange(matches[idx],matches[idx]+q.length);var before=el.value.slice(0,matches[idx]).split('\n').length-1;el.scrollTop=Math.max(0,before*19-el.clientHeight/2);devOpsLineNumbers(editorId,editorId==='devopsEditor'?'devopsHtmlGutter':'devopsGsGutter');$(countId).textContent=(idx+1)+'/'+matches.length+' hasil';}
+function devOpsLoadBackend(){var path='gas/backend/Kode.js',btn=$('devopsLoadBackend');btn.disabled=true;$('devopsBackendMeta').textContent='Memuat source Apps Script dari repository…';callWithTimeout({action:'admin_devops_read_file',token:token,path:path},45000).then(function(j){$('devopsBackendEditor').value=j.content;window.devOpsBackendSha=j.sha||'';$('devopsBackendMeta').textContent='Source tersinkron dimuat · '+Number(j.size||0)+' byte · SHA '+String(j.sha||'').slice(0,8);devOpsLineNumbers('devopsBackendEditor','devopsGsGutter');$('devopsBackendStatus').textContent='Source repository untuk deployment Apps Script siap ditinjau atau diedit.';}).catch(function(e){$('devopsBackendMeta').textContent='Gagal memuat: '+e.message;toast(e.message);}).finally(function(){btn.disabled=false;});}
 function populateResetResultBranches(){var sel=$('resetResultBranch');if(!sel)return;sel.innerHTML='<option value="">Pilih cabang lomba…</option>';BRANCHES.forEach(function(x){var op=document.createElement('option');op.value=x[0];op.textContent=x[0];sel.appendChild(op);});}
 function resetChampionshipResults(scope){
  if(user!=='Tyo'){toast('Akses reset hasil hanya untuk Admin Tyo.');return;}
@@ -557,7 +591,7 @@ function devOpsOpenFile(){
  $('devopsFilePath').value=path;
  var btn=$('devopsLoadFile');btn.disabled=true;
  callWithTimeout({action:'admin_devops_read_file',token:token,path:path},45000).then(function(j){
-  $('devopsFilePath').value=j.path;$('devopsEditor').value=j.content;devOpsFileSha=j.sha||'';devOpsFilePathLoaded=j.path;
+  $('devopsFilePath').value=j.path;$('devopsEditor').value=j.content;devOpsLineNumbers('devopsEditor','devopsHtmlGutter');devOpsFileSha=j.sha||'';devOpsFilePathLoaded=j.path;
   $('devopsCommitMessage').value='Update '+j.path+' melalui PORSENI Control Center';
   $('devopsFileMeta').textContent='Versi GitHub dimuat · '+Number(j.size||0)+' byte.';if($('devopsEditorSource'))$('devopsEditorSource').textContent='Editor menampilkan: '+j.path+' (versi GitHub, SHA '+String(j.sha||'').slice(0,8)+').';
   $('devopsSaveFile').disabled=!devOpsReady;
@@ -592,16 +626,19 @@ function devOpsSaveDeployBackend(){
  var btn=$('devopsSaveDeployBackend'),status=$('devopsBackendStatus');
  btn.disabled=true;status.textContent='Membaca versi backend saat ini dari repository…';
  var path='gas/backend/Kode.js';
- callWithTimeout({action:'admin_devops_read_file',token:token,path:path},45000).then(function(current){
+ var sourceSha=window.devOpsBackendSha||'';
+ var readCurrent=sourceSha?Promise.resolve({sha:sourceSha}):callWithTimeout({action:'admin_devops_read_file',token:token,path:path},45000);
+ readCurrent.then(function(current){
   status.textContent='Menyimpan kode terbaru ke GitHub…';
   return callWithTimeout({action:'admin_devops_save_file',token:token,path:path,content:content,sha:current.sha,message:'Update Apps Script backend melalui PORSENI Control Center'},60000);
  }).then(function(saved){
+  window.devOpsBackendSha=saved.sha||'';
   status.textContent='Kode tersimpan di GitHub (commit '+String(saved.commitSha||'').slice(0,7)+'). Memulai backup dan deployment produksi…';
   return callWithTimeout({action:'admin_devops_deploy_gas',token:token,mode:'deploy-production',confirmation:'SAYA-PAHAM-APPS-SCRIPT',productionConfirm:'DEPLOY-PRODUKSI-PORSENI-2026'},45000);
  }).then(function(result){
   status.textContent='Permintaan deploy berhasil dikirim. Backup dan deployment sedang diproses GitHub Actions. Buka riwayat untuk memantau sampai SUCCESS.';
   toast('Kode Apps Script tersimpan. Deployment produksi berhasil dipicu.');
-  $('devopsBackendEditor').value='';
+  $('devopsBackendMeta').textContent='Commit tersimpan; menunggu hasil workflow.';
   return devOpsLoadRuns();
  }).catch(function(e){
   status.textContent='Belum selesai: '+e.message;
@@ -619,7 +656,7 @@ function devOpsLoadLocalFile(file){
  if(devOpsFilePathLoaded!==target||!devOpsFileSha){toast('Klik Muat versi dari GitHub terlebih dahulu, baru pilih file pengganti.');$('devopsLocalFile').value='';return;}
  var reader=new FileReader();
  reader.onload=function(){
-  $('devopsFilePath').value=target;$('devopsEditor').value=String(reader.result||'');if($('devopsEditorSource'))$('devopsEditorSource').textContent='Editor menampilkan: '+file.name+' (file lokal pengganti untuk '+target+').';
+  $('devopsFilePath').value=target;$('devopsEditor').value=String(reader.result||'');devOpsLineNumbers('devopsEditor','devopsHtmlGutter');if($('devopsEditorSource'))$('devopsEditorSource').textContent='Editor menampilkan: '+file.name+' (file lokal pengganti untuk '+target+').';
   $('devopsFileMeta').textContent='File HTML baru siap disimpan · '+file.size+' byte · tujuan: '+(target==='index.html'?'Website utama':'Portal panitia');
   $('devopsSaveFile').disabled=!devOpsReady;
  };
@@ -709,7 +746,17 @@ function previewAndResetRegistrations(){
  }).catch(function(e){out.textContent+='\nGAGAL: '+e.message;toast(e.message);}).finally(function(){btn.disabled=false;});
 }
 $('previewResetRegistration').addEventListener('click',previewAndResetRegistrations);if($('resetAllResults'))$('resetAllResults').addEventListener('click',function(){resetChampionshipResults('all');});if($('resetBranchResults'))$('resetBranchResults').addEventListener('click',function(){resetChampionshipResults('branch');});if($('devopsSaveSetup'))$('devopsSaveSetup').addEventListener('click',devOpsSaveSetup);if($('devopsRefresh'))$('devopsRefresh').addEventListener('click',function(){loadDevOps(true).catch(function(){});});if($('devopsLoadFile'))$('devopsLoadFile').addEventListener('click',devOpsOpenFile);if($('devopsFileSelect'))$('devopsFileSelect').addEventListener('change',function(){devOpsFileSha='';devOpsFilePathLoaded='';$('devopsFilePath').value=this.value;if($('devopsLocalFile'))$('devopsLocalFile').value='';if($('devopsLocalFileName'))$('devopsLocalFileName').textContent='Belum ada file lokal dipilih.';$('devopsFileMeta').textContent='Muat versi terbaru dari GitHub sebelum mengganti halaman.';$('devopsSaveFile').disabled=true;devOpsOpenFile();});if($('devopsLocalFile'))$('devopsLocalFile').addEventListener('change',function(){var f=(this.files||[])[0];if($('devopsLocalFileName'))$('devopsLocalFileName').textContent=f?'File dipilih: '+f.name+' · '+f.size+' byte':'Belum ada file lokal dipilih.';devOpsLoadLocalFile(f);});if($('devopsSaveFile'))$('devopsSaveFile').addEventListener('click',devOpsSaveFile);if($('devopsSaveDeployBackend'))$('devopsSaveDeployBackend').addEventListener('click',devOpsSaveDeployBackend);if($('devopsRefreshRuns'))$('devopsRefreshRuns').addEventListener('click',function(){devOpsLoadRuns().catch(function(){});});$('testChampionshipPdf').addEventListener('click',startChampionshipTestPreview);$('toggleRegKont').addEventListener('click',function(){toggleRegistration('kontingen',this);});$('toggleRegCab').addEventListener('click',function(){toggleRegistration('cabang',this);});if($('toggleRegCabMaintenance'))$('toggleRegCabMaintenance').addEventListener('click',function(){toggleRegistration('maintenance_cabang',this);});$('loginForm').addEventListener('submit',login);$('logoutBtn').addEventListener('click',logout);$('refreshBtn').addEventListener('click',function(){if(tab==='log')loadActivityLogs(true);else if(tab==='devops')loadDevOps(true).catch(function(){});else{loadData();if(tab==='hasil')loadResults(true);if(tab==='berita')loadNewsAdmin(true);}});if($('refreshActivityLogs'))$('refreshActivityLogs').addEventListener('click',function(){loadActivityLogs(true);});$('scrollActivityLogsDown').addEventListener('click',function(){var box=$('activityLogScroll');if(box)box.scrollTo({top:box.scrollHeight,behavior:'smooth'});});$('searchInput').addEventListener('input',function(){currentPage=1;renderTable();});$('statusFilter').addEventListener('change',function(){currentPage=1;renderTable();});$('pagePrev').addEventListener('click',function(){changePage(-1);});$('pageNext').addEventListener('click',function(){changePage(1);});$('exportBtn').addEventListener('click',exportCSV);$('closeDrawer').addEventListener('click',function(){$('detailOverlay').classList.add('hidden');});$('detailOverlay').addEventListener('click',function(e){if(e.target===$('detailOverlay'))$('detailOverlay').classList.add('hidden');});$('saveNews').addEventListener('click',saveNewsAdmin);$('resetNews').addEventListener('click',resetNewsForm);$('refreshNews').addEventListener('click',function(){loadNewsAdmin(true);});$('modeRegisteredBtn').addEventListener('click',function(){setPublicRecapMode('terdaftar');});$('modeVerifiedBtn').addEventListener('click',function(){setPublicRecapMode('terverifikasi');});document.querySelectorAll('.navbtn').forEach(function(b){b.addEventListener('click',function(){setTab(b.dataset.tab);});});$('resultBranch').addEventListener('change',function(){if(editingResultKey&&editingResultKey.branch!==$('resultBranch').value)editingResultKey=null;fillCategorySelect();});$('saveResult').addEventListener('click',saveResult);$('clearResult').addEventListener('click',clearResultForm);$('refreshResults').addEventListener('click',function(){loadResults(true);});if($('refreshRequests'))$('refreshRequests').addEventListener('click',loadData);
+// Control Center: download, load Apps Script, editor line numbers and word search.
+['devopsEditor','devopsBackendEditor'].forEach(function(id){var g=id==='devopsEditor'?'devopsHtmlGutter':'devopsGsGutter';var el=$(id);if(el){el.addEventListener('input',function(){devOpsLineNumbers(id,g);});el.addEventListener('scroll',function(){var gut=$(g);if(gut)gut.scrollTop=el.scrollTop;});}});
+[['devopsSearchHtml','devopsFindHtmlPrev','devopsFindHtmlNext','devopsSearchHtmlCount','devopsEditor'],['devopsSearchGs','devopsFindGsPrev','devopsFindGsNext','devopsSearchGsCount','devopsBackendEditor']].forEach(function(x){$(x[0]).addEventListener('input',function(){var id=x[4],q=this.value,src=$(id).value.toLowerCase(),needle=q.toLowerCase(),n=0,p=0;if(needle)while((p=src.indexOf(needle,p))!==-1){n++;p+=Math.max(1,needle.length);}$(x[3]).textContent=n+' hasil';$(id).dataset.findIndex='-1';});$(x[1]).addEventListener('click',function(){devOpsFind(x[4],x[0],x[3],-1);});$(x[2]).addEventListener('click',function(){devOpsFind(x[4],x[0],x[3],1);});});
+if($('devopsLoadBackend'))$('devopsLoadBackend').addEventListener('click',devOpsLoadBackend);
+if($('devopsDownloadBackend'))$('devopsDownloadBackend').addEventListener('click',function(){devOpsDownloadFile('gas/backend/Kode.js','Kode.js');});
+if($('devopsDownloadIndex'))$('devopsDownloadIndex').addEventListener('click',function(){devOpsDownloadFile('index.html','index.html');});
+if($('devopsDownloadAdmin'))$('devopsDownloadAdmin').addEventListener('click',function(){devOpsDownloadFile('admin.html','admin.html');});
+
 fillBranchSelects();if(token&&['Tyo','Sochibul','Fuad'].indexOf(user)>=0){showApp();loadData();}else{token='';user='';sessionStorage.removeItem('porseni_admin_token');sessionStorage.removeItem('porseni_admin_user');showLogin();}
 })();
+
+
 </script>
 </body></html>
