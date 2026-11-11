@@ -2419,7 +2419,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{
 <div class="st"><span class="n">1</span><div><b>Ikuti sosialisasi PORSENI 2026</b><p>18 Oktober 2026.</p></div></div>
 <div class="st"><span class="n">2</span><div><b>Ikuti Technical Meeting 1</b><p>25 Oktober 2026.</p></div></div>
 <div class="st"><span class="n">3</span><div><b>Pelajari Juknis PORSENI 2026</b><p>Dapat diunduh di bagian Dokumen Penting.</p></div></div>
-<div class="st"><span class="n">4</span><div><b>Daftar kontingen dengan mengisi formulir pada <a href="#daftar-kontingen">tautan pendaftaran di bawah bagian ini</a></b>
+<div class="st"><span class="n">4</span><div><b>Daftar kontingen dengan mengisi formulir pada tombol dibawah</a></b>
 <p>Siapkan berkas berikut untuk diunggah:</p>
 <ol><li>Pakta integritas</li><li>Bukti pembayaran uang mandat</li><li>SP (Surat Pengesahan) / berita acara Rapat Anggota Tahunan PR/PK IPNU-IPPNU</li><li>KTP ketua kontingen</li></ol></div></div>
 <div class="st"><span class="n">5</span><div><b>Konfirmasi cabang lomba yang akan diikuti</b><p>Pada formulir pendaftaran kontingen, paling lambat 20 November 2026.</p></div></div>
@@ -2532,8 +2532,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{
     <label class="fld"><span>SP / berita acara Rapat Anggota Tahunan PR/PK *</span><input type="file" name="f_sp" accept="application/pdf,.pdf" required></label>
     <p class="pgsub" style="margin:0 0 12px">Setelah mengunggah SP, lengkapi berkas berikut. KTP dan pas foto dapat diunggah sebagai JPG, JPEG, PNG, WEBP, HEIC, atau HEIF. WEBP dan HEIC/HEIF akan dikonversi ke JPEG sebelum dikirim. Pakta integritas dan SP tetap berupa PDF. Seluruh berkas digabung otomatis ke PDF resmi, sehingga pada hari-H daftar ulang cukup dengan tanda tangan manual.</p>
     <label class="fld"><span>KTP ketua kontingen *</span><input type="file" name="f_ktp" accept="image/png,image/jpeg,image/webp,image/heic,image/heif,.png,.jpg,.jpeg,.webp,.heic,.heif" required></label>
-    <label class="fld"><span>Pakta integritas bertanda tangan *</span><input type="file" name="f_pakta" accept="application/pdf,.pdf" required></label>
-    <p class="hint">Kolom tanda tangan tidak perlu diunggah. Area tanda tangan Ketua Kontingen, Ketua IPNU, dan Ketua IPPNU tetap tersedia pada formulir cetak untuk ditandatangani secara manual.</p>
+    <label class="fld"><span>Pakta integritas yang telah dicetak dan bertanda tangan + materai lalu discan*</span><input type="file" name="f_pakta" accept="application/pdf,.pdf" required></label>
     <label class="chk" style="margin:6px 0 14px"><input type="checkbox" name="setuju" required><span>Data sudah benar dan kontingen bersedia mengikuti seluruh peraturan PORSENI 2026.</span></label>
     <button class="btn" type="submit" id="fk-btn">Daftar</button>
   </form>
@@ -2637,11 +2636,11 @@ var DOC_GROUPS=[
  {title:"PETUNJUK KEGIATAN",description:"Dokumen acuan dan ketentuan resmi pelaksanaan PORSENI 2026.",items:[
   {i:"📑",t:"Term of Reference (TOR) Kegiatan",d:"Kerangka acuan kegiatan PORSENI 2026",u:"https://drive.google.com/uc?export=download&id=f1UuoaNBKZ7uZ2uP9bYzKquC-JvrZWttA7/view?usp=drive_link"},
   {i:"📘",t:"Petunjuk Teknis (Juknis)",d:"Ketentuan dan aturan setiap cabang lomba",u:"https://drive.google.com/uc?export=download&id=14SHGdE0fhn-cjmaNIpYK06ElIZnVtYX_/view?usp=drive_link"},
-  {i:"🏛️",t:"SK Kepanitiaan PORSENI 2026",d:"Surat keputusan kepanitiaan",u:"https://drive.google.com/uc?export=download&id=1QC9fJUUolR2iHUkEEVwLIM3wBelw-E2R/view?usp=drive_link"}
+  {i:"🏛️",t:"SK Kepanitiaan PORSENI 2026",d:"Surat keputusan susunan kepanitiaan PORSENI 2026",u:"https://drive.google.com/uc?export=download&id=1QC9fJUUolR2iHUkEEVwLIM3wBelw-E2R/view?usp=drive_link"}
  ]},
  {title:"BERKAS",description:"Format dokumen yang perlu disiapkan dan dilengkapi oleh kontingen.",items:[
-  {i:"🤝",t:"Pakta Integritas",d:"Format pakta integritas kontingen",u:"https://drive.google.com/uc?export=download&id=1rZmdav5JndLXDP-9PEQXie5Q63Anr3L1/view?usp=sharing"},
-  {i:"📨",t:"Contoh Surat Mandat",d:"Format surat mandat atau surat tugas dari kontingen",u:"https://docs.google.com/document/d/1-XPO_4ur3E2Z1lgtqzyTXElMVuKf2jRS/export?format=docx"},
+  {i:"🤝",t:"Pakta Integritas",d:"Silahkan cetak Pakta Integritas lalu diisi manual dan tanda tangan bermaterai lalu scan dalam format PDF",u:"https://drive.google.com/uc?export=download&id=1rZmdav5JndLXDP-9PEQXie5Q63Anr3L1/view?usp=sharing"},
+  {i:"📨",t:"Contoh Surat Mandat",d:"Format surat mandat atau surat tugas dari kontingen (boleh edit langsung upload)",u:"https://docs.google.com/document/d/1-XPO_4ur3E2Z1lgtqzyTXElMVuKf2jRS/export?format=docx"},
  ]}
 ];
 function renderDocs(){
