@@ -5,6 +5,7 @@
  */
 var PDF_TTD_KOOR_ID = '1fM24qlCUGcKMwjtnGdLr8eDWH6pmpL9b';
 var PDF_TTD_SEKRETARIAT_ID = '1CCuOOo6KzkX5kQbZjmAp1KRZ55qCcVwC';
+var PDF_STEMPEL_PANITIA_ID = '1ITYlMp7nb9pIUOiL53J469Q6uhfnzEzT';
 var NOTIFY = 'fuadsyafi62@gmail.com, wahyu.tyo242@gmail.com, shochibul.789@gmail.com, porsenipatebon@gmail.com';
 var SENDER_EMAIL = 'porsenipatebon@gmail.com';
 var SENDER_NAME = 'Panitia PORSENI 2026';
@@ -492,7 +493,7 @@ function adminDevOpsWorkflowRuns_(d){
  requireDevOpsTyo_(d.token);var c=devOpsRequireConfig_(),workflow=PORSENI_DEVOPS_WORKFLOW_FILE_;
  var endpoint='/repos/'+encodeURIComponent(c.config.owner)+'/'+encodeURIComponent(c.config.repo)+'/actions/workflows/'+encodeURIComponent(workflow)+'/runs?branch='+encodeURIComponent(c.config.branch)+'&per_page=8';
  var data=devOpsApi_('GET',endpoint,null,c.token,false).data||{},rows=data.workflow_runs||[];
- return {ok:true,workflow:workflow,branch:c.config.branch,actionsUrl:'https://github.com/'+encodeURIComponent(c.config.owner)+'/'+encodeURIComponent(c.config.repo)+'/actions/workflows/'+encodeURIComponent(workflow),runs:rows.map(function(r){return {id:r.id,name:r.name||r.display_title||'PORSENI Apps Script',status:r.status||'',conclusion:r.conclusion||'',event:r.event||'',branch:r.head_branch||'',sha:String(r.head_sha||'').slice(0,7),createdAt:r.created_at||'',updatedAt:r.updated_at||'',url:r.html_url||''};})};
+ return {ok:true,workflow:workflow,branch:c.config.branch,actionsUrl:'https://github.com/'+encodeURIComponent(c.config.owner)+'/'+encodeURIComponent(c.config.repo)+'/actions/workflows/'+encodeURIComponent(workflow),runs:rows.map(function(r){return {id:r.id,runNumber:r.run_number||'',name:r.name||r.display_title||'PORSENI Apps Script',status:r.status||'',conclusion:r.conclusion||'',event:r.event||'',branch:r.head_branch||'',sha:String(r.head_sha||'').slice(0,7),createdAt:r.created_at||'',updatedAt:r.updated_at||'',url:r.html_url||'',actor:r.actor&&r.actor.login||'',attempt:r.run_attempt||1};})};
 }
 
 function adminSecurityLogs_(token){
@@ -544,6 +545,7 @@ function doPost(e){
   if(d.action==='admin_get_results')return out(adminGetResults_(d.token));
   if(d.action==='admin_save_result')return out(adminSaveResult_(d));
   if(d.action==='admin_delete_result')return out(adminDeleteResult_(d));
+  if(d.action==='admin_reset_championship_results')return out(adminResetChampionshipResults_(d));
   if(d.action==='admin_finalize_championship')return out(adminFinalizeChampionship_(d));
    if(d.action==='admin_test_championship_pdf')return out(adminTestChampionshipPdf_(d));
   if(d.action==='admin_resend_final_results')return out(adminResendFinalResults_(d));
@@ -1275,6 +1277,46 @@ function adminDeleteResult_(d){
   return {ok:true,message:'Hasil kejuaraan dihapus.',results:getChampionshipResults_(),finalization:getChampionshipFinalization_()};
  }finally{lock.releaseLock();}
 }
+
+/* ===== RESET HASIL KEJUARAAN — KHUSUS ADMIN TYO ===== */
+function adminResetChampionshipResults_(d){
+ var admin=requireResetAdminTyo_(d.token);
+ var scope=String(d.scope||''),branch=String(d.cabang||'').trim();
+ var expected=scope==='all'?'RESET SELURUH HASIL KEJUARAAN PORSENI 2026':'RESET HASIL '+branch.toUpperCase();
+ if(scope!=='all'&&scope!=='branch')throw new Error('Lingkup reset hasil tidak valid.');
+ if(scope==='branch'&&(!branch||!KAT[branch]))throw new Error('Cabang lomba tidak valid.');
+ if(String(d.confirmText||'')!==expected)throw new Error('Konfirmasi tidak cocok. Reset hasil dibatalkan.');
+ var lock=LockService.getScriptLock();lock.waitLock(30000);
+ try{
+  var ss=SpreadsheetApp.getActiveSpreadsheet(),sh=ss&&ss.getSheetByName(RESULT_SHEET);
+  if(!sh||sh.getLastRow()<2)throw new Error('Belum ada hasil kejuaraan untuk direset.');
+  var values=sh.getDataRange().getValues(),headers=values[0],bi=headers.indexOf('Cabang Lomba');
+  if(bi<0)throw new Error('Kolom Cabang Lomba tidak ditemukan. Reset dibatalkan.');
+  var rowsToDelete=[];
+  for(var i=1;i<values.length;i++){
+   if(scope==='all'||normalizeEvent_(values[i][bi])===normalizeEvent_(branch))rowsToDelete.push(i+1);
+  }
+  if(!rowsToDelete.length)throw new Error(scope==='all'?'Tidak ada hasil kejuaraan.':'Belum ada hasil pada cabang '+branch+'.');
+  rowsToDelete.reverse().forEach(function(row){sh.deleteRow(row);});
+  // Hasil berubah: nonaktifkan PDF final dan buka kembali status finalisasi.
+  retireChampionshipPdf_();
+  var props=PropertiesService.getScriptProperties();
+  props.setProperty(CHAMPIONSHIP_FINALIZATION_PROPERTY,JSON.stringify({
+   finalized:false,finalizedAt:'',finalizedBy:'',
+   lastReopenedAt:Utilities.formatDate(new Date(),Session.getScriptTimeZone(),'dd-MM-yyyy HH:mm:ss'),
+   lastReopenedBy:admin.user||'Admin',
+   reason:scope==='all'?'Seluruh hasil kejuaraan direset.':'Hasil cabang '+branch+' direset.'
+  }));
+  var label=scope==='all'?'SELURUH HASIL KEJUARAAN':'HASIL CABANG '+branch;
+  adminAudit_(admin,'RESET HASIL KEJUARAAN', 'hasil','',label,'Menghapus '+rowsToDelete.length+' baris hasil kejuaraan.');
+  logSecurityEvent_(admin.user,'RESET HASIL KEJUARAAN','BERHASIL',label+'; baris dihapus: '+rowsToDelete.length);
+  return {ok:true,message:scope==='all'?'Seluruh hasil kejuaraan berhasil direset.':'Hasil kejuaraan cabang '+branch+' berhasil direset.',deleted:rowsToDelete.length,results:getChampionshipResults_(),finalization:getChampionshipFinalization_()};
+ }catch(err){
+  logSecurityEvent_(admin.user,'RESET HASIL KEJUARAAN','GAGAL',String(err&&err.message||err));
+  throw err;
+ }finally{lock.releaseLock();}
+}
+
 function adminSendEmail_(d){
  var admin=requireAdmin_(d.token),type=String(d.type||''),status=String(d.status||''),note=String(d.note||'').trim().slice(0,1000);
  if(type!=='kontingen'&&type!=='cabang')throw new Error('Jenis data tidak valid.');
@@ -3406,6 +3448,33 @@ function appendDriveSignature_(cell, fileId, maxWidth, maxHeight) {
 }
 
 
+/**
+ * Menambahkan stempel panitia pada area tanda tangan sekretariat.
+ * Stempel ditempatkan dalam paragraf yang sama dengan tanda tangan agar
+ * tampil berdampingan dan masuk ke area tanda tangan, bukan di bawah nama.
+ */
+function appendDriveStampBesideSignature_(signatureImage, fileId, maxWidth, maxHeight) {
+  if (!signatureImage) throw new Error('Gambar tanda tangan sekretariat tidak ditemukan.');
+  if (!fileId) throw new Error('ID Google Drive stempel panitia belum diisi.');
+
+  var stampFile = DriveApp.getFileById(fileId);
+  if (stampFile.isTrashed()) throw new Error('File stempel panitia berada di Trash Google Drive.');
+  var stampBlob = stampFile.getBlob();
+  if (stampBlob.getContentType() !== 'image/png') {
+    throw new Error('Stempel panitia harus berupa file PNG.');
+  }
+
+  var paragraph = signatureImage.getParent().asParagraph();
+  var stamp = paragraph.appendInlineImage(stampBlob);
+  var width = stamp.getWidth();
+  var height = stamp.getHeight();
+  var ratio = Math.min(maxWidth / width, maxHeight / height, 1);
+  stamp.setWidth(Math.round(width * ratio));
+  stamp.setHeight(Math.round(height * ratio));
+  return stamp;
+}
+
+
 function createBranchRegistrationPdf_(d, folder) {
 
   var doc = pdfNewDoc_('TEMP PORSENI CABANG ' + d.reg, 0);
@@ -3625,11 +3694,19 @@ appendDriveSignature_(
 );
 
 // ===== TANDA TANGAN SEKRETARIAT =====
-appendDriveSignature_(
+var sekretariatSignatureImage = appendDriveSignature_(
   sg.getCell(1, 1),
   PDF_TTD_SEKRETARIAT_ID,
-  180,
-  85
+  145,
+  75
+);
+
+// Stempel berada di samping tanda tangan sekretariat, masuk ke area tanda tangan.
+appendDriveStampBesideSignature_(
+  sekretariatSignatureImage,
+  PDF_STEMPEL_PANITIA_ID,
+  62,
+  62
 );
 
   w.para(
