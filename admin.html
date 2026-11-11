@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive"><title>Portal Panitia | PORSENI 2026</title>
+<link rel="icon" type="image/png" href="assets/images/favicon-porseni.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0b2d72;--blue:#0a63c9;--cyan:#12a9e8;--orange:#f7941d;--yellow:#ffc20e;--red:#e8312f;--ink:#12254b;--muted:#7182a0;--line:#e1eaf7;--bg:#f2f6fc;--white:#fff;--green:#16794b;--amber:#9b6500;--danger:#b42318;--shadow:0 14px 38px rgba(11,45,114,.10)}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 5% 0%,rgba(247,148,29,.13),transparent 28rem),radial-gradient(circle at 95% 8%,rgba(18,169,232,.13),transparent 32rem),var(--bg);color:var(--ink);font:500 14px/1.5 'DM Sans',sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer}.hidden{display:none!important}.muted{color:var(--muted)}
+.login-wrap{min-height:100vh;display:grid;place-items:center;padding:22px;background:radial-gradient(circle at 12% 15%,rgba(255,194,14,.22),transparent 30%),radial-gradient(circle at 90% 90%,rgba(18,169,232,.2),transparent 32%),var(--bg)}.login-card{width:min(460px,100%);position:relative;overflow:hidden;background:#fff;border:1px solid #e5edf8;border-radius:28px;padding:34px;box-shadow:0 24px 70px rgba(11,45,114,.16)}.login-card:before{content:"";position:absolute;left:0;right:0;top:0;height:8px;background:linear-gradient(90deg,var(--red),var(--orange),var(--yellow),var(--blue),var(--cyan))}.login-brand{display:flex;gap:16px;align-items:center;margin-bottom:24px}.login-brand img{width:66px;height:110px;object-fit:contain}.eyebrow{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);font-weight:800}.login-card h1{font:800 24px/1.2 Manrope;margin:5px 0;color:var(--navy)}.login-card .motto{color:#a35a00;font-style:italic;font-weight:700;margin:0}.field{display:grid;gap:7px;margin:15px 0}.field label{font-size:12px;font-weight:800;color:#40516a}.field input,.field select,.field textarea{width:100%;border:1px solid #d4e0f0;border-radius:12px;padding:11px 13px;background:#fff;color:var(--ink);outline:none}.field input:focus,.field select:focus,.field textarea:focus{border-color:#3980d2;box-shadow:0 0 0 3px #e6f1ff}.btn{border:0;border-radius:12px;padding:11px 15px;font-weight:800;background:linear-gradient(100deg,var(--blue),var(--cyan));color:#fff;box-shadow:0 7px 16px rgba(10,99,201,.18)}.btn:hover{filter:brightness(1.06);transform:translateY(-1px)}.btn:disabled{opacity:.55;cursor:wait;transform:none}.btn.light{background:#eaf2ff;color:var(--navy);box-shadow:none}.btn.warm{background:linear-gradient(100deg,var(--orange),var(--yellow));color:#422500;box-shadow:0 7px 16px rgba(247,148,29,.15)}.btn.danger{background:#fff0ef;color:var(--danger);box-shadow:none}.btn.full{width:100%;padding:13px}.error{background:#fff0ef;color:var(--danger);padding:10px 12px;border-radius:10px;margin-top:12px;font-size:13px}.login-foot{margin:18px 0 0;font-size:11px;line-height:1.6;color:var(--muted)}
+.shell{min-height:100vh}.topbar{height:76px;background:rgba(255,255,255,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 max(22px,calc((100vw - 1480px)/2));position:sticky;top:0;z-index:10}.topbrand{display:flex;align-items:center;gap:12px;font:800 15px Manrope;color:var(--navy)}.topbrand img{height:52px;width:auto;max-width:45px;object-fit:contain}.topbrand small{display:block;color:var(--muted);font:700 10px 'DM Sans';letter-spacing:.12em}.top-right{display:flex;align-items:center;gap:10px}.admin-pill{padding:7px 12px;border-radius:999px;background:linear-gradient(90deg,#fff3d9,#eaf4ff);color:var(--navy);font-size:12px;font-weight:800;border:1px solid #e8eaf1}.layout{max-width:1480px;margin:auto;padding:28px;display:grid;grid-template-columns:230px minmax(0,1fr);gap:24px}.sidebar{align-self:start;position:sticky;top:100px;padding:14px;background:rgba(255,255,255,.78);border:1px solid var(--line);border-radius:20px;box-shadow:0 8px 22px rgba(11,45,114,.05)}.side-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#91a0b4;font-weight:800;margin:7px 10px 10px}.navbtn{width:100%;border:0;background:transparent;color:#52627a;text-align:left;padding:12px;border-radius:12px;font-weight:800;display:flex;justify-content:space-between;align-items:center;margin:4px 0}.navbtn.active{background:linear-gradient(100deg,#e8f1ff,#fff4e4);color:var(--navy);box-shadow:inset 3px 0 var(--orange)}.navbtn small{background:#fff;border-radius:20px;padding:2px 8px;color:#60718b}.main{min-width:0}.page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin:0 0 20px;padding:20px 22px;border-radius:22px;background:linear-gradient(112deg,#09265f 0%,#0b4b9d 58%,#12a9e8 100%);color:#fff;box-shadow:0 16px 34px rgba(11,45,114,.16);position:relative;overflow:hidden}.page-head:after{content:"";position:absolute;width:210px;height:210px;border:25px solid rgba(255,255,255,.09);border-radius:50%;right:-55px;top:-115px}.page-head .eyebrow{color:#ffdc8a}.page-head h1{font:800 25px/1.2 Manrope;margin:5px 0}.page-head p{margin:5px 0 0;color:#d9ebff}.page-head .btn{position:relative;z-index:1}.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px}.metric{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px 18px;box-shadow:0 6px 18px rgba(11,45,114,.04);position:relative;overflow:hidden}.metric:after{content:"";position:absolute;right:-18px;bottom:-25px;width:68px;height:68px;border-radius:50%;background:rgba(18,169,232,.09)}.metric span{display:block;color:var(--muted);font-size:11px;font-weight:800}.metric strong{display:block;font:800 27px Manrope;margin-top:6px;color:var(--navy)}.panel{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 6px 20px rgba(11,45,114,.045);overflow:hidden}.recap-grid{display:grid;grid-template-columns:1fr 1.3fr;gap:14px;margin:0 0 18px}.recap-panel{padding:18px}.recap-head{display:flex;justify-content:space-between;align-items:center}.recap-head h3{font:800 14px Manrope;margin:4px 0 0;color:var(--navy)}.recap-icon{width:38px;height:38px;border-radius:13px;background:linear-gradient(135deg,#fff0d7,#e8f4ff);color:var(--blue);display:grid;place-items:center;font-size:19px}.recap-number{display:block;font:800 36px Manrope;color:var(--green);margin:10px 0}.recap-list{display:grid;gap:7px;max-height:160px;overflow:auto}.recap-entry{padding:8px 10px;border-radius:9px;background:#f5f8fd;font-size:12px;display:flex;justify-content:space-between;gap:8px}.recap-entry b{color:var(--navy)}.recap-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:14px 0}.recap-stats div{padding:9px;background:#f5f8fd;border-radius:10px}.recap-stats b{display:block;font:800 19px Manrope;color:var(--navy)}.recap-stats small{font-size:9px;color:var(--muted)}.branch-mini{font-size:11px;color:#34445e}.branch-mini ul{margin:5px 0;padding-left:18px;display:grid;gap:5px}.branch-mini li{display:flex;justify-content:space-between;gap:8px}.branch-mini em{font-style:normal;color:var(--muted);white-space:nowrap}
+.toolbar{display:flex;gap:9px;align-items:center;padding:14px;border-bottom:1px solid var(--line);flex-wrap:wrap}.toolbar input,.toolbar select{border:1px solid #dce5f1;border-radius:11px;padding:10px 12px;background:#fff;color:var(--ink)}.toolbar input{flex:1;min-width:190px}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:720px}th,td{text-align:left;padding:12px 14px;border-bottom:1px solid #edf1f7;vertical-align:middle}th{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#8390a3;background:#f8faff}td{font-size:12px}tbody tr:hover{background:#f8fbff}.namecell{font-weight:800;color:#233b61}.subcell{font-size:10px;color:var(--muted);margin-top:3px}.status{display:inline-flex;padding:5px 9px;border-radius:30px;font-size:10px;font-weight:800;white-space:nowrap;background:#f1f4f8;color:#65748a}.status.ok{background:#e8f6ee;color:var(--green)}.status.wait{background:#fff5df;color:var(--amber)}.status.revise{background:#fff0e5;color:#a44d13}.status.no{background:#ffeded;color:var(--danger)}.openbtn{border:1px solid #dbe4f1;background:#fff;color:var(--blue);border-radius:9px;padding:7px 10px;font-size:11px;font-weight:800}.empty{padding:38px;text-align:center;color:var(--muted)}.footnote{padding:11px 14px;color:#8996a8;font-size:10px}.overlay{position:fixed;inset:0;background:rgba(8,22,46,.68);backdrop-filter:blur(7px);z-index:50;display:flex;justify-content:center;align-items:center;padding:18px}.drawer{height:min(94vh,1160px);width:min(1120px,98vw);background:#fff;overflow:auto;border-radius:22px;box-shadow:0 28px 90px rgba(0,0,0,.32);border:1px solid rgba(255,255,255,.7)}.drawer-head{position:sticky;top:0;background:linear-gradient(110deg,#102b58,#0a63c9,#12a9e8);color:#fff;padding:17px 24px;display:flex;justify-content:space-between;align-items:center;z-index:2}.drawer-head h2{font:800 19px Manrope;margin:0;color:#fff}.close{border:0;background:rgba(255,255,255,.18);border-radius:10px;width:38px;height:38px;font-size:24px;color:#fff}.drawer-body{padding:22px 25px 30px}.detail-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0;padding:7px;background:#f2f6fc;border-radius:13px;position:sticky;top:72px;z-index:1}.detail-tab{border:0;border-radius:9px;padding:10px 14px;background:transparent;color:#52627a;font-size:11px;font-weight:800;cursor:pointer}.detail-tab.active{background:#fff;color:#075bb5;box-shadow:0 2px 9px rgba(20,50,90,.1)}.detail-tab-panel{display:none}.detail-tab-panel.active{display:block}.detail-status-card{padding:15px;border:1px solid var(--line);border-radius:14px;background:#f8fbff;margin:12px 0}.detail-status-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.detail-status-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.detail-status-actions .btn{flex:1;min-width:150px}.detail-title{font:800 21px Manrope;color:var(--navy);margin:0 0 5px}.detail-meta{font-size:11px;color:var(--muted);margin-bottom:12px}.section-title{font:800 11px Manrope;color:#354b6b;margin:19px 0 10px;padding-bottom:7px;border-bottom:1px solid var(--line);letter-spacing:.04em}.detail-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0}.field.compact{margin:0}.field.compact input,.field.compact textarea{padding:9px 11px;font-size:12px}.field.compact textarea{min-height:62px}.file-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.file-card{padding:12px;border:1px solid var(--line);border-radius:12px;background:#fbfdff;min-width:0}.file-link{display:block;color:var(--blue);font-weight:800;text-decoration:none;font-size:11px;overflow-wrap:anywhere;margin-bottom:8px}.file-card input{width:100%;font-size:10px}.review-box{margin-top:20px;padding:16px;background:#f6f9fd;border:1px solid var(--line);border-radius:15px}.review-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:13px}.actions .btn{flex:1;min-width:140px}.toast{position:fixed;bottom:20px;right:20px;z-index:80;padding:12px 16px;background:#142b4e;color:#fff;border-radius:12px;box-shadow:var(--shadow);max-width:min(420px,calc(100vw - 40px));font-weight:700}.result-layout{display:grid;grid-template-columns:minmax(300px,.85fr) minmax(0,1.15fr);gap:16px}.result-form{padding:18px}.result-list{display:grid;gap:9px;padding:14px}.result-item{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px;border:1px solid var(--line);border-radius:13px;background:#fff}.result-item b{display:block;color:var(--navy)}.result-item small{display:block;color:var(--muted);font-size:10px}.result-buttons{display:flex;gap:6px}.result-buttons button{border:1px solid var(--line);background:#f7faff;color:var(--blue);border-radius:8px;padding:6px 8px;font-size:10px;font-weight:800}.note-banner{padding:11px 13px;border-radius:11px;background:#fff5df;color:#805400;font-size:11px;margin-top:12px}
+@media(max-width:1050px){.layout{grid-template-columns:1fr;padding:18px}.sidebar{position:static;display:flex;gap:7px;overflow:auto}.side-label{display:none}.navbtn{width:auto;white-space:nowrap}.recap-grid{grid-template-columns:1fr}.result-layout{grid-template-columns:1fr}}
+@media(max-width:650px){.topbar{height:64px;padding:0 13px}.topbrand{font-size:12px}.topbrand img{height:42px}.admin-pill{display:none}.layout{padding:12px}.page-head{padding:16px;align-items:flex-start;flex-direction:column}.page-head h1{font-size:21px}.cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.metric{padding:12px}.metric strong{font-size:22px}.recap-stats{grid-template-columns:repeat(2,1fr)}.detail-grid,.file-list,.review-grid{grid-template-columns:1fr}.drawer-body{padding:15px}.drawer{height:96vh}.login-card{padding:26px}.toolbar{padding:10px}.toolbar input{min-width:100%}.result-item{align-items:flex-start;flex-direction:column}}
+
+.finalization-box{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:16px 18px;margin:0 0 14px;border-radius:16px;border:1px solid #f0d79d;background:#fff8e8;color:#704900}.finalization-box.is-final{background:#eaf8ef;border-color:#b9e5c8;color:#14532d}.finalization-box b{font:800 12px Manrope;letter-spacing:.04em}.finalization-box p{font-size:11px;line-height:1.5;margin:5px 0 0}.finalization-box .btn{flex:none}.finalization-box .btn.danger{background:#fff0ef;color:#b42318;box-shadow:none}@media(max-width:650px){.finalization-box{align-items:stretch;flex-direction:column}.finalization-box .btn{width:100%}}
+
+.change-request-placeholder{padding:16px;border-bottom:1px solid var(--line)}.result-item .field.compact{margin:8px 0}.result-item textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:9px}
+.final-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.final-actions .btn{white-space:normal}@media(max-width:650px){.final-actions{display:grid;grid-template-columns:1fr}.final-actions .btn{width:100%}}
+.test-actions{display:flex;gap:7px;flex-wrap:wrap;align-items:center;justify-content:flex-end}.test-actions .btn{font-size:11px;padding:9px 11px;white-space:nowrap}@media(max-width:900px){.test-actions{justify-content:flex-start}.page-head{align-items:flex-start;flex-wrap:wrap}}@media(max-width:600px){.test-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%}.test-actions .btn{width:100%;white-space:normal}.test-actions [data-test-pdf="all"]{grid-column:1/-1}}
+
+.test-preview-frame{width:min(1180px,96vw);height:min(94vh,900px);background:#fff;border-radius:18px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 28px 90px rgba(0,0,0,.35)}.test-preview-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 18px;background:linear-gradient(110deg,#102b58,#0a63c9,#12a9e8);color:#fff}.test-preview-head h2{font:800 16px Manrope;margin:0}.test-preview-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.test-preview-tools select{border:1px solid #dbe7f7;border-radius:9px;padding:8px;max-width:260px}.test-preview-frame iframe{width:100%;height:100%;border:0;background:#eef2f8}.test-preview-status{padding:9px 16px;background:#f5f8fd;color:#43536c;font-size:12px;border-bottom:1px solid var(--line)}@media(max-width:700px){.test-preview-frame{width:100%;height:96vh}.test-preview-head{align-items:flex-start;flex-direction:column}.test-preview-tools{width:100%}.test-preview-tools select{flex:1;min-width:0}}
+
+.log-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.activity-log-wrap{max-height:560px;overflow:auto;border:1px solid #e4ebf5;border-radius:14px;scroll-behavior:smooth}
+.activity-log-table{min-width:980px}
+.activity-log-table thead th{position:sticky;top:0;z-index:2;background:#f3f7fd;box-shadow:0 1px 0 #dce6f3}
+.activity-log-table td{vertical-align:top;line-height:1.5;white-space:normal}
+.activity-log-table td:first-child{min-width:150px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.activity-log-table td:nth-child(2){min-width:150px}
+.activity-log-table td:nth-child(3){min-width:190px;font-weight:700;color:#173b78}
+.activity-log-table td:last-child{min-width:280px;max-width:480px;overflow-wrap:anywhere}
+.activity-log-table tbody tr:nth-child(even){background:#f9fbff}
+@media(max-width:700px){.log-tools{width:100%}.log-tools button{flex:1}}
+.change-attachments{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}.change-attachments b{width:100%;font-size:12px}.change-attachments a{display:inline-flex;padding:7px 10px;border:1px solid var(--line);border-radius:9px;background:#f5f9ff;color:#1556a5;font-weight:700;font-size:11px;text-decoration:none}
+
+.pagination-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:12px 14px;border-top:1px solid var(--line);font-size:12px;color:#64748b}
+.pagination-actions{display:flex;align-items:center;gap:7px}
+.pagination-actions button{border:1px solid #d7e2f2;background:#fff;color:#12336b;border-radius:9px;padding:8px 12px;font-weight:700;cursor:pointer}
+.pagination-actions button:disabled{opacity:.4;cursor:not-allowed}
+.pagination-actions .page-indicator{min-width:88px;text-align:center;font-weight:700;color:#12336b}
+@media(max-width:600px){.pagination-bar{align-items:flex-start}.pagination-actions{width:100%;justify-content:space-between}}
+
+/* Control Center editor upgrade */
+.devops-panel-wide{width:100%;max-width:none!important}
+#devopsPanel .panel{width:100%;max-width:none}
+.code-tools{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin:8px 0}
+.code-tools input{flex:1;min-width:180px;border:1px solid #d5dfec;border-radius:9px;padding:9px 11px}
+.code-tools .code-count{font-size:11px;color:#52627a;min-width:90px}
+.code-editor-shell{display:grid;grid-template-columns:54px minmax(0,1fr);height:620px;min-height:420px;max-height:78vh;border:1px solid #cbd8e8;border-radius:12px;overflow:hidden;background:#0d1728}
+.code-gutter{margin:0;padding:12px 10px 12px 0;overflow:hidden;text-align:right;background:#142238;color:#8193ad;border-right:1px solid #263a56;font:12px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre;user-select:none}
+.code-editor-shell textarea{width:100%;height:100%;min-height:0;resize:none;border:0!important;border-radius:0!important;outline:none!important;box-shadow:none!important;padding:12px 14px!important;background:#0d1728!important;color:#e7efff!important;font:12px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace!important;white-space:pre!important;overflow:auto;tab-size:2}
+.code-editor-shell textarea:focus{box-shadow:none!important}
+.devops-file-actions{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.workflow-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin:12px 0}
+.workflow-metric{border:1px solid #e1eaf7;border-radius:11px;padding:11px;background:#fbfdff}
+.workflow-metric b{display:block;color:#102b58;font:800 18px Manrope}
+.workflow-metric small{font-size:10px;color:#7182a0}
+.workflow-run-card{border:1px solid #e1eaf7;border-radius:12px;padding:13px;background:#fff}
+.workflow-run-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.workflow-run-meta{font-size:11px;color:#7182a0;line-height:1.7;margin-top:7px}
+.workflow-state{display:inline-flex;padding:5px 9px;border-radius:30px;font-size:10px;font-weight:900;background:#fff5df;color:#9b6500}
+.workflow-state.success{background:#e8f6ee;color:#16794b}.workflow-state.failure{background:#ffeded;color:#b42318}.workflow-state.running{background:#eaf2ff;color:#0a63c9}
+@media(max-width:700px){.code-editor-shell{grid-template-columns:42px minmax(0,1fr);height:480px}.workflow-summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+</style>
+</head>
+<body>
+<section id="loginView" class="login-wrap"><form id="loginForm" class="login-card">
+ <div class="login-brand"><img src="assets/images/logo-porseni.png" alt="Logo PORSENI" fetchpriority="high" decoding="async"><div><div class="eyebrow">PORSENI 2026 · PAC IPNU-IPPNU PATEBON</div><h1>Portal Panitia</h1><p class="motto">“Unitas Ad Gloriam”</p></div></div>
+ <p class="muted">Pilih nama petugas. Tyo menggunakan password pribadi yang berbeda; Sochibul dan Fuad menggunakan password admin bersama.</p>
+ <div class="field"><label for="adminUser">Akses portal sebagai</label><select id="adminUser" required><option value="">Pilih nama petugas…</option><option value="Tyo">Tyo</option><option value="Sochibul">Sochibul</option><option value="Fuad">Fuad</option></select></div>
+ <div class="field"><label for="password">Password akun petugas</label><input id="password" type="password" autocomplete="current-password" placeholder="Masukkan password akun petugas" required></div>
+ <button id="loginBtn" class="btn full" type="submit">Masuk ke Portal Panitia</button><div id="loginError" class="error hidden"></div>
+ <p class="login-foot">Akses khusus panitia. Gunakan password sesuai akun petugas. Password Tyo bersifat khusus dan tidak sama dengan password admin bersama. Jangan membagikan password atau sesi login. Aktivitas penting dicatat berdasarkan nama petugas yang dipilih.</p>
+</form></section>
+<section id="appView" class="shell hidden">
+ <header class="topbar"><div class="topbrand"><img src="assets/images/logo-porseni.png" alt="" fetchpriority="high" decoding="async"><span>PORTAL PANITIA<small>PORSENI 2026 · PATEBON</small></span></div><div class="top-right"><span class="admin-pill" id="adminIdentity">PETUGAS</span><button id="logoutBtn" class="btn light">Keluar</button></div></header>
+ <div class="layout"><aside class="sidebar"><div class="side-label">MENU PENGELOLAAN</div><button class="navbtn active" data-tab="kontingen">Data Kontingen <small id="navKont">0</small></button><button class="navbtn" data-tab="cabang">Data Cabang Lomba <small id="navCab">0</small></button><button class="navbtn" data-tab="berita">Kelola Berita <small>✎</small></button><button class="navbtn" data-tab="hasil">Hasil Kejuaraan <small>✦</small></button><button class="navbtn" data-tab="ujicetak">Uji Coba Cetak <small>▧</small></button><button class="navbtn" data-tab="log">Log Aktivitas <small>●</small></button><button class="navbtn hidden" id="devopsNav" data-tab="devops">Control Center <small>⚙</small></button></aside>
+ <main class="main">
+  <div class="page-head"><div><div class="eyebrow">PANEL KENDALI PORSENI 2026</div><h1 id="pageTitle">Data Kontingen</h1><p id="pageDesc">Kelola data, dokumen, dan proses verifikasi kontingen.</p></div><button id="refreshBtn" class="btn warm">↻ Muat ulang data</button></div>
+  <section class="panel recap-panel" id="registrationControlPanel" style="margin:0 0 18px;padding:18px">
+   <div class="recap-head"><div><div class="eyebrow">KONTROL PENDAFTARAN</div><h3 style="font:800 16px Manrope;color:var(--navy);margin:4px 0">Buka / Tutup Pendaftaran Manual</h3></div><span class="recap-icon">⚙</span></div>
+   <p class="muted" style="font-size:12px;margin:8px 0 14px">Jika dibuka manual, batas tanggal otomatis diabaikan. Pengaturan ini berlaku untuk formulir publik dan divalidasi kembali oleh server.</p>
+   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px">
+    <div style="padding:14px;border:1px solid var(--line);border-radius:14px"><b style="color:var(--navy)">Pendaftaran Kontingen</b><p id="regKontStatus" class="muted" style="font-size:12px;margin:5px 0 10px">Memuat status…</p><button type="button" class="btn" id="toggleRegKont">Memuat…</button></div>
+    <div style="padding:14px;border:1px solid var(--line);border-radius:14px"><b style="color:var(--navy)">Pendaftaran Cabang Lomba</b><p id="regCabStatus" class="muted" style="font-size:12px;margin:5px 0 10px">Memuat status…</p><button type="button" class="btn" id="toggleRegCab">Memuat…</button></div>
+    <div style="padding:14px;border:1px solid #f0c77b;border-radius:14px;background:#fffaf0"><b style="color:#854600">Mode Perbaikan Cabang Lomba</b><p id="regCabMaintenanceStatus" class="muted" style="font-size:12px;margin:5px 0 10px">Memuat status…</p><button type="button" class="btn" id="toggleRegCabMaintenance">Memuat…</button></div>
+   </div><small id="regControlMeta" class="muted" style="display:block;margin-top:10px">Status tanggal otomatis tetap berlaku saat kontrol manual ditutup.</small>
+  </section>
+  <div class="cards"><div class="metric"><span>Total pendaftaran</span><strong id="mTotal">0</strong></div><div class="metric"><span>Menunggu verifikasi</span><strong id="mWait">0</strong></div><div class="metric"><span>Terverifikasi</span><strong id="mOk">0</strong></div><div class="metric"><span>Perlu revisi / ditolak</span><strong id="mIssue">0</strong></div></div>
+  <section class="recap-grid" id="adminRecap">
+   <div class="panel recap-panel" id="recapKontPanel"><div class="recap-head"><div><div class="eyebrow">DATA TERKENDALI</div><h3>Kontingen Terverifikasi</h3></div><span class="recap-icon">✓</span></div><strong class="recap-number" id="recVerified">0</strong><div id="recVerifiedNames" class="recap-list">Belum ada kontingen terverifikasi.</div></div>
+   <div class="panel recap-panel" id="recapCabPanel"><div class="recap-head"><div><div class="eyebrow">DATA PESERTA</div><h3>Peserta & Status Berkas</h3></div><span class="recap-icon">◎</span></div><div class="recap-stats"><div><b id="recParticipants">0</b><small>Peserta terdata</small></div><div><b id="recBranchVerified">0</b><small>Terverifikasi</small></div><div><b id="recBranchWait">0</b><small>Menunggu</small></div><div><b id="recBranchIssue">0</b><small>Revisi / Ditolak</small></div></div><div id="recBranchList" class="recap-list"></div></div>
+  </section>
+  <section class="panel recap-panel hidden" id="publicRecapModePanel" style="margin:0 0 18px">
+   <div class="recap-head"><div><div class="eyebrow">PENGATURAN BERANDA</div><h3>Tampilan Peserta Cabang Lomba</h3></div><span class="recap-icon">⚙</span></div>
+   <p class="muted" style="font-size:12px;margin:8px 0 12px">Pilih data yang ditampilkan pada halaman utama website. Perubahan berlaku untuk semua pengunjung setelah data beranda dimuat ulang.</p>
+   <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+    <button type="button" class="btn warm" id="modeRegisteredBtn">A. Peserta dari Kontingen Terverifikasi</button>
+    <button type="button" class="btn light" id="modeVerifiedBtn">B. Berkas Cabang Lomba Terverifikasi</button>
+    <span id="publicRecapModeStatus" class="muted" style="font-size:11px">Mode aktif: memuat…</span>
+   </div>
+  </section>
+  <section id="recordsPanel" class="panel"><div class="toolbar"><input id="searchInput" type="search" placeholder="Cari nama kontingen atau nomor registrasi…"><select id="statusFilter"><option value="">Semua status</option><option>Menunggu Verifikasi</option><option>Terverifikasi</option><option>Perlu Revisi</option><option>Ditolak</option></select><button id="exportBtn" class="btn light">Unduh CSV</button></div><div class="table-wrap"><table><thead><tr id="recordsHeader"><th>Nama Kontingen / Registrasi</th><th>Asal PR / PK</th><th>Tanggal Pendaftaran</th><th>Status Verifikasi</th><th>Aksi</th></tr></thead><tbody id="tableBody"><tr><td colspan="5" class="empty">Memuat data…</td></tr></tbody></table></div><div id="tableFoot" class="footnote"></div><div id="tablePagination" class="pagination-bar"><span id="paginationInfo">Halaman 1</span><div class="pagination-actions"><button type="button" id="pagePrev" disabled>← Sebelumnya</button><span id="pageIndicator" class="page-indicator">1 / 1</span><button type="button" id="pageNext" disabled>Berikutnya →</button></div></div></section>
+<section id="newsAdminPanel" class="hidden"><section class="panel"><div class="eyebrow">PUBLIKASI WEBSITE</div><h2 style="font:800 18px Manrope;color:var(--navy);margin:5px 0">Kelola Kabar PORSENI</h2><p class="muted" style="font-size:12px">Tulis berita dengan format teks dan sisipkan beberapa foto langsung dari komputer. Foto akan disimpan di Google Drive.</p><div class="field"><label>Judul berita</label><input id="newsTitle" maxlength="180" placeholder="Judul berita"></div><div class="field"><label>Kategori</label><select id="newsCategory"><option>Pengumuman</option><option>Kegiatan</option><option>Prestasi</option><option>Informasi</option></select></div><div class="field"><label>Tanggal publikasi</label><input id="newsDate" type="date"></div><div class="field"><label>Ringkasan</label><textarea id="newsSummary" maxlength="500" placeholder="Ringkasan singkat yang tampil di beranda"></textarea></div><div class="field"><label>Foto sampul (URL publik, opsional)</label><input id="newsImage" type="url" placeholder="https://..."></div><div class="field"><label>Isi berita</label><div class="news-editor-tools" style="display:flex;gap:6px;flex-wrap:wrap;margin:6px 0"><button type="button" class="btn light" onclick="newsFormat('bold')"><b>B</b></button><button type="button" class="btn light" onclick="newsFormat('italic')"><i>I</i></button><button type="button" class="btn light" onclick="newsFormat('insertUnorderedList')">• Daftar</button><button type="button" class="btn light" onclick="newsFormat('insertOrderedList')">1. Daftar</button><button type="button" class="btn light" onclick="newsFormat('formatBlock','h3')">Judul</button><button type="button" class="btn light" onclick="newsFormat('formatBlock','blockquote')">Kutipan</button><button type="button" class="btn light" onclick="document.getElementById('newsInlineImage').click()">＋ Sisipkan Foto</button><input id="newsInlineImage" type="file" accept="image/jpeg,image/png,image/webp" multiple hidden></div><div id="newsBody" contenteditable="true" style="min-height:260px;padding:12px;border:1px solid #cbd5e1;border-radius:10px;background:#fff;line-height:1.65" data-placeholder="Tulis isi berita. Letakkan kursor di posisi foto akan disisipkan."></div><small class="muted">Maksimal 5 MB per foto. Foto akan diunggah ke Google Drive dan disisipkan pada posisi kursor.</small></div><div class="field"><label>Status publikasi</label><select id="newsStatus"><option>Draft</option><option>Terbit</option></select></div><div class="actions"><button id="saveNews" class="btn">Simpan Berita</button><button id="resetNews" type="button" class="btn light">Kosongkan</button></div><input type="hidden" id="newsId"></section><section class="panel" style="margin-top:14px"><div class="toolbar" style="justify-content:space-between"><b>Daftar berita</b><button type="button" class="btn light" id="refreshNews">↻ Perbarui</button></div><div id="newsAdminList" class="result-list"><div class="empty">Memuat berita…</div></div></section></section>
+  <section id="resultsPanel" class="hidden">
+   <div class="result-layout">
+    <section class="panel result-form"><div class="eyebrow">INPUT HASIL LOMBA</div><h2 style="font:800 18px Manrope;color:var(--navy);margin:5px 0 4px">Rekap Juara per Cabang</h2><p class="muted" style="font-size:11px;margin:0 0 14px">Pilih cabang dan kategori, lalu isi nama kontingen juara. Hasil yang disimpan akan terhubung ke bagian Hasil Kejuaraan di website utama.</p>
+     <div class="field"><label for="resultBranch">Cabang lomba</label><select id="resultBranch"></select></div><div class="field"><label for="resultCategory">Kategori</label><select id="resultCategory"></select></div>
+     <div class="field"><label for="winner1">🥇 Juara 1</label><input id="winner1" list="contingentOptions" placeholder="Nama kontingen juara 1"></div>
+     <div class="field"><label for="winner2">🥈 Juara 2</label><input id="winner2" list="contingentOptions" placeholder="Nama kontingen juara 2"></div>
+     <div class="field"><label for="winner3">🥉 Juara 3</label><input id="winner3" list="contingentOptions" placeholder="Nama kontingen juara 3"></div><datalist id="contingentOptions"></datalist>
+     <div class="actions"><button id="saveResult" class="btn">Simpan hasil</button><button id="clearResult" class="btn light" type="button">Kosongkan form</button></div>
+     <div class="note-banner">Poin: Juara 1 = 5, Juara 2 = 3, Juara 3 = 1. Jika poin sama, peringkat ditentukan dari jumlah emas, lalu perak, kemudian perunggu.</div>
+    </section>
+    <section class="panel"><div class="toolbar" style="justify-content:space-between"><div><div class="eyebrow">DATABASE KEJUARAAN</div><b style="color:var(--navy)">Hasil tersimpan</b></div><button id="refreshResults" class="btn light">↻ Perbarui</button></div><div id="resultFinalization" class="finalization-box"></div><div id="resultList" class="result-list"><div class="empty">Memuat hasil…</div></div></section>
+   </div>
+  </section>
+  <section id="testPrintPanel" class="hidden">
+   <section class="panel" style="padding:20px;margin-bottom:16px">
+    <div class="eyebrow">PENGUJIAN DOKUMEN</div><h2 style="font:800 19px Manrope;color:var(--navy);margin:5px 0">Uji Coba Cetak PDF</h2>
+    <p class="muted" style="font-size:12px;margin:0 0 16px">Pilih jenis dokumen untuk membuat dan melihat pratinjau PDF uji coba. Proses ini tidak mengubah data pendaftaran.</p>
+    <div class="test-actions" style="justify-content:flex-start">
+     <button class="btn light" type="button" data-test-pdf="kontingen">Uji Kontingen</button>
+     <button class="btn light" type="button" data-test-pdf="duta">Uji Duta Pelajar</button>
+     <button class="btn light" type="button" data-test-pdf="tunggal">Uji Tunggal</button>
+     <button class="btn light" type="button" data-test-pdf="beregu">Uji Beregu</button>
+     <button class="btn warm" type="button" data-test-pdf="all">Cetak Semua Uji Coba</button>
+    </div>
+   </section>
+   <section class="panel" style="padding:20px">
+    <div class="eyebrow">HASIL KEJUARAAN</div><h2 style="font:800 19px Manrope;color:var(--navy);margin:5px 0">Uji Cetak Hasil Kejuaraan</h2>
+    <p class="muted" style="font-size:12px;margin:0 0 14px">Buat pratinjau PDF hasil kejuaraan dengan tanda dokumen uji coba. Tidak menjalankan finalisasi dan tidak mengirim email hasil resmi.</p>
+    <button id="testChampionshipPdf" class="btn warm" type="button">▧ Uji Cetak Hasil Kejuaraan</button>
+   </section>
+  </section>
+  </section>
+  <section id="activityLogPanel" class="hidden">
+   <section class="panel"><div class="toolbar" style="justify-content:space-between"><div><div class="eyebrow">AUDIT DAN KEAMANAN</div><b style="color:var(--navy)">Riwayat Aktivitas Kontingen dan Panitia</b><p class="muted" style="font-size:11px;margin:3px 0 0">Login berhasil/gagal, pratinjau, unggah, penggantian, penghapusan, dan perubahan data admin.</p></div><div class="log-tools"><button id="refreshActivityLogs" class="btn light" type="button">↻ Perbarui log</button><button id="scrollActivityLogsDown" class="btn" type="button">↓ Scroll ke bawah</button></div></div><div class="table-wrap activity-log-wrap" id="activityLogScroll"><table class="activity-log-table"><thead><tr><th>Waktu</th><th>Aktor</th><th>Aktivitas</th><th>Status</th><th>Detail</th></tr></thead><tbody id="activityLogRows"><tr><td colspan="5" class="empty">Memuat riwayat aktivitas…</td></tr></tbody></table></div><div class="footnote">Riwayat terbaru ditampilkan hingga 300 aktivitas. Log disimpan di Google Sheets oleh Apps Script.</div></section>
+  </section>
+  <section id="devopsPanel" class="hidden">
+   <section class="panel" style="padding:18px;margin-bottom:14px">
+    <div class="toolbar" style="justify-content:space-between;align-items:center">
+     <div>
+      <div class="eyebrow">KHUSUS ADMIN TYO</div>
+      <h2 style="font:800 19px Manrope;color:var(--navy);margin:5px 0">PORSENI Control Center</h2>
+      <p class="muted" style="font-size:12px;margin:0">Dua pekerjaan saja: ganti halaman website atau ganti kode Apps Script.</p>
+     </div>
+     <span id="devopsBadge" class="status wait">MEMERIKSA</span>
+    </div>
+    <div id="devopsStatusText" class="note-banner" style="margin:12px 0 0">Memeriksa koneksi repository…</div>
+    <details style="margin-top:12px">
+     <summary style="cursor:pointer;font-weight:700;color:var(--navy);padding:8px 0">Pengaturan koneksi GitHub (buka hanya bila diperlukan)</summary>
+     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:9px;margin-top:10px">
+      <div class="field"><label for="devopsOwner">GitHub Owner</label><input id="devopsOwner" autocomplete="off" placeholder="porsenipatebon"></div>
+      <div class="field"><label for="devopsRepo">Repository</label><input id="devopsRepo" autocomplete="off" placeholder="porsenipatebon"></div>
+      <div class="field"><label for="devopsBranch">Branch</label><input id="devopsBranch" autocomplete="off" value="main"></div>
+     </div>
+     <div class="field"><label for="devopsGithubToken">Fine-grained GitHub Token</label><input id="devopsGithubToken" type="password" autocomplete="new-password" placeholder="Tempel token bila perlu mengganti konfigurasi"><small class="muted">Token disimpan di server Apps Script, bukan di browser.</small></div>
+     <div class="actions">
+      <button id="devopsSaveSetup" class="btn" type="button">Simpan Koneksi</button>
+      <button id="devopsRefresh" class="btn light" type="button">Periksa Koneksi</button>
+     </div>
+    </details>
+   </section>
+
+   <section class="panel" style="padding:18px;margin-bottom:14px">
+    <div class="eyebrow">1 · FRONTEND WEBSITE</div>
+    <h3 style="font:800 17px Manrope;color:var(--navy);margin:5px 0">Ganti halaman website</h3>
+    <p class="muted" style="font-size:12px;margin:0 0 12px">Pilih halaman, muat versi dari GitHub, lalu unggah file HTML baru atau tempel kode HTML pengganti.</p>
+    <div class="field">
+     <label for="devopsFileSelect">Halaman yang ingin diganti</label>
+     <select id="devopsFileSelect">
+      <option value="index.html">Website utama — index.html</option>
+      <option value="admin.html">Portal panitia — admin.html</option>
+     </select>
+    </div>
+    <div class="actions" style="margin:8px 0 12px">
+     <button id="devopsLoadFile" class="btn light" type="button">Muat versi dari GitHub</button>
+     <span id="devopsFileMeta" class="muted" style="font-size:11px;align-self:center">Pilih halaman lalu muat versi terbaru.</span>
+    </div>
+    <div class="field">
+     <label for="devopsLocalFile">Atau pilih file HTML baru dari komputer</label>
+     <input id="devopsLocalFile" type="file" accept=".html,.htm,text/html">
+     <small id="devopsLocalFileName" class="muted" style="display:block;margin-top:6px">Belum ada file lokal dipilih.</small>
+    </div>
+    <div class="field">
+     <label for="devopsEditor">Isi halaman HTML</label>
+     <div id="devopsEditorSource" class="note-banner" style="margin:0 0 8px">Editor menampilkan: belum ada file dimuat.</div>
+     <div class="code-tools"><input id="devopsSearchHtml" type="search" placeholder="Cari kata/frasa dalam HTML…"><button class="btn light" type="button" id="devopsFindHtmlPrev">↑ Sebelumnya</button><button class="btn light" type="button" id="devopsFindHtmlNext">↓ Berikutnya</button><span id="devopsSearchHtmlCount" class="code-count">0 hasil</span></div>
+     <div class="code-editor-shell"><pre id="devopsHtmlGutter" class="code-gutter">1</pre><textarea id="devopsEditor" spellcheck="false" wrap="off" placeholder="Muat halaman dari GitHub atau unggah file HTML baru di sini…"></textarea></div>
+    </div>
+    <div class="devops-file-actions"><button id="devopsDownloadIndex" class="btn light" type="button">↓ Unduh source index.html</button><button id="devopsDownloadAdmin" class="btn light" type="button">↓ Unduh source admin.html</button></div>
+    <input id="devopsFilePath" type="hidden" value="index.html">
+    <input id="devopsCommitMessage" type="hidden" value="Update halaman melalui PORSENI Control Center">
+    <div class="actions">
+     <button id="devopsSaveFile" class="btn" type="button" disabled>Simpan halaman website</button>
+    </div>
+   </section>
+
+   <section class="panel" style="padding:18px;margin-bottom:14px;border-left:4px solid #2563eb">
+    <div class="eyebrow">2 · GOOGLE APPS SCRIPT</div>
+    <h3 style="font:800 17px Manrope;color:var(--navy);margin:5px 0">Ganti kode Apps Script</h3>
+    <p class="muted" style="font-size:12px;margin:0 0 12px">Tempel seluruh kode backend terbaru ke kotak ini. Tekan tombol di bawah untuk menyimpan ke GitHub, membuat backup otomatis, lalu menerbitkan ke Web App produksi.</p>
+    <div class="field">
+     <label for="devopsBackendEditor">Source Apps Script (gas/backend/Kode.js)</label>
+     <div class="devops-file-actions"><button id="devopsLoadBackend" class="btn light" type="button">↻ Muat source deployment Apps Script</button><button id="devopsDownloadBackend" class="btn light" type="button">↓ Unduh source Apps Script</button><span id="devopsBackendMeta" class="muted" style="font-size:11px;align-self:center">Belum dimuat.</span></div>
+     <div class="code-tools"><input id="devopsSearchGs" type="search" placeholder="Cari kata/frasa dalam Apps Script…"><button class="btn light" type="button" id="devopsFindGsPrev">↑ Sebelumnya</button><button class="btn light" type="button" id="devopsFindGsNext">↓ Berikutnya</button><span id="devopsSearchGsCount" class="code-count">0 hasil</span></div>
+     <div class="code-editor-shell"><pre id="devopsGsGutter" class="code-gutter">1</pre><textarea id="devopsBackendEditor" spellcheck="false" wrap="off" placeholder="Klik Muat source deployment Apps Script atau tempel kode baru…"></textarea></div>
+    </div>
+    <div class="note-banner" style="margin:8px 0 12px">Sebelum deploy, sistem akan menyimpan kode ke repository dan workflow akan membuat backup versi Apps Script. Deployment Web App yang sama diperbarui; URL tetap.</div>
+    <div class="actions">
+     <button id="devopsSaveDeployBackend" class="btn warm" type="button" disabled>Simpan kode &amp; Deploy Apps Script</button>
+    </div>
+    <div id="devopsBackendStatus" class="muted" style="font-size:12px;margin-top:10px">Tempel kode terbaru untuk memulai.</div>
+   </section>
+
+
+   <section class="panel" style="padding:18px;margin-bottom:14px;border:2px solid #dc2626;background:#fffafa">
+    <div class="eyebrow" style="color:#b91c1c">AKSES KHUSUS ADMIN TYO</div>
+    <h3 style="font:800 16px Manrope;color:#991b1b;margin:5px 0">Reset Total Data Pendaftaran</h3>
+    <p class="muted" style="font-size:12px;margin:6px 0 12px">Mengosongkan data pendaftaran aktif, PIN kontingen, dan berkas pada dua folder pendaftaran. Hasil kejuaraan, berita, akun admin, dan log tetap dipertahankan.</p>
+    <button id="previewResetRegistration" class="btn danger" type="button">Periksa Data Sebelum Reset</button>
+    <div id="resetRegistrationPreview" class="muted" style="font-size:12px;margin-top:12px;white-space:pre-line"></div>
+   </section>
+   <section class="panel" style="padding:18px;margin-bottom:14px;border:2px solid #f0c77b;background:#fffdf7">
+    <div class="eyebrow" style="color:#9a5b00">PENGELOLAAN HASIL KEJUARAAN</div>
+    <h3 style="font:800 16px Manrope;color:var(--navy);margin:5px 0">Reset Hasil Kejuaraan</h3>
+    <p class="muted" style="font-size:12px;margin:6px 0 12px">Reset seluruh hasil atau hanya hasil pada satu cabang lomba. Tindakan ini menghapus data juara dan membatalkan finalisasi serta PDF hasil resmi.</p>
+    <div class="field"><label for="resetResultBranch">Pilih cabang untuk reset khusus cabang</label><select id="resetResultBranch"><option value="">Pilih cabang lomba…</option></select></div>
+    <div class="actions">
+     <button id="resetAllResults" class="btn danger" type="button">Reset seluruh hasil kejuaraan</button>
+     <button id="resetBranchResults" class="btn warm" type="button">Reset hasil cabang terpilih</button>
+    </div>
+    <div id="resetResultsStatus" class="muted" style="font-size:12px;margin-top:10px"></div>
+   </section>
+   <section class="panel" style="padding:16px">
+    <div class="toolbar" style="justify-content:space-between;align-items:center">
+     <div><div class="eyebrow">RIWAYAT PEMBARUAN</div><b style="color:var(--navy)">Preview Workflow & Status Deployment</b><p class="muted" style="font-size:11px;margin:4px 0 0">Pantau antrean, proses berjalan, berhasil, atau gagal beserta waktu dan durasi.</p></div>
+     <div class="devops-file-actions"><button id="devopsRefreshRuns" class="btn light" type="button" disabled>↻ Perbarui status</button><a id="devopsActionsLink" class="btn light" href="#" target="_blank" rel="noopener" style="text-decoration:none">Buka GitHub Actions ↗</a></div>
+    </div>
+    <div id="devopsWorkflowSummary" class="workflow-summary"></div>
+    <div id="devopsRuns" class="result-list" style="padding:10px 0"><div class="empty">Riwayat belum dimuat.</div></div>
+    <div id="devopsDeployStatus" class="hidden" aria-hidden="true"></div>
+   </section>
+  </section>
+ </main></div>
+</section>
+<div id="testPreviewOverlay" class="overlay hidden"><section class="test-preview-frame"><header class="test-preview-head"><h2>Preview PDF Uji Coba PORSENI 2026</h2><div class="test-preview-tools"><select id="testPreviewSelect" class="hidden" aria-label="Pilih PDF uji coba"></select><button id="testPreviewDownload" class="btn light hidden" type="button">⬇ Unduh PDF</button><button id="testPreviewDownloadAll" class="btn warm hidden" type="button">⬇ Unduh semua</button><button id="testPreviewClose" class="close" type="button" aria-label="Tutup preview">×</button></div></header><div id="testPreviewStatus" class="test-preview-status">Menyiapkan PDF…</div><iframe id="testPreviewFrame" title="Pratinjau PDF uji coba" src="about:blank"></iframe></section></div><div id="detailOverlay" class="overlay hidden"><section class="drawer"><header class="drawer-head"><h2>Detail & Kontrol Pendaftaran</h2><button id="closeDrawer" class="close" aria-label="Tutup">×</button></header><div id="drawerBody" class="drawer-body"></div></section></div><div id="toast" class="toast hidden"></div>
+<script>
+(function(){
+'use strict';
+var API='https://script.google.com/macros/s/AKfycbxkIioAhO7UwoVjpRr_i8yULRzvTa7YIcvPSVuvoI6bBscIEyWP-vCYEgx7ff34GdcX/exec';
+var token=sessionStorage.getItem('porseni_admin_token')||'',user=sessionStorage.getItem('porseni_admin_user')||'',data={kontingen:[],cabang:[],counts:{},changeRequests:[]},tab='kontingen',selected=null,resultData={detail:[],medals:[]},resultFinalization={finalized:false,finalizedAt:'',finalizedBy:''},editingResultKey=null,currentPage=1,pageSize=20;
+var BRANCHES=[['Duta Pelajar',['Tunggal Putra','Tunggal Putri']],['Khitobah',['Tunggal Putra','Tunggal Putri']],['LCC',['Beregu Campuran']],['Karya ilmiah',['Beregu Campuran']],['Baca kitab',['Tunggal Putra','Tunggal Putri']],['Badminton',['Ganda Campuran']],['Voli',['Beregu Putra']],['Sprint',['Tunggal Putra','Tunggal Putri']],['Tenis meja',['Tunggal Putra','Tunggal Putri']],['PES PS3',['Tunggal Bebas']],['Parade Gelar Budaya',['Beregu Campuran']],['Rebana',['Beregu Bebas']],['Paduan suara',['Beregu Campuran']],['Kaligrafi',['Tunggal Putra','Tunggal Putri']],['Baca puisi',['Tunggal Putra','Tunggal Putri']],['MTQ',['Tunggal Putra','Tunggal Putri']]];
+var BRANCH_LABELS={'Duta Pelajar':'Duta Pelajar','Khitobah':'Khitobah','LCC':'LCC','Karya ilmiah':'Karya Ilmiah','Baca kitab':'Baca Kitab','Badminton':'Badminton','Voli':'Voli','Sprint':'Sprint','Tenis meja':'Tenis Meja','PES PS3':'PES PS3','Parade Gelar Budaya':'Parade Gelar Budaya','Rebana':'Rebana','Paduan suara':'Paduan Suara','Kaligrafi':'Kaligrafi','Baca puisi':'Baca Puisi','MTQ':'MTQ'};
+function prettyBranch(name){return BRANCH_LABELS[name]||name;}
+function prettyCategory(branch,category){return category;}
+var $=function(id){return document.getElementById(id)};
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function call(payload){return fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)}).then(function(r){return r.json();}).then(function(j){if(!j||!j.ok)throw new Error(j&&j.error||'Permintaan gagal.');return j;});}
+function callWithTimeout(payload,ms){return new Promise(function(resolve,reject){var settled=false,timer=setTimeout(function(){if(!settled){settled=true;reject(new Error('Server belum merespons dalam '+Math.round(ms/1000)+' detik. Periksa koneksi lalu tekan Muat ulang data.'));}},ms||45000);call(payload).then(function(v){if(settled)return;settled=true;clearTimeout(timer);resolve(v);}).catch(function(e){if(settled)return;settled=true;clearTimeout(timer);reject(e);});});}
+function toast(message){$('toast').textContent=message;$('toast').classList.remove('hidden');setTimeout(function(){$('toast').classList.add('hidden');},3600);}
+function showLogin(){$('appView').classList.add('hidden');$('loginView').classList.remove('hidden');$('password').focus();}
+function showApp(){$('loginView').classList.add('hidden');$('appView').classList.remove('hidden');$('adminIdentity').textContent='PETUGAS: '+user.toUpperCase();var resetPanel=$('resetRegistrationPanel');if(resetPanel)resetPanel.classList.toggle('hidden',user!=='Tyo');var devopsNav=$('devopsNav');if(devopsNav)devopsNav.classList.toggle('hidden',user!=='Tyo');if($('devopsPanel'))$('devopsPanel').classList.add('hidden');}
+function login(e){e.preventDefault();var btn=$('loginBtn');btn.disabled=true;btn.textContent='Memeriksa akses…';$('loginError').classList.add('hidden');call({action:'admin_login',user:$('adminUser').value,password:$('password').value}).then(function(j){token=j.token;user=j.user||$('adminUser').value;sessionStorage.setItem('porseni_admin_token',token);sessionStorage.setItem('porseni_admin_user',user);$('password').value='';showApp();return loadData();}).catch(function(err){$('loginError').textContent=err.message;$('loginError').classList.remove('hidden');}).finally(function(){btn.disabled=false;btn.textContent='Masuk ke Portal Panitia';});}
+function logout(){var old=token;token='';user='';sessionStorage.removeItem('porseni_admin_token');sessionStorage.removeItem('porseni_admin_user');call({action:'admin_logout',token:old}).catch(function(){}).finally(showLogin);}
+function loadData(){ $('tableBody').innerHTML='<tr><td colspan="6" class="empty">Memuat data pendaftaran dan status kontrol…</td></tr>';['regKontStatus','regCabStatus','regCabMaintenanceStatus'].forEach(function(id){var el=$(id);if(el)el.textContent='Memuat status…';});return callWithTimeout({action:'admin_dashboard',token:token},45000).then(function(j){data=j;renderMetrics();renderRecap();renderPublicRecapMode();renderRegistrationControls(j.registration);renderTable();fillContingentOptions();}).catch(function(err){if(/sesi|login|tidak valid/i.test(err.message)){logout();return;}['regKontStatus','regCabStatus','regCabMaintenanceStatus'].forEach(function(id){var el=$(id);if(el)el.textContent='Gagal memuat — '+err.message;});$('tableBody').innerHTML='<tr><td colspan="6" class="empty">'+esc(err.message)+'</td></tr>';});}
+function fillContingentOptions(){
+ var list=$('contingentOptions');
+ if(!list)return;
+ var rows=(data&&data.kontingen)||[];
+ list.innerHTML=rows.map(function(r){
+   var name=String(r.nama||'').trim();
+   return name?'<option value="'+esc(name)+'"></option>':'';
+ }).join('');
+}
+function renderMetrics(){var c=data.counts||{},rows=records(),wait=rows.filter(function(r){return !r.status||r.status==='Menunggu Verifikasi';}).length,ok=rows.filter(function(r){return r.status==='Terverifikasi';}).length,issue=rows.filter(function(r){return r.status==='Perlu Revisi'||r.status==='Ditolak';}).length;var isKont=tab==='kontingen';$('mTotal').previousElementSibling.textContent=isKont?'Total Kontingen':'Total Pendaftaran Cabang';$('mWait').previousElementSibling.textContent='Menunggu Verifikasi';$('mOk').previousElementSibling.textContent='Terverifikasi';$('mIssue').previousElementSibling.textContent='Perlu Revisi / Ditolak';$('mTotal').textContent=rows.length;$('mWait').textContent=wait;$('mOk').textContent=ok;$('mIssue').textContent=issue;$('navKont').textContent=c.kontingen||0;$('navCab').textContent=c.cabang||0;}
+function parseParticipantNames(raw){if(!raw)return [];var s=String(raw);try{var j=JSON.parse(s);if(Array.isArray(j))return j.map(function(x){return typeof x==='string'?x:(x.nama||'');}).filter(Boolean);}catch(e){}return s.split(/[\n;|]+/).map(function(x){return x.trim();}).filter(Boolean);}
+function renderRecap(){var kont=data.kontingen||[],cab=data.cabang||[],approved=kont.filter(function(r){return r.status==='Terverifikasi';});$('recapKontPanel').classList.toggle('hidden',tab!=='kontingen');$('recapCabPanel').classList.toggle('hidden',tab!=='cabang');$('recVerified').textContent=approved.length;$('recVerifiedNames').innerHTML=approved.length?approved.map(function(r){return '<div class="recap-entry"><b>'+esc(r.nama)+'</b><span>'+esc(r.nomor||'')+'</span></div>';}).join(''):'Belum ada kontingen terverifikasi.';var verified=cab.filter(function(r){return r.status==='Terverifikasi';}).length,waiting=cab.filter(function(r){return !r.status||r.status==='Menunggu Verifikasi';}).length,issue=cab.filter(function(r){return r.status==='Perlu Revisi'||r.status==='Ditolak';}).length;var participants=0;cab.forEach(function(r){participants+=Number(r.jumlahPeserta)||parseParticipantNames(r.peserta).length;});$('recParticipants').textContent=participants;$('recBranchVerified').textContent=verified;$('recBranchWait').textContent=waiting;$('recBranchIssue').textContent=issue;$('recBranchList').innerHTML=cab.length?'<div class="branch-mini"><ul>'+cab.map(function(r){return '<li><span><b>'+esc(r.nama)+'</b> — '+esc(prettyBranch(r.cabang))+' / '+esc(prettyCategory(r.cabang,r.kategori))+'</span><em>'+esc(r.status||'Menunggu Verifikasi')+'</em></li>';}).join('')+'</ul></div>':'Belum ada berkas cabang lomba.';}
+function renderPublicRecapMode(){
+ var mode=data.modeRekapPublik==='terverifikasi'?'terverifikasi':'terdaftar';
+ $('modeRegisteredBtn').className='btn '+(mode==='terdaftar'?'warm':'light');
+ $('modeVerifiedBtn').className='btn '+(mode==='terverifikasi'?'warm':'light');
+ $('publicRecapModeStatus').textContent='Mode aktif: '+(mode==='terdaftar'?'A — Peserta dari Kontingen Terverifikasi':'B — Berkas Cabang Lomba Terverifikasi');
+}
+function setPublicRecapMode(mode){
+ var buttons=[$('modeRegisteredBtn'),$('modeVerifiedBtn')];buttons.forEach(function(b){b.disabled=true;});
+ call({action:'admin_set_public_recap_mode',token:token,mode:mode}).then(function(j){
+  data.modeRekapPublik=j.mode;renderPublicRecapMode();toast(j.message);
+ }).catch(function(err){toast(err.message);}).finally(function(){buttons.forEach(function(b){b.disabled=false;});});
+}
+function records(){if(tab==='kontingen')return (data.kontingen||[]).filter(function(r){return r.type==='kontingen';});if(tab==='cabang')return (data.cabang||[]).filter(function(r){return r.type==='cabang';});return [];}
+function statusClass(s){return s==='Terverifikasi'?'ok':s==='Perlu Revisi'?'revise':s==='Ditolak'?'no':'wait';}
+function renderTable(){
+ var q=$('searchInput').value.trim().toLowerCase(),st=$('statusFilter').value,isKont=tab==='kontingen';
+ $('searchInput').placeholder=isKont?'Cari nama kontingen, nomor registrasi, ketua, atau asal PR/PK…':'Cari nama kontingen, nomor registrasi, peserta, cabang, atau kategori…';
+ $('recordsHeader').innerHTML=isKont?'<th>Nama Kontingen / Registrasi</th><th>Asal PR / PK</th><th>Ketua Kontingen</th><th>Tanggal Pendaftaran</th><th>Status Verifikasi</th><th>Aksi</th>':'<th>Nama Kontingen / Registrasi</th><th>Cabang Lomba</th><th>Kategori</th><th>Jumlah Peserta</th><th>Status Verifikasi</th><th>Aksi</th>';
+ var allRows=records(),rows=allRows.filter(function(r){var hay=(isKont?[r.nama,r.nomor,r.ketua,r.asal,r.email,r.waKetua]:[r.nama,r.nomor,r.cabang,r.kategori,r.peserta,r.catatan]).join(' ').toLowerCase();return (!q||hay.indexOf(q)>=0)&&(!st||r.status===st);});
+ var pageCount=Math.max(1,Math.ceil(rows.length/pageSize));currentPage=Math.min(Math.max(1,currentPage),pageCount);
+ var start=(currentPage-1)*pageSize,pageRows=rows.slice(start,start+pageSize);
+ $('tableBody').innerHTML=pageRows.length?pageRows.map(function(r){var cells=isKont?'<td><div class="namecell">'+esc(r.nama)+'</div><div class="subcell">'+esc(r.nomor||'Nomor registrasi belum tersedia')+'</div></td><td>'+esc(r.asal||'-')+'</td><td>'+esc(r.ketua||'-')+'</td><td>'+esc(r.waktu||'-')+'</td>':'<td><div class="namecell">'+esc(r.nama)+'</div><div class="subcell">'+esc(r.nomor||'Nomor registrasi belum tersedia')+'</div></td><td>'+esc(prettyBranch(r.cabang)||'-')+'</td><td>'+esc(prettyCategory(r.cabang,r.kategori)||'-')+'</td><td>'+esc(r.jumlahPeserta||parseParticipantNames(r.peserta).length||'-')+'</td>';return '<tr>'+cells+'<td><span class="status '+statusClass(r.status)+'">'+esc(r.status||'Menunggu Verifikasi')+'</span></td><td><button class="openbtn" data-open="'+esc(r.type)+'|'+r.rowNumber+'">Kelola →</button></td></tr>';}).join(''):'<tr><td colspan="6" class="empty">Tidak ada data pada panel '+(isKont?'kontingen':'cabang lomba')+' yang cocok.</td></tr>';
+ $('tableFoot').textContent='Menampilkan '+(rows.length?start+1:0)+'–'+Math.min(start+pageRows.length,rows.length)+' dari '+rows.length+' hasil filter ('+allRows.length+' total '+(isKont?'kontingen':'cabang lomba')+').';
+ $('paginationInfo').textContent='20 data per halaman';$('pageIndicator').textContent=currentPage+' / '+pageCount;$('pagePrev').disabled=currentPage<=1;$('pageNext').disabled=currentPage>=pageCount;
+ Array.prototype.forEach.call(document.querySelectorAll('[data-open]'),function(b){b.addEventListener('click',function(){var parts=b.getAttribute('data-open').split('|');openDetail(parts[0],Number(parts[1]));});});
+}
+function changePage(delta){currentPage+=delta;renderTable();var panel=$('recordsPanel');if(panel)panel.scrollIntoView({behavior:'smooth',block:'nearest'});}
+
+function inputField(label,key,value,multiline){return '<div class="field compact"><label>'+esc(label)+'</label>'+(multiline?'<textarea data-edit-key="'+esc(key)+'">'+esc(value||'')+'</textarea>':'<input data-edit-key="'+esc(key)+'" value="'+esc(value||'')+'">')+'</div>';}
+function inputDateField(label,key,value){var v=String(value||'').trim();var m=v.match(/^(\d{2})-(\d{2})-(\d{4})$/);if(m)v=m[3]+'-'+m[2]+'-'+m[1];return '<div class="field compact"><label>'+esc(label)+'</label><input type="date" data-edit-key="'+esc(key)+'" value="'+esc(v)+'"></div>'; }
+function openDetail(type,row){var r=(type==='kontingen'?data.kontingen:data.cabang).filter(function(x){return x.rowNumber===row;})[0];if(!r)return;var overlay=$('detailOverlay');overlay.classList.remove('hidden');$('drawerBody').innerHTML='<div class="empty">Memuat detail dan daftar lampiran…</div>';call({action:'admin_record_files',token:token,type:type,recordId:r.recordId}).then(function(j){r.berkas=j.berkas||[];renderDetail(type,row);}).catch(function(e){overlay.classList.add('hidden');toast('Gagal memuat detail: '+e.message);});}
+function renderDetail(type,row){var r=(type==='kontingen'?data.kontingen:data.cabang).filter(function(x){return x.rowNumber===row;})[0];if(!r)return;selected=r;var html='<div class="detail-title">'+esc(r.nama)+'</div><div class="detail-meta">'+esc(r.nomor)+' · '+esc(r.waktu)+' · '+(type==='kontingen'?'Pendaftaran Kontingen':'Berkas Cabang Lomba')+'</div><div class="detail-tabs"><button type="button" class="detail-tab active" data-detail-tab="status">Status</button><button type="button" class="detail-tab" data-detail-tab="kelengkapan">Kelengkapan Berkas</button><button type="button" class="detail-tab" data-detail-tab="perubahan">Perubahan Berkas</button></div><section class="detail-tab-panel active" data-detail-panel="status"><div class="detail-status-card"><div class="detail-status-row"><b>Status Verifikasi</b><span class="status '+statusClass(r.status||'Menunggu Verifikasi')+'">'+esc(r.status||'Menunggu Verifikasi')+'</span></div><p class="muted" style="font-size:11px;margin:9px 0 0">Perubahan status otomatis diberitahukan melalui email kepada ketua kontingen. Status Terverifikasi harus dibatalkan terlebih dahulu sebelum dapat diubah.</p><div class="detail-status-actions">'+(String(r.status||'Menunggu Verifikasi')==='Terverifikasi'?'<button type="button" class="btn danger" id="cancelVerification">Batalkan Verifikasi</button>':'<button type="button" class="btn" id="verifyRecord">Setujui / Verifikasi Berkas</button><button type="button" class="btn warm" id="reviseRecord">Revisi Isi</button><button type="button" class="btn danger" id="rejectRecord">Tolak Berkas</button>')+'</div></div><div class="detail-status-card"><b>Kelengkapan Berkas</b><p style="font-size:12px;margin:7px 0 0">'+(r.berkas||[]).length+' berkas tercatat. Buka tab Kelengkapan Berkas untuk memeriksa dokumen.</p></div></section><div id="detailChanges" class="section-title">UBAH DATA PENDAFTARAN</div><p class="note-banner">Perubahan yang diterima dari kontingen melalui WhatsApp diproses langsung oleh panitia di sini. Setelah mengubah data atau berkas, PDF dibangun ulang otomatis; tombol Bangun Ulang PDF juga tersedia untuk proses manual.</p><div class="detail-grid">';
+ if(type==='kontingen'){html+=inputField('Asal PR / PK','asal',r.asal)+inputField('Ketua Kontingen','ketua',r.ketua)+inputField('Tempat Lahir Ketua Kontingen','tempatLahirKetua',r.tempatLahirKetua)+inputField('Tanggal Lahir Ketua Kontingen','tanggalLahirKetua',r.tanggalLahirKetua)+inputField('Alamat Rumah Ketua Kontingen','alamat',r.alamat,true)+inputField('WhatsApp Ketua','waKetua',r.waKetua)+inputField('Email Kontingen','email',r.email)+inputField('Jumlah Peserta','jumlahPeserta',r.jumlahPeserta)+inputField('Cabang dan Kategori (format teks)','cabang',r.cabang,true)+inputField('Metode Pembayaran','metodeBayar',r.metodeBayar)+inputField('Tanggal Pembayaran','tanggalBayar',r.tanggalBayar)+inputField('Ketua PR IPNU','ketuaIpnu',r.ketuaIpnu)+inputField('Ketua PR IPPNU','ketuaIppnu',r.ketuaIppnu);}
+ else{html+=inputField('Cabang Lomba','cabang',r.cabang)+inputField('Kategori','kategori',r.kategori)+inputField('Jumlah Peserta','jumlahPeserta',r.jumlahPeserta)+inputField('Daftar Peserta (format: nama (L/P) - peran)','peserta',r.peserta,true)+inputField('Tempat Lahir Peserta','tempatLahirPeserta',r.tempatLahirPeserta,true)+inputField('Tanggal Lahir Peserta','tanggalLahir',r.tanggalLahir,true)+inputField('Alamat Peserta','alamatPeserta',r.alamatPeserta,true)+inputField('Nomor WhatsApp Peserta','waPeserta',r.waPeserta,true)+inputField('Catatan Pendaftar','catatan',r.catatan,true);}
+ html+='</div><div class="actions"><button class="btn" id="saveRecord">Simpan perubahan data</button></div><div id="detailCompleteness" class="section-title">DOKUMEN DAN BERKAS — KLIK TAUTAN UNTUK MEMERIKSA</div><div class="file-list">';
+ if(r.pdf)html+='<div class="file-card"><a class="file-link" href="'+esc(r.pdf)+'" target="_blank" rel="noopener">PDF Formulir Pendaftaran ↗</a><small class="muted">PDF formulir utama</small></div>';
+ if(r.folder)html+='<div class="file-card"><a class="file-link" href="'+esc(r.folder)+'" target="_blank" rel="noopener">Buka Folder Google Drive ↗</a><small class="muted">Seluruh arsip pendaftaran</small></div>';
+ var standaloneLabels=['makalah kti (word)','makalah kti (pdf)','presentasi kti (ppt)','naskah khitobah (pdf)','soft file makalah kti (word)','soft file makalah kti (pdf)'];
+ var standalone=(r.berkas||[]).filter(function(f){return standaloneLabels.indexOf(String(f.label||'').trim().toLowerCase())>=0;});
+ var regular=(r.berkas||[]).map(function(f,index){return {file:f,index:index};}).filter(function(x){return standaloneLabels.indexOf(String(x.file.label||'').trim().toLowerCase())<0;});
+ if(standalone.length){
+  html+='<div class="section-title">DOKUMEN LOMBA — UNDUH TERPISAH</div><div class="file-list">';
+  standalone.forEach(function(f){
+   var fid=(String(f.url||'').match(/[-\w]{25,}/)||[])[0]||'';
+   html+='<div class="file-card"><a class="file-link" href="'+esc(f.url)+'" target="_blank" rel="noopener">'+esc(f.label)+' · Unduh / buka ↗</a><small class="muted">Dokumen tersimpan terpisah di Google Drive dan tidak digabung ke PDF formulir cabang.</small>';
+   if(fid)html+='<button type="button" class="btn danger" style="width:100%;margin-top:8px" data-delete-file="'+esc(fid)+'" data-delete-label="'+esc(f.label)+'">Hapus berkas</button>';
+   html+='</div>';
+  });
+  html+='</div><div class="section-title">BERKAS FORMULIR CABANG</div><div class="file-list">';
+ }
+ regular.forEach(function(entry){var f=entry.file,i=entry.index;var fileId=(String(f.url||'').match(/[-\w]{25,}/)||[])[0]||'';html+='<div class="file-card"><a class="file-link" href="'+esc(f.url)+'" target="_blank" rel="noopener">'+esc(f.label)+' ↗</a><label class="muted" style="display:block;font-size:10px;font-weight:800;margin:6px 0">Pilih berkas pengganti</label><input type="file" data-replace-file="'+i+'" '+(/^ktp(?: peserta\s+\d+)?$/i.test(f.label)?'accept="image/png,image/jpeg,.png,.jpg,.jpeg"':'')+'><input type="hidden" data-replace-label="'+i+'" value="'+esc(f.label)+'">'+(fileId?'<button type="button" class="btn danger" style="width:100%;margin-top:8px" data-delete-file="'+esc(fileId)+'" data-delete-label="'+esc(f.label)+'">Hapus berkas</button>':'')+'</div>';});
+ if(standalone.length)html+='</div>';
+ html+='</div><div class="actions"><button class="btn light" id="replaceFiles">Terapkan penggantian berkas</button><label class="btn light" style="display:flex;align-items:center;gap:8px;justify-content:center">Tambah / perbarui lampiran<input id="newAttachment" type="file" style="display:none"></label><input id="newAttachmentLabel" placeholder="Label berkas baru (mis. Surat Tugas)" style="flex:1;min-width:180px;border:1px solid var(--line);border-radius:10px;padding:9px 12px"></div>';
+ html+='<div class="review-box" style="display:none"><div class="section-title" style="margin-top:0">VERIFIKASI PANITIA</div><div class="review-grid"><div class="field compact"><label for="reviewStatus">Status berkas</label><select id="reviewStatus"><option>Menunggu Verifikasi</option><option>Terverifikasi</option><option>Perlu Revisi</option><option>Ditolak</option></select></div><div class="field compact"><label for="reviewNote">Catatan / alasan revisi</label><textarea id="reviewNote" rows="3" maxlength="1000"></textarea></div></div><div class="section-title">NOTIFIKASI KONTINGEN</div><div class="field compact"><label for="waMessage">Pratinjau pesan WhatsApp (dapat diedit)</label><textarea id="waMessage" rows="5" maxlength="4000"></textarea></div><div class="actions"><button class="btn light" id="sendWhatsApp">☏ Buka WhatsApp</button><button class="btn" id="saveReview">Simpan verifikasi &amp; Kirim Email</button><button class="btn light" id="retryMerge">Gabung ulang PDF</button><button class="btn warm" id="rebuildPdf">Bangun Ulang PDF</button><button class="btn light" id="resetPin">Reset PIN</button>'+(type==='kontingen'&&String(r.status||'').toLowerCase()==='ditolak'?'<button class="btn light" id="allowReregistration">Izinkan Daftar Ulang</button>':'')+'<button class="btn danger" id="deleteRecord">Hapus data pendaftaran</button></div><p class="muted" style="font-size:10px;margin:10px 0 0">Penghapusan menghapus baris pendaftaran pada Google Sheets. Folder dan dokumen Drive tetap disimpan sebagai arsip. Perubahan penting tercatat di sheet Log Admin.</p></div>';
+ $('drawerBody').innerHTML=html;Array.prototype.forEach.call(document.querySelectorAll('[data-detail-tab]'),function(b){b.addEventListener('click',function(){document.querySelectorAll('[data-detail-tab]').forEach(function(x){x.classList.toggle('active',x===b);});var target=b.dataset.detailTab;if(target==='status')$('detailOverlay').querySelector('.drawer').scrollTo({top:0,behavior:'smooth'});else if(target==='kelengkapan')$('detailCompleteness').scrollIntoView({behavior:'smooth',block:'start'});else $('detailChanges').scrollIntoView({behavior:'smooth',block:'start'});});});function runStatusChange(next){var note='';if(next==='Perlu Revisi'||next==='Ditolak'){note=window.prompt(next==='Perlu Revisi'?'Tuliskan bagian yang harus direvisi:':'Tuliskan alasan penolakan:','');if(note===null)return;if(!note.trim()){toast('Catatan wajib diisi.');return;}}if(!window.confirm('Simpan status '+next+' dan kirim email otomatis kepada ketua kontingen?'))return;call({action:'admin_update_status',token:token,type:selected.type,recordId:selected.recordId,status:next,note:note}).then(function(j){toast(j.message||'Status diperbarui.');return loadData();}).then(function(){var latest=(selected.type==='kontingen'?data.kontingen:data.cabang).filter(function(x){return x.recordId===selected.recordId;})[0];if(latest){selected=latest;openDetail(latest.type,latest.rowNumber);}}).catch(function(e){toast(e.message);});}var v=$('verifyRecord'),rv=$('reviseRecord'),rj=$('rejectRecord'),cv=$('cancelVerification');if(v)v.onclick=function(){runStatusChange('Terverifikasi');};if(rv)rv.onclick=function(){runStatusChange('Perlu Revisi');};if(rj)rj.onclick=function(){runStatusChange('Ditolak');};if(cv)cv.onclick=function(){if(window.confirm('Batalkan verifikasi dan kembalikan status menjadi Menunggu Verifikasi? Email pemberitahuan akan dikirim.'))runStatusChange('Menunggu Verifikasi');};$('reviewStatus').value=r.status||'Menunggu Verifikasi';$('reviewNote').value=r.catatanAdmin||'';refreshWhatsAppDraft();$('reviewStatus').addEventListener('change',refreshWhatsAppDraft);$('reviewNote').addEventListener('input',refreshWhatsAppDraft);$('detailOverlay').classList.remove('hidden');$('saveRecord').addEventListener('click',saveRecord);$('replaceFiles').addEventListener('click',replaceFiles);$('newAttachment').addEventListener('change',addNewAttachment);Array.prototype.forEach.call(document.querySelectorAll('[data-delete-file]'),function(btn){btn.addEventListener('click',function(){deleteAttachment(btn);});});$('saveReview').addEventListener('click',saveReview);$('rebuildPdf').addEventListener('click',rebuildRegistrationPdf);$('sendWhatsApp').addEventListener('click',sendWhatsApp);if($('allowReregistration'))$('allowReregistration').addEventListener('click',allowReregistration);$('deleteRecord').addEventListener('click',deleteRecord);
+}
+function saveRecord(){if(!selected)return;var fields={};document.querySelectorAll('[data-edit-key]').forEach(function(el){fields[el.dataset.editKey]=el.value;});var btn=$('saveRecord');btn.disabled=true;btn.textContent='Menyimpan…';call({action:'admin_update_record',token:token,type:selected.type,rowNumber:selected.rowNumber,recordId:selected.recordId,fields:fields}).then(function(j){toast(j.message);return call({action:'admin_rebuild_registration_pdf',token:token,type:selected.type,rowNumber:selected.rowNumber,recordId:selected.recordId});}).then(function(j){toast(j.message);return loadData();}).then(function(){$('detailOverlay').classList.add('hidden');}).catch(function(err){toast(err.message);}).finally(function(){btn.disabled=false;btn.textContent='Simpan perubahan data';});}
+function rebuildRegistrationPdf(){
+ if(!selected)return;
+ if(!window.confirm('Bangun ulang PDF formulir untuk '+selected.nama+' berdasarkan data dan berkas terbaru? PDF lama akan diganti setelah versi baru siap.'))return;
+ var btn=$('rebuildPdf');btn.disabled=true;btn.textContent='Menyusun PDF…';
+ call({action:'admin_rebuild_registration_pdf',token:token,type:selected.type,rowNumber:selected.rowNumber,recordId:selected.recordId})
+ .then(function(j){toast(j.message||'Pembangunan ulang PDF dijadwalkan.');return loadData();})
+ .then(function(){var latest=(selected.type==='kontingen'?data.kontingen:data.cabang).filter(function(x){return x.recordId===selected.recordId;})[0];if(latest){selected=latest;openDetail(latest.type,latest.rowNumber);}})
+ .catch(function(err){toast(err.message);})
+ .finally(function(){if($('rebuildPdf')){$('rebuildPdf').disabled=false;$('rebuildPdf').textContent='Bangun Ulang PDF';}});
+}
+function compressAdminImage(file){
+ if(!file||!/^image\/(jpeg|png)$/i.test(file.type||''))return Promise.resolve(file);
+ return new Promise(function(resolve){
+  var url=URL.createObjectURL(file),img=new Image();
+  img.onload=function(){try{
+   var maxSide=2200,scale=Math.min(1,maxSide/Math.max(img.naturalWidth,img.naturalHeight));
+   var w=Math.max(1,Math.round(img.naturalWidth*scale)),h=Math.max(1,Math.round(img.naturalHeight*scale));
+   var canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
+   var ctx=canvas.getContext('2d');if(!ctx)throw new Error('Canvas tidak tersedia');
+   ctx.fillStyle='#fff';ctx.fillRect(0,0,w,h);ctx.drawImage(img,0,0,w,h);
+   canvas.toBlob(function(blob){URL.revokeObjectURL(url);
+    if(!blob||blob.size>=file.size){resolve(file);return;}
+    try{resolve(new File([blob],file.name.replace(/\.[^.]+$/,'')+'_optimized.jpg',{type:'image/jpeg',lastModified:Date.now()}));}catch(e){resolve(file);}
+   },'image/jpeg',.92);
+  }catch(e){URL.revokeObjectURL(url);resolve(file);}};
+  img.onerror=function(){URL.revokeObjectURL(url);resolve(file);};img.src=url;
+ });
+}
+function fileToPayload(file){return compressAdminImage(file).then(function(prepared){return new Promise(function(resolve,reject){var reader=new FileReader();reader.onload=function(){var result=String(reader.result||''),part=result.split(',');resolve({fileData:part[1]||'',mimeType:prepared.type||'application/octet-stream',name:prepared.name});};reader.onerror=function(){reject(new Error('Gagal membaca berkas.'));};reader.readAsDataURL(prepared);});});}
+function replaceFiles(){if(!selected)return;var tasks=[];document.querySelectorAll('[data-replace-file]').forEach(function(input){var file=input.files&&input.files[0];if(!file)return;var idx=input.dataset.replaceFile,label=document.querySelector('[data-replace-label="'+idx+'"]').value;tasks.push(function(){return fileToPayload(file).then(function(f){return call({action:'admin_replace_file',token:token,type:selected.type,rowNumber:selected.rowNumber,recordId:selected.recordId,label:label,fileData:f.fileData,mimeType:f.mimeType,name:f.name});});});});if(!tasks.length){toast('Pilih minimal satu berkas yang akan diganti.');return;}var btn=$('replaceFiles');btn.disabled=true;btn.textContent='Mengunggah…';tasks.reduce(function(p,task){return p.then(task);},Promise.resolve()).then(function(){return call({action:'admin_rebuild_registration_pdf',token:token,type:selected.type,rowNumber:selected.rowNumber,recordId:selected.recordId});}).then(function(j){toast('Berkas diperbarui. '+j.message);return loadData();}).then(function(){$('detailOverlay').classList.add('hidden');}).catch(function(err){toast(err.message);}).finally(function(){btn.disabled=false;btn.textContent='Terapkan penggantian berkas';});}
+function addNewAttachment(){var file=$('newAttachment').files[0];if(!file||!selected)return;var label=$('newAttachmentLabel').value.trim();if(!label){toast('Isi label berkas terlebih dahulu.');$('newAttachmentLabel').focus();return;}fileToPayload(file).then(function(f){return call({action:'admin_replace_file',token:token,type:selected.type,rowNumber:selected.rowNumber,recordId:selected.recordId,label:label,fileData:f.fileData,mimeType:f.mimeType,name:f.name});}).then(function(j){return call({action:'admin_rebuild_registration_pdf',token:token,type:selected.type,rowNumber:selected.rowNumber,recordId:selected.recordId}).then(function(rb){toast(j.message+' '+rb.message);});}).then(function(){return loadData();}).then(function(){$('detailOverlay').classList.add('hidden');}).catch(function(err){toast(err.message);});}
+function deleteAttachment(btn){if(!selected)return;var fileId=btn.dataset.deleteFile,label=btn.dataset.deleteLabel,type=selected.type,recordId=selected.recordId;if(!window.confirm('Hapus berkas '+label+'? File akan dipindahkan ke Trash Google Drive dan tidak lagi dapat dipratinjau kontingen.'))return;btn.disabled=true;btn.textContent='Menghapus…';call({action:'admin_delete_file',token:token,type:type,recordId:recordId,fileId:fileId,label:label}).then(function(j){toast(j.message);return loadData();}).then(function(){var list=type==='kontingen'?data.kontingen:data.cabang,latest=list.filter(function(x){return x.recordId===recordId;})[0];if(latest)openDetail(type,latest.rowNumber);else $('detailOverlay').classList.add('hidden');}).catch(function(err){toast(err.message);btn.disabled=false;btn.textContent='Hapus berkas';});}
+function makeWhatsAppMessage(){if(!selected)return '';var status=$('reviewStatus').value,note=$('reviewNote').value.trim(),kind=selected.type==='kontingen'?'pendaftaran kontingen':'berkas cabang lomba';var body=status==='Terverifikasi'?'Berkas Anda telah TERVERIFIKASI. Terima kasih atas kerja sama dan partisipasinya.':status==='Perlu Revisi'?'Berkas Anda PERLU DIREVISI. Mohon perbaiki sesuai catatan panitia:\n'+(note||'Silakan koordinasikan dengan panitia.'):status==='Ditolak'?'Berkas Anda DITOLAK. '+(note?'Keterangan: '+note:'Silakan hubungi panitia untuk informasi lebih lanjut.'):'Status berkas Anda masih MENUNGGU VERIFIKASI.';return 'Assalamu’alaikum Wr. Wb.\n\nYth. Ketua Kontingen '+(selected.nama||'')+',\n\nPanitia PORSENI 2026 PAC IPNU-IPPNU Patebon menyampaikan informasi mengenai '+kind+'.\n\n'+body+(note&&status==='Terverifikasi'?'\n\nCatatan panitia: '+note:'')+'\n\nTerima kasih.\nPanitia PORSENI 2026\n“Unitas Ad Gloriam”';}
+function refreshWhatsAppDraft(){var box=$('waMessage');if(box)box.value=makeWhatsAppMessage();}
+function sendWhatsApp(){if(!selected)return;var phone=String(selected.waKetua||'').replace(/[^0-9]/g,'');if(phone.indexOf('0')===0)phone='62'+phone.slice(1);if(phone.indexOf('8')===0)phone='62'+phone;if(!/^62[0-9]{8,13}$/.test(phone)){toast('Nomor WhatsApp ketua kontingen tidak tersedia atau tidak valid.');return;}window.open('https://wa.me/'+phone+'?text='+encodeURIComponent($('waMessage').value.trim()),'_blank','noopener,noreferrer');}
+function saveReview(){if(!selected)return;var status=$('reviewStatus').value,note=$('reviewNote').value.trim();if((status==='Perlu Revisi'||status==='Ditolak')&&!note){toast('Catatan wajib diisi untuk status Perlu Revisi atau Ditolak.');$('reviewNote').focus();return;}if(!window.confirm('Simpan status “'+status+'” dan kirim pemberitahuan email otomatis kepada ketua kontingen?'))return;var btn=$('saveReview');btn.disabled=true;btn.textContent='Menyimpan & mengirim…';call({action:'admin_update_status',token:token,type:selected.type,recordId:selected.recordId,status:status,note:note}).then(function(j){toast(j.message||'Status tersimpan.');$('detailOverlay').classList.add('hidden');return loadData();}).catch(function(err){toast(err.message);}).finally(function(){btn.disabled=false;btn.textContent='Simpan verifikasi & Kirim Email';});}
+document.addEventListener('click',function(e){
+ var rp=e.target.closest('#resetPin'),tp=e.target.closest('[data-test-pdf]'),rm=e.target.closest('#retryMerge');
+ if(rm){if(!selected){toast('Pilih data pendaftaran terlebih dahulu.');return;}if(!window.confirm('Gabungkan ulang formulir dengan seluruh lampiran PDF untuk '+selected.nama+'?\n\nGunakan hanya jika PDF belum menyatu dengan lampirannya.'))return;rm.disabled=true;call({action:'admin_retry_pdf_merge',token:token,type:selected.type,recordId:selected.recordId}).then(function(j){toast(j.message);}).catch(function(err){toast(err.message);}).finally(function(){rm.disabled=false;});return;}
+ if(rp){if(!selected||selected.type!=='kontingen'){toast('Reset PIN hanya tersedia untuk data kontingen.');return;}if(!window.confirm('Buat PIN baru untuk '+selected.nama+'?\n\nPIN lama langsung tidak berlaku. PIN baru hanya ditampilkan sekali.'))return;rp.disabled=true;call({action:'admin_reset_pin',token:token,nama:selected.nama}).then(function(j){window.prompt('PIN baru untuk '+selected.nama+' (salin dan sampaikan hanya kepada ketua kontingen):',j.pin);}).catch(function(err){toast(err.message);}).finally(function(){rp.disabled=false;});return;}
+ if(tp){var kind=tp.getAttribute('data-test-pdf');tp.disabled=true;startTestPdfPreview(kind,tp).catch(function(err){toast(err.message);}).finally(function(){tp.disabled=false;});}
+});
+var testPreviewJobs={},testPreviewTimer=null,testPreviewShownId='',testReadyList=[],testPdfCache={},testPdfObjectUrl='';
+function testPdfLabel(k){return ({kontingen:'PDF Kontingen',duta:'PDF Duta Pelajar',tunggal:'PDF Tunggal',beregu:'PDF Beregu'})[k]||k;}
+function setTestDownloadButtons(single,allCount){
+ var a=$('testPreviewDownload'),b=$('testPreviewDownloadAll');
+ if(a)a.classList.toggle('hidden',!single);
+ if(b){b.classList.toggle('hidden',!(allCount>=2));b.textContent='⬇ Unduh semua ('+allCount+') .zip';}
+}
+function resetTestPreviewState(){
+ if(testPreviewTimer){clearTimeout(testPreviewTimer);testPreviewTimer=null;}
+ testPreviewJobs={};testPreviewShownId='';testReadyList=[];testPdfCache={};
+ setTestDownloadButtons(false,0);
+}
+function startTestPdfPreview(kind,button){
+ resetTestPreviewState();
+ $('testPreviewOverlay').classList.remove('hidden');$('testPreviewFrame').src='about:blank';$('testPreviewStatus').textContent='Membuat formulir dan mengonversi lampiran menjadi halaman PDF…';$('testPreviewSelect').classList.add('hidden');$('testPreviewSelect').innerHTML='';
+ function requestTestJobs(k){
+  if(k!=='all')return call({action:'admin_test_pdf',token:token,kind:k});
+  var kinds=['kontingen','duta','tunggal','beregu'],jobs={},chain=Promise.resolve();
+  kinds.forEach(function(one,idx){chain=chain.then(function(){$('testPreviewStatus').textContent='Menyusun PDF '+(idx+1)+' dari '+kinds.length+' ('+testPdfLabel(one)+')…';return call({action:'admin_test_pdf',token:token,kind:one}).then(function(r){Object.assign(jobs,r.jobs||{});});});});
+  return chain.then(function(){return {jobs:jobs,message:'PDF sedang digabungkan. Preview akan tampil otomatis setelah selesai.'};});
+ }
+ return requestTestJobs(kind).then(function(j){
+  if(!j.jobs||!Object.keys(j.jobs).length)throw new Error('Pekerjaan PDF uji coba tidak berhasil dibuat.');
+  testPreviewJobs=j.jobs;$('testPreviewStatus').textContent=j.message||'PDF sedang digabungkan. Preview akan tampil otomatis setelah selesai.';
+  var started=Date.now(),MAX_WAIT_MS=15*60*1000;
+  function poll(){
+   var keys=Object.keys(testPreviewJobs);
+   return Promise.all(keys.map(function(k){
+    var job=testPreviewJobs[k];
+    if(job.state==='ready'||job.state==='error')return Promise.resolve();
+    return call({action:'admin_test_pdf_status',token:token,jobId:job.jobId}).then(function(st){
+     testPreviewJobs[k]=Object.assign({},job,st,{pollErrors:0});
+    }).catch(function(err){
+     var n=(job.pollErrors||0)+1,msg=String(err&&err.message||'');
+     testPreviewJobs[k]=Object.assign({},job,{pollErrors:n},(n>=6||/tidak ditemukan|kedaluwarsa/i.test(msg))?{state:'error',message:msg||'Status PDF tidak dapat dibaca.'}:{});
+    });
+   })).then(function(){
+    var ready=[],done=0,failed=0,lastError='';
+    keys.forEach(function(k){var job=testPreviewJobs[k];if(job.state==='ready'){ready.push({key:k,job:job});done++;}else if(job.state==='error'){done++;failed++;lastError=job.message||lastError;}});
+    testReadyList=ready;
+    if(ready.length){
+     var select=$('testPreviewSelect');
+     select.innerHTML=ready.map(function(x){return '<option value="'+esc(x.job.jobId)+'">'+esc(testPdfLabel(x.key))+'</option>';}).join('');
+     select.classList.toggle('hidden',ready.length<2);
+     if(!testPreviewShownId)showTestPdf(ready[0].job.jobId);
+     select.value=testPreviewShownId;select.onchange=function(){showTestPdf(select.value);};
+     setTestDownloadButtons(true,ready.length);
+    }
+    if(done===keys.length){
+     $('testPreviewStatus').textContent=!ready.length?('Semua PDF gagal dibuat. '+lastError):(failed?('Selesai: '+ready.length+' PDF berhasil, '+failed+' gagal. Gunakan tombol Unduh untuk menyimpan PDF yang berhasil.'):'Semua PDF final selesai dibuat. Gunakan tombol Unduh untuk menyimpan hasilnya.');
+     return;
+    }
+    if(Date.now()-started>MAX_WAIT_MS){$('testPreviewStatus').textContent='Proses masih berjalan di server lebih dari 15 menit. PDF yang sudah jadi tetap bisa diunduh; sisanya ada di folder UJI COBA pada Drive.';return;}
+    $('testPreviewStatus').textContent='Menggabungkan PDF… '+ready.length+' dari '+keys.length+' siap. Penggabungan berjalan di latar belakang server dan dapat memakan beberapa menit.';
+    testPreviewTimer=setTimeout(poll,5000);
+   });
+  }
+  return poll();
+ });
+}
+function fetchTestPdf(jobId){
+ if(testPdfCache[jobId])return Promise.resolve(testPdfCache[jobId]);
+ return call({action:'admin_test_pdf_file',token:token,jobId:jobId}).then(function(j){
+  var f=j.file||{},raw=atob(f.base64||''),u=new Uint8Array(raw.length);
+  for(var i=0;i<raw.length;i++)u[i]=raw.charCodeAt(i);
+  var item={name:String(f.name||('UJI_'+jobId+'.pdf')),bytes:u};
+  testPdfCache[jobId]=item;return item;
+ });
+}
+function showTestPdf(jobId){
+ if(!jobId)return Promise.resolve();
+ testPreviewShownId=jobId;
+ var st=$('testPreviewStatus');st.dataset.prev=st.textContent;st.textContent='Memuat PDF…';
+ return fetchTestPdf(jobId).then(function(item){
+  if(testPdfObjectUrl)URL.revokeObjectURL(testPdfObjectUrl);
+  testPdfObjectUrl=URL.createObjectURL(new Blob([item.bytes],{type:'application/pdf'}));
+  $('testPreviewFrame').src=testPdfObjectUrl;st.textContent=st.dataset.prev||'';
+  setTestDownloadButtons(true,testReadyList.length);
+ }).catch(function(err){st.textContent=err.message;toast(err.message);});
+}
+function saveBlobAs(blob,name){
+ var url=URL.createObjectURL(blob),a=document.createElement('a');
+ a.href=url;a.download=name;a.style.display='none';document.body.appendChild(a);a.click();
+ setTimeout(function(){a.remove();URL.revokeObjectURL(url);},5000);
+}
+function downloadCurrentTestPdf(){
+ if(!testPreviewShownId){toast('Belum ada PDF yang siap diunduh.');return;}
+ var b=$('testPreviewDownload');b.disabled=true;
+ fetchTestPdf(testPreviewShownId).then(function(item){saveBlobAs(new Blob([item.bytes],{type:'application/pdf'}),item.name);}).catch(function(err){toast(err.message);}).finally(function(){b.disabled=false;});
+}
+function downloadAllTestPdfs(){
+ var list=testReadyList.slice();
+ if(!list.length){toast('Belum ada PDF yang siap diunduh.');return;}
+ var b=$('testPreviewDownloadAll'),oldText=b.textContent;b.disabled=true;b.textContent='Menyiapkan ZIP…';
+ Promise.all(list.map(function(x){return fetchTestPdf(x.job.jobId).then(function(item){return {key:x.key,item:item};});})).then(function(items){
+  var used={},files=items.map(function(o){
+   var n=o.item.name.replace(/[\\\/:*?"<>|]+/g,'_');
+   if(used[n])n=n.replace(/\.pdf$/i,'')+'_'+o.key+'.pdf';
+   used[n]=1;return {name:n,bytes:o.item.bytes};
+  });
+  var d=new Date(),p=function(v){return String(v).padStart(2,'0');};
+  saveBlobAs(buildZip(files),'PORSENI_UJI_COBA_'+d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'_'+p(d.getHours())+p(d.getMinutes())+'.zip');
+  toast(files.length+' PDF diunduh dalam satu berkas ZIP.');
+ }).catch(function(err){toast(err.message);}).finally(function(){b.disabled=false;b.textContent=oldText;});
+}
+var CRC_TABLE=null;
+function crc32(u8){
+ if(!CRC_TABLE){CRC_TABLE=new Uint32Array(256);for(var n=0;n<256;n++){var c=n;for(var k=0;k<8;k++)c=(c&1)?(0xEDB88320^(c>>>1)):(c>>>1);CRC_TABLE[n]=c>>>0;}}
+ var crc=0xFFFFFFFF;for(var i=0;i<u8.length;i++)crc=CRC_TABLE[(crc^u8[i])&255]^(crc>>>8);
+ return (crc^0xFFFFFFFF)>>>0;
+}
+// ZIP tanpa kompresi (PDF sudah terkompresi), cukup untuk beberapa berkas uji.
+function buildZip(files){
+ var enc=new TextEncoder(),parts=[],central=[],offset=0,now=new Date();
+ var dosTime=(now.getHours()<<11)|(now.getMinutes()<<5)|(now.getSeconds()>>1);
+ var dosDate=((now.getFullYear()-1980)<<9)|((now.getMonth()+1)<<5)|now.getDate();
+ files.forEach(function(f){
+  var name=enc.encode(f.name),crc=crc32(f.bytes),size=f.bytes.length;
+  var lh=new DataView(new ArrayBuffer(30));
+  lh.setUint32(0,0x04034b50,true);lh.setUint16(4,20,true);lh.setUint16(6,0x0800,true);lh.setUint16(8,0,true);
+  lh.setUint16(10,dosTime,true);lh.setUint16(12,dosDate,true);lh.setUint32(14,crc,true);lh.setUint32(18,size,true);lh.setUint32(22,size,true);
+  lh.setUint16(26,name.length,true);lh.setUint16(28,0,true);
+  parts.push(lh.buffer,name,f.bytes);
+  var ch=new DataView(new ArrayBuffer(46));
+  ch.setUint32(0,0x02014b50,true);ch.setUint16(4,20,true);ch.setUint16(6,20,true);ch.setUint16(8,0x0800,true);ch.setUint16(10,0,true);
+  ch.setUint16(12,dosTime,true);ch.setUint16(14,dosDate,true);ch.setUint32(16,crc,true);ch.setUint32(20,size,true);ch.setUint32(24,size,true);
+  ch.setUint16(28,name.length,true);ch.setUint16(30,0,true);ch.setUint16(32,0,true);ch.setUint16(34,0,true);ch.setUint16(36,0,true);
+  ch.setUint32(38,0,true);ch.setUint32(42,offset,true);
+  central.push(ch.buffer,name);
+  offset+=30+name.length+size;
+ });
+ var cdSize=0;central.forEach(function(p){cdSize+=p.byteLength;});
+ var end=new DataView(new ArrayBuffer(22));
+ end.setUint32(0,0x06054b50,true);end.setUint16(4,0,true);end.setUint16(6,0,true);end.setUint16(8,files.length,true);end.setUint16(10,files.length,true);
+ end.setUint32(12,cdSize,true);end.setUint32(16,offset,true);end.setUint16(20,0,true);
+ return new Blob(parts.concat(central,[end.buffer]),{type:'application/zip'});
+}
+function closeTestPreview(){resetTestPreviewState();$('testPreviewFrame').src='about:blank';if(testPdfObjectUrl){URL.revokeObjectURL(testPdfObjectUrl);testPdfObjectUrl='';}$('testPreviewOverlay').classList.add('hidden');}
+$('testPreviewClose').addEventListener('click',closeTestPreview);$('testPreviewDownload').addEventListener('click',downloadCurrentTestPdf);$('testPreviewDownloadAll').addEventListener('click',downloadAllTestPdfs);$('testPreviewOverlay').addEventListener('click',function(e){if(e.target===$('testPreviewOverlay'))closeTestPreview();});
+function allowReregistration(){if(!selected||selected.type!=='kontingen'||String(selected.status||'').toLowerCase()!=='ditolak')return;if(!window.confirm('Izinkan '+selected.nama+' mendaftar ulang?\n\nPendaftaran lama, data cabang terkait, dan PIN aktif akan dipindahkan ke Arsip Data Terhapus. Nama kontingen akan tersedia kembali pada formulir pendaftaran.'))return;var btn=$('allowReregistration');btn.disabled=true;btn.textContent='Mengarsipkan…';call({action:'admin_allow_reregistration',token:token,type:'kontingen',recordId:selected.recordId}).then(function(j){toast(j.message);$('detailOverlay').classList.add('hidden');return loadData();}).catch(function(err){toast(err.message);}).finally(function(){if(btn){btn.disabled=false;btn.textContent='Izinkan Daftar Ulang';}});}
+function deleteRecord(){if(!selected)return;var label=selected.nama+(selected.type==='cabang'?' · '+selected.cabang+' / '+selected.kategori:'');if(!window.confirm('Hapus data pendaftaran berikut dari Google Sheets?\n\n'+label+'\n\nData aktif akan diarsipkan untuk pemulihan, data cabang terkait dan PIN dihapus dari daftar aktif, serta akses pratinjau email kontingen dicabut. Tindakan ini hanya dapat dipulihkan pemilik database.'))return;var btn=$('deleteRecord');btn.disabled=true;call({action:'admin_delete_record',token:token,type:selected.type,rowNumber:selected.rowNumber,recordId:selected.recordId}).then(function(j){toast(j.message);$('detailOverlay').classList.add('hidden');return loadData();}).catch(function(err){toast(err.message);}).finally(function(){btn.disabled=false;});}
+function newsFormat(cmd,val){$('newsBody').focus();document.execCommand(cmd,false,val||null);}
+function cleanNewsHtml(html){var box=document.createElement('div');box.innerHTML=html;box.querySelectorAll('script,style,iframe,object,embed,form,input,button').forEach(function(n){n.remove();});box.querySelectorAll('*').forEach(function(n){var tag=n.tagName.toLowerCase();if(!['p','br','div','h2','h3','h4','strong','b','em','i','u','ul','ol','li','blockquote','a','img'].includes(tag)){n.replaceWith(document.createTextNode(n.textContent||''));return;}Array.from(n.attributes).forEach(function(at){if(tag==='a'&&at.name==='href'){if(!/^https:\/\//i.test(at.value))n.removeAttribute('href');}else if(tag==='img'&&['src','alt','width'].includes(at.name)){if(at.name==='src'&&!/^https:\/\//i.test(at.value))n.removeAttribute('src');}else n.removeAttribute(at.name);});});return box.innerHTML;}
+function uploadNewsInlineImage(file){if(!file)return Promise.resolve();if(!/^image\/(jpeg|png|webp)$/.test(file.type)){toast('Gunakan JPG, PNG, atau WebP.');return Promise.resolve();}if(file.size>5*1024*1024){toast('Ukuran foto maksimal 5 MB.');return Promise.resolve();}var editor=$('newsBody');editor.focus();var sel=window.getSelection(),range=sel&&sel.rangeCount?sel.getRangeAt(0).cloneRange():null;toast('Mengunggah foto…');return new Promise(function(resolve,reject){var fr=new FileReader();fr.onload=function(){var data=String(fr.result).split(',')[1];call({action:'admin_news_image_upload',token:token,name:file.name,mimeType:file.type,data:data}).then(function(j){var img=document.createElement('img');img.src=j.url;img.alt=file.name;img.style.cssText='max-width:100%;height:auto;border-radius:10px;display:block;margin:12px auto';if(range){sel.removeAllRanges();sel.addRange(range);}else editor.appendChild(document.createElement('p'));document.execCommand('insertHTML',false,img.outerHTML+'<p><br></p>');toast('Foto berhasil disisipkan.');resolve();}).catch(function(e){toast(e.message);reject(e);});};fr.onerror=function(){toast('Foto gagal dibaca.');reject(new Error('Foto gagal dibaca'));};fr.readAsDataURL(file);});}
+$('newsInlineImage').addEventListener('change',function(e){var files=Array.from(e.target.files||[]);(async function(){for(var f of files){try{await uploadNewsInlineImage(f);}catch(err){break;}}e.target.value='';})();});
+function resetNewsForm(){['newsId','newsTitle','newsSummary','newsImage'].forEach(function(id){$(id).value='';});$('newsBody').innerHTML='';$('newsCategory').value='Pengumuman';$('newsStatus').value='Draft';$('newsDate').value=new Date().toISOString().slice(0,10);}
+var devOpsFileSha='',devOpsFilePathLoaded='',devOpsReady=false,devOpsFiles=[];
+function devOpsShowStatus(status){
+ var badge=$('devopsBadge'),box=$('devopsStatusText');
+ if(status&&status.owner&&status.repo){
+  badge.textContent='TERHUBUNG';badge.className='status ok';
+  box.textContent='Terhubung ke '+status.owner+'/'+status.repo+' · branch '+(status.branch||'main')+'.';
+  $('devopsOwner').value=status.owner;$('devopsRepo').value=status.repo;$('devopsBranch').value=status.branch||'main';
+  devOpsReady=!!status.tokenConfigured;
+ }else{
+  badge.textContent='BELUM TERHUBUNG';badge.className='status wait';
+  box.textContent='Koneksi GitHub belum tersedia. Buka Pengaturan koneksi GitHub bila perlu mengaturnya.';
+  devOpsReady=false;
+ }
+ ['devopsSaveFile','devopsSaveDeployBackend','devopsRefreshRuns'].forEach(function(id){if($(id))$(id).disabled=!devOpsReady;});
+}
+function devOpsFormatDate(value){if(!value)return '—';var d=new Date(value);if(isNaN(d.getTime()))return String(value);return new Intl.DateTimeFormat('id-ID',{timeZone:'Asia/Jakarta',day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(d)+' WIB';}
+function devOpsDuration(start,end){if(!start)return '—';var a=new Date(start).getTime(),b=end?new Date(end).getTime():Date.now();if(!isFinite(a)||!isFinite(b)||b<a)return '—';var sec=Math.floor((b-a)/1000),h=Math.floor(sec/3600),m=Math.floor(sec%3600/60),s=sec%60;return (h?h+'j ':'')+(m?m+'m ':'')+s+'dtk';}
+function devOpsRenderRuns(rows){var box=$('devopsRuns');rows=rows||[];var summary=$('devopsWorkflowSummary');var counts={success:0,failure:0,running:0,queued:0};rows.forEach(function(r){var st=String(r.status||'').toLowerCase(),co=String(r.conclusion||'').toLowerCase();if(co==='success')counts.success++;else if(['failure','cancelled','timed_out','action_required'].indexOf(co)>=0)counts.failure++;else if(st==='in_progress')counts.running++;else if(st==='queued'||st==='requested'||st==='waiting'||st==='pending')counts.queued++;});summary.innerHTML=[['Berhasil',counts.success],['Gagal',counts.failure],['Berjalan',counts.running],['Antrean',counts.queued]].map(function(x){return '<div class="workflow-metric"><b>'+x[1]+'</b><small>'+x[0]+'</small></div>';}).join('');if(!rows.length){box.innerHTML='<div class="empty">Belum ada riwayat workflow pada branch ini.</div>';return;}box.innerHTML=rows.map(function(r){var co=String(r.conclusion||'').toLowerCase(),st=String(r.status||'').toLowerCase(),status=co?co.toUpperCase():st.toUpperCase(),kind=co==='success'?'success':(['failure','cancelled','timed_out','action_required'].indexOf(co)>=0?'failure':(st==='in_progress'?'running':''));var finish=r.updatedAt&&st==='completed'?r.updatedAt:'';return '<article class="workflow-run-card"><div class="workflow-run-head"><b>'+esc(r.name||'PORSENI Apps Script')+'</b><span class="workflow-state '+kind+'">'+esc(status||'UNKNOWN')+'</span></div><div class="workflow-run-meta">Branch: '+esc(r.branch||'—')+' · Commit: '+esc(r.sha||'—')+' · Mode: '+esc(r.mode||r.event||'—')+'<br>Mulai: '+esc(devOpsFormatDate(r.createdAt))+'<br>Terakhir diperbarui / selesai: '+esc(devOpsFormatDate(r.updatedAt))+'<br>Durasi: '+esc(devOpsDuration(r.createdAt,finish||(st==='in_progress'?null:(!co?r.updatedAt:null))))+'</div>'+(r.url?'<a class="file-link" href="'+esc(r.url)+'" target="_blank" rel="noopener">Buka detail log dan langkah workflow ↗</a>':'')+'</article>';}).join('');}
+function devOpsLoadRuns(){if(!devOpsReady)return Promise.resolve();$('devopsRuns').innerHTML='<div class="empty">Memeriksa status workflow…</div>';return callWithTimeout({action:'admin_devops_workflow_runs',token:token},30000).then(function(j){devOpsRenderRuns(j.runs||[]);$('devopsActionsLink').href=j.actionsUrl||'#';return j;}).catch(function(e){$('devopsRuns').innerHTML='<div class="empty">Gagal memuat riwayat: '+esc(e.message)+'</div>';throw e;});}
+function devOpsDownloadFile(path,filename){if(!devOpsReady){toast('Hubungkan GitHub terlebih dahulu.');return;}callWithTimeout({action:'admin_devops_read_file',token:token,path:path},45000).then(function(j){var blob=new Blob([j.content],{type:'text/plain;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=filename||path.split('/').pop();document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(url);},1500);toast('File '+a.download+' berhasil disiapkan untuk diunduh.');}).catch(function(e){toast('Unduh gagal: '+e.message);});}
+function devOpsLineNumbers(editorId,gutterId){var el=$(editorId),gut=$(gutterId);if(!el||!gut)return;var n=Math.max(1,el.value.split('\n').length),lines=[];for(var i=1;i<=n;i++)lines.push(i);gut.textContent=lines.join('\n');gut.scrollTop=el.scrollTop;}
+function devOpsFind(editorId,inputId,countId,direction){var el=$(editorId),q=String($(inputId).value||'');if(!q){$(countId).textContent='0 hasil';return;}var src=el.value.toLowerCase(),needle=q.toLowerCase(),matches=[],pos=0;while((pos=src.indexOf(needle,pos))!==-1){matches.push(pos);pos+=Math.max(1,needle.length);}$(countId).textContent=matches.length+' hasil';if(!matches.length){toast('Kata tidak ditemukan.');return;}var idx=Number(el.dataset.findIndex||-1);idx=direction>0?(idx+1)%matches.length:(idx<=0?matches.length-1:idx-1);el.dataset.findIndex=idx;el.focus();el.setSelectionRange(matches[idx],matches[idx]+q.length);var before=el.value.slice(0,matches[idx]).split('\n').length-1;el.scrollTop=Math.max(0,before*19-el.clientHeight/2);devOpsLineNumbers(editorId,editorId==='devopsEditor'?'devopsHtmlGutter':'devopsGsGutter');$(countId).textContent=(idx+1)+'/'+matches.length+' hasil';}
+function devOpsLoadBackend(){var path='gas/backend/Kode.js',btn=$('devopsLoadBackend');btn.disabled=true;$('devopsBackendMeta').textContent='Memuat source Apps Script dari repository…';callWithTimeout({action:'admin_devops_read_file',token:token,path:path},45000).then(function(j){$('devopsBackendEditor').value=j.content;window.devOpsBackendSha=j.sha||'';$('devopsBackendMeta').textContent='Source tersinkron dimuat · '+Number(j.size||0)+' byte · SHA '+String(j.sha||'').slice(0,8);devOpsLineNumbers('devopsBackendEditor','devopsGsGutter');$('devopsBackendStatus').textContent='Source repository untuk deployment Apps Script siap ditinjau atau diedit.';}).catch(function(e){$('devopsBackendMeta').textContent='Gagal memuat: '+e.message;toast(e.message);}).finally(function(){btn.disabled=false;});}
+function populateResetResultBranches(){var sel=$('resetResultBranch');if(!sel)return;sel.innerHTML='<option value="">Pilih cabang lomba…</option>';BRANCHES.forEach(function(x){var op=document.createElement('option');op.value=x[0];op.textContent=x[0];sel.appendChild(op);});}
+function resetChampionshipResults(scope){
+ if(user!=='Tyo'){toast('Akses reset hasil hanya untuk Admin Tyo.');return;}
+ var branch=scope==='branch'?String($('resetResultBranch').value||'').trim():'';
+ if(scope==='branch'&&!branch){toast('Pilih cabang lomba terlebih dahulu.');return;}
+ var promptText=scope==='all'?'RESET SELURUH HASIL KEJUARAAN PORSENI 2026':'RESET HASIL '+branch.toUpperCase();
+ if(!window.confirm('PERINGATAN: '+(scope==='all'?'Seluruh hasil kejuaraan':'Seluruh hasil cabang '+branch)+' akan dihapus. Finalisasi dan PDF hasil resmi juga akan dibatalkan. Lanjutkan?'))return;
+ var phrase=window.prompt('Ketik persis kalimat berikut untuk konfirmasi:\n'+promptText);
+ if(phrase!==promptText){toast('Konfirmasi tidak cocok. Reset dibatalkan.');return;}
+ var out=$('resetResultsStatus');out.textContent='Menjalankan reset…';
+ call({action:'admin_reset_championship_results',token:token,scope:scope,cabang:branch,confirmText:phrase}).then(function(j){
+  out.textContent=j.message+' Data terhapus: '+(j.deleted||0)+' baris.';
+  resultData=j.results||{detail:[],medals:[]};resultFinalization=j.finalization||{finalized:false};ADMIN_TAB_LOADED.results=true;
+  if($('resultList'))renderResultList();toast(j.message);
+ }).catch(function(e){out.textContent='Gagal: '+e.message;toast(e.message);});
+}
+function loadDevOps(force){if(user!=='Tyo'){toast('Akses Control Center hanya untuk Admin Tyo.');return Promise.reject(new Error('Akses ditolak.'));}
+ $('devopsStatusText').textContent='Memeriksa konfigurasi GitHub…';
+ return callWithTimeout({action:'admin_devops_status',token:token},30000).then(function(j){devOpsShowStatus(j.status||{});if(j.ready)return Promise.all([devOpsLoadFiles(),devOpsLoadRuns()]);return j;}).catch(function(e){$('devopsBadge').textContent='GAGAL MEMERIKSA';$('devopsBadge').className='status no';$('devopsStatusText').textContent=e.message;throw e;});}
+function devOpsLoadFiles(){
+ return callWithTimeout({action:'admin_devops_list_files',token:token},45000).then(function(j){
+  var available=(j.files||[]).filter(function(f){return f.path==='index.html'||f.path==='admin.html';});
+  devOpsFiles=available;
+  var sel=$('devopsFileSelect'),keep=sel.value||'index.html';
+  sel.innerHTML='';
+  [['index.html','Website utama — index.html'],['admin.html','Portal panitia — admin.html']].forEach(function(x){
+   var found=available.some(function(f){return f.path===x[0];});
+   var op=document.createElement('option');op.value=x[0];op.textContent=x[1]+(found?'':' (belum ditemukan)');
+   sel.appendChild(op);
+  });
+  sel.value=keep;
+  $('devopsFilePath').value=sel.value;
+  $('devopsFileMeta').textContent=available.length+' dari 2 halaman website ditemukan pada branch '+esc(j.branch)+'.';
+  return j;
+ }).catch(function(e){$('devopsFileMeta').textContent='Gagal memeriksa halaman website: '+e.message;throw e;});
+}
+function devOpsOpenFile(){
+ var path=String($('devopsFileSelect').value||'').trim();
+ if(['index.html','admin.html'].indexOf(path)<0){toast('Pilih Website utama atau Portal panitia.');return;}
+ $('devopsFilePath').value=path;
+ var btn=$('devopsLoadFile');btn.disabled=true;
+ callWithTimeout({action:'admin_devops_read_file',token:token,path:path},45000).then(function(j){
+  $('devopsFilePath').value=j.path;$('devopsEditor').value=j.content;devOpsLineNumbers('devopsEditor','devopsHtmlGutter');devOpsFileSha=j.sha||'';devOpsFilePathLoaded=j.path;
+  $('devopsCommitMessage').value='Update '+j.path+' melalui PORSENI Control Center';
+  $('devopsFileMeta').textContent='Versi GitHub dimuat · '+Number(j.size||0)+' byte.';if($('devopsEditorSource'))$('devopsEditorSource').textContent='Editor menampilkan: '+j.path+' (versi GitHub, SHA '+String(j.sha||'').slice(0,8)+').';
+  $('devopsSaveFile').disabled=!devOpsReady;
+ }).catch(function(e){
+  devOpsFileSha='';devOpsFilePathLoaded='';$('devopsSaveFile').disabled=true;
+  $('devopsFileMeta').textContent=e.message;toast(e.message);
+ }).finally(function(){btn.disabled=false;});
+}
+function devOpsSaveSetup(){var btn=$('devopsSaveSetup');btn.disabled=true;callWithTimeout({action:'admin_devops_save_setup',token:token,owner:$('devopsOwner').value,repo:$('devopsRepo').value,branch:$('devopsBranch').value,githubToken:$('devopsGithubToken').value},45000).then(function(j){$('devopsGithubToken').value='';toast(j.message);devOpsShowStatus(j.status||{});return devOpsLoadFiles();}).catch(function(e){toast(e.message);$('devopsStatusText').textContent=e.message;}).finally(function(){btn.disabled=false;});}
+function devOpsSaveFile(){
+ if(user!=='Tyo'||!devOpsReady){toast('Akses tidak diizinkan atau GitHub belum terhubung.');return;}
+ var path=String($('devopsFileSelect').value||'').trim(),content=$('devopsEditor').value;
+ if(['index.html','admin.html'].indexOf(path)<0){toast('Pilih salah satu halaman website.');return;}
+ if(devOpsFilePathLoaded!==path||!devOpsFileSha){toast('Klik Muat versi dari GitHub terlebih dahulu agar file tidak menimpa perubahan terbaru.');return;}
+ if(!content.trim()){toast('Isi HTML masih kosong.');return;}
+ if(new Blob([content]).size>700*1024){toast('Ukuran file maksimal 700 KB.');return;}
+ if(!window.confirm('Simpan '+path+' ke website PORSENI? GitHub Pages akan menerbitkan perubahan setelah commit.'))return;
+ var btn=$('devopsSaveFile');btn.disabled=true;
+ callWithTimeout({action:'admin_devops_save_file',token:token,path:path,content:content,sha:devOpsFileSha,message:'Update '+path+' melalui PORSENI Control Center'},60000).then(function(j){
+  devOpsFileSha=j.sha||'';$('devopsFileMeta').textContent='Tersimpan di GitHub · commit '+String(j.commitSha||'').slice(0,7);
+  toast('Halaman '+path+' berhasil disimpan ke GitHub. Tunggu GitHub Pages selesai menerbitkan.');
+  return devOpsLoadFiles();
+ }).catch(function(e){toast(e.message);$('devopsFileMeta').textContent=e.message;}).finally(function(){btn.disabled=false;});
+}
+function devOpsSaveDeployBackend(){
+ if(user!=='Tyo'||!devOpsReady){toast('Akses hanya untuk Admin Tyo dan koneksi GitHub harus aktif.');return;}
+ var content=String($('devopsBackendEditor').value||'');
+ if(!content.trim()){toast('Tempel seluruh kode Apps Script terlebih dahulu.');return;}
+ if(new Blob([content]).size>700*1024){toast('Kode Apps Script melebihi batas editor 700 KB.');return;}
+ if(!/function\s+doGet\s*\(/.test(content)||!/function\s+doPost\s*\(/.test(content)){toast('Kode belum lengkap. Pastikan seluruh source Apps Script yang ditempel memiliki doGet() dan doPost(e).');return;}
+ if(!window.confirm('YA, DEPLOY APPS SCRIPT?\\n\\nKode yang ditempel akan mengganti source backend di GitHub. Workflow akan membuat backup otomatis, mengirim source ke Apps Script, lalu memperbarui Web App produksi. URL Web App tetap sama. Lanjutkan?'))return;
+ var btn=$('devopsSaveDeployBackend'),status=$('devopsBackendStatus');
+ btn.disabled=true;status.textContent='Membaca versi backend saat ini dari repository…';
+ var path='gas/backend/Kode.js';
+ var sourceSha=window.devOpsBackendSha||'';
+ var readCurrent=sourceSha?Promise.resolve({sha:sourceSha}):callWithTimeout({action:'admin_devops_read_file',token:token,path:path},45000);
+ readCurrent.then(function(current){
+  status.textContent='Menyimpan kode terbaru ke GitHub…';
+  return callWithTimeout({action:'admin_devops_save_file',token:token,path:path,content:content,sha:current.sha,message:'Update Apps Script backend melalui PORSENI Control Center'},60000);
+ }).then(function(saved){
+  window.devOpsBackendSha=saved.sha||'';
+  status.textContent='Kode tersimpan di GitHub (commit '+String(saved.commitSha||'').slice(0,7)+'). Memulai backup dan deployment produksi…';
+  return callWithTimeout({action:'admin_devops_deploy_gas',token:token,mode:'deploy-production',confirmation:'SAYA-PAHAM-APPS-SCRIPT',productionConfirm:'DEPLOY-PRODUKSI-PORSENI-2026'},45000);
+ }).then(function(result){
+  status.textContent='Permintaan deploy berhasil dikirim. Backup dan deployment sedang diproses GitHub Actions. Buka riwayat untuk memantau sampai SUCCESS.';
+  toast('Kode Apps Script tersimpan. Deployment produksi berhasil dipicu.');
+  $('devopsBackendMeta').textContent='Commit tersimpan; menunggu hasil workflow.';
+  return devOpsLoadRuns();
+ }).catch(function(e){
+  status.textContent='Belum selesai: '+e.message;
+  toast(e.message);
+ }).finally(function(){btn.disabled=!devOpsReady;});
+}
+function devOpsInstallWorkflow(){if(!devOpsReady){toast('Hubungkan GitHub terlebih dahulu.');return;}if(!window.confirm('Pasang atau perbarui workflow deployment Google Apps Script pada repository? File workflow yang sama akan diganti bila sudah ada.'))return;var btn=$('devopsInstallWorkflow');btn.disabled=true;callWithTimeout({action:'admin_devops_install_workflow',token:token},60000).then(function(j){$('devopsDeployStatus').textContent=j.message+' Workflow deploy-apps-script.yml diperbarui. Pastikan Secrets CLASPRC_JSON, CLASP_JSON, dan GAS_DEPLOYMENT_ID tersedia.';toast(j.message);return devOpsLoadFiles();}).catch(function(e){toast(e.message);$('devopsDeployStatus').textContent=e.message;}).finally(function(){btn.disabled=false;});}
+function devOpsDeployGas(){if(user!=='Tyo'||!devOpsReady){toast('Akses tidak diizinkan atau GitHub belum terhubung.');return;}var mode=$('devopsDeployMode').value,confirmation=String($('devopsDeployConfirmation').value||'').trim(),productionConfirm=String($('devopsProductionConfirmation').value||'').trim();if(confirmation!=='SAYA-PAHAM-APPS-SCRIPT'){toast('Ketik persis SAYA-PAHAM-APPS-SCRIPT.');return;}if(mode==='deploy-production'){if(productionConfirm!=='DEPLOY-PRODUKSI-PORSENI-2026'){toast('Konfirmasi tambahan produksi belum cocok.');return;}if(!window.confirm('PERINGATAN: Ini akan memperbarui backend Web App produksi PORSENI yang sedang dipakai pengunjung. URL deployment tetap sama, tetapi kode aktif berubah. Lanjutkan?'))return;}else if(!window.confirm('Mode push-only akan mengganti source project Apps Script dari GitHub, membuat backup versi, tetapi TIDAK memperbarui Web App aktif. Lanjutkan?'))return;var btn=$('devopsDeployGas');btn.disabled=true;$('devopsDeployStatus').textContent='Mengirim workflow '+mode+' ke GitHub Actions…';callWithTimeout({action:'admin_devops_deploy_gas',token:token,mode:mode,confirmation:confirmation,productionConfirm:productionConfirm},45000).then(function(j){$('devopsDeployStatus').textContent=j.message+' Pantau: '+(j.runUrl||'tab Actions repository');toast(j.message);$('devopsDeployConfirmation').value='';$('devopsProductionConfirmation').value='';return devOpsLoadRuns();}).catch(function(e){$('devopsDeployStatus').textContent='Workflow gagal dipicu: '+e.message;toast(e.message);}).finally(function(){btn.disabled=false;});}
+function devOpsLoadLocalFile(file){
+ if(!file)return;
+ var target=String($('devopsFileSelect').value||'');
+ if(['index.html','admin.html'].indexOf(target)<0){toast('Pilih halaman website terlebih dahulu.');return;}
+ if(!/\.html?$/i.test(file.name)){toast('Pilih file .html atau .htm.');return;}
+ if(file.size>700*1024){toast('Ukuran file maksimal 700 KB.');return;}
+ if(devOpsFilePathLoaded!==target||!devOpsFileSha){toast('Klik Muat versi dari GitHub terlebih dahulu, baru pilih file pengganti.');$('devopsLocalFile').value='';return;}
+ var reader=new FileReader();
+ reader.onload=function(){
+  $('devopsFilePath').value=target;$('devopsEditor').value=String(reader.result||'');devOpsLineNumbers('devopsEditor','devopsHtmlGutter');if($('devopsEditorSource'))$('devopsEditorSource').textContent='Editor menampilkan: '+file.name+' (file lokal pengganti untuk '+target+').';
+  $('devopsFileMeta').textContent='File HTML baru siap disimpan · '+file.size+' byte · tujuan: '+(target==='index.html'?'Website utama':'Portal panitia');
+  $('devopsSaveFile').disabled=!devOpsReady;
+ };
+ reader.onerror=function(){toast('File HTML gagal dibaca.');};
+ reader.readAsText(file,'UTF-8');
+}
+var ADMIN_TAB_LOADED={news:false,results:false,logs:false,devops:false};
+function loadNewsAdmin(force){if(ADMIN_TAB_LOADED.news&&!force)return Promise.resolve(); $('newsAdminList').innerHTML='<div class="empty">Memuat berita…</div>';call({action:'admin_news_list',token:token}).then(function(j){var rows=j.news||[];$('newsAdminList').innerHTML=rows.length?rows.map(function(n){return '<article class="file-card" style="margin:8px 0"><b>'+esc(n.judul)+'</b><p class="muted" style="margin:4px 0">'+esc(n.kategori)+' · '+esc(n.tanggal)+' · <b>'+esc(n.status)+'</b></p><div class="actions"><button class="btn light" data-news-edit="'+esc(n.id)+'">Edit</button><button class="btn light" data-news-delete="'+esc(n.id)+'">Hapus</button></div></article>';}).join(''):'<div class="empty">Belum ada berita.</div>';window._adminNews=rows;ADMIN_TAB_LOADED.news=true;$('newsAdminList').querySelectorAll('[data-news-edit]').forEach(function(b){b.onclick=function(){var n=rows.find(function(x){return x.id===b.dataset.newsEdit;});if(!n)return;$('newsId').value=n.id;$('newsTitle').value=n.judul;$('newsCategory').value=n.kategori;$('newsDate').value=n.tanggal;$('newsSummary').value=n.ringkasan;$('newsImage').value=n.gambar;$('newsBody').innerHTML=cleanNewsHtml(n.isi||'');$('newsStatus').value=n.status;window.scrollTo(0,0);};});$('newsAdminList').querySelectorAll('[data-news-delete]').forEach(function(b){b.onclick=function(){if(!confirm('Hapus berita ini?'))return;call({action:'admin_news_delete',token:token,id:b.dataset.newsDelete}).then(function(j){toast(j.message);loadNewsAdmin(true);}).catch(function(e){toast(e.message);});};});}).catch(function(e){$('newsAdminList').innerHTML='<div class="empty">'+esc(e.message)+'</div>';});}
+function saveNewsAdmin(){var btn=$('saveNews');btn.disabled=true;call({action:'admin_news_save',token:token,news:{id:$('newsId').value,tanggal:$('newsDate').value,kategori:$('newsCategory').value,judul:$('newsTitle').value,ringkasan:$('newsSummary').value,isi:cleanNewsHtml($('newsBody').innerHTML),gambar:$('newsImage').value,status:$('newsStatus').value}}).then(function(j){toast(j.message);resetNewsForm();loadNewsAdmin(true);}).catch(function(e){toast(e.message);}).finally(function(){btn.disabled=false;});}
+function renderRegistrationControls(r){r=r||{};[['kontingen','regKontStatus','toggleRegKont'],['cabang','regCabStatus','toggleRegCab']].forEach(function(x){var open=!!r[x[0]],st=$(x[1]),bt=$(x[2]);st.textContent=open?'DIBUKA MANUAL — tanggal diabaikan':'MENGIKUTI JADWAL TANGGAL — dapat ditutup otomatis';bt.textContent=open?'Tutup pendaftaran':'Buka pendaftaran';bt.className='btn '+(open?'danger':'warm');bt.dataset.open=open?'false':'true';});var maint=!!r.maintenanceCabang,ms=$('regCabMaintenanceStatus'),mb=$('toggleRegCabMaintenance');if(ms&&mb){ms.textContent=maint?'MODE PERBAIKAN AKTIF — semua pengiriman cabang diblokir':'MODE NORMAL — pengiriman mengikuti status pendaftaran dan tanggal';mb.textContent=maint?'Akhiri mode perbaikan':'Tutup untuk perbaikan';mb.className='btn '+(maint?'warm':'danger');mb.dataset.open=maint?'false':'true';}$('regControlMeta').textContent=r.updatedAt?'Perubahan terakhir: '+r.updatedAt+' oleh '+(r.updatedBy||'Admin'):'Belum ada perubahan manual. Sistem mengikuti tanggal pendaftaran.';}
+function loadRegistrationControls(){return call({action:'admin_get_registration_controls',token:token}).then(function(j){renderRegistrationControls(j.registration);}).catch(function(e){$('regKontStatus').textContent='Gagal memuat: '+e.message;$('regCabStatus').textContent='Gagal memuat: '+e.message;});}
+function toggleRegistration(type,btn){var open=btn.dataset.open==='true',label=type==='kontingen'?'pendaftaran kontingen':(type==='cabang'?'pendaftaran cabang lomba':'mode perbaikan cabang lomba');var question=type==='maintenance_cabang'?(open?'Aktifkan mode perbaikan? Semua pengiriman berkas cabang lomba akan dihentikan sementara.':'Akhiri mode perbaikan? Pendaftaran kembali mengikuti kontrol buka/tutup dan tanggal.'):(open?'Tanggal otomatis akan diabaikan sampai ditutup kembali.':'Setelah ditutup, sistem kembali mengikuti tanggal otomatis.');if(!window.confirm((open?'Aktifkan/Buka ':'Nonaktifkan/Tutup ')+label+'? '+question))return;btn.disabled=true;call({action:'admin_set_registration_controls',token:token,type:type,open:open}).then(function(j){toast(j.message);renderRegistrationControls(j.registration);}).catch(function(e){toast(e.message);}).finally(function(){btn.disabled=false;});}
+function setTab(next){
+ tab=next;currentPage=1;document.querySelectorAll('.navbtn').forEach(function(b){b.classList.toggle('active',b.dataset.tab===tab);});
+ if(next==='devops'&&user!=='Tyo'){toast('Control Center hanya dapat digunakan Admin Tyo.');tab='kontingen';}
+ var isResults=tab==='hasil',isLogs=tab==='log',isNews=tab==='berita',isTestPrint=tab==='ujicetak',isDevops=tab==='devops';
+ $('registrationControlPanel').classList.toggle('hidden',tab!=='kontingen'&&tab!=='cabang');
+ $('recordsPanel').classList.toggle('hidden',isResults||isLogs||isNews||isTestPrint||isDevops);
+ $('resultsPanel').classList.toggle('hidden',!isResults);$('testPrintPanel').classList.toggle('hidden',!isTestPrint);
+ $('activityLogPanel').classList.toggle('hidden',!isLogs);if($('newsAdminPanel'))$('newsAdminPanel').classList.toggle('hidden',!isNews);if($('devopsPanel'))$('devopsPanel').classList.toggle('hidden',!isDevops);
+ $('adminRecap').classList.toggle('hidden',isResults||isLogs||isNews||isTestPrint||isDevops);if($('publicRecapModePanel'))$('publicRecapModePanel').classList.toggle('hidden',tab!=='cabang');
+ $('searchInput').value='';$('statusFilter').value='';
+ $('pageTitle').textContent=tab==='kontingen'?'Data Kontingen':tab==='cabang'?'Data Cabang Lomba':isNews?'Kelola Kabar PORSENI':isResults?'Hasil Kejuaraan PORSENI 2026':isTestPrint?'Uji Coba Cetak':isDevops?'PORSENI Control Center':'Log Aktivitas';
+ $('pageDesc').textContent=tab==='kontingen'?'Kelola data, dokumen, dan proses verifikasi kontingen.':tab==='cabang'?'Kelola data peserta, kategori, dokumen, serta status verifikasi cabang lomba.':isNews?'Tulis, edit, dan publikasikan berita yang akan tampil otomatis di website utama.':isResults?'Input juara setiap cabang lomba dan perbarui klasemen website utama.':isTestPrint?'Buat dan periksa pratinjau dokumen PDF sebelum digunakan.':isDevops?'Ganti halaman website atau kode Apps Script dari satu tempat.':'Periksa riwayat login, unggah, pratinjau dokumen, dan perubahan oleh panitia.';
+ if(isResults)loadResults();else if(isLogs)loadActivityLogs();else if(isNews)loadNewsAdmin();else if(isDevops){populateResetResultBranches();loadDevOps(true).catch(function(){});}else{renderMetrics();renderRecap();renderTable();}
+}
+function loadActivityLogs(force){if(ADMIN_TAB_LOADED.logs&&!force)return Promise.resolve();var body=$('activityLogRows');body.innerHTML='<tr><td colspan="5" class="empty">Memuat riwayat aktivitas…</td></tr>';return call({action:'admin_security_logs',token:token}).then(function(j){var rows=j.logs||[];ADMIN_TAB_LOADED.logs=true;body.innerHTML=rows.length?rows.map(function(x){return '<tr><td>'+esc(x.waktu)+'</td><td>'+esc(x.aktor)+'</td><td>'+esc(x.aktivitas)+'</td><td><span class="status '+(x.status==='BERHASIL'?'ok':x.status==='GAGAL'||x.status==='DIKUNCI'?'no':'wait')+'">'+esc(x.status)+'</span></td><td>'+esc(x.detail)+'</td></tr>';}).join(''):'<tr><td colspan="5" class="empty">Belum ada aktivitas tercatat.</td></tr>';}).catch(function(err){body.innerHTML='<tr><td colspan="5" class="empty">'+esc(err.message)+'</td></tr>';});}
+
+function resultExists(branch,category){
+ var items=(resultData&&Array.isArray(resultData.detail))?resultData.detail:[];
+ return items.some(function(item){return String(item.cabang||'').trim()===String(branch||'').trim()&&String(item.kategori||'').trim()===String(category||'').trim();});
+}
+
+function refreshResultBranchOptions(preferred){
+ var sel=$('resultBranch'),previous=preferred||sel.value,html='';
+ BRANCHES.forEach(function(entry){
+  var available=entry[1].filter(function(cat){return !resultExists(entry[0],cat)||(editingResultKey&&editingResultKey.branch===entry[0]&&editingResultKey.category===cat);});
+  if(available.length)html+='<option value="'+esc(entry[0])+'">'+esc(prettyBranch(entry[0]))+'</option>';
+ });
+ if(!html)html='<option value="">Semua cabang dan kategori sudah diinput</option>';
+ sel.innerHTML=html;
+ if(previous&&Array.prototype.some.call(sel.options,function(o){return o.value===previous;}))sel.value=previous;
+ else sel.selectedIndex=0;
+ fillCategorySelect();
+ var disabled=!sel.value;
+ $('resultCategory').disabled=disabled;$('saveResult').disabled=disabled;
+}
+
+function fillBranchSelects(){refreshResultBranchOptions();}
+function fillCategorySelect(selected){
+ var branch=$('resultBranch').value,entry=BRANCHES.filter(function(x){return x[0]===branch;})[0];
+ var cats=entry?entry[1].filter(function(c){return !resultExists(branch,c)||(editingResultKey&&editingResultKey.branch===branch&&editingResultKey.category===c); }):[];
+ $('resultCategory').innerHTML=cats.map(function(c){return '<option value="'+esc(c)+'">'+esc(prettyCategory(branch,c))+'</option>';}).join('');
+ if(selected&&Array.prototype.some.call($('resultCategory').options,function(o){return o.value===selected;}))$('resultCategory').value=selected;
+ $('resultCategory').disabled=!cats.length;$('saveResult').disabled=!cats.length;
+}
+function clearResultForm(){editingResultKey=null;$('winner1').value='';$('winner2').value='';$('winner3').value='';refreshResultBranchOptions();}
+function loadResults(force){if(ADMIN_TAB_LOADED.results&&!force)return Promise.resolve();return call({action:'admin_get_results',token:token}).then(function(j){var resetSel=$('resetResultBranch');if(resetSel){resetSel.innerHTML='<option value="">Pilih cabang lomba…</option>';(j.catalog||[]).forEach(function(x){var op=document.createElement('option');op.value=x.cabang;op.textContent=x.cabang;resetSel.appendChild(op);});}resultData=j.results||{detail:[],medals:[]};resultFinalization=j.finalization||{finalized:false,finalizedAt:'',finalizedBy:''};ADMIN_TAB_LOADED.results=true;renderResultList();}).catch(function(err){$('resultList').innerHTML='<div class="empty">'+esc(err.message)+'</div>';});}
+function renderResultList(){var items=resultData.detail||[];renderFinalizationControls();refreshResultBranchOptions();$('resultList').innerHTML=items.length?items.map(function(x){return '<article class="result-item"><div><b>'+esc(prettyBranch(x.cabang))+' · '+esc(prettyCategory(x.cabang,x.kategori))+'</b><small>🥇 '+esc(x.juara1||'—')+' · 🥈 '+esc(x.juara2||'—')+' · 🥉 '+esc(x.juara3||'—')+'</small><small>'+esc(x.updatedAt||'')+' · '+esc(x.updatedBy||'')+'</small></div><div class="result-buttons"><button data-result-edit="'+esc(x.cabang)+'|'+esc(x.kategori)+'">Edit</button><button data-result-delete="'+esc(x.cabang)+'|'+esc(x.kategori)+'">Hapus</button></div></article>';}).join(''):'<div class="empty">Belum ada hasil kejuaraan yang diinput.</div>';Array.prototype.forEach.call(document.querySelectorAll('[data-result-edit]'),function(b){b.addEventListener('click',function(){var a=b.dataset.resultEdit.split('|'),x=items.filter(function(v){return v.cabang===a[0]&&v.kategori===a[1];})[0];if(!x)return;editingResultKey={branch:x.cabang,category:x.kategori};refreshResultBranchOptions(x.cabang);$('resultBranch').value=x.cabang;fillCategorySelect(x.kategori);$('winner1').value=x.juara1;$('winner2').value=x.juara2;$('winner3').value=x.juara3;window.scrollTo({top:0,behavior:'smooth'});});});Array.prototype.forEach.call(document.querySelectorAll('[data-result-delete]'),function(b){b.addEventListener('click',function(){var a=b.dataset.resultDelete.split('|');deleteResult(a[0],a[1]);});});}
+function renderFinalizationControls(){var box=$('resultFinalization');if(!box)return;var finalized=!!resultFinalization.finalized;box.className='finalization-box '+(finalized?'is-final':'is-pending');box.innerHTML='<div><b>'+(finalized?'JUARA UMUM TELAH DIFINALISASI':'HASIL MASIH SEMENTARA')+'</b><p>'+(finalized?'Website utama menampilkan hasil sebagai keputusan resmi. PDF hasil dikirim ke email ketua kontingen. Apabila ada email gagal, gunakan tombol kirim ulang. '+(resultFinalization.finalizedBy?'Difinalisasi oleh '+esc(resultFinalization.finalizedBy):'')+(resultFinalization.finalizedAt?' · '+esc(resultFinalization.finalizedAt):''):'Pastikan Juara 1 sudah diisi pada seluruh 24 kategori sebelum finalisasi. Setelah final, PDF resmi akan tersedia di website utama dan dikirim ke email kontingen.')+'</p></div><div class="final-actions">'+(finalized?'<button id="retryFinalEmail" class="btn light" type="button">✉ Kirim ulang email yang belum berhasil</button>':'')+'<button id="toggleFinalization" class="btn '+(finalized?'danger':'warm')+'">'+(finalized?'Batalkan finalisasi':'Finalisasi Juara Umum')+'</button></div>';var btn=$('toggleFinalization');btn.addEventListener('click',toggleFinalization);var retry=$('retryFinalEmail');if(retry)retry.addEventListener('click',retryFinalResults);}
+function startChampionshipTestPreview(){
+ var btn=$('testChampionshipPdf');if(btn){btn.disabled=true;btn.textContent='Menyusun PDF…';}
+ $('testPreviewOverlay').classList.remove('hidden');$('testPreviewFrame').src='about:blank';$('testPreviewSelect').classList.add('hidden');$('testPreviewSelect').innerHTML='';$('testPreviewStatus').textContent='Menyusun pratinjau hasil kejuaraan…';resetTestPreviewState();
+ call({action:'admin_test_championship_pdf',token:token}).then(function(j){
+  if(!j.jobId)throw new Error('ID pekerjaan PDF uji tidak diterima.');
+  $('testPreviewStatus').textContent=j.message||'PDF uji siap. Memuat pratinjau…';
+  return showTestPdf(j.jobId);
+ }).catch(function(err){$('testPreviewStatus').textContent=err.message;toast(err.message);}).finally(function(){if(btn){btn.disabled=false;btn.textContent='▧ Uji Cetak Hasil Kejuaraan';}});
+}
+function toggleFinalization(){var next=!resultFinalization.finalized;if(next&&!window.confirm('Finalisasi juara umum PORSENI 2026? Sistem akan memeriksa kelengkapan Juara 1 pada seluruh 24 kategori. Setelah berhasil, PDF hasil resmi akan dibuat dan dikirim ke email ketua kontingen yang valid.'))return;if(!next&&!window.confirm('Batalkan finalisasi? Website utama akan kembali menampilkan status sementara dan tombol cetak PDF resmi disembunyikan.'))return;var b=$('toggleFinalization');b.disabled=true;call({action:'admin_finalize_championship',token:token,finalized:next}).then(function(j){resultFinalization=j.finalization||{finalized:false};resultData=j.results||resultData;renderResultList();var mail=j.emailDispatch;if(next&&mail)toast(j.message+' Email hasil: '+(mail.sent||0)+' terkirim, '+(mail.failed||0)+' gagal, '+(mail.skipped||0)+' dilewati.');else toast(j.message);}).catch(function(err){toast(err.message);}).finally(function(){if($('toggleFinalization'))$('toggleFinalization').disabled=false;});}
+function retryFinalResults(){var btn=$('retryFinalEmail');if(!btn)return;if(!window.confirm('Kirim ulang PDF hasil resmi hanya ke alamat email yang belum berhasil menerima PDF untuk finalisasi ini? Email yang sudah sukses tidak akan dikirim ulang.'))return;btn.disabled=true;btn.textContent='Mengirim ulang…';call({action:'admin_resend_final_results',token:token}).then(function(j){var x=j.emailDispatch||{};toast(j.message+' Terkirim: '+(x.sent||0)+', gagal: '+(x.failed||0)+', dilewati: '+(x.skipped||0)+'.');}).catch(function(err){toast(err.message);}).finally(function(){if($('retryFinalEmail')){$('retryFinalEmail').disabled=false;$('retryFinalEmail').textContent='✉ Kirim ulang email yang belum berhasil';}});}
+function saveResult(){var b=$('saveResult');b.disabled=true;b.textContent='Menyimpan…';call({action:'admin_save_result',token:token,cabang:$('resultBranch').value,kategori:$('resultCategory').value,juara1:$('winner1').value,juara2:$('winner2').value,juara3:$('winner3').value}).then(function(j){resultData=j.results||resultData;resultFinalization=j.finalization||resultFinalization;renderResultList();clearResultForm();toast(j.message+(resultFinalization.finalized?' Finalisasi perlu diperiksa kembali.':' Klasemen website utama diperbarui.'));}).catch(function(err){toast(err.message);}).finally(function(){b.disabled=false;b.textContent='Simpan hasil';});}
+function deleteResult(branch,category){if(!window.confirm('Hapus hasil '+branch+' · '+category+'?'))return;call({action:'admin_delete_result',token:token,cabang:branch,kategori:category}).then(function(j){resultData=j.results||resultData;resultFinalization=j.finalization||resultFinalization;renderResultList();toast(j.message);}).catch(function(err){toast(err.message);});}
+function exportCSV(){var rows=records(),headers=tab==='kontingen'?['Nama Kontingen','Nomor Registrasi','Asal','Ketua','Tempat Lahir Ketua','Tanggal Lahir Ketua','Alamat','WhatsApp','Email','Cabang','Jumlah Peserta','Status']:['Nama Kontingen','Nomor Registrasi','Cabang','Kategori','Jumlah Peserta','Daftar Peserta','Tempat Lahir Peserta','Tanggal Lahir Peserta','Alamat Peserta','WhatsApp Peserta','Status'];var keys=tab==='kontingen'?['nama','nomor','asal','ketua','tempatLahirKetua','tanggalLahirKetua','alamat','waKetua','email','cabang','jumlahPeserta','status']:['nama','nomor','cabang','kategori','jumlahPeserta','peserta','tempatLahirPeserta','tanggalLahir','alamatPeserta','waPeserta','status'];var csv=[headers].concat(rows.map(function(r){return keys.map(function(k){return String(r[k]||'').replace(/"/g,'""');});})).map(function(row){return row.map(function(v){return '"'+v+'"';}).join(',');}).join('\r\n');var a=document.createElement('a'),url=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'}));a.href=url;a.download='PORSENI_2026_'+tab+'_'+new Date().toISOString().slice(0,10)+'.csv';a.click();URL.revokeObjectURL(url);}
+function previewAndResetRegistrations(){
+ var btn=$('previewResetRegistration'),out=$('resetRegistrationPreview');
+ if(user!=='Tyo'){toast('Akses hanya untuk Admin Tyo.');return;}
+ btn.disabled=true;out.textContent='Menghitung data pendaftaran dan berkas Drive…';
+ call({action:'admin_preview_reset_registrations',token:token}).then(function(j){
+  var p=j.preview||{},sh=p.sheets||{},dr=p.drive||{},q=p.pdfQueue||{};
+  out.textContent='HASIL PREVIEW (belum ada data dihapus)\nData Kontingen: '+(sh.kontingen||0)+'\nData Cabang Lomba: '+(sh.cabang||0)+'\nData PIN: '+(sh.pin||0)+'\nBerkas Drive: '+(dr.totalFiles||0)+' file\nAntrean PDF: '+((q.jobs||0)+(q.legacyJobs||0))+' pekerjaan';
+  if(!window.confirm('Preview selesai. Lanjutkan ke konfirmasi RESET TOTAL DATA?'))return;
+  var phrase=window.prompt('Ketik persis kalimat berikut untuk melanjutkan:\n'+j.confirmation);
+  if(phrase!==j.confirmation){toast('Konfirmasi tidak cocok. Reset dibatalkan.');return;}
+  btn.disabled=true;out.textContent+='\nMenjalankan reset…';
+  return call({action:'admin_reset_registrations',token:token,confirmText:phrase}).then(function(done){out.textContent+='\nSELESAI: '+done.message;toast(done.message);return loadData();});
+ }).catch(function(e){out.textContent+='\nGAGAL: '+e.message;toast(e.message);}).finally(function(){btn.disabled=false;});
+}
+$('previewResetRegistration').addEventListener('click',previewAndResetRegistrations);if($('resetAllResults'))$('resetAllResults').addEventListener('click',function(){resetChampionshipResults('all');});if($('resetBranchResults'))$('resetBranchResults').addEventListener('click',function(){resetChampionshipResults('branch');});if($('devopsSaveSetup'))$('devopsSaveSetup').addEventListener('click',devOpsSaveSetup);if($('devopsRefresh'))$('devopsRefresh').addEventListener('click',function(){loadDevOps(true).catch(function(){});});if($('devopsLoadFile'))$('devopsLoadFile').addEventListener('click',devOpsOpenFile);if($('devopsFileSelect'))$('devopsFileSelect').addEventListener('change',function(){devOpsFileSha='';devOpsFilePathLoaded='';$('devopsFilePath').value=this.value;if($('devopsLocalFile'))$('devopsLocalFile').value='';if($('devopsLocalFileName'))$('devopsLocalFileName').textContent='Belum ada file lokal dipilih.';$('devopsFileMeta').textContent='Muat versi terbaru dari GitHub sebelum mengganti halaman.';$('devopsSaveFile').disabled=true;devOpsOpenFile();});if($('devopsLocalFile'))$('devopsLocalFile').addEventListener('change',function(){var f=(this.files||[])[0];if($('devopsLocalFileName'))$('devopsLocalFileName').textContent=f?'File dipilih: '+f.name+' · '+f.size+' byte':'Belum ada file lokal dipilih.';devOpsLoadLocalFile(f);});if($('devopsSaveFile'))$('devopsSaveFile').addEventListener('click',devOpsSaveFile);if($('devopsSaveDeployBackend'))$('devopsSaveDeployBackend').addEventListener('click',devOpsSaveDeployBackend);if($('devopsRefreshRuns'))$('devopsRefreshRuns').addEventListener('click',function(){devOpsLoadRuns().catch(function(){});});$('testChampionshipPdf').addEventListener('click',startChampionshipTestPreview);$('toggleRegKont').addEventListener('click',function(){toggleRegistration('kontingen',this);});$('toggleRegCab').addEventListener('click',function(){toggleRegistration('cabang',this);});if($('toggleRegCabMaintenance'))$('toggleRegCabMaintenance').addEventListener('click',function(){toggleRegistration('maintenance_cabang',this);});$('loginForm').addEventListener('submit',login);$('logoutBtn').addEventListener('click',logout);$('refreshBtn').addEventListener('click',function(){if(tab==='log')loadActivityLogs(true);else if(tab==='devops')loadDevOps(true).catch(function(){});else{loadData();if(tab==='hasil')loadResults(true);if(tab==='berita')loadNewsAdmin(true);}});if($('refreshActivityLogs'))$('refreshActivityLogs').addEventListener('click',function(){loadActivityLogs(true);});$('scrollActivityLogsDown').addEventListener('click',function(){var box=$('activityLogScroll');if(box)box.scrollTo({top:box.scrollHeight,behavior:'smooth'});});$('searchInput').addEventListener('input',function(){currentPage=1;renderTable();});$('statusFilter').addEventListener('change',function(){currentPage=1;renderTable();});$('pagePrev').addEventListener('click',function(){changePage(-1);});$('pageNext').addEventListener('click',function(){changePage(1);});$('exportBtn').addEventListener('click',exportCSV);$('closeDrawer').addEventListener('click',function(){$('detailOverlay').classList.add('hidden');});$('detailOverlay').addEventListener('click',function(e){if(e.target===$('detailOverlay'))$('detailOverlay').classList.add('hidden');});$('saveNews').addEventListener('click',saveNewsAdmin);$('resetNews').addEventListener('click',resetNewsForm);$('refreshNews').addEventListener('click',function(){loadNewsAdmin(true);});$('modeRegisteredBtn').addEventListener('click',function(){setPublicRecapMode('terdaftar');});$('modeVerifiedBtn').addEventListener('click',function(){setPublicRecapMode('terverifikasi');});document.querySelectorAll('.navbtn').forEach(function(b){b.addEventListener('click',function(){setTab(b.dataset.tab);});});$('resultBranch').addEventListener('change',function(){if(editingResultKey&&editingResultKey.branch!==$('resultBranch').value)editingResultKey=null;fillCategorySelect();});$('saveResult').addEventListener('click',saveResult);$('clearResult').addEventListener('click',clearResultForm);$('refreshResults').addEventListener('click',function(){loadResults(true);});if($('refreshRequests'))$('refreshRequests').addEventListener('click',loadData);
+// Control Center: download, load Apps Script, editor line numbers and word search.
+['devopsEditor','devopsBackendEditor'].forEach(function(id){var g=id==='devopsEditor'?'devopsHtmlGutter':'devopsGsGutter';var el=$(id);if(el){el.addEventListener('input',function(){devOpsLineNumbers(id,g);});el.addEventListener('scroll',function(){var gut=$(g);if(gut)gut.scrollTop=el.scrollTop;});}});
+[['devopsSearchHtml','devopsFindHtmlPrev','devopsFindHtmlNext','devopsSearchHtmlCount','devopsEditor'],['devopsSearchGs','devopsFindGsPrev','devopsFindGsNext','devopsSearchGsCount','devopsBackendEditor']].forEach(function(x){$(x[0]).addEventListener('input',function(){var id=x[4],q=this.value,src=$(id).value.toLowerCase(),needle=q.toLowerCase(),n=0,p=0;if(needle)while((p=src.indexOf(needle,p))!==-1){n++;p+=Math.max(1,needle.length);}$(x[3]).textContent=n+' hasil';$(id).dataset.findIndex='-1';});$(x[1]).addEventListener('click',function(){devOpsFind(x[4],x[0],x[3],-1);});$(x[2]).addEventListener('click',function(){devOpsFind(x[4],x[0],x[3],1);});});
+if($('devopsLoadBackend'))$('devopsLoadBackend').addEventListener('click',devOpsLoadBackend);
+if($('devopsDownloadBackend'))$('devopsDownloadBackend').addEventListener('click',function(){devOpsDownloadFile('gas/backend/Kode.js','Kode.js');});
+if($('devopsDownloadIndex'))$('devopsDownloadIndex').addEventListener('click',function(){devOpsDownloadFile('index.html','index.html');});
+if($('devopsDownloadAdmin'))$('devopsDownloadAdmin').addEventListener('click',function(){devOpsDownloadFile('admin.html','admin.html');});
+
+fillBranchSelects();if(token&&['Tyo','Sochibul','Fuad'].indexOf(user)>=0){showApp();loadData();}else{token='';user='';sessionStorage.removeItem('porseni_admin_token');sessionStorage.removeItem('porseni_admin_user');showLogin();}
+})();
+
+
+</script>
+</body></html>
