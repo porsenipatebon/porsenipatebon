@@ -2640,13 +2640,56 @@ var DOC_GROUPS=[
  ]},
  {title:"BERKAS",description:"Format dokumen yang perlu disiapkan dan dilengkapi oleh kontingen.",items:[
   {i:"🤝",t:"Pakta Integritas",d:"Silahkan cetak Pakta Integritas lalu diisi manual dan tanda tangan bermaterai lalu scan dalam format PDF",u:"https://drive.google.com/uc?export=download&id=1rZmdav5JndLXDP-9PEQXie5Q63Anr3L1/view?usp=sharing"},
-  {i:"📨",t:"Contoh Surat Mandat",d:"Format surat mandat atau surat tugas dari kontingen (boleh edit langsung upload)",u:"https://docs.google.com/document/d/1-XPO_4ur3E2Z1lgtqzyTXElMVuKf2jRS/export?format=docx"},
+  {i:"📨",t:"Contoh Surat Mandat",d:"Format surat mandat atau surat tugas dari kontingen (boleh edit langsung upload)",u:"https://docs.google.com/document/d/1-XPO_4ur3E2Z1lgtqzyTXElMVuKf2jRS/export?format=docx"}
  ]}
 ];
+
+/* Mengubah tautan Google Drive/Docs biasa menjadi URL unduhan langsung.
+   Google Docs diekspor sebagai DOCX, Sheets sebagai XLSX, dan Slides sebagai PPTX.
+   File Drive biasa diunduh dalam format aslinya. */
+function getDirectDownloadUrl(rawUrl){
+ if(!rawUrl)return "";
+ var value=String(rawUrl).trim();
+ try{
+  var url=new URL(value);
+  var host=url.hostname.toLowerCase();
+  var path=url.pathname;
+  var id="";
+  var match;
+
+  if(host==="docs.google.com"||host.endsWith(".docs.google.com")){
+   match=path.match(/^\/(document|spreadsheets|presentation)\/d\/([^/]+)/i);
+   if(match){
+    id=match[2];
+    if(match[1].toLowerCase()==="document")return "https://docs.google.com/document/d/"+encodeURIComponent(id)+"/export?format=docx";
+    if(match[1].toLowerCase()==="spreadsheets")return "https://docs.google.com/spreadsheets/d/"+encodeURIComponent(id)+"/export?format=xlsx";
+    return "https://docs.google.com/presentation/d/"+encodeURIComponent(id)+"/export/pptx";
+   }
+  }
+
+  if(host==="drive.google.com"||host.endsWith(".drive.google.com")){
+   match=path.match(/\/file\/d\/([^/]+)/i);
+   if(match)id=match[1];
+   if(!id){
+    var queryId=url.searchParams.get("id")||"";
+    /* Membersihkan URL lama yang telanjur memasukkan /view?usp=... ke nilai id. */
+    id=queryId.split("/")[0].split("?")[0].trim();
+   }
+   if(id)return "https://drive.google.com/uc?export=download&id="+encodeURIComponent(id);
+  }
+ }catch(err){
+  /* Jika URL tidak dapat dikenali, kembalikan tautan asli agar tidak merusak tautan eksternal. */
+ }
+ return value;
+}
+
 function renderDocs(){
  var root=document.getElementById('docs');if(!root)return;
  root.innerHTML=DOC_GROUPS.map(function(group,gi){
-  return '<section class="docs-group"><div class="docs-group-head"><h3>'+esc(group.title)+'</h3><p>'+esc(group.description)+'</p></div><div class="docs-list">'+group.items.map(function(x,n){var on=!!x.u;return '<a class="link reveal'+(on?'':' off')+'" style="--i:'+(gi*10+n)+'" '+(on?'href="'+x.u+'" target="_blank" rel="noopener noreferrer"':'aria-disabled="true"')+'><span class="ic">'+x.i+'</span><span class="t"><b>'+esc(x.t)+'</b><small>'+esc(x.d)+'</small></span><span class="arr">'+(on?'Unduh':'Belum diunggah')+'</span></a>';}).join('')+'</div></section>';
+  return '<section class="docs-group"><div class="docs-group-head"><h3>'+esc(group.title)+'</h3><p>'+esc(group.description)+'</p></div><div class="docs-list">'+group.items.map(function(x,n){
+   var downloadUrl=getDirectDownloadUrl(x.u),on=!!downloadUrl;
+   return '<a class="link reveal'+(on?'':' off')+'" style="--i:'+(gi*10+n)+'" '+(on?'href="'+esc(downloadUrl)+'"':'aria-disabled="true"')+'><span class="ic">'+esc(x.i)+'</span><span class="t"><b>'+esc(x.t)+'</b><small>'+esc(x.d)+'</small></span><span class="arr">'+(on?'Unduh':'Belum diunggah')+'</span></a>';
+  }).join('')+'</div></section>';
  }).join('');
 }
 
