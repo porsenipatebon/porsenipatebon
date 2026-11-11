@@ -248,7 +248,7 @@ function adminResetRegistrations_(d){
  * Hanya file teks yang diizinkan; credential, file environment, dan konfigurasi clasp dilarang.
  */
 var PORSENI_DEVOPS_PREFIX_ = 'PORSENI_DEVOPS_';
-var PORSENI_DEVOPS_WORKFLOW_FILE_ = 'porseni-deploy-gas.yml';
+var PORSENI_DEVOPS_WORKFLOW_FILE_ = 'deploy-apps-script.yml';
 var PORSENI_DEVOPS_MAX_FILE_BYTES_ = 700 * 1024;
 
 function requireDevOpsTyo_(token){ return requireResetAdminTyo_(token); }
@@ -354,47 +354,113 @@ function devOpsCommitTextFile_(admin,c,path,content,sha,message){
 }
 function adminDevOpsSaveFile_(d){var admin=requireDevOpsTyo_(d.token),c=devOpsRequireConfig_();return devOpsCommitTextFile_(admin,c,d.path,d.content,d.sha,String(d.message||''));}
 function devOpsWorkflowText_(branch){
+ branch=String(branch||'main').trim();
+ if(!/^[A-Za-z0-9._/-]{1,100}$/.test(branch)||branch.indexOf('..')>=0||branch.charAt(0)==='/'||branch.charAt(branch.length-1)==='/')throw new Error('Branch workflow tidak valid.');
+ var ref="refs/heads/"+branch;
  return [
-  'name: Deploy PORSENI Apps Script',
-  '\'on\':',
+  'name: PORSENI Apps Script — Manual Deploy',
+  '',
+  'on:',
   '  workflow_dispatch:',
+  '    inputs:',
+  '      mode:',
+  '        description: "Pilih tindakan: push-only tidak memperbarui Web App aktif; deploy-production memperbarui deployment aktif."',
+  '        required: true',
+  '        type: choice',
+  '        options:',
+  '          - push-only',
+  '          - deploy-production',
+  '      confirmation:',
+  '        description: "Ketik persis: SAYA-PAHAM-APPS-SCRIPT"',
+  '        required: true',
+  '        type: string',
+  '',
   'permissions:',
   '  contents: read',
+  '',
+  'concurrency:',
+  '  group: porseni-apps-script-production',
+  '  cancel-in-progress: false',
+  '',
   'jobs:',
   '  deploy:',
-  '    runs-on: ubuntu-latest',
+  '    name: Sync / deploy Apps Script',
+  "    if: github.ref == '"+ref+"' && inputs.confirmation == 'SAYA-PAHAM-APPS-SCRIPT'",
+  '    runs-on: ubuntu-24.04',
+  '    timeout-minutes: 15',
   '    steps:',
   '      - name: Checkout repository',
-  '        uses: actions/checkout@v4',
+  '        uses: actions/checkout@v7',
+  '',
   '      - name: Setup Node.js',
-  '        uses: actions/setup-node@v4',
+  '        uses: actions/setup-node@v7',
   '        with:',
-  "          node-version: '22'",
-  '      - name: Check required deployment secrets',
+  '          node-version: "22"',
+  '',
+  '      - name: Validate source and required secrets',
   '        env:',
   '          CLASPRC_JSON: ${{ secrets.CLASPRC_JSON }}',
   '          CLASP_JSON: ${{ secrets.CLASP_JSON }}',
   '          GAS_DEPLOYMENT_ID: ${{ secrets.GAS_DEPLOYMENT_ID }}',
+  '          DEPLOY_MODE: ${{ inputs.mode }}',
   '        run: |',
-  '          test -n "$CLASPRC_JSON" || (echo "Missing CLASPRC_JSON" && exit 1)',
-  '          test -n "$CLASP_JSON" || (echo "Missing CLASP_JSON" && exit 1)',
-  '          test -n "$GAS_DEPLOYMENT_ID" || (echo "Missing GAS_DEPLOYMENT_ID" && exit 1)',
-  '      - name: Configure clasp authentication',
+  '          set -euo pipefail',
+  '          test -n "$CLASPRC_JSON" || { echo "Missing secret CLASPRC_JSON"; exit 1; }',
+  '          test -n "$CLASP_JSON" || { echo "Missing secret CLASP_JSON"; exit 1; }',
+  '          if [ "$DEPLOY_MODE" = "deploy-production" ]; then',
+  '            test -n "$GAS_DEPLOYMENT_ID" || { echo "Missing secret GAS_DEPLOYMENT_ID"; exit 1; }',
+  '          fi',
+  '          test -f gas/backend/appsscript.json',
+  '          test -f gas/backend/Kode.js',
+  '          node -e "const fs=require(\'fs\'); const c=JSON.parse(process.env.CLASP_JSON); if(!c.scriptId || c.rootDir !== \'gas/backend\') process.exit(2); const m=JSON.parse(fs.readFileSync(\'gas/backend/appsscript.json\',\'utf8\')); if(!m.dependencies?.libraries?.some(x=>x.userSymbol===\'PDFApp\' && String(x.version)===\'7\')) process.exit(3);"',
+  '          node --check gas/backend/Kode.js',
+  '',
+  '      - name: Install clasp',
+  '        run: npm install --global @google/clasp@3.4.1',
+  '',
+  '      - name: Configure temporary clasp credentials',
   '        env:',
   '          CLASPRC_JSON: ${{ secrets.CLASPRC_JSON }}',
   '          CLASP_JSON: ${{ secrets.CLASP_JSON }}',
   '        run: |',
+  '          set -euo pipefail',
   '          printf \'%s\' "$CLASPRC_JSON" > "$HOME/.clasprc.json"',
+  '          chmod 600 "$HOME/.clasprc.json"',
   '          printf \'%s\' "$CLASP_JSON" > .clasp.json',
-  '      - name: Push Apps Script source and update Web App deployment',
+  '          chmod 600 .clasp.json',
+  '',
+  '      - name: Verify Apps Script target and file scope',
+  '        run: |',
+  '          set -euo pipefail',
+  '          clasp --user tyo show-file-status',
+  '',
+  '      - name: Create pre-sync backup version in Apps Script',
+  '        run: |',
+  '          set -euo pipefail',
+  '          clasp --user tyo create-version "PORSENI pre-sync backup ${GITHUB_SHA::7}"',
+  '',
+  '      - name: Push source to Apps Script project',
+  '        run: |',
+  '          set -euo pipefail',
+  '          clasp --user tyo push --force',
+  '',
+  '      - name: Update existing production Web App deployment',
+  "        if: inputs.mode == 'deploy-production'",
   '        env:',
   '          GAS_DEPLOYMENT_ID: ${{ secrets.GAS_DEPLOYMENT_ID }}',
   '        run: |',
-  '          npm install --global @google/clasp@3.4.1',
-  '          test -f gas/appsscript.json || (echo "Missing gas/appsscript.json; clone the full Apps Script project into gas/ first." && exit 1)',
-  '          clasp show-file-status',
-  '          clasp push --force',
-  '          clasp update-deployment "$GAS_DEPLOYMENT_ID" --description "PORSENI deploy ${GITHUB_SHA:0:7}"'
+  '          set -euo pipefail',
+  '          clasp --user tyo update-deployment "$GAS_DEPLOYMENT_ID" --description "PORSENI production ${GITHUB_SHA::7}"',
+  '',
+  '      - name: Deployment summary',
+  '        env:',
+  '          DEPLOY_MODE: ${{ inputs.mode }}',
+  '        run: |',
+  '          if [ "$DEPLOY_MODE" = "push-only" ]; then',
+  '            echo "Source synced to Apps Script. Existing Web App deployment was NOT changed."',
+  '          else',
+  '            echo "Source synced and existing Web App deployment was updated."',
+  '          fi'
  ].join('\n')+'\n';
 }
 function adminDevOpsInstallWorkflow_(d){
@@ -406,10 +472,27 @@ function adminDevOpsInstallWorkflow_(d){
 }
 function adminDevOpsDeployGas_(d){
  var admin=requireDevOpsTyo_(d.token),c=devOpsRequireConfig_(),workflow=PORSENI_DEVOPS_WORKFLOW_FILE_;
+ var mode=String(d.mode||'').trim(),confirmation=String(d.confirmation||'').trim(),productionConfirm=String(d.productionConfirm||'').trim();
+ if(mode!=='push-only'&&mode!=='deploy-production')throw new Error('Pilih mode push-only atau deploy-production.');
+ if(confirmation!=='SAYA-PAHAM-APPS-SCRIPT')throw new Error('Konfirmasi workflow tidak cocok. Ketik SAYA-PAHAM-APPS-SCRIPT.');
+ if(mode==='deploy-production'&&productionConfirm!=='DEPLOY-PRODUKSI-PORSENI-2026')
+  throw new Error('Konfirmasi produksi tidak cocok. Ketik DEPLOY-PRODUKSI-PORSENI-2026.');
  var endpoint='/repos/'+encodeURIComponent(c.config.owner)+'/'+encodeURIComponent(c.config.repo)+'/actions/workflows/'+encodeURIComponent(workflow)+'/dispatches';
- var result=devOpsApi_('POST',endpoint,{ref:c.config.branch},c.token,false).data||{};
- adminAudit_(admin,'JALANKAN DEPLOYMENT GOOGLE APPS SCRIPT','devops',0,c.config.owner+'/'+c.config.repo,'Workflow '+workflow+' dipicu pada branch '+c.config.branch+'.');
- return {ok:true,message:'Permintaan deployment telah dikirim ke GitHub Actions. Pantau hasilnya pada tab Actions repository.',runUrl:result.html_url||result.run_url||'',workflow:workflow,branch:c.config.branch};
+ // GitHub workflow_dispatch mengembalikan HTTP 204 tanpa body; input wajib harus dikirim eksplisit.
+ devOpsApi_('POST',endpoint,{ref:c.config.branch,inputs:{mode:mode,confirmation:confirmation}},c.token,false);
+ var runUrl='https://github.com/'+encodeURIComponent(c.config.owner)+'/'+encodeURIComponent(c.config.repo)+'/actions/workflows/'+encodeURIComponent(workflow);
+ adminAudit_(admin,'JALANKAN WORKFLOW GOOGLE APPS SCRIPT','devops',0,c.config.owner+'/'+c.config.repo,
+  'Mode '+mode+' dipicu oleh '+admin.user+' pada branch '+c.config.branch+'.');
+ return {ok:true,message:mode==='push-only'
+   ?'Workflow push-only berhasil dipicu. Source project Apps Script akan disinkronkan, tetapi Web App aktif tidak diperbarui.'
+   :'Workflow deployment produksi berhasil dipicu. Backend aktif akan diperbarui jika seluruh langkah workflow berhasil.',
+   mode:mode,runUrl:runUrl,workflow:workflow,branch:c.config.branch};
+}
+function adminDevOpsWorkflowRuns_(d){
+ requireDevOpsTyo_(d.token);var c=devOpsRequireConfig_(),workflow=PORSENI_DEVOPS_WORKFLOW_FILE_;
+ var endpoint='/repos/'+encodeURIComponent(c.config.owner)+'/'+encodeURIComponent(c.config.repo)+'/actions/workflows/'+encodeURIComponent(workflow)+'/runs?branch='+encodeURIComponent(c.config.branch)+'&per_page=8';
+ var data=devOpsApi_('GET',endpoint,null,c.token,false).data||{},rows=data.workflow_runs||[];
+ return {ok:true,workflow:workflow,branch:c.config.branch,actionsUrl:'https://github.com/'+encodeURIComponent(c.config.owner)+'/'+encodeURIComponent(c.config.repo)+'/actions/workflows/'+encodeURIComponent(workflow),runs:rows.map(function(r){return {id:r.id,name:r.name||r.display_title||'PORSENI Apps Script',status:r.status||'',conclusion:r.conclusion||'',event:r.event||'',branch:r.head_branch||'',sha:String(r.head_sha||'').slice(0,7),createdAt:r.created_at||'',updatedAt:r.updated_at||'',url:r.html_url||''};})};
 }
 
 function adminSecurityLogs_(token){
@@ -432,7 +515,7 @@ function requireContingentSession_(token){
 }
 function contingentLogout_(token){token=String(token||'');if(/^[a-f0-9]{64}$/.test(token))CacheService.getScriptCache().remove('cont_session_'+token);return {ok:true};}
 
-function doGet(){return out({ok:true,info:'PORSENI 2026 form endpoint',backendVersion:'PORSENI-2026-CONTROL-CENTER-V39-20261111',pinMaxAttempts:PIN_MAX_ATTEMPTS,pinLockMinutes:PIN_LOCK_MS/60000,contingentSessionSeconds:CONTINGENT_SESSION_SECONDS});}
+function doGet(){return out({ok:true,info:'PORSENI 2026 form endpoint',backendVersion:'PORSENI-2026-CONTROL-CENTER-V40-20261111',pinMaxAttempts:PIN_MAX_ATTEMPTS,pinLockMinutes:PIN_LOCK_MS/60000,contingentSessionSeconds:CONTINGENT_SESSION_SECONDS});}
 function doPost(e){
  var lock,d=null,stage='baca_request';
  try{
@@ -475,6 +558,7 @@ function doPost(e){
   if(d.action==='admin_devops_save_file')return out(adminDevOpsSaveFile_(d));
   if(d.action==='admin_devops_install_workflow')return out(adminDevOpsInstallWorkflow_(d));
   if(d.action==='admin_devops_deploy_gas')return out(adminDevOpsDeployGas_(d));
+  if(d.action==='admin_devops_workflow_runs')return out(adminDevOpsWorkflowRuns_(d));
   if(d.action==='contingent_logout')return out(contingentLogout_(d.sessionToken));
   if(d.action==='contingent_session_ping'){var activeSession=requireContingentSession_(d.sessionToken);return out({ok:true,nama:activeSession.nama,sessionSeconds:CONTINGENT_SESSION_SECONDS});}
   if(d.action==='contingent_portal_session'){var restored=requireContingentSession_(d.sessionToken),restoredData=getContingentPortalData_(restored.nama);restoredData.sessionSeconds=CONTINGENT_SESSION_SECONDS;return out({ok:true,data:restoredData});}
@@ -1230,7 +1314,7 @@ function adminSendEmail_(d){
   body='Assalamu’alaikum Wr. Wb.\n\nYth. Ketua Kontingen '+nama+',\n\nDengan hormat,\n\nPanitia Pekan Olahraga dan Seni (PORSENI) 2026 PAC IPNU-IPPNU Kecamatan Patebon telah melakukan pemeriksaan terhadap berkas cabang lomba yang Saudara kirimkan.\n\nSTATUS VERIFIKASI: DITOLAK\n\nBerdasarkan hasil pemeriksaan dan pertimbangan administrasi panitia, berkas cabang lomba berikut dinyatakan DITOLAK dan tidak dapat dilanjutkan ke tahap berikutnya.\n\nRINCIAN BERKAS\n\nNama Kontingen: '+nama+'\nNomor Registrasi: '+(reg||'-')+'\nCabang Lomba: '+(cabang||'-')+'\nKategori: '+(kategori||'-')+'\n\nALASAN PENOLAKAN\n\n'+note+'\n\nKeputusan tersebut ditetapkan berdasarkan hasil pemeriksaan terhadap dokumen dan ketentuan yang berlaku dalam pelaksanaan PORSENI 2026.\n\nApabila terdapat hal yang perlu dikonfirmasi terkait keputusan tersebut, Ketua Kontingen dapat menghubungi panitia melalui kanal komunikasi resmi PORSENI 2026.\n\nKami mengucapkan terima kasih atas perhatian, partisipasi, dan kerja sama Saudara.\n\nWassalamu’alaikum Wr. Wb.\n\nHormat kami,\n\nPanitia PORSENI 2026\nPAC IPNU-IPPNU Kecamatan Patebon\n“Unitas Ad Gloriam”';
  }else if(type==='cabang'&&status==='Menunggu Verifikasi'){
   throw new Error('Status Menunggu Verifikasi tidak mengirim email keputusan.');
-
+ 
   body='Assalamu’alaikum Wr. Wb.\n\nYth. Ketua Kontingen '+nama+',\n\nKami dari Panitia PORSENI 2026 PAC IPNU-IPPNU Kecamatan Patebon menyampaikan informasi mengenai '+jenis+'.\n\nSTATUS VERIFIKASI: '+status.toUpperCase()+'.';
   if(status==='Perlu Revisi')body+='\n\nMohon melakukan perbaikan berkas sesuai catatan panitia berikut:';
   else if(status==='Ditolak')body+='\n\nDengan berat hati kami informasikan bahwa berkas pendaftaran belum dapat diterima. Berikut keterangan dari panitia:';
@@ -1346,7 +1430,7 @@ function validate(d){
     if(!files.some(function(f){return String(f.label||'').trim().toLowerCase()==='ktp peserta '+pi;}))throw new Error('KTP peserta '+pi+' wajib dilampirkan dalam format gambar JPG/PNG.');
    }
   }
-
+  
  if(d.type==='cabang'&&!files.some(function(f){return String(f.label||'').toLowerCase()==='surat tugas dari pr ipnu-ippnu';}))throw new Error('Surat Tugas dari PR IPNU-IPPNU wajib dilampirkan.');
  if(d.type==='cabang'&&d.cabang==='Duta Pelajar'){['cv duta pelajar','berkas pendukung duta pelajar'].forEach(function(lbl){if(!files.some(function(f){return String(f.label||'').trim().toLowerCase()===lbl;}))throw new Error(lbl.toUpperCase()+' wajib dilampirkan.');});}
  if(d.type==='cabang'&&d.cabang==='Karya ilmiah'){
@@ -3024,7 +3108,7 @@ function out(o){return ContentService.createTextOutput(JSON.stringify(o)).setMim
 
 function porseniBackendHealthCheckV15(){
  var ss=SpreadsheetApp.getActiveSpreadsheet();
- return {ok:true,backendVersion:'PORSENI-2026-CONTROL-CENTER-V39-20261111',kontingenCount:KONTINGEN.length,branchCount:Object.keys(KAT).length,pinMaxAttempts:PIN_MAX_ATTEMPTS,pinWindowMinutes:PIN_WINDOW_MS/60000,pinLockMinutes:PIN_LOCK_MS/60000,contingentSessionSeconds:CONTINGENT_SESSION_SECONDS,securityLogSheet:SECURITY_LOG_SHEET,spreadsheet:!!ss,pdfMergeLibrary:typeof PDFApp!=='undefined'&&!!PDFApp&&typeof PDFApp.mergePDFs==='function'};
+ return {ok:true,backendVersion:'PORSENI-2026-CONTROL-CENTER-V40-20261111',kontingenCount:KONTINGEN.length,branchCount:Object.keys(KAT).length,pinMaxAttempts:PIN_MAX_ATTEMPTS,pinWindowMinutes:PIN_WINDOW_MS/60000,pinLockMinutes:PIN_LOCK_MS/60000,contingentSessionSeconds:CONTINGENT_SESSION_SECONDS,securityLogSheet:SECURITY_LOG_SHEET,spreadsheet:!!ss,pdfMergeLibrary:typeof PDFApp!=='undefined'&&!!PDFApp&&typeof PDFApp.mergePDFs==='function'};
 }
 
 /* ===================================================================
