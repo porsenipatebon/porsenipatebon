@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex,nofollow,noarchive"><title>Portal Panitia | PORSENI 2026</title>
-<link rel="icon" type="image/png" href="assets/images/favicon-porseni.png">
+<link rel="icon" type="image/png" href="favicon-porseni.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -69,7 +69,7 @@
 </head>
 <body>
 <section id="loginView" class="login-wrap"><form id="loginForm" class="login-card">
- <div class="login-brand"><img src="assets/images/logo-porseni.png" alt="Logo PORSENI" fetchpriority="high" decoding="async"><div><div class="eyebrow">PORSENI 2026 · PAC IPNU-IPPNU PATEBON</div><h1>Portal Panitia</h1><p class="motto">“Unitas Ad Gloriam”</p></div></div>
+ <div class="login-brand"><img src="logo-porseni.png" alt="Logo PORSENI" fetchpriority="high" decoding="async"><div><div class="eyebrow">PORSENI 2026 · PAC IPNU-IPPNU PATEBON</div><h1>Portal Panitia</h1><p class="motto">“Unitas Ad Gloriam”</p></div></div>
  <p class="muted">Pilih nama petugas. Tyo menggunakan password pribadi yang berbeda; Sochibul dan Fuad menggunakan password admin bersama.</p>
  <div class="field"><label for="adminUser">Akses portal sebagai</label><select id="adminUser" required><option value="">Pilih nama petugas…</option><option value="Tyo">Tyo</option><option value="Sochibul">Sochibul</option><option value="Fuad">Fuad</option></select></div>
  <div class="field"><label for="password">Password akun petugas</label><input id="password" type="password" autocomplete="current-password" placeholder="Masukkan password akun petugas" required></div>
@@ -77,7 +77,7 @@
  <p class="login-foot">Akses khusus panitia. Gunakan password sesuai akun petugas. Password Tyo bersifat khusus dan tidak sama dengan password admin bersama. Jangan membagikan password atau sesi login. Aktivitas penting dicatat berdasarkan nama petugas yang dipilih.</p>
 </form></section>
 <section id="appView" class="shell hidden">
- <header class="topbar"><div class="topbrand"><img src="assets/images/logo-porseni.png" alt="" fetchpriority="high" decoding="async"><span>PORTAL PANITIA<small>PORSENI 2026 · PATEBON</small></span></div><div class="top-right"><span class="admin-pill" id="adminIdentity">PETUGAS</span><button id="logoutBtn" class="btn light">Keluar</button></div></header>
+ <header class="topbar"><div class="topbrand"><img src="logo-porseni.png" alt="" fetchpriority="high" decoding="async"><span>PORTAL PANITIA<small>PORSENI 2026 · PATEBON</small></span></div><div class="top-right"><span class="admin-pill" id="adminIdentity">PETUGAS</span><button id="logoutBtn" class="btn light">Keluar</button></div></header>
  <div class="layout"><aside class="sidebar"><div class="side-label">MENU PENGELOLAAN</div><button class="navbtn active" data-tab="kontingen">Data Kontingen <small id="navKont">0</small></button><button class="navbtn" data-tab="cabang">Data Cabang Lomba <small id="navCab">0</small></button><button class="navbtn" data-tab="berita">Kelola Berita <small>✎</small></button><button class="navbtn" data-tab="hasil">Hasil Kejuaraan <small>✦</small></button><button class="navbtn" data-tab="ujicetak">Uji Coba Cetak <small>▧</small></button><button class="navbtn" data-tab="log">Log Aktivitas <small>●</small></button><button class="navbtn hidden" id="devopsNav" data-tab="devops">Control Center <small>⚙</small></button></aside>
  <main class="main">
   <div class="page-head"><div><div class="eyebrow">PANEL KENDALI PORSENI 2026</div><h1 id="pageTitle">Data Kontingen</h1><p id="pageDesc">Kelola data, dokumen, dan proses verifikasi kontingen.</p></div><button id="refreshBtn" class="btn warm">↻ Muat ulang data</button></div>
@@ -394,7 +394,7 @@ function resetTestPreviewState(){
 }
 function startTestPdfPreview(kind,button){
  resetTestPreviewState();
- $('testPreviewOverlay').classList.remove('hidden');$('testPreviewFrame').src='about:blank';$('testPreviewStatus').textContent='Membuat formulir dan mengonversi lampiran menjadi halaman PDF…';$('testPreviewSelect').classList.add('hidden');$('testPreviewSelect').innerHTML='';
+ $('testPreviewOverlay').classList.remove('hidden');$('testPreviewFrame').src='about:blank';$('testPreviewStatus').textContent='Membuat formulir dan memproses lampiran contoh di server…';$('testPreviewSelect').classList.add('hidden');$('testPreviewSelect').innerHTML='';
  function requestTestJobs(k){
   if(k!=='all')return call({action:'admin_test_pdf',token:token,kind:k});
   var kinds=['kontingen','duta','tunggal','beregu'],jobs={},chain=Promise.resolve();
@@ -433,7 +433,7 @@ function startTestPdfPreview(kind,button){
      return;
     }
     if(Date.now()-started>MAX_WAIT_MS){$('testPreviewStatus').textContent='Proses masih berjalan di server lebih dari 15 menit. PDF yang sudah jadi tetap bisa diunduh; sisanya ada di folder UJI COBA pada Drive.';return;}
-    $('testPreviewStatus').textContent='Menggabungkan PDF… '+ready.length+' dari '+keys.length+' siap. Penggabungan berjalan di latar belakang server dan dapat memakan beberapa menit.';
+    $('testPreviewStatus').textContent='Memproses PDF di server… '+ready.length+' dari '+keys.length+' siap. Formulir dan lampiran sedang disiapkan serta digabungkan.';
     testPreviewTimer=setTimeout(poll,5000);
    });
   }
