@@ -1,0 +1,105 @@
+
+name: PORSENI Apps Script - Manual Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Pilih tindakan"
+        required: true
+        type: choice
+        options:
+          - push-only
+          - deploy-production
+      confirmation:
+        description: "Ketik SAYA-PAHAM-APPS-SCRIPT"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: porseni-apps-script-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Sync / Deploy Apps Script
+    if: github.ref == 'refs/heads/main' && inputs.confirmation == 'SAYA-PAHAM-APPS-SCRIPT'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Validate source and secrets
+        env:
+          CLASPRC_JSON: ${{ secrets.CLASPRC_JSON }}
+          CLASP_JSON: ${{ secrets.CLASP_JSON }}
+          GAS_DEPLOYMENT_ID: ${{ secrets.GAS_DEPLOYMENT_ID }}
+          DEPLOY_MODE: ${{ inputs.mode }}
+        run: |
+          set -euo pipefail
+
+          test -n "$CLASPRC_JSON"
+          test -n "$CLASP_JSON"
+
+          if [ "$DEPLOY_MODE" = "deploy-production" ]; then
+            test -n "$GAS_DEPLOYMENT_ID"
+          fi
+
+          test -f gas/backend/appsscript.json
+          test -f gas/backend/Kode.js
+
+          node -e "const fs=require('fs'); const c=JSON.parse(process.env.CLASP_JSON); if(!c.scriptId || c.rootDir !== 'gas/backend') process.exit(2); const m=JSON.parse(fs.readFileSync('gas/backend/appsscript.json','utf8')); if(!m.dependencies?.libraries?.some(x=>x.userSymbol==='PDFApp' && String(x.version)==='7')) process.exit(3);"
+
+          node --check gas/backend/Kode.js
+
+      - name: Install clasp
+        run: npm install --global @google/clasp@3.4.1
+
+      - name: Configure clasp credentials
+        env:
+          CLASPRC_JSON: ${{ secrets.CLASPRC_JSON }}
+          CLASP_JSON: ${{ secrets.CLASP_JSON }}
+        run: |
+          set -euo pipefail
+          printf '%s' "$CLASPRC_JSON" > "$HOME/.clasprc.json"
+          chmod 600 "$HOME/.clasprc.json"
+          printf '%s' "$CLASP_JSON" > .clasp.json
+          chmod 600 .clasp.json
+
+      - name: Verify Apps Script target
+        run: |
+          set -euo pipefail
+          clasp --user tyo show-file-status
+
+      - name: Create backup version
+        run: |
+          set -euo pipefail
+          clasp --user tyo create-version "PORSENI pre-sync backup ${GITHUB_SHA::7}"
+
+      - name: Push source to Apps Script
+        run: |
+          set -euo pipefail
+          clasp --user tyo push --force
+
+      - name: Update existing production deployment
+        if: inputs.mode == 'deploy-production'
+        env:
+          GAS_DEPLOYMENT_ID: ${{ secrets.GAS_DEPLOYMENT_ID }}
+        run: |
+          set -euo pipefail
+          clasp --user tyo update-deployment "$GAS_DEPLOYMENT_ID" --description "PORSENI production ${GITHUB_SHA::7}"
+
+      - name: Deployment summary
+        run: |
+          echo "Mode: ${{ inputs.mode }}"
+          echo "Apps Script workflow completed."

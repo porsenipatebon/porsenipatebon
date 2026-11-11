@@ -5,3 +5,7 @@
 # Local credentials
 /.clasprc.json
 node_modules/
+
+# Local clasp configuration and credentials
+.clasp.json
+.clasprc.json
