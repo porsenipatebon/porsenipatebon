@@ -1123,7 +1123,7 @@ function buildChampionshipPdfBlob_(state,isTest){
  var sign=body.appendTable([
   ['Mengetahui,','','Ditetapkan oleh,'],
   ['Koordinator Perlombaan','','Ketua Panitia Pelaksana'],
-  ['\n\n\n\n','','\n\n\n\n'],
+  ['\n\n\n\n','RUANG STEMPEL','\n\n\n\n'],
   ['Sochibul Mustaqim','','Prasetyo Wahyu A.R.']
  ]);
  sign.setBorderWidth(0);
@@ -1131,19 +1131,7 @@ function buildChampionshipPdfBlob_(state,isTest){
   var cell=sign.getCell(sr,sc);cell.setPaddingTop(3).setPaddingBottom(3).setPaddingLeft(4).setPaddingRight(4);
   cell.getChild(0).asParagraph().setAlignment(DocumentApp.HorizontalAlignment.CENTER);
   cell.editAsText().setFontFamily('Arial').setFontSize(sr===2&&sc===1?7:9).setBold(sr===1||sr===3);
-  if(sr===2&&sc===1){
-   cell.setBackgroundColor('#FFFFFF');
-   var stampFile=DriveApp.getFileById(PDF_STEMPEL_PANITIA_ID);
-   if(stampFile.isTrashed())throw new Error('File stempel panitia berada di Trash Google Drive.');
-   var stampBlob=stampFile.getBlob();
-   if(stampBlob.getContentType()!=='image/png')throw new Error('Stempel panitia harus berupa file PNG.');
-   var stampPara=cell.getChild(0).asParagraph();
-   stampPara.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
-   var resultStamp=stampPara.appendInlineImage(stampBlob);
-   var stampRatio=Math.min(46/resultStamp.getWidth(),46/resultStamp.getHeight(),1);
-   resultStamp.setWidth(Math.round(resultStamp.getWidth()*stampRatio));
-   resultStamp.setHeight(Math.round(resultStamp.getHeight()*stampRatio));
-  }
+  if(sr===2&&sc===1){cell.setBackgroundColor(cream);cell.setBorderColor(line);}
  }
 
  // LAMPIRAN — HASIL SETIAP CABANG/KATEGORI, TANPA REKAP MEDALI/POIN
