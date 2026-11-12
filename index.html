@@ -2264,17 +2264,20 @@ a:focus-visible,button:focus-visible,summary:focus-visible{
  .mandate-contact{flex-direction:column;gap:6px}
 }
 </style>
+
+
+
 <style id="porseni-wordmark-o-final-fix">
-/* Wordmark PORSENI: gunakan aset O asli tanpa pseudo-element atau efek tambahan */
+/* Ukuran dan kerning O diselaraskan dengan tinggi huruf PORSENI */
 .header-title .porseni-o{
-  position:relative!important;
   display:inline-flex!important;
-  flex:0 0 .78em!important;
-  width:.78em!important;
-  height:.78em!important;
-  margin:0 .025em!important;
+  width:.70em!important;
+  height:.70em!important;
+  flex:0 0 .70em!important;
+  margin:0 -.035em 0 .005em!important;
   padding:0!important;
-  vertical-align:-.075em!important;
+  position:relative!important;
+  vertical-align:-.045em!important;
   align-items:center!important;
   justify-content:center!important;
   overflow:visible!important;
@@ -2283,12 +2286,10 @@ a:focus-visible,button:focus-visible,summary:focus-visible{
   background:transparent!important;
   box-shadow:none!important;
   filter:none!important;
+  line-height:1!important;
 }
 .header-title .porseni-o::before,
-.header-title .porseni-o::after{
-  content:none!important;
-  display:none!important;
-}
+.header-title .porseni-o::after{content:none!important;display:none!important}
 .header-title .porseni-o img{
   display:block!important;
   width:100%!important;
@@ -2307,10 +2308,16 @@ a:focus-visible,button:focus-visible,summary:focus-visible{
   transform:none!important;
 }
 @media(max-width:899px){
- .header-title .porseni-o{flex-basis:.76em!important;width:.76em!important;height:.76em!important;margin:0 .02em!important}
+ .header-title .porseni-o{
+   width:.69em!important;height:.69em!important;flex-basis:.69em!important;
+   margin-right:-.03em!important;vertical-align:-.04em!important;
+ }
 }
 @media(max-width:390px){
- .header-title .porseni-o{flex-basis:.73em!important;width:.73em!important;height:.73em!important}
+ .header-title .porseni-o{
+   width:.67em!important;height:.67em!important;flex-basis:.67em!important;
+   margin-right:-.025em!important;
+ }
 }
 </style>
 
