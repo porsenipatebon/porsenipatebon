@@ -1,3 +1,333 @@
+
+Lampiran pengguna
+INI SAAT CETAK UJI COBA SK HASIL KEJUARAAN
+
+Kak, penyebabnya sudah ditemukan. Ini kesalahan pada kode pembuat PDF SK Hasil Kejuaraan, bukan masalah data juara atau Google Drive.
+
+Pesan error:
+
+cell.setBorderColor is not a function
+
+Terjadi karena kode memanggil setBorderColor() pada objek TableCell Google Docs. Padahal, pengaturan warna garis tabel harus dilakukan pada objek tabel, bukan sel individual.
+
+Kesalahan ini muncul saat sistem membuat bagian tanda tangan dan ruang stempel pada PDF SK. Karena proses berhenti di situ, pratinjau PDF menjadi kosong.
+
+Perbaikan berhasil
+Saya sudah menghapus pemanggilan fungsi yang tidak didukung tersebut. Pengaturan warna latar ruang stempel tetap dipertahankan, sedangkan garis tabel tetap mengikuti pengaturan tabel induk.
+
+Pemeriksaan: sintaks JavaScript berhasil (node --check).
+
+File backend yang sudah diperbaiki
+Kode.js
+
+Backend Apps Script · 462 KB
+Diperbaiki
+Unduh Kode.js terbaru
+
+Langkah penerapan
+Ganti gas/backend/Kode.js di GitHub dengan file ini.
+
+Commit dan push.
+
+Tunggu GitHub Actions selesai.
+
+Buka Control Center dan pastikan deployment Apps Script berhasil.
+
+Uji kembali Uji Coba SK Hasil Kejuaraan.
+
+Perbaikan ini hanya menyentuh kesalahan API pada ruang stempel. Header, tabel SK, dan desain dokumen yang sebelumnya kita pulihkan tidak saya ubah lagi.
+
+Saya belum menjalankan deployment produksi, jadi silakan kirim hasil PDF setelah pengujian agar kita bisa memastikan tampilannya tetap sesuai desain sebelumnya.
+
+
+Kode.js
+Kode
+TIDAK BISA DOWNLOAD
+Maaf, Kak. Kita gunakan tautan alternatif dengan nama file yang lebih sederhana.
+
+Saya sudah membuat ulang paket unduhan dan memeriksa bahwa arsip ZIP dapat dibuka tanpa kerusakan.
+
+Kode_SK_FIX_DOWNLOAD.zip
+
+Terverifikasi
+Berisi Kode.js dan salinan TXT dengan isi yang sama.
+
+UNDUH ZIP DI SINI
+
+Alternatif file TXT
+
+Unduh Kode_SK_FIX.txt
+
+Jika masih gagal:
+
+Klik kanan tautan unduhan.
+
+Pilih Open link in new tab.
+
+Jika terbuka sebagai teks, tekan Ctrl + S untuk menyimpan.
+
+Jangan mengubah kode produksi sebelum file berhasil diperoleh.
+
+
+Kode_SK_FIX.txt
+Dokumen
+HEADER SK TIDAK FULL, SAMAKAN DENGAN  PDF LAINNYA,
+LALU TABEL JUARA CABANG LOMBA ITU JADIKAN SATU SAJA AGAR TIDAK BANYAK HALAMAN
+
+Memproses selama 50s
+Siap, Kak. Saya sudah memperbaiki dua hal pada fungsi pembuatan PDF SK Hasil Kejuaraan.
+
+Perbaikan kode selesai
+1. Header SK full-width A4
+Penyebab header sebelumnya tidak penuh adalah fungsi SK menimpa margin kiri dan kanan yang sudah diatur oleh mesin PDF standar.
+
+Sekarang:
+
+Menggunakan mekanisme header yang sama dengan PDF pendaftaran lainnya.
+
+Lebar kop mengikuti lebar A4.
+
+Header tetap berulang pada halaman berikutnya.
+
+Margin isi dokumen tetap disediakan melalui pengaturan tabel dan paragraf.
+
+2. Tabel juara seluruh cabang digabung
+Konsep susunan tabel baru
+
+No.
+
+Cabang Lomba
+
+Kategori
+
+Juara 1
+
+Juara 2
+
+Juara 3
+
+1
+
+Duta Pelajar
+
+Putra
+
+Kontingen A
+
+Kontingen B
+
+Kontingen C
+
+2
+
+Duta Pelajar
+
+Putri
+
+Kontingen B
+
+Kontingen A
+
+Kontingen C
+
+3
+
+Voli
+
+Kelompok Putra
+
+Kontingen C
+
+Kontingen A
+
+Kontingen B
+
+4
+
+Voli
+
+Kelompok Putri
+
+Kontingen A
+
+Kontingen C
+
+Kontingen B
+
+Ini merupakan ilustrasi format. Data sebenarnya tetap diambil dari database hasil kejuaraan.
+
+Perubahan:
+
+Satu tabel untuk seluruh cabang dan kategori.
+
+Tidak lagi membuat halaman baru untuk setiap cabang.
+
+Baris tabel berlanjut otomatis ke halaman berikutnya jika sudah penuh.
+
+Ukuran huruf dan padding tabel dibuat lebih ringkas agar hemat halaman.
+
+3. File terbaru
+Repository lengkap
+
+Terbaru
+Unduh ZIP repository
+
+Backend Apps Script
+
+Unduh Kode.js
+
+Pemeriksaan: sintaks JavaScript berhasil dan integritas ZIP valid.
+
+Saran saya, setelah deployment, jalankan Uji Coba SK Hasil Kejuaraan terlebih dahulu. Pastikan header memenuhi lebar A4 dan tabel juara mengalir rapi. Desain SK lainnya tidak saya ubah di luar bagian yang diminta.
+
+Perlu dicatat, saya belum menghasilkan PDF langsung dari server Google Apps Script produksi, sehingga hasil visual akhir tetap perlu diverifikasi setelah deployment.
+
+
+Kode_SK_LAYOUT_FULL_A4_SATU_TABEL.js
+Kode
+TAMBHKAN UNTUK LAMPIRAN REKAPITULASI HASIL PEROLEHAN JUARA KONTINGEN YANG MEMUAT JUARA YANG DIRAIH OLEH KONTINGEN, LALU PADA SK HALAMAN 1 TABEL ITU JUARA TERUS NAMA KONTINGEN, TERUS TOTAL POIN
+Lampiran pengguna
+TAMBHKAN UNTUK LAMPIRAN REKAPITULASI HASIL PEROLEHAN JUARA KONTINGEN YANG MEMUAT JUARA YANG DIRAIH OLEH KONTINGEN, LALU PADA SK HALAMAN 1 TABEL ITU JUARA TERUS NAMA KONTINGEN, TERUS TOTAL POIN. LALU LIHAT PADA GAMBAR KOK MARGIN ISI UTAMA HLAMAN MEPET SEPERTI ITU BRO
+
+# 
+
+Siap, Kak. Saya sudah memperbarui format SK Hasil Kejuaraan sesuai permintaan. Sekaligus saya memperbaiki masalah margin yang terlihat pada screenshot.
+
+Perubahan kode selesai
+1. Halaman 1 — tabel penetapan juara umum
+Format tabel sekarang menjadi:
+
+Juara
+
+Nama Kontingen
+
+Total Poin
+
+Juara Umum I
+
+Kontingen A
+
+85
+
+Juara Umum II
+
+Kontingen B
+
+72
+
+Juara Umum III
+
+Kontingen C
+
+60
+
+Angka di atas hanya ilustrasi. PDF mengambil nama dan poin dari hasil kejuaraan yang tersimpan.
+
+2. Lampiran I — rekapitulasi perolehan juara kontingen
+Saya menambahkan lampiran khusus yang menunjukkan jumlah gelar juara yang diraih setiap kontingen.
+
+No.
+
+Nama Kontingen
+
+Juara I
+
+Juara II
+
+Juara III
+
+Total Poin
+
+1
+
+Kontingen A
+
+10
+
+5
+
+2
+
+67
+
+2
+
+Kontingen B
+
+8
+
+6
+
+3
+
+61
+
+Dengan bobot poin yang sudah digunakan sistem:
+
+Juara I = 5 poin
+
+Juara II = 3 poin
+
+Juara III = 1 poin
+
+3. Lampiran II — rekapitulasi seluruh cabang lomba
+Seluruh cabang dan kategori sekarang dimasukkan dalam satu tabel berkelanjutan, bukan tabel terpisah untuk setiap cabang.
+
+Kolomnya:
+
+Nomor
+
+Cabang lomba
+
+Kategori
+
+Juara I
+
+Juara II
+
+Juara III
+
+Tabel akan berlanjut otomatis ke halaman berikutnya apabila ruang halaman sudah penuh.
+
+4. Margin isi utama
+Saya menemukan penyebabnya: mesin PDF menggunakan margin halaman nol agar kop surat bisa memenuhi lebar A4. Namun, isi SK sebelumnya belum diberi batas margin visual.
+
+Sekarang:
+
+Paragraf isi diberi indent kiri dan kanan sekitar 2 cm.
+
+Tabel diberi padding sisi kiri dan kanan.
+
+Blok tanda tangan ikut dirapikan.
+
+Kop surat tetap full-width A4.
+
+CONTOH SK Tim Fasilitasi Dan Evaluasi | PDF
+
+5. File terbaru
+Repository lengkap
+
+Terbaru
+Unduh ZIP SK Rekap Kontingen dan Margin
+
+Backend Apps Script
+
+Unduh Kode.js
+
+Alternatif TXT
+
+Unduh Kode TXT
+
+Pemeriksaan: sintaks JavaScript lolos dan ZIP valid.
+
+Catatan: perubahan belum aktif di server produksi. Saya belum dapat membuat PDF langsung dari akun Apps Script Kakak. Setelah deploy, mohon uji cetak SK dan kirim hasilnya. Kita perlu memastikan margin, tabel peringkat, rekapitulasi kontingen, dan tanda tangan tampil proporsional sebelum SK digunakan sebagai dokumen resmi.
+
+
+Kode_SK_REKAP_KONTINGEN_MARGIN_FIX.js
+Kode
+
+Kode_SK_REKAP_KONTINGEN_MARGIN_FIX.txt
+Dokumen
 /**
  * PORSENI 2026 - Backend pendaftaran
  * Pasang pada Apps Script yang terikat ke Spreadsheet database.
@@ -1091,32 +1421,40 @@ function buildChampionshipPdfBlob_(state,isTest){
  isTest=!!isTest;
  var data=getChampionshipResults_(),catalog=getChampionshipCatalog_(),byKey={};
  data.detail.forEach(function(x){byKey[normalizeEvent_(x.cabang)+'|'+normalizeEvent_(x.kategori)]=x;});
- // Gunakan mesin dokumen PDF standar yang sama dengan PDF pendaftaran lain.
- // Jangan menimpa margin kiri/kanan dari pdfNewDoc_: margin 0 diperlukan
- // agar kop yang berada di header dapat tampil selebar A4.
  var doc=pdfNewDoc_('TEMP_HASIL_RESMI_PORSENI_2026_'+new Date().getTime(),0);
  var body=doc.getBody();
- body.setMarginTop(Math.round(PDF_KOP_PX_H*0.75)+18)
-     .setMarginBottom(42);
+ // Header tetap full-width dari pdfNewDoc_. Isi SK diberi margin visual 2 cm
+ // melalui indent paragraf dan padding tabel, bukan mengubah margin halaman.
+ var SIDE=PDF_SIDE||56.7;
  var navy='#24364B',muted='#666666',cream='#F7F3E8',ivory='#FFFDF7',softGray='#EEF0F2',line='#D8D5CC';
- function center(text,size,bold){var q=body.appendParagraph(text);q.setAlignment(DocumentApp.HorizontalAlignment.CENTER);q.editAsText().setFontFamily('Arial').setFontSize(size||10).setBold(!!bold);return q;}
- function para(text,size,bold){var q=body.appendParagraph(text);q.setAlignment(DocumentApp.HorizontalAlignment.JUSTIFY);q.setSpacingAfter(5);q.editAsText().setFontFamily('Arial').setFontSize(size||10).setBold(!!bold);return q;}
+ function center(text,size,bold){var q=body.appendParagraph(text);q.setAlignment(DocumentApp.HorizontalAlignment.CENTER);q.setIndentStart(SIDE).setIndentEnd(SIDE).setIndentFirstLine(0);q.editAsText().setFontFamily('Arial').setFontSize(size||10).setBold(!!bold);return q;}
+ function para(text,size,bold){var q=body.appendParagraph(text);q.setAlignment(DocumentApp.HorizontalAlignment.JUSTIFY);q.setIndentStart(SIDE).setIndentEnd(SIDE).setIndentFirstLine(0);q.setSpacingAfter(5);q.editAsText().setFontFamily('Arial').setFontSize(size||10).setBold(!!bold);return q;}
  function pageTitle(kicker,title,sub){
   center(kicker,9,true);center(title,15,true);if(sub)center(sub,9,false);
-  var rule=body.appendParagraph('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');rule.setAlignment(DocumentApp.HorizontalAlignment.CENTER);rule.setSpacingAfter(10);rule.editAsText().setFontSize(7).setForegroundColor(navy);
+  var lineP=body.appendParagraph('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');lineP.setAlignment(DocumentApp.HorizontalAlignment.CENTER);lineP.setIndentStart(SIDE).setIndentEnd(SIDE);lineP.setSpacingAfter(10);lineP.editAsText().setFontSize(7).setForegroundColor(navy);
  }
- function styleTable(table,header){
+ function styleTable(table,header,compact){
   table.setBorderWidth(0.6).setBorderColor(line);
   for(var r=0;r<table.getNumRows();r++)for(var c=0;c<table.getRow(r).getNumCells();c++){
-   var cell=table.getCell(r,c);cell.setPaddingTop(4).setPaddingBottom(4).setPaddingLeft(5).setPaddingRight(5);
-   cell.editAsText().setFontFamily('Arial').setFontSize(8).setForegroundColor('#222222');
+   var cell=table.getCell(r,c);
+   // Tabel berada pada area full-bleed agar kop tetap full-width; padding kolom
+   // pertama/terakhir menciptakan margin isi sekitar 2 cm tanpa mengecilkan header.
+   var leftPad=(c===0?SIDE:6),rightPad=(c===table.getRow(r).getNumCells()-1?SIDE:6);
+   cell.setPaddingTop(compact?3:5).setPaddingBottom(compact?3:5).setPaddingLeft(leftPad).setPaddingRight(rightPad);
+   cell.editAsText().setFontFamily('Arial').setFontSize(compact?8:9).setForegroundColor('#222222');
    if(header&&r===0){cell.setBackgroundColor(cream);cell.editAsText().setBold(true).setForegroundColor(navy);}
    else cell.setBackgroundColor(r%2===0?ivory:softGray);
   }
  }
+ function setTableColumnWidths(table,widths){
+  try{widths.forEach(function(w,i){table.setColumnWidth(i,w);});}catch(e){}
+ }
+ function appendPaddedTable(rows,widths,compact){
+  var t=body.appendTable(rows);styleTable(t,true,!!compact);if(widths)setTableColumnWidths(t,widths);return t;
+ }
  if(isTest){var draft=center('DOKUMEN UJI COBA — BELUM RESMI',11,true);draft.editAsText().setForegroundColor('#B3261E');}
 
- // HALAMAN AWAL — SK PENETAPAN JUARA UMUM
+ // HALAMAN 1 — SK DAN PERINGKAT JUARA UMUM
  pageTitle('PANITIA PELAKSANA PEKAN OLAHRAGA DAN SENI','SURAT KEPUTUSAN','PORSENI 2026 · PAC IPNU-IPPNU PATEBON');
  center('Nomor: ....../SK/PORSENI/2026',9,false);
  center('TENTANG',10,true);
@@ -1127,10 +1465,10 @@ function buildChampionshipPdfBlob_(state,isTest){
  para('Memperhatikan: hasil penilaian dan rekapitulasi panitia pada seluruh cabang perlombaan PORSENI 2026.',9,false);
  center('MEMUTUSKAN',11,true);
  para('Menetapkan: KEPUTUSAN PANITIA PELAKSANA PORSENI 2026 TENTANG PENETAPAN JUARA UMUM PORSENI 2026.',9,true);
- para('Menetapkan tiga kontingen sebagai Juara Umum PORSENI 2026 dengan urutan sebagai berikut:',9,false);
- var winnerRows=[['Peringkat','Nama Kontingen']];
- for(var wi=0;wi<3;wi++){var wm=(data.medals||[])[wi];winnerRows.push(['JUARA UMUM '+(wi+1),wm?wm.k:'—']);}
- var wt=body.appendTable(winnerRows);styleTable(wt,true);
+ para('Menetapkan tiga kontingen sebagai Juara Umum PORSENI 2026 dengan urutan dan perolehan poin sebagai berikut:',9,false);
+ var winnerRows=[['Juara','Nama Kontingen','Total Poin']];
+ for(var wi=0;wi<3;wi++){var wm=(data.medals||[])[wi];winnerRows.push([wi===0?'Juara Umum I':wi===1?'Juara Umum II':'Juara Umum III',wm?wm.k:'—',wm?String(wm.points):'—']);}
+ var wt=appendPaddedTable(winnerRows,[155,260,180],false);
  para('Keputusan ini berlaku sejak tanggal ditetapkan. Apabila di kemudian hari terdapat kekeliruan, akan dilakukan perbaikan sebagaimana mestinya.',9,false);
  center(isTest?'Patebon, .................... 2026':'Patebon, .... ................ 2026',9,false);
  var sign=body.appendTable([
@@ -1141,31 +1479,31 @@ function buildChampionshipPdfBlob_(state,isTest){
  ]);
  sign.setBorderWidth(0);
  for(var sr=0;sr<sign.getNumRows();sr++)for(var sc=0;sc<3;sc++){
-  var cell=sign.getCell(sr,sc);cell.setPaddingTop(3).setPaddingBottom(3).setPaddingLeft(4).setPaddingRight(4);
+  var cell=sign.getCell(sr,sc);cell.setPaddingTop(3).setPaddingBottom(3).setPaddingLeft(sc===0?SIDE:5).setPaddingRight(sc===2?SIDE:5);
   cell.getChild(0).asParagraph().setAlignment(DocumentApp.HorizontalAlignment.CENTER);
   cell.editAsText().setFontFamily('Arial').setFontSize(sr===2&&sc===1?7:9).setBold(sr===1||sr===3);
-  if(sr===2&&sc===1)cell.setBackgroundColor(cream);
  }
 
- // LAMPIRAN: SATU TABEL BERKESINAMBUNGAN UNTUK SEMUA CABANG.
- // Tabel akan mengalir ke halaman berikutnya tanpa page break per cabang.
+ // LAMPIRAN I — REKAPITULASI PEROLEHAN JUARA SETIAP KONTINGEN
  body.appendPageBreak();
- pageTitle('LAMPIRAN SURAT KEPUTUSAN PANITIA PELAKSANA PORSENI 2026','REKAPITULASI HASIL KEJUARAAN','SELURUH CABANG LOMBA PORSENI 2026');
- var rows=[['No.','Cabang Lomba','Kategori','Juara 1','Juara 2','Juara 3']],no=0;
+ pageTitle('LAMPIRAN I · SURAT KEPUTUSAN PANITIA PELAKSANA PORSENI 2026','REKAPITULASI PEROLEHAN JUARA KONTINGEN','PORSENI 2026 · PAC IPNU-IPPNU PATEBON');
+ para('Rekapitulasi berikut memuat jumlah gelar juara yang diraih setiap kontingen pada seluruh cabang dan kategori perlombaan. Perhitungan poin menggunakan bobot Juara I = 5 poin, Juara II = 3 poin, dan Juara III = 1 poin.',8,false);
+ var recapRows=[['No.','Nama Kontingen','Juara I','Juara II','Juara III','Total Poin']];
+ (data.medals||[]).forEach(function(m,i){recapRows.push([String(i+1),m.k,String(m.g||0),String(m.s||0),String(m.b||0),String(m.points||0)]);});
+ if(recapRows.length===1)recapRows.push(['—','Belum ada hasil kejuaraan','0','0','0','0']);
+ appendPaddedTable(recapRows,[90,205,55,55,55,150],true);
+
+ // LAMPIRAN II — SATU TABEL SELURUH CABANG/KATEGORI, BERLANJUT OTOMATIS ANTARHALAMAN
+ body.appendPageBreak();
+ pageTitle('LAMPIRAN II · SURAT KEPUTUSAN PANITIA PELAKSANA PORSENI 2026','REKAPITULASI HASIL SELURUH CABANG LOMBA','PORSENI 2026 · PAC IPNU-IPPNU PATEBON');
+ var rows=[['No.','Cabang Lomba','Kategori','Juara I','Juara II','Juara III']],rowNo=0;
  catalog.forEach(function(g){
-  g.kategori.forEach(function(c){
-   no++;
-   var x=byKey[normalizeEvent_(g.cabang)+'|'+normalizeEvent_(c)]||{};
-   rows.push([String(no),displayBranchName_(g.cabang),String(c),x.juara1||'—',x.juara2||'—',x.juara3||'—']);
-  });
+  g.kategori.forEach(function(c){var x=byKey[normalizeEvent_(g.cabang)+'|'+normalizeEvent_(c)]||{};rowNo++;rows.push([String(rowNo),displayBranchName_(g.cabang),displayCategoryName_(g.cabang,c),x.juara1||'—',x.juara2||'—',x.juara3||'—']);});
  });
- var allResultsTable=body.appendTable(rows);styleTable(allResultsTable,true);
- // Ukuran kolom dibuat ringkas agar satu tabel muat secara proporsional pada A4.
- try{
-  [24,92,82,105,105,105].forEach(function(w,i){allResultsTable.setColumnWidth(i,w);});
- }catch(widthErr){}
+ if(rows.length===1)rows.push(['—','Belum ada hasil','—','—','—','—']);
+ appendPaddedTable(rows,[85,105,105,100,100,100],true);
  var foot=body.appendParagraph(isTest?'DOKUMEN UJI COBA — BELUM RESMI. Data dapat berubah dan dokumen ini tidak dikirim kepada kontingen.':'Dokumen ini merupakan lampiran resmi Surat Keputusan Penetapan Juara Umum PORSENI 2026 setelah dilakukan finalisasi oleh Panitia Pelaksana.');
- foot.setAlignment(DocumentApp.HorizontalAlignment.CENTER);foot.setSpacingBefore(12);foot.editAsText().setFontFamily('Arial').setFontSize(8).setItalic(true).setForegroundColor(muted);
+ foot.setAlignment(DocumentApp.HorizontalAlignment.CENTER);foot.setIndentStart(SIDE).setIndentEnd(SIDE);foot.setSpacingBefore(12);foot.editAsText().setFontFamily('Arial').setFontSize(8).setItalic(true).setForegroundColor(muted);
  doc.saveAndClose();
  var file=DriveApp.getFileById(doc.getId()),blob=file.getAs(MimeType.PDF).setName('Surat Keputusan Hasil Kejuaraan PORSENI 2026.pdf');
  file.setTrashed(true);return blob;
