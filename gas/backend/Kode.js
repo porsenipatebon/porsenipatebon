@@ -94,7 +94,7 @@ var DRIVE_PATH = ['PORSENI PATEBON', 'PORSENI 2026'];
 var KAT = {
  'Duta Pelajar':['Putra','Putri'], 'Khitobah':['Putra','Putri'],
  'LCC':['Kelompok Campuran'], 'Karya ilmiah':['Kelompok Campuran'], 'Baca kitab':['Putra','Putri'],
- 'Badminton':['Ganda Campuran'], 'Voli':['Beregu Putra'], 'Sprint':['Putra','Putri'],
+ 'Badminton':['Ganda Campuran'], 'Voli':['Kelompok Putra'], 'Sprint':['Putra','Putri'],
  'Tenis meja':['Putra','Putri'], 'PES PS3':['Tunggal Bebas'],
  'Parade Gelar Budaya':['Kelompok Campuran'], 'Rebana':['Kelompok Bebas'], 'Paduan suara':['Kelompok Campuran'],
  'Kaligrafi':['Putra','Putri'], 'Baca puisi':['Putra','Putri'],
@@ -2073,7 +2073,7 @@ function displayBranchName_(branch){
  var labels={'Duta Pelajar':'Duta Pelajar','Khitobah':'Khitobah','LCC':'LCC','Karya ilmiah':'Karya Ilmiah','Baca kitab':'Baca Kitab','Badminton':'Badminton','Voli':'Voli','Sprint':'Sprint','Tenis meja':'Tenis Meja','PES PS3':'PES PS3','Parade Gelar Budaya':'Parade Gelar Budaya','Rebana':'Rebana','Paduan suara':'Paduan Suara','Kaligrafi':'Kaligrafi','Baca puisi':'Baca Puisi','MTQ':'MTQ'};
  return labels[branch]||branch;
 }
-function displayCategoryName_(branch,category){var value=String(category||'').trim();var legacy={'Tunggal Putra':'Putra','Tunggal Putri':'Putri','Beregu Campuran':'Kelompok Campuran','Beregu Bebas':'Kelompok Bebas'};return legacy[value]||value;}
+function displayCategoryName_(branch,category){var value=String(category||'').trim();var legacy={'Tunggal Putra':'Putra','Tunggal Putri':'Putri','Beregu Campuran':'Kelompok Campuran','Beregu Bebas':'Kelompok Bebas','Beregu Putra':'Kelompok Putra'};return legacy[value]||value;}
 function branchDeadline_(branch){return branch==='Badminton'?'29 November 2026':(branch==='Duta Pelajar'||branch==='Voli'?'6 Desember 2026':'19 Desember 2026');}
 function branchSchedule_(branch){
  var m={
@@ -2488,7 +2488,7 @@ function createRegistrationPdf(d, folder) {
     ['', 'Karya Ilmiah', ['Kelompok Campuran']],
     ['', 'Baca Kitab', ['Putra', 'Putri']],
     ['B. OLAHRAGA', 'Badminton', ['Ganda Campuran']],
-    ['', 'Voli', ['Beregu Putra']],
+    ['', 'Voli', ['Kelompok Putra']],
     ['', 'Sprint', ['Putra', 'Putri']],
     ['', 'Tenis Meja', ['Putra', 'Putri']],
     ['', 'PES PS3', ['Tunggal Bebas']],
