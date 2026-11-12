@@ -295,7 +295,7 @@ function devOpsValidatePath_(raw){
  if(parts.some(function(x){return !x||x==='.'||x==='..';}))throw new Error('Path file tidak valid.');
  if(/(^|\/)(\.env(?:\.[^/]*)?|\.clasprc\.json|\.clasp\.json|[^/]*(?:credential|secret|token|private[-_]?key)[^/]*)(\/|$)/i.test(path)||/\.(pem|key|p12|pfx|keystore)$/i.test(path))throw new Error('File kredensial atau rahasia tidak boleh dikelola dari portal.');
  if(lower.indexOf('.github/workflows/')===0 && path!=='.github/workflows/'+PORSENI_DEVOPS_WORKFLOW_FILE_)throw new Error('Portal hanya boleh mengelola workflow deployment PORSENI yang telah ditentukan.');
- if(!/\.(gs|html|htm|css|js|json|txt|md|yml|yaml|xml|toml|svg)$/i.test(path))throw new Error('Versi ini hanya mendukung file teks kode/konfigurasi (GS, HTML, CSS, JS, JSON, TXT, MD, YAML, XML, TOML, SVG).');
+ if(path!=='CNAME'&&!/\.(gs|html|htm|css|js|json|txt|md|yml|yaml|xml|toml|svg)$/i.test(path))throw new Error('Versi ini hanya mendukung file teks kode/konfigurasi (GS, HTML, CSS, JS, JSON, TXT, MD, YAML, XML, TOML, SVG, CNAME).');
  return path;
 }
 function devOpsSaveConfig_(d){
@@ -354,6 +354,46 @@ function devOpsCommitTextFile_(admin,c,path,content,sha,message){
  return {ok:true,path:path,sha:saved.content&&saved.content.sha||'',commitSha:saved.commit&&saved.commit.sha||'',commitUrl:saved.commit&&saved.commit.html_url||'',message:'File berhasil di-commit ke GitHub.'};
 }
 function adminDevOpsSaveFile_(d){var admin=requireDevOpsTyo_(d.token),c=devOpsRequireConfig_();return devOpsCommitTextFile_(admin,c,d.path,d.content,d.sha,String(d.message||''));}
+
+/** Commit beberapa file dalam satu commit Git tree; tidak membuat commit parsial per file. */
+function adminDevOpsPublishBundle_(d){
+ var admin=requireDevOpsTyo_(d.token),c=devOpsRequireConfig_(),files=d.files||[];
+ if(!Array.isArray(files)||!files.length||files.length>8)throw new Error('Pilih 1 sampai 8 file untuk satu batch.');
+ var allowed={'index.html':true,'admin.html':true,'gas/backend/Kode.js':true,'gas/backend/appsscript.json':true,'CNAME':true};
+ var seen={},prepared=[],total=0,hasGas=false;
+ files.forEach(function(f){
+  var path=devOpsValidatePath_(f&&f.path),content=String(f&&f.content==null?'':f.content);
+  if(!allowed[path])throw new Error('Path batch tidak diizinkan: '+path);
+  if(seen[path])throw new Error('File duplikat pada batch: '+path);seen[path]=true;
+  if(!content.trim())throw new Error('File kosong tidak dapat dipublikasikan: '+path);
+  var bytes=Utilities.newBlob(content,'text/plain',path.split('/').pop()).getBytes();
+  if(bytes.length>PORSENI_DEVOPS_MAX_FILE_BYTES_)throw new Error(path+' melebihi batas 700 KB.');
+  total+=bytes.length;if(total>1800*1024)throw new Error('Total batch melebihi 1,8 MB.');
+  if(path==='gas/backend/Kode.js'||path==='gas/backend/appsscript.json')hasGas=true;
+  if(path==='gas/backend/Kode.js'&&(!/function\s+doGet\s*\(/.test(content)||!/function\s+doPost\s*\(/.test(content)))throw new Error('Kode.js tidak lengkap: doGet() dan doPost(e) wajib tersedia.');
+  if(path==='gas/backend/appsscript.json'){try{JSON.parse(content);}catch(e){throw new Error('appsscript.json bukan JSON valid.');}}
+  prepared.push({path:path,bytes:bytes});
+ });
+ var head=devOpsApi_('GET','/repos/'+encodeURIComponent(c.config.owner)+'/'+encodeURIComponent(c.config.repo)+'/git/ref/heads/'+encodeURIComponent(c.config.branch),null,c.token,false).data;
+ var parentSha=head.object&&head.object.sha;if(!parentSha)throw new Error('Commit branch saat ini tidak dapat dibaca.');
+ var parent=devOpsApi_('GET','/repos/'+encodeURIComponent(c.config.owner)+'/'+encodeURIComponent(c.config.repo)+'/git/commits/'+encodeURIComponent(parentSha),null,c.token,false).data;
+ var treeItems=prepared.map(function(f){
+  var blob=devOpsApi_('POST','/repos/'+encodeURIComponent(c.config.owner)+'/'+encodeURIComponent(c.config.repo)+'/git/blobs',{content:Utilities.base64Encode(f.bytes),encoding:'base64'},c.token,false).data;
+  return {path:f.path,mode:'100644',type:'blob',sha:blob.sha};
+ });
+ var tree=devOpsApi_('POST','/repos/'+encodeURIComponent(c.config.owner)+'/'+encodeURIComponent(c.config.repo)+'/git/trees',{base_tree:parent.tree.sha,tree:treeItems},c.token,false).data;
+ var commit=devOpsApi_('POST','/repos/'+encodeURIComponent(c.config.owner)+'/'+encodeURIComponent(c.config.repo)+'/git/commits',{message:'PORSENI Control Center: publish '+prepared.map(function(x){return x.path;}).join(', '),tree:tree.sha,parents:[parentSha]},c.token,false).data;
+ devOpsApi_('PATCH','/repos/'+encodeURIComponent(c.config.owner)+'/'+encodeURIComponent(c.config.repo)+'/git/refs/heads/'+encodeURIComponent(c.config.branch),{sha:commit.sha,force:false},c.token,false);
+ var gasDispatched=false,workflowUrl='';
+ if(hasGas&&d.deployGas===true){
+  if(String(d.confirmation||'')!=='SAYA-PAHAM-APPS-SCRIPT'||String(d.productionConfirm||'')!=='DEPLOY-PRODUKSI-PORSENI-2026')throw new Error('Konfirmasi deployment produksi tidak valid. Commit tersimpan, tetapi deployment belum dipicu.');
+  var wf='/repos/'+encodeURIComponent(c.config.owner)+'/'+encodeURIComponent(c.config.repo)+'/actions/workflows/'+encodeURIComponent(PORSENI_DEVOPS_WORKFLOW_FILE_)+'/dispatches';
+  devOpsApi_('POST',wf,{ref:c.config.branch,inputs:{mode:'deploy-production',confirmation:'SAYA-PAHAM-APPS-SCRIPT'}},c.token,false);
+  gasDispatched=true;workflowUrl='https://github.com/'+encodeURIComponent(c.config.owner)+'/'+encodeURIComponent(c.config.repo)+'/actions/workflows/'+encodeURIComponent(PORSENI_DEVOPS_WORKFLOW_FILE_);
+ }
+ adminAudit_(admin,'PUBLISH BATCH FILE GITHUB','devops',0,c.config.owner+'/'+c.config.repo,'Commit '+String(commit.sha).slice(0,12)+'; files: '+prepared.map(function(x){return x.path;}).join(', ')+'; GAS dispatch: '+gasDispatched);
+ return {ok:true,commitSha:commit.sha,commitUrl:commit.html_url||'',files:prepared.map(function(x){return x.path;}),gasDispatched:gasDispatched,workflowUrl:workflowUrl,message:'Seluruh file berhasil diterbitkan dalam satu commit GitHub.'+(gasDispatched?' Deployment Apps Script otomatis telah dipicu.':'')};
+}
 function devOpsWorkflowText_(branch){
  branch=String(branch||'main').trim();
  if(!/^[A-Za-z0-9._/-]{1,100}$/.test(branch)||branch.indexOf('..')>=0||branch.charAt(0)==='/'||branch.charAt(branch.length-1)==='/')throw new Error('Branch workflow tidak valid.');
@@ -558,6 +598,7 @@ function doPost(e){
   if(d.action==='admin_devops_list_files')return out(adminDevOpsListFiles_(d));
   if(d.action==='admin_devops_read_file')return out(adminDevOpsReadFile_(d));
   if(d.action==='admin_devops_save_file')return out(adminDevOpsSaveFile_(d));
+  if(d.action==='admin_devops_publish_bundle')return out(adminDevOpsPublishBundle_(d));
   if(d.action==='admin_devops_install_workflow')return out(adminDevOpsInstallWorkflow_(d));
   if(d.action==='admin_devops_deploy_gas')return out(adminDevOpsDeployGas_(d));
   if(d.action==='admin_devops_workflow_runs')return out(adminDevOpsWorkflowRuns_(d));
