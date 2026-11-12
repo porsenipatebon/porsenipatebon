@@ -2951,13 +2951,13 @@ function queuePdfMerge_(mainPdf,d,folder,options){
   })[0];
   if(queued){
    if(jobId)setPdfJobStatus_(queued,'processing','Penggabungan PDF sudah terjadwal; pekerjaan duplikat tidak dibuat.');
-   ensurePdfMergeTrigger_(60*1000);
+   ensurePdfMergeTrigger_(1000);
    return jobId||true;
   }
   var job={qid:Utilities.getUuid().replace(/-/g,''),mainPdfId:mainPdfId,pdfIds:pdfIds,folderId:folder.getId(),outputFolderId:options.outputFolderId||folder.getId(),cleanupFolder:!!options.cleanupFolder,jobId:jobId,reg:String(d.reg||''),type:String(d.type||''),nama:String(d.nama||''),cabang:String(d.cabang||''),kategori:String(d.kategori||''),fileName:options.fileName||pdfName(d),oldPdfIds:(options.oldPdfIds||[]).filter(Boolean),attempts:0,waits:0,createdAt:new Date().toISOString()};
   savePdfMergeJob_(job);
   setPdfJobStatus_(job,'processing','Sedang menyatukan formulir dan seluruh lampiran PDF.');
-  ensurePdfMergeTrigger_(60*1000);
+  ensurePdfMergeTrigger_(1000);
  }finally{lock.releaseLock();}
  return jobId||true;
 }
@@ -3404,13 +3404,14 @@ function buildTestPdfJob_(d){
   // sama seperti jalur pendaftaran sebenarnya. Lampiran gambar tidak digabung ulang.
   (d.files||[]).forEach(function(f){
    if(!f||!f.data)return;
-   var bytes=Utilities.base64Decode(f.data),mime=detectedMime_(bytes,f.type||'');
+   // Lewati gambar sebelum base64Decode: gambar sudah diproses satu kali oleh
+   // mesin formulir produksi. Decode hanya PDF yang benar-benar perlu digabung.
+   var declaredMime=String(f.type||'').toLowerCase().split(';')[0].trim();
+   if(declaredMime==='image/png'||declaredMime==='image/jpeg'||declaredMime==='image/jpg')return;
+   var bytes=Utilities.base64Decode(f.data),mime=detectedMime_(bytes,declaredMime);
    if(mime==='application/pdf'){
     var pdfFile=tempFolder.createFile(Utilities.newBlob(bytes,'application/pdf','SRC_'+safe(f.name||'lampiran.pdf')));
     saved.push({label:f.label||f.name,id:pdfFile.getId(),mime:'application/pdf'});
-   }else if(mime==='image/png'||mime==='image/jpeg'){
-    // Tidak ditambahkan ke savedAttachments: gambar sudah ditangani oleh
-    // pembuat PDF formulir sesuai aturan lampiran produksi.
    }else{
     throw new Error('Format lampiran uji tidak didukung untuk PDF: '+(f.name||mime));
    }
