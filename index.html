@@ -2263,7 +2263,58 @@ a:focus-visible,button:focus-visible,summary:focus-visible{
  .mandate-accounts{grid-template-columns:1fr}
  .mandate-contact{flex-direction:column;gap:6px}
 }
-</style></head>
+</style>
+<style id="porseni-wordmark-o-final-fix">
+/* Wordmark PORSENI: gunakan aset O asli tanpa pseudo-element atau efek tambahan */
+.header-title .porseni-o{
+  position:relative!important;
+  display:inline-flex!important;
+  flex:0 0 .78em!important;
+  width:.78em!important;
+  height:.78em!important;
+  margin:0 .025em!important;
+  padding:0!important;
+  vertical-align:-.075em!important;
+  align-items:center!important;
+  justify-content:center!important;
+  overflow:visible!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  filter:none!important;
+}
+.header-title .porseni-o::before,
+.header-title .porseni-o::after{
+  content:none!important;
+  display:none!important;
+}
+.header-title .porseni-o img{
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  max-width:none!important;
+  max-height:none!important;
+  margin:0!important;
+  padding:0!important;
+  object-fit:contain!important;
+  object-position:center!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  filter:none!important;
+  transform:none!important;
+}
+@media(max-width:899px){
+ .header-title .porseni-o{flex-basis:.76em!important;width:.76em!important;height:.76em!important;margin:0 .02em!important}
+}
+@media(max-width:390px){
+ .header-title .porseni-o{flex-basis:.73em!important;width:.73em!important;height:.73em!important}
+}
+</style>
+
+</head>
 <body>
 <i class="blob b1"></i><i class="blob b2"></i><i class="blob b3"></i>
 <svg aria-hidden="true" class="sw" viewbox="0 0 420 150"><path d="M0 0H190C110 22 50 62 0 120Z" fill="#f7941d"></path><path d="M0 0H120C70 20 25 50 0 82Z" fill="#e8312f"></path><path d="M190 0H300C200 25 90 80 0 150V120C50 62 110 22 190 0Z" fill="#0a63c9"></path><path d="M300 0H400C290 30 150 100 0 150C90 80 200 25 300 0Z" fill="#12a9e8"></path></svg>
