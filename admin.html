@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex,nofollow,noarchive"><title>Portal Panitia | PORSENI 2026</title>
-<link rel="icon" type="image/png" href="favicon-porseni.png">
+<link rel="icon" type="image/png" href="assets/images/favicon-porseni.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -69,7 +69,7 @@
 </head>
 <body>
 <section id="loginView" class="login-wrap"><form id="loginForm" class="login-card">
- <div class="login-brand"><img src="logo-porseni.png" alt="Logo PORSENI" fetchpriority="high" decoding="async"><div><div class="eyebrow">PORSENI 2026 · PAC IPNU-IPPNU PATEBON</div><h1>Portal Panitia</h1><p class="motto">“Unitas Ad Gloriam”</p></div></div>
+ <div class="login-brand"><img src="assets/images/logo-porseni.png" alt="Logo PORSENI" fetchpriority="high" decoding="async"><div><div class="eyebrow">PORSENI 2026 · PAC IPNU-IPPNU PATEBON</div><h1>Portal Panitia</h1><p class="motto">“Unitas Ad Gloriam”</p></div></div>
  <p class="muted">Pilih nama petugas. Tyo menggunakan password pribadi yang berbeda; Sochibul dan Fuad menggunakan password admin bersama.</p>
  <div class="field"><label for="adminUser">Akses portal sebagai</label><select id="adminUser" required><option value="">Pilih nama petugas…</option><option value="Tyo">Tyo</option><option value="Sochibul">Sochibul</option><option value="Fuad">Fuad</option></select></div>
  <div class="field"><label for="password">Password akun petugas</label><input id="password" type="password" autocomplete="current-password" placeholder="Masukkan password akun petugas" required></div>
@@ -77,7 +77,7 @@
  <p class="login-foot">Akses khusus panitia. Gunakan password sesuai akun petugas. Password Tyo bersifat khusus dan tidak sama dengan password admin bersama. Jangan membagikan password atau sesi login. Aktivitas penting dicatat berdasarkan nama petugas yang dipilih.</p>
 </form></section>
 <section id="appView" class="shell hidden">
- <header class="topbar"><div class="topbrand"><img src="logo-porseni.png" alt="" fetchpriority="high" decoding="async"><span>PORTAL PANITIA<small>PORSENI 2026 · PATEBON</small></span></div><div class="top-right"><span class="admin-pill" id="adminIdentity">PETUGAS</span><button id="logoutBtn" class="btn light">Keluar</button></div></header>
+ <header class="topbar"><div class="topbrand"><img src="assets/images/logo-porseni.png" alt="" fetchpriority="high" decoding="async"><span>PORTAL PANITIA<small>PORSENI 2026 · PATEBON</small></span></div><div class="top-right"><span class="admin-pill" id="adminIdentity">PETUGAS</span><button id="logoutBtn" class="btn light">Keluar</button></div></header>
  <div class="layout"><aside class="sidebar"><div class="side-label">MENU PENGELOLAAN</div><button class="navbtn active" data-tab="kontingen">Data Kontingen <small id="navKont">0</small></button><button class="navbtn" data-tab="cabang">Data Cabang Lomba <small id="navCab">0</small></button><button class="navbtn" data-tab="berita">Kelola Berita <small>✎</small></button><button class="navbtn" data-tab="hasil">Hasil Kejuaraan <small>✦</small></button><button class="navbtn" data-tab="ujicetak">Uji Coba Cetak <small>▧</small></button><button class="navbtn" data-tab="log">Log Aktivitas <small>●</small></button><button class="navbtn hidden" id="devopsNav" data-tab="devops">Control Center <small>⚙</small></button></aside>
  <main class="main">
   <div class="page-head"><div><div class="eyebrow">PANEL KENDALI PORSENI 2026</div><h1 id="pageTitle">Data Kontingen</h1><p id="pageDesc">Kelola data, dokumen, dan proses verifikasi kontingen.</p></div><button id="refreshBtn" class="btn warm">↻ Muat ulang data</button></div>
@@ -170,8 +170,8 @@
    <section class="panel" style="padding:18px;margin-bottom:14px;border:2px solid #2563eb;background:#f8fbff">
     <div class="eyebrow" style="color:#1d4ed8">PEMBARUAN TERPADU · MULTI-FILE</div>
     <h3 style="font:800 17px Manrope;color:var(--navy);margin:5px 0">Upload beberapa file & terbitkan sekaligus</h3>
-    <p class="muted" style="font-size:12px;margin:0 0 12px">Pilih beberapa file sekaligus. Sistem mengenali nama file, menyimpan seluruh perubahan dalam satu commit GitHub, lalu otomatis memicu deployment Apps Script jika Kode.js ikut diunggah. GitHub Pages menerbitkan index.html/admin.html dari commit yang sama.</p>
-    <div class="field"><label for="devopsBundleFiles">Pilih file pembaruan (bisa lebih dari satu)</label><input id="devopsBundleFiles" type="file" multiple accept=".html,.htm,.js,.gs,.json,.css,.yml,.yaml,.md,.txt,.svg"><small class="muted">Nama yang dikenali: index.html, admin.html, Kode.js (atau Kode.gs), appsscript.json, CNAME, dan file aset teks yang didukung. File kredensial tidak diterima.</small></div>
+    <p class="muted" style="font-size:12px;margin:0 0 12px">Pilih beberapa file sekaligus dengan Ctrl/Shift pada jendela pemilih file. Anda juga boleh memilih file secara bertahap; pilihan sebelumnya tetap tersimpan. Sistem mengenali nama file, menyimpan seluruh perubahan dalam satu commit GitHub, lalu otomatis memicu deployment Apps Script jika Kode.js ikut diunggah. GitHub Pages menerbitkan index.html/admin.html dari commit yang sama.</p>
+    <div class="field"><label for="devopsBundleFiles">Pilih file pembaruan (bisa lebih dari satu; pilihan bertahap didukung)</label><input id="devopsBundleFiles" type="file" multiple accept=".html,.htm,.js,.gs,.json,.css,.yml,.yaml,.md,.txt,.svg"><small class="muted">Nama yang dikenali: index.html, admin.html, Kode.js (atau Kode.gs), appsscript.json, CNAME, dan file aset teks yang didukung. File kredensial tidak diterima.</small></div>
     <div id="devopsBundleList" class="note-banner" style="margin:8px 0">Belum ada file dipilih.</div>
     <label style="display:flex;align-items:flex-start;gap:8px;font-size:12px;margin:10px 0"><input id="devopsBundleDeployGas" type="checkbox" checked style="margin-top:2px"> Jika backend Apps Script disertakan, otomatis jalankan backup dan perbarui Web App produksi.</label>
     <div class="actions"><button id="devopsPublishBundle" class="btn warm" type="button" disabled>Upload semua, commit, & deploy</button><button id="devopsClearBundle" class="btn light" type="button">Kosongkan pilihan</button></div>
@@ -243,7 +243,7 @@
     <p class="muted" style="font-size:12px;margin:6px 0 12px">Reset seluruh hasil atau hanya hasil pada satu cabang lomba. Tindakan ini menghapus data juara dan membatalkan finalisasi serta PDF hasil resmi.</p>
     <div class="field"><label for="resetResultBranch">Pilih cabang untuk reset khusus cabang</label><select id="resetResultBranch"><option value="">Pilih cabang lomba…</option></select></div>
     <div class="actions">
-     <button id="resetAllResults" class="btn danger" type="button">Reset seluruh hasil kejuaraan</button>
+     <button id="resetAllResults" class="btn danger" type="button">Reset seluruh hasil kejuaraan (semua cabang)</button>
      <button id="resetBranchResults" class="btn warm" type="button">Reset hasil cabang terpilih</button>
     </div>
     <div id="resetResultsStatus" class="muted" style="font-size:12px;margin-top:10px"></div>
@@ -609,15 +609,21 @@ function devOpsRenderBundleSelection(){
  btn.disabled=!devOpsReady;
 }
 function devOpsReadBundleFiles(files){
- devOpsBundleSelection=[];var seen={};
+ // Pertahankan pilihan sebelumnya bila pengguna membuka pemilih file lagi.
+ // File dengan tujuan repository yang sama akan menggantikan pilihan lama.
+ var byPath={};
+ devOpsBundleSelection.forEach(function(item){byPath[item.path]=item;});
+ var accepted=0,skipped=[];
  Array.prototype.forEach.call(files||[],function(file){
   var path=devOpsBundlePath_(file.name);
-  if(!path){toast('Nama file tidak dikenali: '+file.name);return;}
-  if(seen[path]){toast('Ada dua file menuju '+path+'. Pilih satu saja.');return;}
-  if(file.size>700*1024){toast(file.name+' melebihi batas 700 KB.');return;}
-  seen[path]=true;devOpsBundleSelection.push({file:file,path:path});
+  if(!path){skipped.push(file.name+' (nama tidak dikenali)');return;}
+  if(file.size>700*1024){skipped.push(file.name+' (lebih dari 700 KB)');return;}
+  byPath[path]={file:file,path:path};accepted++;
  });
+ devOpsBundleSelection=Object.keys(byPath).map(function(path){return byPath[path];});
  devOpsRenderBundleSelection();
+ if(accepted)toast(accepted+' file ditambahkan/diperbarui. Total pilihan: '+devOpsBundleSelection.length+' file.');
+ if(skipped.length)toast('Tidak dimasukkan: '+skipped.join('; '));
 }
 function devOpsPublishBundle(){
  if(user!=='Tyo'||!devOpsReady||!devOpsBundleSelection.length){toast('Pilih file dan pastikan koneksi GitHub aktif.');return;}
