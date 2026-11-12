@@ -3395,29 +3395,36 @@ function buildTestPdfJob_(d){
  if(typeof PDFApp==='undefined'||!PDFApp||typeof PDFApp.mergePDFs!=='function')throw new Error('Library PDFApp belum terpasang. Tambahkan PDFApp dengan fungsi mergePDFs sebelum menjalankan uji cetak.');
  var outputFolder=testFolder_(),tempFolder=DriveApp.createFolder('TEMP_PORSENI_UJI_'+Utilities.getUuid()),saved=[];
  try{
-  // Buat PDF formulir pada folder sementara, bukan folder UJI COBA.
+  // Uji coba wajib mengikuti jalur produksi: seluruh gambar diproses hanya oleh
+  // createRegistrationPdf()/createBranchRegistrationPdf_(). Jangan konversi ulang
+  // gambar menjadi PDF terpisah karena gambar cabang sudah ditata di halaman formulir.
   var formPdf=createRegistrationPdf(d,tempFolder);
-  var imageFiles=[],imageLabels=[],imageInsertAt=-1;
+
+  // Hanya lampiran PDF asli yang disimpan untuk digabung setelah formulir,
+  // sama seperti jalur pendaftaran sebenarnya. Lampiran gambar tidak digabung ulang.
   (d.files||[]).forEach(function(f){
+   if(!f||!f.data)return;
    var bytes=Utilities.base64Decode(f.data),mime=detectedMime_(bytes,f.type||'');
    if(mime==='application/pdf'){
     var pdfFile=tempFolder.createFile(Utilities.newBlob(bytes,'application/pdf','SRC_'+safe(f.name||'lampiran.pdf')));
     saved.push({label:f.label||f.name,id:pdfFile.getId(),mime:'application/pdf'});
-   }else if(mime.indexOf('image/')===0){
-    if(imageInsertAt<0)imageInsertAt=saved.length;
-    imageFiles.push(f);imageLabels.push(f.label||f.name||'Lampiran gambar');
-   }else throw new Error('Format lampiran uji tidak didukung untuk PDF: '+(f.name||mime));
+   }else if(mime==='image/png'||mime==='image/jpeg'){
+    // Tidak ditambahkan ke savedAttachments: gambar sudah ditangani oleh
+    // pembuat PDF formulir sesuai aturan lampiran produksi.
+   }else{
+    throw new Error('Format lampiran uji tidak didukung untuk PDF: '+(f.name||mime));
+   }
   });
-  if(imageFiles.length){
-   var imagePdf=createTestImagesPdf_(imageFiles,tempFolder,d.nama);
-   saved.splice(imageInsertAt<0?saved.length:imageInsertAt,0,{label:imageLabels.join(', '),id:imagePdf.getId(),mime:'application/pdf'});
-  }
+
   d.savedAttachments=saved;
   var jobId=Utilities.getUuid();
+  // jobId tetap memaksa finalisasi ke folder UJI COBA, termasuk ketika tidak ada
+  // lampiran PDF. Ini hanya alur penyimpanan hasil uji; isi PDF tetap mengikuti produksi.
   queuePdfMerge_(formPdf,d,tempFolder,{outputFolderId:outputFolder.getId(),cleanupFolder:true,jobId:jobId,fileName:'UJI_'+safe(d.reg)+'_'+safe(d.nama)+'.pdf'});
   return {jobId:jobId,kind:d.cabang==='Duta Pelajar'?'duta':(/^Beregu/i.test(d.kategori||'')?'beregu':(d.type==='kontingen'?'kontingen':'tunggal'))};
  }catch(err){try{tempFolder.setTrashed(true);}catch(cleanErr){}throw err;}
 }
+
 function sampleImageAttachment_(label,name){return {label:label,data:SAMPLE_ATTACHMENT_B64_,type:'image/png',name:name||'contoh-lampiran.png'};}
 function ujiCetakPdfKontingen(){
  var d={type:'kontingen',reg:'K-UJI-'+Utilities.getUuid().slice(0,6),nama:'PR IPNU IPPNU CONTOH UJI COBA',pin:'123456',waktu:new Date().toISOString(),ketua:'Ahmad Contoh',tempat_lahir_ketua:'Kendal',tanggal_lahir_ketua:'2006-08-17',alamat:'Jl. Contoh No. 1 RT 02 RW 03, Desa Contoh, Patebon, Kendal',wa_ketua:'081234567890',email:'contoh@example.com',ketua_pr_ipnu:'Ahmad Contoh',ketua_pr_ippnu:'Siti Contoh',cabang:'Duta Pelajar; LCC; Voli; Parade Gelar Budaya',files:[sampleImageAttachment_('Bukti pembayaran','bukti-pembayaran.png'),sampleImageAttachment_('KTP ketua kontingen','ktp-ketua.png'),{label:'Pakta integritas',name:'pakta-integritas.pdf',type:'application/pdf',data:'JVBERi0xLjMKJZOMi54gUmVwb3J0TGFiIEdlbmVyYXRlZCBQREYgZG9jdW1lbnQgKG9wZW5zb3VyY2UpCjEgMCBvYmoKPDwKL0YxIDIgMCBSCj4+CmVuZG9iagoyIDAgb2JqCjw8Ci9CYXNlRm9udCAvSGVsdmV0aWNhIC9FbmNvZGluZyAvV2luQW5zaUVuY29kaW5nIC9OYW1lIC9GMSAvU3VidHlwZSAvVHlwZTEgL1R5cGUgL0ZvbnQKPj4KZW5kb2JqCjMgMCBvYmoKPDwKL0NvbnRlbnRzIDcgMCBSIC9NZWRpYUJveCBbIDAgMCAyMDAgMTIwIF0gL1BhcmVudCA2IDAgUiAvUmVzb3VyY2VzIDw8Ci9Gb250IDEgMCBSIC9Qcm9jU2V0IFsgL1BERiAvVGV4dCAvSW1hZ2VCIC9JbWFnZUMgL0ltYWdlSSBdCj4+IC9Sb3RhdGUgMCAvVHJhbnMgPDwKCj4+IAogIC9UeXBlIC9QYWdlCj4+CmVuZG9iago0IDAgb2JqCjw8Ci9QYWdlTW9kZSAvVXNlTm9uZSAvUGFnZXMgNiAwIFIgL1R5cGUgL0NhdGFsb2cKPj4KZW5kb2JqCjUgMCBvYmoKPDwKL0F1dGhvciAoYW5vbnltb3VzKSAvQ3JlYXRpb25EYXRlIChEOjIwMjYxMTA2MDUyMTEyKzAwJzAwJykgL0NyZWF0b3IgKGFub255bW91cykgL0tleXdvcmRzICgpIC9Nb2REYXRlIChEOjIwMjYxMTA2MDUyMTEyKzAwJzAwJykgL1Byb2R1Y2VyIChSZXBvcnRMYWIgUERGIExpYnJhcnkgLSBcKG9wZW5zb3VyY2VcKSkgCiAgL1N1YmplY3QgKHVuc3BlY2lmaWVkKSAvVGl0bGUgKHVudGl0bGVkKSAvVHJhcHBlZCAvRmFsc2UKPj4KZW5kb2JqCjYgMCBvYmoKPDwKL0NvdW50IDEgL0tpZHMgWyAzIDAgUiBdIC9UeXBlIC9QYWdlcwo+PgplbmRvYmoKNyAwIG9iago8PAovRmlsdGVyIFsgL0FTQ0lJODVEZWNvZGUgL0ZsYXRlRGVjb2RlIF0gL0xlbmd0aCAxNTIKPj4Kc3RyZWFtCkdhcFFoMEU9RiwwVVxIM1RccE5ZVF5RS2s/dGM+SVAsO1cjVTFeMjNpaFBFTV8/Q1c0S0lTaTc6cDtXTSNnJClubjRDaFVhPUtzLTtbQD5eO1tDWGo8LGcsWThsUSljJWdtTFFvKXUnTDE9SzIuYVxpRGxfREsoO0BZLipaOjE+aiZKRTZYQFA1R182ZUkjT11RK0E2TH4+ZW5kc3RyZWFtCmVuZG9iagp4cmVmCjAgOAowMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAwNjEgMDAwMDAgbiAKMDAwMDAwMDA5MiAwMDAwMCBuIAowMDAwMDAwMTk5IDAwMDAwIG4gCjAwMDAwMDAzOTIgMDAwMDAgbiAKMDAwMDAwMDQ2MCAwMDAwMCBuIAowMDAwMDAwNzIxIDAwMDAwIG4gCjAwMDAwMDA3ODAgMDAwMDAgbiAKdHJhaWxlcgo8PAovSUQgCls8NGFiZWMwMDg2ZGZlNjQ2YjM4YjRkZTI2NGI2Njc4ODM+PDRhYmVjMDA4NmRmZTY0NmIzOGI0ZGUyNjRiNjY3ODgzPl0KJSBSZXBvcnRMYWIgZ2VuZXJhdGVkIFBERiBkb2N1bWVudCAtLSBkaWdlc3QgKG9wZW5zb3VyY2UpCgovSW5mbyA1IDAgUgovUm9vdCA0IDAgUgovU2l6ZSA4Cj4+CnN0YXJ0eHJlZgoxMDIyCiUlRU9GCg=='} ,{label:'SP / berita acara RAT',name:'sp-rat.pdf',type:'application/pdf',data:'JVBERi0xLjMKJZOMi54gUmVwb3J0TGFiIEdlbmVyYXRlZCBQREYgZG9jdW1lbnQgKG9wZW5zb3VyY2UpCjEgMCBvYmoKPDwKL0YxIDIgMCBSCj4+CmVuZG9iagoyIDAgb2JqCjw8Ci9CYXNlRm9udCAvSGVsdmV0aWNhIC9FbmNvZGluZyAvV2luQW5zaUVuY29kaW5nIC9OYW1lIC9GMSAvU3VidHlwZSAvVHlwZTEgL1R5cGUgL0ZvbnQKPj4KZW5kb2JqCjMgMCBvYmoKPDwKL0NvbnRlbnRzIDcgMCBSIC9NZWRpYUJveCBbIDAgMCAyMDAgMTIwIF0gL1BhcmVudCA2IDAgUiAvUmVzb3VyY2VzIDw8Ci9Gb250IDEgMCBSIC9Qcm9jU2V0IFsgL1BERiAvVGV4dCAvSW1hZ2VCIC9JbWFnZUMgL0ltYWdlSSBdCj4+IC9Sb3RhdGUgMCAvVHJhbnMgPDwKCj4+IAogIC9UeXBlIC9QYWdlCj4+CmVuZG9iago0IDAgb2JqCjw8Ci9QYWdlTW9kZSAvVXNlTm9uZSAvUGFnZXMgNiAwIFIgL1R5cGUgL0NhdGFsb2cKPj4KZW5kb2JqCjUgMCBvYmoKPDwKL0F1dGhvciAoYW5vbnltb3VzKSAvQ3JlYXRpb25EYXRlIChEOjIwMjYxMTA2MDUyMTEyKzAwJzAwJykgL0NyZWF0b3IgKGFub255bW91cykgL0tleXdvcmRzICgpIC9Nb2REYXRlIChEOjIwMjYxMTA2MDUyMTEyKzAwJzAwJykgL1Byb2R1Y2VyIChSZXBvcnRMYWIgUERGIExpYnJhcnkgLSBcKG9wZW5zb3VyY2VcKSkgCiAgL1N1YmplY3QgKHVuc3BlY2lmaWVkKSAvVGl0bGUgKHVudGl0bGVkKSAvVHJhcHBlZCAvRmFsc2UKPj4KZW5kb2JqCjYgMCBvYmoKPDwKL0NvdW50IDEgL0tpZHMgWyAzIDAgUiBdIC9UeXBlIC9QYWdlcwo+PgplbmRvYmoKNyAwIG9iago8PAovRmlsdGVyIFsgL0FTQ0lJODVEZWNvZGUgL0ZsYXRlRGVjb2RlIF0gL0xlbmd0aCAxNTIKPj4Kc3RyZWFtCkdhcFFoMEU9RiwwVVxIM1RccE5ZVF5RS2s/dGM+SVAsO1cjVTFeMjNpaFBFTV8/Q1c0S0lTaTc6cDtXTSNnJClubjRDaFVhPUtzLTtbQD5eO1tDWGo8LGcsWThsUSljJWdtTFFvKXUnTDE9SzIuYVxpRGxfREsoO0BZLipaOjE+aiZKRTZYQFA1R182ZUkjT11RK0E2TH4+ZW5kc3RyZWFtCmVuZG9iagp4cmVmCjAgOAowMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAwNjEgMDAwMDAgbiAKMDAwMDAwMDA5MiAwMDAwMCBuIAowMDAwMDAwMTk5IDAwMDAwIG4gCjAwMDAwMDAzOTIgMDAwMDAgbiAKMDAwMDAwMDQ2MCAwMDAwMCBuIAowMDAwMDAwNzIxIDAwMDAwIG4gCjAwMDAwMDA3ODAgMDAwMDAgbiAKdHJhaWxlcgo8PAovSUQgCls8NGFiZWMwMDg2ZGZlNjQ2YjM4YjRkZTI2NGI2Njc4ODM+PDRhYmVjMDA4NmRmZTY0NmIzOGI0ZGUyNjRiNjY3ODgzPl0KJSBSZXBvcnRMYWIgZ2VuZXJhdGVkIFBERiBkb2N1bWVudCAtLSBkaWdlc3QgKG9wZW5zb3VyY2UpCgovSW5mbyA1IDAgUgovUm9vdCA0IDAgUgovU2l6ZSA4Cj4+CnN0YXJ0eHJlZgoxMDIyCiUlRU9GCg=='}]};
@@ -3510,17 +3517,14 @@ function createBranchRegistrationPdf_(d, folder) {
   var doc = pdfNewDoc_('TEMP PORSENI CABANG ' + d.reg, 0);
   var body = doc.getBody();
 
-  // Khusus formulir cabang: kop hanya ditampilkan pada dua halaman formulir.
-  // Lampiran foto/KTP dan PDF asli tidak memakai header/kop.
-  try { var branchHeader = doc.getHeader(); if (branchHeader) branchHeader.clear(); } catch (headerErr) {}
-  body.setMarginTop(24);
-
+  // Gunakan header A4 standar yang sama dengan formulir Kontingen.
+  // pdfNewDoc_ sudah memasang kop pada header dokumen dengan lebar penuh A4
+  // dan margin atas yang menyediakan ruang untuk kop. Header otomatis berulang
+  // pada setiap halaman formulir; lampiran foto/KTP dan PDF tetap tanpa kop.
   var CENTER = DocumentApp.HorizontalAlignment.CENTER;
   var JUSTIFY = DocumentApp.HorizontalAlignment.JUSTIFY;
 
   var w = pdfWriter_(pdfPage_(body));
-  var branchKopBlob = Utilities.newBlob(Utilities.base64Decode(KOP_PORSENI_BASE64), 'image/png', 'kop-porseni-resmi.png');
-  w.image(branchKopBlob, PDF_KOP_PX_W, PDF_KOP_PX_H);
 
   function heading(text, before) {
     return w.para(text, {
@@ -3620,9 +3624,8 @@ function createBranchRegistrationPdf_(d, folder) {
 
   body.appendPageBreak();
 
-  // Writer baru agar kop halaman kedua tetap dipanggil
+  // Writer halaman kedua; kop diulang otomatis oleh header standar dokumen.
   w = pdfWriter_(pdfPage_(body));
-  w.image(branchKopBlob, PDF_KOP_PX_W, PDF_KOP_PX_H);
 
   // C. CATATAN (jika tersedia)
   var nx = 'C';
