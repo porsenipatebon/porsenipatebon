@@ -1123,7 +1123,7 @@ function buildChampionshipPdfBlob_(state,isTest){
  var sign=body.appendTable([
   ['Mengetahui,','','Ditetapkan oleh,'],
   ['Koordinator Perlombaan','','Ketua Panitia Pelaksana'],
-  ['\n\n\n\n','RUANG STEMPEL','\n\n\n\n'],
+  ['\n\n\n\n','','\n\n\n\n'],
   ['Sochibul Mustaqim','','Prasetyo Wahyu A.R.']
  ]);
  sign.setBorderWidth(0);
@@ -1131,7 +1131,19 @@ function buildChampionshipPdfBlob_(state,isTest){
   var cell=sign.getCell(sr,sc);cell.setPaddingTop(3).setPaddingBottom(3).setPaddingLeft(4).setPaddingRight(4);
   cell.getChild(0).asParagraph().setAlignment(DocumentApp.HorizontalAlignment.CENTER);
   cell.editAsText().setFontFamily('Arial').setFontSize(sr===2&&sc===1?7:9).setBold(sr===1||sr===3);
-  if(sr===2&&sc===1){cell.setBackgroundColor(cream);cell.setBorderColor(line);}
+  if(sr===2&&sc===1){
+   cell.setBackgroundColor('#FFFFFF');
+   var stampFile=DriveApp.getFileById(PDF_STEMPEL_PANITIA_ID);
+   if(stampFile.isTrashed())throw new Error('File stempel panitia berada di Trash Google Drive.');
+   var stampBlob=stampFile.getBlob();
+   if(stampBlob.getContentType()!=='image/png')throw new Error('Stempel panitia harus berupa file PNG.');
+   var stampPara=cell.getChild(0).asParagraph();
+   stampPara.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+   var resultStamp=stampPara.appendInlineImage(stampBlob);
+   var stampRatio=Math.min(46/resultStamp.getWidth(),46/resultStamp.getHeight(),1);
+   resultStamp.setWidth(Math.round(resultStamp.getWidth()*stampRatio));
+   resultStamp.setHeight(Math.round(resultStamp.getHeight()*stampRatio));
+  }
  }
 
  // LAMPIRAN — HASIL SETIAP CABANG/KATEGORI, TANPA REKAP MEDALI/POIN
@@ -1339,6 +1351,8 @@ function adminResetChampionshipResults_(d){
   }
   if(!rowsToDelete.length)throw new Error(scope==='all'?'Tidak ada hasil kejuaraan.':'Belum ada hasil pada cabang '+branch+'.');
   rowsToDelete.reverse().forEach(function(row){sh.deleteRow(row);});
+  // Hapus cache publik agar index.html langsung membaca hasil terbaru.
+  invalidatePublicCache_('recap');
   // Hasil berubah: nonaktifkan PDF final dan buka kembali status finalisasi.
   retireChampionshipPdf_();
   var props=PropertiesService.getScriptProperties();
@@ -3544,7 +3558,9 @@ function appendDriveStampBesideSignature_(signatureImage, fileId, maxWidth, maxH
   }
 
   var paragraph = signatureImage.getParent().asParagraph();
-  var stamp = paragraph.appendInlineImage(stampBlob);
+  // Cap organisasi ditempatkan di sisi kiri tanda tangan. Sisipkan sebelum
+  // gambar tanda tangan agar tidak terdorong ke kanan/keluar area blok.
+  var stamp = paragraph.insertInlineImage(paragraph.getChildIndex(signatureImage), stampBlob);
   var width = stamp.getWidth();
   var height = stamp.getHeight();
   var ratio = Math.min(maxWidth / width, maxHeight / height, 1);
@@ -3780,8 +3796,8 @@ var sekretariatSignatureImage = appendDriveSignature_(
 appendDriveStampBesideSignature_(
   sekretariatSignatureImage,
   PDF_STEMPEL_PANITIA_ID,
-  62,
-  62
+  48,
+  48
 );
 
   w.para(
