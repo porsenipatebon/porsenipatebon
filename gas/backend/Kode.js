@@ -2266,8 +2266,17 @@ function pdfWriter_(cell) {
     table: function (rows) { first = false; return cell.appendTable(rows); },
     image: function (blob, width, height) {
       var p;
-      if (first) { p = cell.getChild(0).asParagraph(); p.setText(''); first = false; }
-      else p = cell.appendParagraph('');
+      // Jangan pernah menyisipkan teks/paragraf kosong: Google Docs dapat
+      // menolak setText('') atau appendParagraph('') dengan error
+      // "Tidak dapat menyisipkan elemen teks kosong".
+      if (first) {
+        // Gunakan paragraf kosong bawaan sel sebagai wadah gambar.
+        p = cell.getChild(0).asParagraph();
+        first = false;
+      } else {
+        // Gunakan NBSP sebagai jangkar paragraf non-kosong sebelum gambar.
+        p = cell.appendParagraph('\u00A0');
+      }
       p.setAlignment(DocumentApp.HorizontalAlignment.CENTER)
        .setSpacingBefore(0).setSpacingAfter(4).setLineSpacing(1);
       var im = p.appendInlineImage(blob);
