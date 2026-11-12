@@ -2703,7 +2703,7 @@ var BRANCH_LABELS={
 };
 function prettyCategoryLabel(branch,category,categories){
  var list=Array.isArray(categories)?categories:(KAT[branch]||[]);
- var legacyCategoryLabels={"Tunggal Putra":"Putra","Tunggal Putri":"Putri","Beregu Campuran":"Kelompok Campuran","Beregu Bebas":"Kelompok Bebas"};
+ var legacyCategoryLabels={"Tunggal Putra":"Putra","Tunggal Putri":"Putri","Beregu Campuran":"Kelompok Campuran","Beregu Bebas":"Kelompok Bebas","Beregu Putra":"Kelompok Putra"};
  return legacyCategoryLabels[String(category||"").trim()]||category;
 }
 function prettyBranchName(name){return BRANCH_LABELS[name]||name;}
@@ -2722,7 +2722,7 @@ var KAT={
  "Karya ilmiah":["Kelompok Campuran"],
  "Baca kitab":["Putra","Putri"],
  "Badminton":["Ganda Campuran"],
- "Voli":["Beregu Putra"],
+ "Voli":["Kelompok Putra"],
  "Sprint":["Putra","Putri"],
  "Tenis meja":["Putra","Putri"],
  "PES PS3":["Tunggal Bebas"],
@@ -3032,7 +3032,7 @@ function paperK(d,stamps){
  var selected=(d.cabang||"").split("; ").filter(Boolean);
  var catalog=[
   ["A. AKADEMIK","Duta Pelajar","Putra; Putri"],["","Khitobah","Putra; Putri"],["","LCC","Kelompok Campuran"],["","Karya Ilmiah","Kelompok Campuran"],["","Baca Kitab","Putra; Putri"],
-  ["B. OLAHRAGA","Badminton","Ganda Campuran"],["","Voli","Beregu Putra"],["","Sprint","Putra; Putri"],["","Tenis Meja","Putra; Putri"],["","PES PS3","Tunggal Bebas"],
+  ["B. OLAHRAGA","Badminton","Ganda Campuran"],["","Voli","Kelompok Putra"],["","Sprint","Putra; Putri"],["","Tenis Meja","Putra; Putri"],["","PES PS3","Tunggal Bebas"],
   ["C. SENI","Parade Gelar Budaya","Kelompok Campuran"],["","Rebana","Kelompok Bebas"],["","Paduan Suara","Kelompok Campuran"],["","Kaligrafi","Putra; Putri"],["","Baca Puisi","Putra; Putri"],["","MTQ","Putra; Putri"]
  ];
  function chosen(l,k){return selected.some(function(x){var z=x.toLowerCase();return z.indexOf(l.toLowerCase()+" (")===0&&z.indexOf(k.toLowerCase())>=0||z===l.toLowerCase()&&k==="";});}
