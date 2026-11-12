@@ -2904,7 +2904,10 @@ function clearPdfMergeTriggers_(){
 }
 function ensurePdfMergeTrigger_(delayMs){
  var exists=ScriptApp.getProjectTriggers().some(function(t){return t.getHandlerFunction()==='processPdfMergeQueue_';});
- if(!exists)ScriptApp.newTrigger('processPdfMergeQueue_').timeBased().after(Math.max(60*1000,Number(delayMs)||60*1000)).create();
+ // Untuk pekerjaan baru, jadwalkan secepat mungkin. Apps Script tetap dapat
+ // menjalankan trigger sedikit lebih lambat dari waktu minimum yang diminta.
+ // Trigger watchdog tetap menggunakan jeda panjang yang diberikan pemanggil.
+ if(!exists)ScriptApp.newTrigger('processPdfMergeQueue_').timeBased().after(Math.max(1000,Number(delayMs)||1000)).create();
 }
 function setPdfJobStatus_(job,state,message,extra){
  if(!job||!job.jobId)return;
@@ -3354,19 +3357,30 @@ function adminResetPin_(d){
 }
 
 /* ---------- UJI CETAK PDF ---------- */
-var SAMPLE_ATTACHMENT_B64_ = 'iVBORw0KGgoAAAANSUhEUgAAASwAAABuCAYAAACdmi6mAAAD20lEQVR42u3dQXLaQBAFUEz5CFnnYDmgD+a175CsUkVRCBDMtLp73lsmsQON5qtnJA2nEwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADACj6UYJxfv//8vfXnP99f6gwCK3dQCS4QWOWCSnjBGGcliA+rET8POizeCpmtrunez+m0QGClCatnfo/QAlPCED/fXx97AufWvzU9BIE1vbt6tTMSWnGfmboKLAZM47ZCywB7P5Su/1xd+7B28kJ3NWrNadS62Opd7p4wUlOBZRo4MbhWHmAzuyLBJbCEldBKFVaPui+hdb/+GevnAwueBmYNzGphdV2L65959PdCa+zJIqqOPqxkYbX6ADtizVBojetuZ9fSVcLB05BRTAPH12HrnjlXEMfVYvYVWWeWhN1V9tfU4X164mBMB/rK9F1gNT6AL1/X/0XQTgPryGmaKeLcR85m1NWUMPmU4PJD7jZ1yfp+VpgiPjN12/vIWUTQ67CKTA8eXQXTWem0RgXxjIsco37n8oFVZS2jU2BlDIjOoRW9znTr/xdYC4VVh9CqcgNnt8X4bo9/Lb+G1flg9DrHHA9V17TudY1Ra06jlWgDdSy1O4CK062qnVb3R5HOo4tVZSuPqtOr69e5d7cCYdW301rhucnzUQU0RRkzmCq+l6onh6rHdKerndO3Ssl+e0DlD1StvY9ux/ShHVaHbgaDKGuntbX80vlO/XPEh2sQxQykLCeHjoMo05bWK2/5vMxtDSs/RKzOfWr+aK2qe62nBFbWM3/HDzPbmb9zze8FQkS97Z46+T6sTEXt9izeswdz1PtcrbOKqreQCpoSZlqoXGG+n+05vO6D6d5mgCOOt0e/Z1Z9s4+Vz9OCug6mWzeRznziwH5Sj2vz7uZ3I+rb6YT92WkAoWs96uS3VY+t431v/bKuC0c7ZFfH6MDqvn4VXXOdVb0Q7/LZtF+QXXXv7lnve+v76nTN8eG1Ys3DQyNyX/LVv2hgRickqHwj9ZFCFt0vz8jWPnIMuFcGRuewOuK4FE5JO6wjDnhf4zS+06oWWFk7IReekndYHGtrz6w9XxKQJaw6TMeEVZEOK+rA113NH/ARVx2FA+kCa+RB5XJ7XEDs7ciEECUDa1awCKt83Y0QokVgzQgY00DTMQRWiemhsBJCCKwyobVCYAkhKH5bQ/V1KyEExTqsVzukrBubCSFoHlh7Qyu6sxJCILCGBkOmTc2EEMxR/tGcqG9BFkKgwwrvfoQQCKw0oSWEgPbdFgAAAAAAAAAAAAAAAAAAAAAAAAAAABDpH3t8bnUhofLOAAAAAElFTkSuQmCC';
+var SAMPLE_ATTACHMENT_B64_ = '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';
 function testFolder_(){return getFolderPath(DRIVE_PATH.concat(['UJI COBA']));}
-function createTestImagePdf_(file,tempFolder,ownerName){
- var bytes=Utilities.base64Decode(file.data),mime=detectedMime_(bytes,file.type||'');
- if(mime.indexOf('image/')!==0)throw new Error('Lampiran uji bukan gambar: '+(file.name||''));
- var doc=DocumentApp.create('TEMP IMAGE PDF '+Utilities.getUuid());
- var body=doc.getBody();body.setPageWidth(595.28).setPageHeight(841.89).setMarginTop(42).setMarginBottom(42).setMarginLeft(42).setMarginRight(42);
- body.appendParagraph(String(file.label||file.name||'Lampiran')+(ownerName?' · '+String(ownerName):'')).setBold(true).setFontSize(12);
- var image=body.appendImage(Utilities.newBlob(bytes,mime,file.name||'lampiran'));
- var maxW=510,maxH=700,ratio=Math.min(maxW/image.getWidth(),maxH/image.getHeight(),1);
- image.setWidth(Math.round(image.getWidth()*ratio)).setHeight(Math.round(image.getHeight()*ratio));
- doc.saveAndClose();var docFile=DriveApp.getFileById(doc.getId());
- try{var pdf= tempFolder.createFile(docFile.getAs(MimeType.PDF).setName('IMG_'+safe(file.label||file.name)+'.pdf'));return pdf;}finally{docFile.setTrashed(true);}
+function createTestImagesPdf_(files,tempFolder,ownerName){
+ // Seluruh gambar contoh dikonversi melalui SATU Google Docs/PDF per jenis uji,
+ // bukan membuat satu dokumen dan satu konversi PDF untuk setiap gambar.
+ if(!files||!files.length)return null;
+ var doc=DocumentApp.create('TEMP IMAGE PAGES '+Utilities.getUuid());
+ var body=doc.getBody();
+ body.setPageWidth(595.28).setPageHeight(841.89).setMarginTop(42).setMarginBottom(42).setMarginLeft(42).setMarginRight(42);
+ files.forEach(function(file,index){
+  var bytes=Utilities.base64Decode(file.data),mime=detectedMime_(bytes,file.type||'');
+  if(mime.indexOf('image/')!==0)throw new Error('Lampiran uji bukan gambar: '+(file.name||''));
+  if(index>0)body.appendPageBreak();
+  body.appendParagraph(String(file.label||file.name||'Lampiran')+(ownerName?' · '+String(ownerName):'')).setBold(true).setFontSize(12);
+  var image=body.appendImage(Utilities.newBlob(bytes,mime,file.name||'lampiran'));
+  var maxW=510,maxH=700,ratio=Math.min(maxW/image.getWidth(),maxH/image.getHeight(),1);
+  image.setWidth(Math.max(1,Math.round(image.getWidth()*ratio))).setHeight(Math.max(1,Math.round(image.getHeight()*ratio)));
+ });
+ doc.saveAndClose();
+ var docFile=DriveApp.getFileById(doc.getId());
+ try{
+  var pdfName='IMG_LAMPIRAN_UJI_'+Utilities.getUuid().slice(0,8)+'.pdf';
+  return tempFolder.createFile(docFile.getAs(MimeType.PDF).setName(pdfName));
+ }finally{docFile.setTrashed(true);}
 }
 function buildTestPdfJob_(d){
  if(typeof PDFApp==='undefined'||!PDFApp||typeof PDFApp.mergePDFs!=='function')throw new Error('Library PDFApp belum terpasang. Tambahkan PDFApp dengan fungsi mergePDFs sebelum menjalankan uji cetak.');
@@ -3374,14 +3388,21 @@ function buildTestPdfJob_(d){
  try{
   // Buat PDF formulir pada folder sementara, bukan folder UJI COBA.
   var formPdf=createRegistrationPdf(d,tempFolder);
+  var imageFiles=[],imageLabels=[],imageInsertAt=-1;
   (d.files||[]).forEach(function(f){
    var bytes=Utilities.base64Decode(f.data),mime=detectedMime_(bytes,f.type||'');
-   var pdfFile;
-   if(mime==='application/pdf')pdfFile=tempFolder.createFile(Utilities.newBlob(bytes,'application/pdf','SRC_'+safe(f.name||'lampiran.pdf')));
-   else if(mime.indexOf('image/')===0)pdfFile=createTestImagePdf_(f,tempFolder,d.nama);
-   else throw new Error('Format lampiran uji tidak didukung untuk PDF: '+(f.name||mime));
-   saved.push({label:f.label||f.name,id:pdfFile.getId(),mime:'application/pdf'});
+   if(mime==='application/pdf'){
+    var pdfFile=tempFolder.createFile(Utilities.newBlob(bytes,'application/pdf','SRC_'+safe(f.name||'lampiran.pdf')));
+    saved.push({label:f.label||f.name,id:pdfFile.getId(),mime:'application/pdf'});
+   }else if(mime.indexOf('image/')===0){
+    if(imageInsertAt<0)imageInsertAt=saved.length;
+    imageFiles.push(f);imageLabels.push(f.label||f.name||'Lampiran gambar');
+   }else throw new Error('Format lampiran uji tidak didukung untuk PDF: '+(f.name||mime));
   });
+  if(imageFiles.length){
+   var imagePdf=createTestImagesPdf_(imageFiles,tempFolder,d.nama);
+   saved.splice(imageInsertAt<0?saved.length:imageInsertAt,0,{label:imageLabels.join(', '),id:imagePdf.getId(),mime:'application/pdf'});
+  }
   d.savedAttachments=saved;
   var jobId=Utilities.getUuid();
   queuePdfMerge_(formPdf,d,tempFolder,{outputFolderId:outputFolder.getId(),cleanupFolder:true,jobId:jobId,fileName:'UJI_'+safe(d.reg)+'_'+safe(d.nama)+'.pdf'});
