@@ -1091,28 +1091,32 @@ function buildChampionshipPdfBlob_(state,isTest){
  isTest=!!isTest;
  var data=getChampionshipResults_(),catalog=getChampionshipCatalog_(),byKey={};
  data.detail.forEach(function(x){byKey[normalizeEvent_(x.cabang)+'|'+normalizeEvent_(x.kategori)]=x;});
+ // Gunakan mesin dokumen PDF standar yang sama dengan PDF pendaftaran lain.
+ // Jangan menimpa margin kiri/kanan dari pdfNewDoc_: margin 0 diperlukan
+ // agar kop yang berada di header dapat tampil selebar A4.
  var doc=pdfNewDoc_('TEMP_HASIL_RESMI_PORSENI_2026_'+new Date().getTime(),0);
  var body=doc.getBody();
- body.setMarginTop(42).setMarginBottom(42).setMarginLeft(52).setMarginRight(52);
+ body.setMarginTop(Math.round(PDF_KOP_PX_H*0.75)+18)
+     .setMarginBottom(42);
  var navy='#24364B',muted='#666666',cream='#F7F3E8',ivory='#FFFDF7',softGray='#EEF0F2',line='#D8D5CC';
  function center(text,size,bold){var q=body.appendParagraph(text);q.setAlignment(DocumentApp.HorizontalAlignment.CENTER);q.editAsText().setFontFamily('Arial').setFontSize(size||10).setBold(!!bold);return q;}
  function para(text,size,bold){var q=body.appendParagraph(text);q.setAlignment(DocumentApp.HorizontalAlignment.JUSTIFY);q.setSpacingAfter(5);q.editAsText().setFontFamily('Arial').setFontSize(size||10).setBold(!!bold);return q;}
  function pageTitle(kicker,title,sub){
   center(kicker,9,true);center(title,15,true);if(sub)center(sub,9,false);
-  var line=body.appendParagraph('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');line.setAlignment(DocumentApp.HorizontalAlignment.CENTER);line.setSpacingAfter(10);line.editAsText().setFontSize(7).setForegroundColor(navy);
+  var rule=body.appendParagraph('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');rule.setAlignment(DocumentApp.HorizontalAlignment.CENTER);rule.setSpacingAfter(10);rule.editAsText().setFontSize(7).setForegroundColor(navy);
  }
  function styleTable(table,header){
   table.setBorderWidth(0.6).setBorderColor(line);
   for(var r=0;r<table.getNumRows();r++)for(var c=0;c<table.getRow(r).getNumCells();c++){
-   var cell=table.getCell(r,c);cell.setPaddingTop(6).setPaddingBottom(6).setPaddingLeft(7).setPaddingRight(7);
-   cell.editAsText().setFontFamily('Arial').setFontSize(9).setForegroundColor('#222222');
+   var cell=table.getCell(r,c);cell.setPaddingTop(4).setPaddingBottom(4).setPaddingLeft(5).setPaddingRight(5);
+   cell.editAsText().setFontFamily('Arial').setFontSize(8).setForegroundColor('#222222');
    if(header&&r===0){cell.setBackgroundColor(cream);cell.editAsText().setBold(true).setForegroundColor(navy);}
    else cell.setBackgroundColor(r%2===0?ivory:softGray);
   }
  }
  if(isTest){var draft=center('DOKUMEN UJI COBA — BELUM RESMI',11,true);draft.editAsText().setForegroundColor('#B3261E');}
 
- // HALAMAN 1 — SURAT KEPUTUSAN DAN PENETAPAN JUARA UMUM
+ // HALAMAN AWAL — SK PENETAPAN JUARA UMUM
  pageTitle('PANITIA PELAKSANA PEKAN OLAHRAGA DAN SENI','SURAT KEPUTUSAN','PORSENI 2026 · PAC IPNU-IPPNU PATEBON');
  center('Nomor: ....../SK/PORSENI/2026',9,false);
  center('TENTANG',10,true);
@@ -1140,17 +1144,26 @@ function buildChampionshipPdfBlob_(state,isTest){
   var cell=sign.getCell(sr,sc);cell.setPaddingTop(3).setPaddingBottom(3).setPaddingLeft(4).setPaddingRight(4);
   cell.getChild(0).asParagraph().setAlignment(DocumentApp.HorizontalAlignment.CENTER);
   cell.editAsText().setFontFamily('Arial').setFontSize(sr===2&&sc===1?7:9).setBold(sr===1||sr===3);
-  if(sr===2&&sc===1){cell.setBackgroundColor(cream); /* Border warna diatur pada level tabel; TableCell tidak menyediakan setBorderColor(). */}
+  if(sr===2&&sc===1)cell.setBackgroundColor(cream);
  }
 
- // LAMPIRAN — HASIL SETIAP CABANG/KATEGORI, TANPA REKAP MEDALI/POIN
+ // LAMPIRAN: SATU TABEL BERKESINAMBUNGAN UNTUK SEMUA CABANG.
+ // Tabel akan mengalir ke halaman berikutnya tanpa page break per cabang.
+ body.appendPageBreak();
+ pageTitle('LAMPIRAN SURAT KEPUTUSAN PANITIA PELAKSANA PORSENI 2026','REKAPITULASI HASIL KEJUARAAN','SELURUH CABANG LOMBA PORSENI 2026');
+ var rows=[['No.','Cabang Lomba','Kategori','Juara 1','Juara 2','Juara 3']],no=0;
  catalog.forEach(function(g){
-  body.appendPageBreak();
-  pageTitle('LAMPIRAN SURAT KEPUTUSAN PANITIA PELAKSANA PORSENI 2026','HASIL KEJUARAAN CABANG LOMBA',displayBranchName_(g.cabang));
-  var rows=[['No.','Kategori','Juara 1','Juara 2','Juara 3']];
-  g.kategori.forEach(function(c,ci){var x=byKey[normalizeEvent_(g.cabang)+'|'+normalizeEvent_(c)]||{};rows.push([String(ci+1),String(c),x.juara1||'—',x.juara2||'—',x.juara3||'—']);});
-  var bt=body.appendTable(rows);styleTable(bt,true);
+  g.kategori.forEach(function(c){
+   no++;
+   var x=byKey[normalizeEvent_(g.cabang)+'|'+normalizeEvent_(c)]||{};
+   rows.push([String(no),displayBranchName_(g.cabang),String(c),x.juara1||'—',x.juara2||'—',x.juara3||'—']);
+  });
  });
+ var allResultsTable=body.appendTable(rows);styleTable(allResultsTable,true);
+ // Ukuran kolom dibuat ringkas agar satu tabel muat secara proporsional pada A4.
+ try{
+  [24,92,82,105,105,105].forEach(function(w,i){allResultsTable.setColumnWidth(i,w);});
+ }catch(widthErr){}
  var foot=body.appendParagraph(isTest?'DOKUMEN UJI COBA — BELUM RESMI. Data dapat berubah dan dokumen ini tidak dikirim kepada kontingen.':'Dokumen ini merupakan lampiran resmi Surat Keputusan Penetapan Juara Umum PORSENI 2026 setelah dilakukan finalisasi oleh Panitia Pelaksana.');
  foot.setAlignment(DocumentApp.HorizontalAlignment.CENTER);foot.setSpacingBefore(12);foot.editAsText().setFontFamily('Arial').setFontSize(8).setItalic(true).setForegroundColor(muted);
  doc.saveAndClose();
