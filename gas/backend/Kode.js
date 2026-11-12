@@ -165,12 +165,14 @@ function invalidatePublicCache_(kind){
  */
 var RESET_REGISTRATION_CONFIRMATION_ = 'RESET SELURUH PENDAFTARAN PORSENI 2026';
 
+function findFolderNoCreate_(parent,name){var it=parent.getFoldersByName(name);return it.hasNext()?it.next():null;}
 function countRegistrationDriveFiles_(folder){
- var count=0,bytes=0,files=folder.getFiles();
+ if(!folder)return {count:0,bytes:0,folders:0};
+ var count=0,bytes=0,folderCount=1,files=folder.getFiles();
  while(files.hasNext()){var f=files.next();if(!f.isTrashed()){count++;try{bytes+=f.getSize();}catch(e){}}}
  var folders=folder.getFolders();
- while(folders.hasNext()){var child=folders.next();var sub=countRegistrationDriveFiles_(child);count+=sub.count;bytes+=sub.bytes;}
- return {count:count,bytes:bytes};
+ while(folders.hasNext()){var child=folders.next();var sub=countRegistrationDriveFiles_(child);count+=sub.count;bytes+=sub.bytes;folderCount+=sub.folders||0;}
+ return {count:count,bytes:bytes,folders:folderCount};
 }
 function registrationResetSnapshot_(){
  var ss=SpreadsheetApp.getActiveSpreadsheet();
@@ -178,14 +180,15 @@ function registrationResetSnapshot_(){
  var kont=ss.getSheetByName(CFG.kontingen.sheet),cabang=ss.getSheetByName(CFG.cabang.sheet),pin=ss.getSheetByName(PIN_SHEET);
  if(!kont||!cabang||!pin)throw new Error('Sheet Kontingen, Cabang, atau PIN Kontingen tidak ditemukan. Reset dibatalkan.');
  var root=getFolderPath(DRIVE_PATH);
- var kontFolder=getFolder(root,CFG.kontingen.folder),cabangFolder=getFolder(root,CFG.cabang.folder);
+ // Snapshot tidak boleh membuat folder baru hanya karena folder target belum ada.
+ var kontFolder=findFolderNoCreate_(root,CFG.kontingen.folder),cabangFolder=findFolderNoCreate_(root,CFG.cabang.folder);
  var kontDrive=countRegistrationDriveFiles_(kontFolder),cabangDrive=countRegistrationDriveFiles_(cabangFolder);
  var props=PropertiesService.getScriptProperties().getProperties(),jobCount=0;
  Object.keys(props).forEach(function(k){if(k.indexOf(PDF_MERGE_JOB_PREFIX_)===0)jobCount++;});
  var legacy=0;try{legacy=JSON.parse(props[PDF_MERGE_QUEUE_PROPERTY_]||'[]').length;}catch(e){}
  return {
   sheets:{kontingen:Math.max(0,kont.getLastRow()-1),cabang:Math.max(0,cabang.getLastRow()-1),pin:Math.max(0,pin.getLastRow()-1)},
-  drive:{kontingenFiles:kontDrive.count,cabangFiles:cabangDrive.count,totalFiles:kontDrive.count+cabangDrive.count,totalBytes:kontDrive.bytes+cabangDrive.bytes},
+  drive:{kontingenFiles:kontDrive.count,cabangFiles:cabangDrive.count,totalFiles:kontDrive.count+cabangDrive.count,totalBytes:kontDrive.bytes+cabangDrive.bytes,kontingenFolders:kontDrive.folders||0,cabangFolders:cabangDrive.folders||0},
   pdfQueue:{jobs:jobCount,legacyJobs:legacy},
   folders:{kontingen:CFG.kontingen.folder,cabang:CFG.cabang.folder}
  };
@@ -201,11 +204,14 @@ function adminPreviewResetRegistrations_(token){
  return {ok:true,preview:snapshot,confirmation:RESET_REGISTRATION_CONFIRMATION_,message:'Preview saja. Belum ada data atau berkas yang dihapus.'};
 }
 function trashFilesInRegistrationTree_(folder){
- var count=0,files=folder.getFiles();
- while(files.hasNext()){var f=files.next();if(!f.isTrashed()){f.setTrashed(true);count++;}}
+ if(!folder)return {files:0,folders:0};
+ var filesMoved=0,foldersMoved=0,files=folder.getFiles();
+ while(files.hasNext()){var f=files.next();if(!f.isTrashed()){f.setTrashed(true);filesMoved++;}}
  var folders=folder.getFolders();
- while(folders.hasNext())count+=trashFilesInRegistrationTree_(folders.next());
- return count;
+ while(folders.hasNext()){var child=folders.next();var sub=trashFilesInRegistrationTree_(child);filesMoved+=sub.files;foldersMoved+=sub.folders;}
+ // Setelah isi dan subfolder diproses, pindahkan folder target itu sendiri ke Sampah.
+ if(!folder.isTrashed()){folder.setTrashed(true);foldersMoved++;}
+ return {files:filesMoved,folders:foldersMoved};
 }
 function adminResetRegistrations_(d){
  var admin=requireResetAdminTyo_(d.token);
@@ -220,8 +226,10 @@ function adminResetRegistrations_(d){
   });
   // Target dibatasi ke dua folder pendaftaran yang telah ditentukan di CFG.
   var root=getFolderPath(DRIVE_PATH);
-  var trashedKont=trashFilesInRegistrationTree_(getFolder(root,CFG.kontingen.folder));
-  var trashedCabang=trashFilesInRegistrationTree_(getFolder(root,CFG.cabang.folder));
+  // Cari folder yang benar-benar ada; jangan pernah membuat folder pengganti saat reset.
+  var kontTarget=findFolderNoCreate_(root,CFG.kontingen.folder),cabangTarget=findFolderNoCreate_(root,CFG.cabang.folder);
+  var trashedKont=trashFilesInRegistrationTree_(kontTarget);
+  var trashedCabang=trashFilesInRegistrationTree_(cabangTarget);
   // Hapus hanya pekerjaan antrean PDF dan status uji PDF; trigger lain tidak disentuh.
   var props=PropertiesService.getScriptProperties(),all=props.getProperties();
   Object.keys(all).forEach(function(k){
@@ -231,12 +239,13 @@ function adminResetRegistrations_(d){
   clearPdfMergeTriggers_();
   invalidatePublicCache_('recap');
   var summary={before:before,deletedRows:{kontingen:before.sheets.kontingen,cabang:before.sheets.cabang,pin:before.sheets.pin},
-   trashedDriveFiles:{kontingen:trashedKont,cabang:trashedCabang,total:trashedKont+trashedCabang},
+   trashedDriveFiles:{kontingen:trashedKont.files,cabang:trashedCabang.files,total:trashedKont.files+trashedCabang.files},
+   trashedDriveFolders:{kontingen:trashedKont.folders,cabang:trashedCabang.folders,total:trashedKont.folders+trashedCabang.folders},
    clearedPdfJobs:before.pdfQueue.jobs+before.pdfQueue.legacyJobs};
   adminAudit_(admin,'RESET TOTAL PENDAFTARAN','sistem','', 'RESET PORSENI 2026',
    'Reset pendaftaran aktif selesai. '+JSON.stringify(summary));
   logSecurityEvent_(admin.user,'RESET TOTAL PENDAFTARAN','BERHASIL',JSON.stringify(summary));
-  return {ok:true,message:'Reset data pendaftaran aktif selesai. Berkas Drive dipindahkan ke Sampah (bukan dihapus permanen).',summary:summary};
+  return {ok:true,message:'Reset data pendaftaran aktif selesai. Seluruh file, subfolder, dan folder utama 02. BERKAS KONTINGEN serta 03. BERKAS CABANG LOMBA dipindahkan ke Sampah. Folder akan dibuat kembali otomatis saat pendaftaran baru masuk. Berkas tidak dihapus permanen.',summary:summary};
  }catch(err){
   logSecurityEvent_(admin.user,'RESET TOTAL PENDAFTARAN','GAGAL',String(err&&err.message||err));
   throw err;
