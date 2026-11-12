@@ -1140,7 +1140,7 @@ function buildChampionshipPdfBlob_(state,isTest){
   var cell=sign.getCell(sr,sc);cell.setPaddingTop(3).setPaddingBottom(3).setPaddingLeft(4).setPaddingRight(4);
   cell.getChild(0).asParagraph().setAlignment(DocumentApp.HorizontalAlignment.CENTER);
   cell.editAsText().setFontFamily('Arial').setFontSize(sr===2&&sc===1?7:9).setBold(sr===1||sr===3);
-  if(sr===2&&sc===1){cell.setBackgroundColor(cream);cell.setBorderColor(line);}
+  if(sr===2&&sc===1){cell.setBackgroundColor(cream); /* Border warna diatur pada level tabel; TableCell tidak menyediakan setBorderColor(). */}
  }
 
  // LAMPIRAN — HASIL SETIAP CABANG/KATEGORI, TANPA REKAP MEDALI/POIN
