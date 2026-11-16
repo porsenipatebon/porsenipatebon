@@ -2678,8 +2678,8 @@ var DOC_GROUPS=[
  {title:"PETUNJUK KEGIATAN",description:"Dokumen acuan dan ketentuan resmi pelaksanaan PORSENI 2026.",items:[
   {i:"📑",t:"Term of Reference (TOR) Kegiatan",d:"Kerangka acuan kegiatan PORSENI 2026",u:"https://drive.google.com/uc?export=download&id=1UuoaNBKZ7uZ2uP9bYzKquC-JvrZWttA7/view?usp=drive_link"},
   {i:"📘",t:"Petunjuk Teknis (Juknis)",d:"Ketentuan dan aturan setiap cabang lomba",u:"https://drive.google.com/uc?export=download&id=17j5JLolSSiQ2fCwZ7AfZpi3gKPuvxLSM/view?usp=drive_link"},
-  {i:"🏛️",t:"SK Kepanitiaan PORSENI 2026",d:"Surat keputusan susunan kepanitiaan PORSENI 2026",u:"https://drive.google.com/uc?export=download&id=1V_ap6d8Jnme-3PnDO5hLJFB3dcZ5Vntd/view?usp=drive_link"}
- ]}, 
+  {i:"🏛️",t:"SK Kepanitiaan PORSENI 2026",d:"Surat keputusan susunan kepanitiaan PORSENI 2026",u:"https://drive.google.com/uc?export=download&id=1Soq12ySyA8fpOF_IzExngk-WuciT066C/view?usp=drive_link"}
+ ]},
  {title:"BERKAS",description:"Format dokumen yang perlu disiapkan dan dilengkapi oleh kontingen.",items:[
   {i:"🤝",t:"Pakta Integritas",d:"Silahkan cetak Pakta Integritas lalu diisi manual dan tanda tangan bermaterai lalu scan dalam format PDF",u:"https://drive.google.com/uc?export=download&id=1rZmdav5JndLXDP-9PEQXie5Q63Anr3L1/view?usp=sharing"},
   {i:"📨",t:"Contoh Surat Mandat",d:"Format surat mandat atau surat tugas dari kontingen (boleh edit langsung upload)",u:"https://docs.google.com/document/d/1-XPO_4ur3E2Z1lgtqzyTXElMVuKf2jRS/export?format=docx"}
@@ -3393,9 +3393,9 @@ function renderPublicRecap(d){
  var mode=d.modeRekapPublik==='terverifikasi'?'terverifikasi':'terdaftar';
  var rows=mode==='terverifikasi'?(d.ringkasan||[]):(d.ringkasanPendaftaran||[]);
  var b=document.getElementById('recap-cabang');
- var heading=mode==='terverifikasi'?'REKAP BERKAS CABANG LOMBA YANG TERVERIFIKASI':'PESERTA CABANG LOMBA DARI KONTINGEN TERVERIFIKASI';
- var countHeading=mode==='terverifikasi'?'Kontingen dengan berkas terverifikasi':'Kontingen terverifikasi';
- var note=mode==='terverifikasi'?'Hanya data pengajuan pada sheet Cabang yang status verifikasi berkasnya Terverifikasi oleh panitia.':'Menampilkan cabang/kategori pilihan dari kontingen yang status pendaftarannya Terverifikasi, meskipun berkas cabang lomba belum dikirim atau belum diverifikasi.';
+ var heading=mode==='terverifikasi'?'PESERTA CABANG LOMBA DARI KONTINGEN TERVERIFIKASI':'SELURUH PENDAFTARAN CABANG LOMBA';
+ var countHeading=mode==='terverifikasi'?'Kontingen terverifikasi':'Kontingen terdaftar';
+ var note=mode==='terverifikasi'?'Hanya cabang dan kategori dari kontingen yang status pendaftaran induknya sudah Terverifikasi. Status berkas cabang lomba tidak menjadi syarat untuk tampil di rekap ini.':'Mode ini menampilkan seluruh pilihan cabang dan kategori dari semua kontingen yang mendaftar, termasuk yang belum terverifikasi.';
  if(b)b.innerHTML='<h3 class="recap-h">'+heading+'</h3>'+(rows.length?'<div class="recap-summary"><table><colgroup><col class="c-cab"><col class="c-kat"><col class="c-jml"></colgroup><thead><tr><th>Cabang lomba</th><th>Kategori</th><th>'+countHeading+'</th></tr></thead><tbody>'+summaryRows(rows)+'</tbody></table><p class="hint">'+note+'</p></div>':'<p class="hint">Belum ada data cabang lomba untuk pilihan tampilan ini.</p>');
 }
 var RK=null;
