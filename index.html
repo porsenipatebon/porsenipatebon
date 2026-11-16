@@ -2330,6 +2330,114 @@ a:focus-visible,button:focus-visible,summary:focus-visible{
 }
 </style>
 
+<style id="mobile-footer-wave-clearance-v30">
+/* Wave footer berhenti sebelum area dock navigasi pada tampilan mobile. */
+@media (max-width: 899px) {
+  body:has(#v-home.desk-page-mode) footer {
+    overflow: visible !important;
+    padding-bottom: calc(112px + env(safe-area-inset-bottom)) !important;
+  }
+  body:has(#v-home.desk-page-mode) footer > .wave {
+    bottom: calc(82px + env(safe-area-inset-bottom)) !important;
+    height: 80px !important;
+    z-index: 0 !important;
+    pointer-events: none !important;
+  }
+  body:has(#v-home.desk-page-mode) nav.desk-nav {
+    z-index: 10010 !important;
+  }
+}
+</style>
+
+<style id="mobile-footer-under-main-layer-v33">
+/* Urutan lapisan saja: seluruh area utama (termasuk navbar fixed)
+   berada di atas footer. Tidak mengubah dimensi atau jarak. */
+@media (max-width: 899px) {
+  body:has(#v-home.desk-page-mode) main.page {
+    position: relative !important;
+    z-index: 2 !important;
+    isolation: isolate !important;
+  }
+  body:has(#v-home.desk-page-mode) footer {
+    position: relative !important;
+    z-index: 1 !important;
+  }
+  body:has(#v-home.desk-page-mode) nav.desk-nav {
+    z-index: 10050 !important;
+  }
+}
+</style>
+
+
+<style id="mobile-footer-content-and-wave-final-v34">
+/* Final mobile footer correction:
+   remove accumulated footer clearance; return wave to footer baseline.
+   Keep the existing fixed navigation clearance on the body. */
+@media (max-width: 899px) {
+  body:has(#v-home.desk-page-mode) footer {
+    box-sizing: border-box !important;
+    margin-top: 24px !important;
+    padding: 50px 14px 28px !important;
+    position: relative !important;
+    z-index: 1 !important;
+    overflow: visible !important;
+  }
+  body:has(#v-home.desk-page-mode) footer > .wave {
+    position: absolute !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    height: 120px !important;
+    z-index: -1 !important;
+    pointer-events: none !important;
+  }
+  body:has(#v-home.desk-page-mode) main.page {
+    position: relative !important;
+    z-index: 2 !important;
+    isolation: isolate !important;
+  }
+  body:has(#v-home.desk-page-mode) nav.desk-nav {
+    z-index: 10050 !important;
+  }
+}
+</style>
+
+
+<style id="mobile-footer-wave-extends-to-bottom-v35">
+/* Perpanjang bidang gelombang ke tepi bawah footer; tidak mengubah jarak konten. */
+@media (max-width: 899px) {
+  body:has(#v-home.desk-page-mode) footer {
+    overflow: visible !important;
+  }
+  body:has(#v-home.desk-page-mode) footer > .wave {
+    position: absolute !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: -24px !important;
+    width: 100% !important;
+    height: 144px !important;
+    z-index: -1 !important;
+    pointer-events: none !important;
+  }
+}
+</style>
+
+
+<style id="mobile-footer-wave-full-bleed-to-page-bottom-v36">
+/* Perpanjang SVG gelombang melewati batas footer hingga tepi bawah layar.
+   Hanya area dekorasi yang diubah; teks, padding, dan jarak tetap. */
+@media (max-width: 899px) {
+  body:has(#v-home.desk-page-mode) footer > .wave {
+    bottom: -110px !important;
+    height: 260px !important;
+    width: 100% !important;
+    z-index: -1 !important;
+    pointer-events: none !important;
+  }
+}
+</style>
+
 </head>
 <body>
 <i class="blob b1"></i><i class="blob b2"></i><i class="blob b3"></i>
