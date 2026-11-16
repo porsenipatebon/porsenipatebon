@@ -640,6 +640,7 @@ function doPost(e){
    return out({ok:true,data:portalData});
   }
   if(d.action==='contingent_preview_file')return out(contingentPreviewFile_(d));
+  if(d.action==='contingent_replace_revision_files')return out(contingentReplaceRevisionFiles_(d));
   stage='cek_jenis_formulir';var c=CFG[d.type];if(!c)throw new Error('Jenis formulir tidak dikenal');
   stage='validasi_data_dan_lampiran';validate(d);
   assertPdfMergeLibraryReady_(d.files||[]);
@@ -739,7 +740,7 @@ function adminLogout_(token){
  return {ok:true};
 }
 function ensureAdminColumns_(sheet){
- var wanted=['Status Verifikasi','Catatan Panitia','Diverifikasi Pada','Diverifikasi Oleh','ID Data'];
+ var wanted=['Status Verifikasi','Catatan Panitia','Diverifikasi Pada','Diverifikasi Oleh','ID Data','Item Revisi'];
  if(sheet.getLastColumn()===0)return;
  var headers=sheet.getRange(1,1,1,sheet.getLastColumn()).getValues()[0];
  wanted.forEach(function(h){if(headers.indexOf(h)<0){sheet.getRange(1,sheet.getLastColumn()+1).setValue(h).setFontWeight('bold');headers.push(h);}});
@@ -762,7 +763,7 @@ function adminReadSheet_(sheetName,type,includeFiles){
  function val(row,key){var i=idx[key];return i===undefined?'':row[i];}
  return values.slice(1).map(function(row,i){
   var files=includeFiles?parsePortalFiles_(val(row,'Berkas (link Drive)')):[];
-  var record={type:type,rowNumber:i+2,recordId:String(val(row,'ID Data')||''),nomor:String(val(row,'No. Registrasi')||''),nama:String(val(row,'Nama Kontingen')||''),waktu:val(row,'Waktu')?Utilities.formatDate(new Date(val(row,'Waktu')),Session.getScriptTimeZone(),'dd-MM-yyyy HH:mm'):'',status:String(val(row,'Status Verifikasi')||'Menunggu Verifikasi'),catatanAdmin:String(val(row,'Catatan Panitia')||''),pdf:String(val(row,'PDF Formulir (link Drive)')||''),archivePdf:String(val(row,'Arsip PDF Panitia (link Drive)')||''),folder:String(val(row,'Folder Drive')||''),berkas:files};
+  var record={type:type,rowNumber:i+2,recordId:String(val(row,'ID Data')||''),nomor:String(val(row,'No. Registrasi')||''),nama:String(val(row,'Nama Kontingen')||''),waktu:val(row,'Waktu')?Utilities.formatDate(new Date(val(row,'Waktu')),Session.getScriptTimeZone(),'dd-MM-yyyy HH:mm'):'',status:String(val(row,'Status Verifikasi')||'Menunggu Verifikasi'),catatanAdmin:String(val(row,'Catatan Panitia')||''),revisionItems:parseRevisionItems_(val(row,'Item Revisi')),pdf:String(val(row,'PDF Formulir (link Drive)')||''),archivePdf:String(val(row,'Arsip PDF Panitia (link Drive)')||''),folder:String(val(row,'Folder Drive')||''),berkas:files};
   if(type==='kontingen'){
    record.asal=String(val(row,'Asal')||'');record.alamat=String(val(row,'Alamat')||'');record.ketua=String(val(row,'Ketua')||'');record.tempatLahirKetua=String(val(row,'Tempat Lahir Ketua')||'');record.tanggalLahirKetua=String(val(row,'Tanggal Lahir Ketua')||'');record.waKetua=String(val(row,'WA Ketua')||'');record.email=String(val(row,'Email')||'');record.cabang=String(val(row,'Cabang Lomba')||'');record.jumlahPeserta=String(val(row,'Jumlah Peserta')||'');record.metodeBayar=String(val(row,'Metode Bayar')||'');record.tanggalBayar=String(val(row,'Tgl Bayar')||'');record.ketuaIpnu=String(val(row,'Ketua PR IPNU')||'');record.ketuaIppnu=String(val(row,'Ketua PR IPPNU')||'');record.igKetua=String(val(row,'Instagram Ketua Kontingen')||'');record.igKetuaIpnu=String(val(row,'Instagram Ketua PR/PK IPNU')||'');record.igKetuaIppnu=String(val(row,'Instagram Ketua PR/PK IPPNU')||'');record.igOrganisasi=String(val(row,'Instagram PR/PK IPNU-IPPNU')||'');
   }else{
@@ -782,8 +783,8 @@ function adminRecordFiles_(d){
  var ids=sh.getRange(2,idCol,sh.getLastRow()-1,1).getValues(),rowNumber=0;
  for(var i=0;i<ids.length;i++){if(String(ids[i][0]||'').trim()===recordId){rowNumber=i+2;break;}}
  if(!rowNumber)throw new Error('Data tidak ditemukan atau sudah dihapus. Muat ulang daftar.');
- var raw=filesCol?sh.getRange(rowNumber,filesCol).getValue():'';
- return {ok:true,recordId:recordId,berkas:parsePortalFiles_(raw)};
+ var raw=filesCol?sh.getRange(rowNumber,filesCol).getValue():'';var revCol=headers.indexOf('Item Revisi');
+ return {ok:true,recordId:recordId,berkas:parsePortalFiles_(raw),revisionItems:revCol>=0?parseRevisionItems_(sh.getRange(rowNumber,revCol+1).getValue()):[]};
 }
 
 function getPublicRecapMode_(){
@@ -850,28 +851,38 @@ function resolveAdminRecordRow_(sheet,d){
  for(var i=0;i<ids.length;i++)if(String(ids[i][0]||'')===recordId)return i+2;
  throw new Error('Data sudah berubah atau dihapus oleh petugas lain. Muat ulang daftar sebelum melanjutkan.');
 }
+function revisionFieldHeaders_(type){
+ return type==='kontingen'
+  ? ['Asal','Alamat','Ketua','Tempat Lahir Ketua','Tanggal Lahir Ketua','WA Ketua','Email','Cabang Lomba','Jumlah Peserta','Metode Bayar','Tgl Bayar','Ketua PR IPNU','Ketua PR IPPNU','WA Ketua IPNU','WA Ketua IPPNU','Instagram Ketua Kontingen','Instagram Ketua PR/PK IPNU','Instagram Ketua PR/PK IPPNU','Instagram PR/PK IPNU-IPPNU']
+  : ['Cabang Lomba','Kategori','Jumlah Peserta','Daftar Peserta','Tempat Lahir Peserta','Tanggal Lahir Peserta','Alamat Rumah Peserta','WA Peserta','Catatan'];
+}
+function revisionItemLabel_(item){var s=String(item||'');if(s.indexOf('field|')===0)return s.slice(6);if(s.indexOf('file|')===0)return s.slice(5);return s;}
 function adminUpdateStatus_(d){
- var admin=requireAdmin_(d.token),type=String(d.type||''),status=String(d.status||''),note=String(d.note||'').slice(0,1000);
+ var admin=requireAdmin_(d.token),type=String(d.type||''),status=String(d.status||''),note=String(d.note||'').slice(0,1000),revisionItems=Array.isArray(d.revisionItems)?d.revisionItems.map(function(x){return String(x||'').trim();}).filter(Boolean):[];
  if(type!=='kontingen'&&type!=='cabang')throw new Error('Jenis data tidak valid.');
  if(ADMIN_STATUS_VALUES.indexOf(status)<0)throw new Error('Status verifikasi tidak valid.');
  if((status==='Perlu Revisi'||status==='Ditolak')&&!String(note||'').trim())throw new Error('Catatan wajib diisi untuk status Perlu Revisi atau Ditolak.');
+ if(status==='Perlu Revisi'&&!revisionItems.length)throw new Error('Pilih minimal satu data atau dokumen yang harus direvisi.');
+ if(status==='Perlu Revisi'){var allowedFields=revisionFieldHeaders_(type);revisionItems.forEach(function(item){if(item.indexOf('field|')===0&&allowedFields.indexOf(item.slice(6))<0)throw new Error('Item data revisi tidak dikenal: '+item.slice(6));if(item.indexOf('file|')!==0&&item.indexOf('field|')!==0){} });}
  var lock=LockService.getScriptLock(),emailPayload=null,result=null;lock.waitLock(20000);
  try{
   var cfg=CFG[type],ss=SpreadsheetApp.getActiveSpreadsheet(),sheet=ss&&ss.getSheetByName(cfg.sheet);
   if(!sheet)throw new Error('Data pendaftaran tidak ditemukan. Muat ulang daftar.');
   ensureAdminColumns_(sheet);
   var rowNumber=resolveAdminRecordRow_(sheet,d),headers=sheet.getRange(1,1,1,sheet.getLastColumn()).getValues()[0];
-  var nameCol=headers.indexOf('Nama Kontingen')+1,statusCol=headers.indexOf('Status Verifikasi')+1,noteCol=headers.indexOf('Catatan Panitia')+1,dateCol=headers.indexOf('Diverifikasi Pada')+1,byCol=headers.indexOf('Diverifikasi Oleh')+1;
+  var nameCol=headers.indexOf('Nama Kontingen')+1,statusCol=headers.indexOf('Status Verifikasi')+1,noteCol=headers.indexOf('Catatan Panitia')+1,dateCol=headers.indexOf('Diverifikasi Pada')+1,byCol=headers.indexOf('Diverifikasi Oleh')+1,revisionCol=headers.indexOf('Item Revisi')+1;
   var name=String(sheet.getRange(rowNumber,nameCol).getValue()||'');if(!name)throw new Error('Baris data kosong.');
+  if(status==='Perlu Revisi'){var filesColCheck=headers.indexOf('Berkas (link Drive)');var existingLabels=filesColCheck>=0?parsePortalFiles_(sheet.getRange(rowNumber,filesColCheck+1).getValue()).map(function(f){return f.label;}):[];revisionItems.forEach(function(item){if(item.indexOf('file|')===0&&existingLabels.indexOf(item.slice(5))<0)throw new Error('Dokumen yang dipilih tidak ditemukan pada arsip: '+item.slice(5));if(item.indexOf('field|')!==0&&item.indexOf('file|')!==0&&existingLabels.indexOf(item)<0)throw new Error('Item revisi tidak dikenali: '+item);});}
   var currentStatus=statusCol?String(sheet.getRange(rowNumber,statusCol).getValue()||'Menunggu Verifikasi'):'Menunggu Verifikasi';
   if(currentStatus==='Terverifikasi'&&status!=='Menunggu Verifikasi')throw new Error('Status sudah Terverifikasi. Batalkan verifikasi terlebih dahulu sebelum mengubah status.');
   if(currentStatus!=='Terverifikasi'&&status==='Menunggu Verifikasi')throw new Error('Status saat ini bukan Terverifikasi.');
   var regCol=headers.indexOf('No. Registrasi')+1,branchCol=headers.indexOf('Cabang Lomba')+1,categoryCol=headers.indexOf('Kategori')+1;
-  var now=new Date();sheet.getRange(rowNumber,statusCol).setValue(status);sheet.getRange(rowNumber,noteCol).setValue(note);sheet.getRange(rowNumber,dateCol).setValue(now);sheet.getRange(rowNumber,byCol).setValue(admin.user||'Admin');
+  var now=new Date();sheet.getRange(rowNumber,statusCol).setValue(status);sheet.getRange(rowNumber,noteCol).setValue(note);sheet.getRange(rowNumber,dateCol).setValue(now);sheet.getRange(rowNumber,byCol).setValue(admin.user||'Admin');if(revisionCol)sheet.getRange(rowNumber,revisionCol).setValue(status==='Perlu Revisi'?JSON.stringify(revisionItems):'');
   invalidatePublicCache_('recap');
   var reg=regCol?sheet.getRange(rowNumber,regCol).getValue():'';
   adminAudit_(admin,'UBAH STATUS VERIFIKASI',type,rowNumber,reg,name+(type==='cabang'?' | '+String(sheet.getRange(rowNumber,branchCol).getValue()||'')+' / '+String(sheet.getRange(rowNumber,categoryCol).getValue()||''):'')+' | '+status+' | '+note);
-  emailPayload=currentStatus!==status&&status!=='Menunggu Verifikasi'&&!(type==='kontingen'&&status==='Terverifikasi')?{token:d.token,type:type,recordId:d.recordId,status:status,note:note}:null;
+  var emailNote=status==='Perlu Revisi'?note+'\nItem yang harus diperbaiki: '+revisionItems.map(revisionItemLabel_).join(', '):note;
+  emailPayload=currentStatus!==status&&status!=='Menunggu Verifikasi'&&!(type==='kontingen'&&status==='Terverifikasi')?{token:d.token,type:type,recordId:d.recordId,status:status,note:emailNote}:null;
   result={ok:true,message:'Status berhasil diperbarui.',status:status,updatedAt:Utilities.formatDate(now,Session.getScriptTimeZone(),'dd-MM-yyyy HH:mm:ss')};
  }finally{lock.releaseLock();}
  // Email dikirim setelah status tersimpan dan lock dilepas. Kegagalan email tidak membatalkan keputusan admin.
@@ -891,6 +902,16 @@ function adminUpdateStatus_(d){
    result.emailPending=true;
   }else{
    result.message+=' Status tidak berubah atau masih menunggu verifikasi; email tidak dikirim.';
+  }
+ }
+ if(type==='kontingen'&&status==='Ditolak'){
+  try{
+   var archived=adminAllowReregistration_({token:d.token,type:'kontingen',recordId:d.recordId});
+   result.deletedFromActive=true;result.message+=' '+archived.message;
+  }catch(archiveErr){
+   result.deletedFromActive=false;result.archiveError=String(archiveErr&&archiveErr.message||archiveErr);
+   result.message+=' PERHATIAN: status Ditolak tersimpan, tetapi pengarsipan otomatis gagal: '+result.archiveError;
+   try{logSecurityEvent_(admin.user,'ARSIP OTOMATIS KONTINGEN DITOLAK','GAGAL',String(d.recordId||'')+' | '+result.archiveError);}catch(ignoreArchiveLog){}
   }
  }
  return result;
@@ -1420,7 +1441,7 @@ function adminSendEmail_(d){
  }else if(type==='kontingen'&&status==='Perlu Revisi'){
   body='Assalamu’alaikum Wr. Wb.\n\nYth. Ketua Kontingen '+nama+',\n\nDengan hormat,\n\nPanitia Pekan Olahraga dan Seni (PORSENI) 2026 PAC IPNU-IPPNU Kecamatan Patebon telah melakukan pemeriksaan terhadap berkas pendaftaran kontingen yang Saudara kirimkan melalui sistem pendaftaran resmi PORSENI 2026.\n\nSTATUS VERIFIKASI: PERLU REVISI\n\nBerdasarkan hasil pemeriksaan, terdapat beberapa bagian pada data dan/atau berkas pendaftaran kontingen '+nama+' yang perlu diperbaiki atau dilengkapi sebelum dapat diproses ke tahap verifikasi selanjutnya.\n\nCATATAN DAN PERBAIKAN YANG HARUS DILAKUKAN\n\n'+note+'\n\nTINDAK LANJUT\n\n1. Periksa dengan saksama seluruh catatan dan arahan perbaikan yang disampaikan oleh panitia.\n2. Lengkapi atau perbaiki data maupun dokumen sesuai dengan catatan tersebut.\n3. Kirimkan kembali pembaruan data dan/atau berkas melalui sistem pendaftaran resmi PORSENI 2026 sesuai mekanisme yang tersedia.\n4. Pastikan seluruh informasi dan dokumen yang diperbarui telah benar, jelas, dan sesuai dengan persyaratan pendaftaran.\n\nKami mengimbau agar perbaikan segera dilakukan sehingga proses verifikasi dapat dilanjutkan tanpa menghambat tahapan pendaftaran berikutnya. Status Perlu Revisi bukan merupakan penolakan akhir; berkas akan dapat diperiksa kembali setelah perbaikan disampaikan sesuai ketentuan panitia.\n\nTerima kasih atas perhatian dan kerja sama Saudara.\n\nWassalamu’alaikum Wr. Wb.\n\nHormat kami,\n\nPanitia PORSENI 2026\nPAC IPNU-IPPNU Kecamatan Patebon\n“Unitas Ad Gloriam”\n\nEmail ini dikirim melalui Portal Panitia PORSENI 2026.';
  }else if(type==='kontingen'&&status==='Ditolak'){
-  body='Assalamu’alaikum Wr. Wb.\n\nYth. Ketua Kontingen '+nama+',\n\nDengan hormat,\n\nPanitia Pekan Olahraga dan Seni (PORSENI) 2026 PAC IPNU-IPPNU Kecamatan Patebon telah melakukan pemeriksaan terhadap berkas pendaftaran kontingen yang Saudara kirimkan melalui sistem pendaftaran resmi PORSENI 2026.\n\nSTATUS VERIFIKASI: DITOLAK\n\nBerdasarkan hasil pemeriksaan dan pertimbangan administrasi panitia, dengan berat hati kami sampaikan bahwa pendaftaran kontingen '+nama+' dengan nomor registrasi '+(reg||'-')+' dinyatakan DITOLAK dan belum dapat dilanjutkan ke tahap berikutnya.\n\nALASAN PENOLAKAN\n\n'+note+'\n\nKEJELASAN DAN TINDAK LANJUT\n\nKeputusan tersebut ditetapkan berdasarkan hasil pemeriksaan terhadap data dan/atau dokumen pendaftaran serta ketentuan yang berlaku dalam pelaksanaan PORSENI 2026. Mohon Ketua Kontingen memperhatikan alasan penolakan yang telah disampaikan di atas.\n\nApabila ketentuan dan kesempatan pendaftaran ulang masih memungkinkan, silakan menghubungi panitia atau sekretariat PORSENI 2026 untuk memperoleh informasi lebih lanjut mengenai mekanisme yang dapat ditempuh. Pendaftaran ulang hanya dapat dilakukan sesuai persetujuan dan ketentuan resmi panitia.\n\nKami mengucapkan terima kasih atas perhatian, partisipasi, dan kerja sama Saudara dalam kegiatan PORSENI 2026.\n\nWassalamu’alaikum Wr. Wb.\n\nHormat kami,\n\nPanitia PORSENI 2026\nPAC IPNU-IPPNU Kecamatan Patebon\n“Unitas Ad Gloriam”\n\nEmail ini dikirim melalui Portal Panitia PORSENI 2026.';
+  body='Assalamu’alaikum Wr. Wb.\n\nYth. Ketua Kontingen '+nama+',\n\nDengan hormat,\n\nPanitia Pekan Olahraga dan Seni (PORSENI) 2026 PAC IPNU-IPPNU Kecamatan Patebon telah melakukan pemeriksaan terhadap berkas pendaftaran kontingen yang Saudara kirimkan melalui sistem pendaftaran resmi PORSENI 2026.\n\nSTATUS VERIFIKASI: DITOLAK\n\nBerdasarkan hasil pemeriksaan dan pertimbangan administrasi panitia, dengan berat hati kami sampaikan bahwa pendaftaran kontingen '+nama+' dengan nomor registrasi '+(reg||'-')+' dinyatakan DITOLAK dan belum dapat dilanjutkan ke tahap berikutnya.\n\nALASAN PENOLAKAN\n\n'+note+'\n\nKEJELASAN DAN TINDAK LANJUT\n\nKeputusan tersebut ditetapkan berdasarkan hasil pemeriksaan terhadap data dan/atau dokumen pendaftaran serta ketentuan yang berlaku dalam pelaksanaan PORSENI 2026. Mohon Ketua Kontingen memperhatikan alasan penolakan yang telah disampaikan di atas.\n\nSetelah keputusan penolakan ini ditetapkan, data pendaftaran lama akan dipindahkan ke arsip panitia dan dihapus dari daftar aktif. Kontingen diperbolehkan melakukan pendaftaran ulang dari awal melalui website resmi PORSENI 2026. Sistem akan menerbitkan PIN baru setelah pendaftaran ulang berhasil.\n\nKami mengucapkan terima kasih atas perhatian, partisipasi, dan kerja sama Saudara dalam kegiatan PORSENI 2026.\n\nWassalamu’alaikum Wr. Wb.\n\nHormat kami,\n\nPanitia PORSENI 2026\nPAC IPNU-IPPNU Kecamatan Patebon\n“Unitas Ad Gloriam”\n\nEmail ini dikirim melalui Portal Panitia PORSENI 2026.';
  }else if(type==='cabang'&&status==='Terverifikasi'){
   body='Assalamu’alaikum Wr. Wb.\n\nYth. Ketua Kontingen '+nama+',\n\nDengan hormat,\n\nPanitia Pekan Olahraga dan Seni (PORSENI) 2026 PAC IPNU-IPPNU Kecamatan Patebon telah melakukan pemeriksaan terhadap berkas cabang lomba yang telah Saudara kirimkan.\n\nSTATUS VERIFIKASI: TERVERIFIKASI\n\nBerdasarkan hasil pemeriksaan, berkas cabang lomba berikut dinyatakan TERVERIFIKASI dan telah memenuhi persyaratan administrasi yang ditetapkan oleh panitia.\n\nRINCIAN BERKAS\n\nNama Kontingen: '+nama+'\nNomor Registrasi: '+(reg||'-')+'\nCabang Lomba: '+(cabang||'-')+'\nKategori: '+(kategori||'-')+'\n\nDengan demikian, berkas tersebut dapat dilanjutkan ke tahapan berikutnya sesuai ketentuan pelaksanaan PORSENI 2026.\n\nMohon Ketua Kontingen tetap memantau informasi dan pengumuman resmi dari panitia terkait jadwal serta teknis pelaksanaan perlombaan.\n\nTerima kasih atas perhatian, kerja sama, dan partisipasi Saudara.\n\nWassalamu’alaikum Wr. Wb.\n\nHormat kami,\n\nPanitia PORSENI 2026\nPAC IPNU-IPPNU Kecamatan Patebon\n“Unitas Ad Gloriam”';
  }else if(type==='cabang'&&status==='Perlu Revisi'){
@@ -1847,6 +1868,47 @@ function portalFileRef_(url,label){
  var id=getDriveFileIdFromUrl_(url);
  return id?{label:String(label||'Berkas'),id:id}:null;
 }
+function parseRevisionItems_(raw){
+ if(Array.isArray(raw))return raw;
+ try{var v=JSON.parse(String(raw||'[]'));return Array.isArray(v)?v.map(function(x){return String(x||'');}).filter(Boolean):[];}catch(e){return [];}
+}
+function rebuildRevisionPdfForRow_(type,row){
+ var ss=SpreadsheetApp.getActiveSpreadsheet(),sh=ss.getSheetByName(CFG[type].sheet),headers=sh.getRange(1,1,1,sh.getLastColumn()).getValues()[0],vals=sh.getRange(row,1,1,sh.getLastColumn()).getValues()[0];
+ function val(h){var i=headers.indexOf(h);return i<0?'':vals[i];}
+ var folderId=getDriveFileIdFromUrl_(String(val('Folder Drive')||''));if(!folderId)throw new Error('Folder arsip tidak ditemukan untuk membangun PDF revisi.');
+ var folder=DriveApp.getFolderById(folderId);assertPrivateFolderTree_(folder);var oldId=getDriveFileIdFromUrl_(String(val('PDF Formulir (link Drive)')||''));
+ var links=parsePortalFiles_(String(val('Berkas (link Drive)')||'')).filter(function(x){return !/^pdf formulir$/i.test(x.label);}),files=[],savedPdf=[];
+ links.forEach(function(x){var id=getDriveFileIdFromUrl_(x.url);if(!id)return;var f=DriveApp.getFileById(id),mime=String(f.getMimeType()||'').toLowerCase();if(mime===MimeType.PDF){if(!isStandaloneCompetitionDocumentLabel_(x.label)){files.push({label:x.label,name:f.getName(),type:MimeType.PDF});savedPdf.push({id:id,mime:MimeType.PDF,label:x.label,name:f.getName()});}return;}if(mime==='image/jpeg'||mime==='image/png'){var bytes=f.getBlob().getBytes();files.push({label:x.label,name:f.getName(),type:detectedMime_(bytes,mime),data:Utilities.base64Encode(bytes)});}});
+ var rec={type:type,reg:String(val('No. Registrasi')||''),nama:String(val('Nama Kontingen')||''),files:files,savedAttachments:savedPdf};
+ if(type==='kontingen'){rec.asal=String(val('Asal')||'');rec.alamat=String(val('Alamat')||'');rec.ketua=String(val('Ketua')||'');rec.tempat_lahir_ketua=String(val('Tempat Lahir Ketua')||'');rec.tanggal_lahir_ketua=String(val('Tanggal Lahir Ketua')||'');rec.wa_ketua=String(val('WA Ketua')||'');rec.email=String(val('Email')||'');rec.cabang=String(val('Cabang Lomba')||'');rec.jml=String(val('Jumlah Peserta')||'');rec.bayar=String(val('Metode Bayar')||'');rec.tgl_bayar=String(val('Tgl Bayar')||'');rec.ketua_pr_ipnu=String(val('Ketua PR IPNU')||'');rec.ketua_pr_ippnu=String(val('Ketua PR IPPNU')||'');}
+ else{rec.cabang=String(val('Cabang Lomba')||'');rec.kategori=String(val('Kategori')||'');rec.catatan=String(val('Catatan')||'');rec.jml=String(val('Jumlah Peserta')||'');var raw=String(val('Daftar Peserta')||'').split(/\r?\n/).filter(Boolean);function detailAt(t,i){var lines=String(t||'').split(/\r?\n/);if(lines.length<=i)return '';var line=lines[i].replace(/^\s*\d+\.\s*/,'');var p=line.indexOf(':');return p>=0?line.slice(p+1).trim():line.trim();}rec.pesertaList=raw.map(function(line,i){var clean=line.replace(/^\s*\d+\.\s*/,'').trim(),m=clean.match(/^(.*?)\s*\(([LP])\)(?:\s*-\s*(.*))?$/i);return {nama:m?m[1].trim():clean,gender:m?m[2].toUpperCase():'',role:m&&m[3]?m[3].trim():'',tempatLahir:detailAt(val('Tempat Lahir Peserta'),i),tanggalLahir:detailAt(val('Tanggal Lahir Peserta'),i),alamat:detailAt(val('Alamat Rumah Peserta'),i),wa:detailAt(val('WA Peserta'),i)};});rec.peserta=String(val('Daftar Peserta')||'');rec.tempat_lahir_peserta=String(val('Tempat Lahir Peserta')||'');rec.tanggal_lahir_peserta=String(val('Tanggal Lahir Peserta')||'');rec.alamat_peserta=String(val('Alamat Rumah Peserta')||'');rec.wa_peserta=String(val('WA Peserta')||'');}
+ var newPdf=createRegistrationPdf(rec,folder);assertPrivateIndividualFile_(newPdf);var pdfCol=headers.indexOf('PDF Formulir (link Drive)')+1,archiveCol=headers.indexOf('Arsip PDF Panitia (link Drive)')+1,filesCol=headers.indexOf('Berkas (link Drive)')+1;if(pdfCol)sh.getRange(row,pdfCol).setValue(newPdf.getUrl());if(archiveCol)sh.getRange(row,archiveCol).setValue(newPdf.getUrl());
+ if(filesCol){var oldLines=String(val('Berkas (link Drive)')||'').split(/\r?\n/).filter(function(x){return !/^PDF formulir:/i.test(x);});oldLines.unshift('PDF formulir: '+newPdf.getUrl());sh.getRange(row,filesCol).setValue(oldLines.join('\n'));}
+ if(savedPdf.length)queuePdfMerge_(newPdf,rec,folder,{oldPdfIds:oldId?[oldId]:[]});else if(oldId&&oldId!==newPdf.getId()){try{DriveApp.getFileById(oldId).setTrashed(true);}catch(e){}}
+ return newPdf.getUrl();
+}
+
+function contingentReplaceRevisionFiles_(d){
+ var session=requireContingentSession_(d.sessionToken),nama=session.nama,type=String(d.type||''),files=Array.isArray(d.files)?d.files:[],changes=d.changes||{};
+ if(['kontingen','cabang'].indexOf(type)<0||(!files.length&&!Object.keys(changes).length)||files.length>20)throw new Error('Permintaan revisi tidak valid.');
+ var cfg=CFG[type],ss=SpreadsheetApp.getActiveSpreadsheet(),sh=ss&&ss.getSheetByName(cfg.sheet);if(!sh)throw new Error('Data tidak ditemukan.');
+ var values=sh.getDataRange().getValues(),headers=values[0],nameIx=headers.indexOf('Nama Kontingen'),statusIx=headers.indexOf('Status Verifikasi'),itemsIx=headers.indexOf('Item Revisi'),filesIx=headers.indexOf('Berkas (link Drive)'),folderIx=headers.indexOf('Folder Drive'),regIx=headers.indexOf('No. Registrasi'),branchIx=headers.indexOf('Cabang Lomba'),catIx=headers.indexOf('Kategori');
+ var row=0;for(var i=values.length-1;i>=1;i--){if(normalizeEvent_(values[i][nameIx])!==normalizeEvent_(nama))continue;if(type==='cabang'&&(normalizeEvent_(values[i][branchIx])!==normalizeEvent_(d.cabang)||normalizeEvent_(values[i][catIx])!==normalizeEvent_(d.kategori)))continue;row=i+1;break;}
+ if(!row)throw new Error('Data yang diminta revisi tidak ditemukan.');
+ var currentStatus=String(sh.getRange(row,statusIx+1).getValue()||'');if(currentStatus!=='Perlu Revisi')throw new Error('Pengiriman revisi hanya tersedia ketika status Perlu Revisi.');
+ var pending=parseRevisionItems_(sh.getRange(row,itemsIx+1).getValue());if(!pending.length)throw new Error('Daftar item revisi tidak ditemukan. Hubungi panitia.');
+ var allowedFields=revisionFieldHeaders_(type),changedKeys=Object.keys(changes),updated=[];
+ changedKeys.forEach(function(header){var token='field|'+header;if(pending.indexOf(token)<0)throw new Error('Data '+header+' tidak termasuk item yang diminta revisi.');if(allowedFields.indexOf(header)<0)throw new Error('Kolom '+header+' tidak dapat diperbarui.');var col=headers.indexOf(header);if(col<0)throw new Error('Kolom '+header+' tidak ditemukan.');var value=String(changes[header]==null?'':changes[header]).trim();if(!value)throw new Error(header+' wajib diisi.');if(value.length>5000)throw new Error(header+' terlalu panjang.');if(type==='kontingen'){var editKey=Object.keys(EDITABLE_FIELDS_).filter(function(k){return EDITABLE_FIELDS_[k].head===header;})[0];if(editKey)value=cleanKontingenField_(editKey,value);}if(/^[=+@]/.test(value))value="'"+value;sh.getRange(row,col+1).setValue(value);updated.push(token);});
+ var raw=String(sh.getRange(row,filesIx+1).getValue()||''),lines=raw.split(/\r?\n/),folderUrl=String(sh.getRange(row,folderIx+1).getValue()||''),folderId=getDriveFileIdFromUrl_(folderUrl);if(!folderId)throw new Error('Folder penyimpanan berkas tidak ditemukan.');
+ var folder=DriveApp.getFolderById(folderId);assertPrivateFolderTree_(folder);var replaced=[];
+ files.forEach(function(f){var label=String(f.label||'').trim(),token='file|'+label;if(pending.indexOf(token)<0&&pending.indexOf(label)<0)throw new Error('Berkas '+label+' tidak termasuk item yang diminta revisi.');if(replaced.indexOf(token)>=0)throw new Error('Berkas '+label+' dikirim lebih dari satu kali.');if(typeof f.data!=='string'||!f.data)throw new Error('Isi berkas '+label+' kosong.');var bytes=Utilities.base64Decode(f.data);if(bytes.length>MAX_FILE_BYTES)throw new Error('Berkas '+label+' melebihi batas ukuran.');if(/^ktp(?: peserta\s+\d+)?$/i.test(label))assertFileKind_(bytes,['png','jpg'],label+' wajib JPG/PNG.');var mime=detectedMime_(bytes,f.type||'application/octet-stream'),name=String(f.name||'revisi_'+label).replace(/[\\/:*?"<>|\r\n]+/g,'_').slice(0,160);var file=folder.createFile(Utilities.newBlob(bytes,mime,name));assertPrivateIndividualFile_(file);var prefix=label+': ',found=-1;for(var li=0;li<lines.length;li++){if(lines[li].indexOf(prefix)===0){found=li;break;}}if(found<0)throw new Error('Dokumen asli '+label+' tidak ditemukan dalam arsip.');lines[found]=label+': '+file.getUrl();replaced.push(token);logSecurityEvent_(nama,'UNGGAH ULANG DOKUMEN REVISI','BERHASIL',label+' | '+name);});
+ var done=updated.concat(replaced),remaining=pending.filter(function(x){return done.indexOf(x)<0;});if(files.length)sh.getRange(row,filesIx+1).setValue(lines.join('\n'));sh.getRange(row,itemsIx+1).setValue(JSON.stringify(remaining));
+ var completed=remaining.length===0;if(completed){sh.getRange(row,statusIx+1).setValue('Menunggu Verifikasi');var noteIx=headers.indexOf('Catatan Panitia');if(noteIx>=0)sh.getRange(row,noteIx+1).setValue('');var dateIx=headers.indexOf('Diverifikasi Pada');if(dateIx>=0)sh.getRange(row,dateIx+1).setValue(new Date());var byIx=headers.indexOf('Diverifikasi Oleh');if(byIx>=0)sh.getRange(row,byIx+1).setValue('Kontingen mengirim revisi');}
+ var refreshedPdfUrl=rebuildRevisionPdfForRow_(type,row);invalidatePublicCache_('recap');logSecurityEvent_(nama,'KIRIM REVISI DATA DAN BERKAS','BERHASIL',(type==='cabang'?String(d.cabang)+' / '+String(d.kategori)+' · ':'')+done.map(revisionItemLabel_).join(', ')+(completed?' · seluruh item selesai, Menunggu Verifikasi':' · item tersisa: '+remaining.map(revisionItemLabel_).join(', ')));
+ try{sendPorseniEmail_({to:NOTIFY,subject:'[PORSENI 2026] Revisi diterima - '+nama,body:'Kontingen '+nama+' telah mengirim pembaruan: '+done.map(revisionItemLabel_).join(', ')+'.\nStatus: '+(completed?'Menunggu Verifikasi':'Perlu Revisi; masih menunggu: '+remaining.map(revisionItemLabel_).join(', ')),name:SENDER_NAME,replyTo:REPLY_TO});}catch(mailErr){}
+ return {ok:true,completed:completed,remaining:remaining,pdfUpdated:true,message:completed?'Seluruh data dan dokumen revisi berhasil dikirim. Status kembali menjadi Menunggu Verifikasi. PDF diperbarui.':'Pembaruan berhasil dikirim. Item revisi yang tersisa: '+remaining.map(revisionItemLabel_).join(', ')};
+}
+
 function getContingentPortalData_(nama){
  var ss=SpreadsheetApp.getActiveSpreadsheet();if(!ss)throw new Error('Database PORSENI tidak dapat diakses.');
  var result={nama:nama,registrasi:null,berkasCabang:[],statusCabang:[]};
@@ -1856,7 +1918,7 @@ function getContingentPortalData_(nama){
  if(!kont.length)throw new Error('Data pendaftaran kontingen belum ditemukan.');
  var kr=kont[kont.length-1];
  result.dataKontingen=readKontingenData_(nama);
- result.approval={status:String(kr['Status Verifikasi']||'Menunggu Verifikasi'),catatan:String(kr['Catatan Panitia']||''),waktu:kr['Diverifikasi Pada']?Utilities.formatDate(new Date(kr['Diverifikasi Pada']),Session.getScriptTimeZone(),'dd-MM-yyyy HH:mm'):''};
+ result.approval={status:String(kr['Status Verifikasi']||'Menunggu Verifikasi'),catatan:String(kr['Catatan Panitia']||''),revisionItems:parseRevisionItems_(kr['Item Revisi']),revisionValues:{'Asal':String(kr['Asal']||''),'Alamat':String(kr['Alamat']||''),'Ketua':String(kr['Ketua']||''),'Tempat Lahir Ketua':String(kr['Tempat Lahir Ketua']||''),'Tanggal Lahir Ketua':(kr['Tanggal Lahir Ketua'] instanceof Date?Utilities.formatDate(kr['Tanggal Lahir Ketua'],'Asia/Jakarta','yyyy-MM-dd'):String(kr['Tanggal Lahir Ketua']||'')),'WA Ketua':String(kr['WA Ketua']||''),'Email':String(kr['Email']||''),'Cabang Lomba':String(kr['Cabang Lomba']||''),'Jumlah Peserta':String(kr['Jumlah Peserta']||''),'Metode Bayar':String(kr['Metode Bayar']||''),'Tgl Bayar':String(kr['Tgl Bayar']||''),'Ketua PR IPNU':String(kr['Ketua PR IPNU']||''),'Ketua PR IPPNU':String(kr['Ketua PR IPPNU']||''),'WA Ketua IPNU':String(kr['WA Ketua IPNU']||''),'WA Ketua IPPNU':String(kr['WA Ketua IPPNU']||''),'Instagram Ketua Kontingen':String(kr['Instagram Ketua Kontingen']||''),'Instagram Ketua PR/PK IPNU':String(kr['Instagram Ketua PR/PK IPNU']||''),'Instagram Ketua PR/PK IPPNU':String(kr['Instagram Ketua PR/PK IPPNU']||''),'Instagram PR/PK IPNU-IPPNU':String(kr['Instagram PR/PK IPNU-IPPNU']||'')},waktu:kr['Diverifikasi Pada']?Utilities.formatDate(new Date(kr['Diverifikasi Pada']),Session.getScriptTimeZone(),'dd-MM-yyyy HH:mm'):''};
  // Portal menerima ID file individual saja. Folder dan PDF arsip internal tidak pernah dikirim.
  result.registrasi={nomor:String(kr['No. Registrasi']||''),waktu:kr['Waktu']?Utilities.formatDate(new Date(kr['Waktu']),Session.getScriptTimeZone(),'dd-MM-yyyy HH:mm'):'',cabang:String(kr['Cabang Lomba']||''),pdfId:getDriveFileIdFromUrl_(kr['PDF Formulir (link Drive)']||''),mergePending:isMergePending_(String(kr['No. Registrasi']||'')),berkas:fileRefs(kr['Berkas (link Drive)']||'')};
  var rows=readRows(CFG.cabang.sheet).filter(function(r){return normalizeEvent_(r['Nama Kontingen'])===normalizeEvent_(nama);});
@@ -1866,7 +1928,7 @@ function getContingentPortalData_(nama){
   return {cabang:ev.cabang,batasAkhir:branchDeadline_(ev.cabang),kategori:ev.categories.map(function(cat){
    var found=null;for(var i=rows.length-1;i>=0;i--){if(normalizeEvent_(rows[i]['Cabang Lomba'])===normalizeEvent_(ev.cabang)&&normalizeEvent_(rows[i]['Kategori'])===normalizeEvent_(cat)){found=rows[i];break;}}
    var branchReg=found?String(found['No. Registrasi']||''):'';
-   return {nama:cat,status:found?'Sudah dikirim':'Belum dikirim',statusVerifikasi:found?String(found['Status Verifikasi']||'Menunggu Verifikasi'):'',catatanPanitia:found?String(found['Catatan Panitia']||''):'',waktuKirim:found&&found['Waktu']?Utilities.formatDate(new Date(found['Waktu']),Session.getScriptTimeZone(),'dd-MM-yyyy HH:mm'):'',nomor:branchReg,pdfId:found?getDriveFileIdFromUrl_(found['PDF Formulir (link Drive)']||''):'',mergePending:found?isMergePending_(branchReg):false};
+   return {nama:cat,status:found?'Sudah dikirim':'Belum dikirim',statusVerifikasi:found?String(found['Status Verifikasi']||'Menunggu Verifikasi'):'',catatanPanitia:found?String(found['Catatan Panitia']||''):'',revisionItems:found?parseRevisionItems_(found['Item Revisi']):[],revisionValues:found?{'Cabang Lomba':String(found['Cabang Lomba']||''),'Kategori':String(found['Kategori']||''),'Jumlah Peserta':String(found['Jumlah Peserta']||''),'Daftar Peserta':String(found['Daftar Peserta']||''),'Tempat Lahir Peserta':String(found['Tempat Lahir Peserta']||''),'Tanggal Lahir Peserta':String(found['Tanggal Lahir Peserta']||''),'Alamat Rumah Peserta':String(found['Alamat Rumah Peserta']||''),'WA Peserta':String(found['WA Peserta']||''),'Catatan':String(found['Catatan']||'')}: {},berkas:found?fileRefs(found['Berkas (link Drive)']||''):[],waktuKirim:found&&found['Waktu']?Utilities.formatDate(new Date(found['Waktu']),Session.getScriptTimeZone(),'dd-MM-yyyy HH:mm'):'',nomor:branchReg,pdfId:found?getDriveFileIdFromUrl_(found['PDF Formulir (link Drive)']||''):'',mergePending:found?isMergePending_(branchReg):false};
   })};
  });
  var logSheet=ss.getSheetByName(SECURITY_LOG_SHEET);result.riwayat=[];
