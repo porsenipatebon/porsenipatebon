@@ -539,10 +539,16 @@ function adminDevOpsDeployGas_(d){
    mode:mode,runUrl:runUrl,workflow:workflow,branch:c.config.branch};
 }
 function adminDevOpsWorkflowRuns_(d){
- requireDevOpsTyo_(d.token);var c=devOpsRequireConfig_(),workflow=PORSENI_DEVOPS_WORKFLOW_FILE_;
- var endpoint='/repos/'+encodeURIComponent(c.config.owner)+'/'+encodeURIComponent(c.config.repo)+'/actions/workflows/'+encodeURIComponent(workflow)+'/runs?branch='+encodeURIComponent(c.config.branch)+'&per_page=8';
- var data=devOpsApi_('GET',endpoint,null,c.token,false).data||{},rows=data.workflow_runs||[];
- return {ok:true,workflow:workflow,branch:c.config.branch,actionsUrl:'https://github.com/'+encodeURIComponent(c.config.owner)+'/'+encodeURIComponent(c.config.repo)+'/actions/workflows/'+encodeURIComponent(workflow),runs:rows.map(function(r){return {id:r.id,runNumber:r.run_number||'',name:r.name||r.display_title||'PORSENI Apps Script',status:r.status||'',conclusion:r.conclusion||'',event:r.event||'',branch:r.head_branch||'',sha:String(r.head_sha||'').slice(0,7),createdAt:r.created_at||'',updatedAt:r.updated_at||'',url:r.html_url||'',actor:r.actor&&r.actor.login||'',attempt:r.run_attempt||1};})};
+ requireDevOpsTyo_(d.token);var c=devOpsRequireConfig_(),all=[],page=1,rows=[];
+ do{
+  var endpoint='/repos/'+encodeURIComponent(c.config.owner)+'/'+encodeURIComponent(c.config.repo)+'/actions/runs?branch='+encodeURIComponent(c.config.branch)+'&per_page=100&page='+page;
+  var data=devOpsApi_('GET',endpoint,null,c.token,false).data||{};
+  rows=data.workflow_runs||[];
+  rows.forEach(function(r){all.push({id:r.id,runNumber:r.run_number||'',name:r.name||r.display_title||'GitHub Actions',workflowName:r.name||'',status:r.status||'',conclusion:r.conclusion||'',event:r.event||'',branch:r.head_branch||'',sha:String(r.head_sha||'').slice(0,7),createdAt:r.created_at||'',updatedAt:r.updated_at||'',url:r.html_url||'',actor:r.actor&&r.actor.login||'',attempt:r.run_attempt||1});});
+  page++;
+ }while(rows.length===100&&page<=10);
+ all.sort(function(a,b){return new Date(b.createdAt||0)-new Date(a.createdAt||0);});
+ return {ok:true,branch:c.config.branch,actionsUrl:'https://github.com/'+encodeURIComponent(c.config.owner)+'/'+encodeURIComponent(c.config.repo)+'/actions',runs:all};
 }
 
 function adminSecurityLogs_(token){
