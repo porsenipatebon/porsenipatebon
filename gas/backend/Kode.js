@@ -796,7 +796,7 @@ function adminSetPublicRecapMode_(d){
  PropertiesService.getScriptProperties().setProperty('PUBLIC_RECAP_MODE',mode);
  invalidatePublicCache_('recap');
  logSecurityEvent_(admin.user,'UBAH TAMPILAN REKAP PUBLIK','BERHASIL','Mode: '+mode);
- return {ok:true,mode:mode,message:mode==='terdaftar'?'Beranda sekarang menampilkan semua pendaftaran cabang lomba.':'Beranda sekarang hanya menampilkan cabang lomba dari kontingen terverifikasi.'};
+ return {ok:true,mode:mode,message:mode==='terdaftar'?'Beranda sekarang menampilkan kontingen terverifikasi dan hanya berkas cabang lomba yang terverifikasi.':'Beranda sekarang menampilkan cabang/kategori pilihan dari kontingen terverifikasi tanpa memeriksa status berkas cabangnya.'};
 }
 
 var NEWS_SHEET_NAME='Kabar PORSENI';
@@ -1733,11 +1733,12 @@ function getPublicRecap_(){
  var ss=SpreadsheetApp.getActiveSpreadsheet();
  if(!ss)throw new Error('Database PORSENI tidak dapat diakses.');
  var sh=ss.getSheetByName(CFG.kontingen.sheet),sub=ss.getSheetByName(CFG.cabang.sheet);
- var mode=getPublicRecapMode_(),names=[],seenNames={},approvedNames={},groups={},registeredGroups={},statusCounts={};
- var diagnostic={backendVersion:'PORSENI-2026-V36-PUBLIC-RECAP-MODE-FIX',sheetKontingen:!!sh,sheetCabang:!!sub,totalBarisKontingen:sh?Math.max(0,sh.getLastRow()-1):0,totalBarisCabang:sub?Math.max(0,sub.getLastRow()-1):0};
+ var mode=getPublicRecapMode_(),names=[],seenNames={},approvedNames={},groups={},verifiedBranchGroups={},statusCounts={};
+ var diagnostic={backendVersion:'PORSENI-2026-V37-PUBLIC-RECAP-BRANCH-VERIFIED',sheetKontingen:!!sh,sheetCabang:!!sub,totalBarisKontingen:sh?Math.max(0,sh.getLastRow()-1):0,totalBarisCabang:sub?Math.max(0,sub.getLastRow()-1):0};
  if(sh)ensureAdminColumns_(sh);
  if(sub)ensureAdminColumns_(sub);
 
+ // Data induk kontingen: daftar nama terverifikasi selalu ditampilkan pada panel kiri.
  if(sh&&sh.getLastRow()>=2){
   var values=sh.getDataRange().getValues(),headers=values[0];
   var iNama=headers.indexOf('Nama Kontingen'),iStatus=headers.indexOf('Status Verifikasi'),iCabang=headers.indexOf('Cabang Lomba');
@@ -1752,10 +1753,9 @@ function getPublicRecap_(){
     approvedNames[normName]=true;
     if(!seenNames[normName]){seenNames[normName]=true;names.push(name);}
    }
-   // The registration's selected branches/categories are the source for public branch recap.
-   // In "terdaftar" mode include all registrants; in "terverifikasi" mode include only
-   // contingents whose registration itself has been verified. Branch document status
-   // remains a separate admin checklist and does not control this public inclusion.
+
+   // Mode B tetap: tampilkan cabang/kategori pilihan dari kontingen terverifikasi,
+   // tanpa mensyaratkan status verifikasi berkas cabang lombanya.
    if(mode==='terverifikasi'&&!isApproved)continue;
    var registeredText=String(values[r][iCabang]||'').trim();
    if(!registeredText)continue;
@@ -1781,36 +1781,65 @@ function getPublicRecap_(){
   }
  }
 
- // Preserve verified-contingent names as an independent recap, regardless of branch mode.
+ // Mode A: ambil hanya pengajuan cabang lomba yang berstatus Terverifikasi.
+ // Pengajuan juga harus berasal dari kontingen induk yang sudah Terverifikasi.
+ if(sub&&sub.getLastRow()>=2){
+  var branchValues=sub.getDataRange().getValues(),branchHeaders=branchValues[0];
+  var biNama=branchHeaders.indexOf('Nama Kontingen'),biStatus=branchHeaders.indexOf('Status Verifikasi'),biCabang=branchHeaders.indexOf('Cabang Lomba'),biKategori=branchHeaders.indexOf('Kategori'),biJumlah=branchHeaders.indexOf('Jumlah Peserta');
+  if(biNama<0||biStatus<0||biCabang<0||biKategori<0)throw new Error('Kolom Nama Kontingen, Status Verifikasi, Cabang Lomba, atau Kategori tidak ditemukan pada sheet Cabang.');
+  for(var br=1;br<branchValues.length;br++){
+   var branchName=String(branchValues[br][biNama]||'').trim();
+   var branchStatus=String(branchValues[br][biStatus]||'').trim();
+   var branch=String(branchValues[br][biCabang]||'').trim();
+   var category=String(branchValues[br][biKategori]||'').trim();
+   if(!branchName||!branch||!category||!isVerifiedStatus_(branchStatus))continue;
+   var branchNormName=normalizeEvent_(branchName);
+   if(!approvedNames[branchNormName])continue;
+   var branchKey=normalizeEvent_(branch),catKey=normalizeEvent_(category);
+   if(!verifiedBranchGroups[branchKey])verifiedBranchGroups[branchKey]={cabang:branch,kategori:{}};
+   if(!verifiedBranchGroups[branchKey].kategori[catKey])verifiedBranchGroups[branchKey].kategori[catKey]={nama:category,kontingen:[],_seen:{},jumlahKontingen:0};
+   var verifiedItem=verifiedBranchGroups[branchKey].kategori[catKey];
+   if(!verifiedItem._seen[branchNormName]){
+    verifiedItem._seen[branchNormName]=true;
+    verifiedItem.kontingen.push({nama:branchName,berkasSudah:true,jumlahPeserta:biJumlah>=0?(Number(branchValues[br][biJumlah])||0):0});
+    verifiedItem.jumlahKontingen++;
+   }
+  }
+ }
+
+ function finalizeGroups_(source){
+  var result=Object.keys(source).map(function(key){
+   var g=source[key],cats=Object.keys(g.kategori).map(function(ck){
+    var x=g.kategori[ck];delete x._seen;
+    x.kontingen.sort(function(a,b){return a.nama.localeCompare(b.nama,'id');});
+    return x;
+   });
+   var categoryOrder=KAT[g.cabang]||[];
+   cats.sort(function(a,b){var ai=categoryOrder.indexOf(a.nama),bi=categoryOrder.indexOf(b.nama);return (ai<0?999:ai)-(bi<0?999:bi)||a.nama.localeCompare(b.nama,'id');});
+   return {cabang:g.cabang,kategori:cats};
+  });
+  var branchOrder=Object.keys(KAT);
+  result.sort(function(a,b){var ai=branchOrder.indexOf(a.cabang),bi=branchOrder.indexOf(b.cabang);return (ai<0?999:ai)-(bi<0?999:bi)||a.cabang.localeCompare(b.cabang,'id');});
+  return result;
+ }
  names.sort(function(a,b){return a.localeCompare(b,'id');});
-
- var cabang=Object.keys(groups).map(function(key){
-  var g=groups[key],cats=Object.keys(g.kategori).map(function(ck){
-   var x=g.kategori[ck];delete x._seen;
-   x.kontingen.sort(function(a,b){return a.nama.localeCompare(b.nama,'id');});
-   return x;
-  });
-  var categoryOrder=KAT[g.cabang]||[];
-  cats.sort(function(a,b){var ai=categoryOrder.indexOf(a.nama),bi=categoryOrder.indexOf(b.nama);return (ai<0?999:ai)-(bi<0?999:bi)||a.nama.localeCompare(b.nama,'id');});
-  return {cabang:g.cabang,kategori:cats};
- });
- var branchOrder=Object.keys(KAT);
- cabang.sort(function(a,b){var ai=branchOrder.indexOf(a.cabang),bi=branchOrder.indexOf(b.cabang);return (ai<0?999:ai)-(bi<0?999:bi)||a.cabang.localeCompare(b.cabang,'id');});
-
- var ringkasan=[],ringkasanPendaftaran=[];
- cabang.forEach(function(g){
-  g.kategori.forEach(function(k){
-   ringkasanPendaftaran.push({cabang:g.cabang,kategori:k.nama,jumlahKontingen:k.jumlahKontingen});
-   ringkasan.push({cabang:g.cabang,kategori:k.nama,jumlahPeserta:k.jumlahKontingen});
-  });
- });
+ var cabang=finalizeGroups_(groups),cabangBerkasTerverifikasi=finalizeGroups_(verifiedBranchGroups);
+ var ringkasan=[],ringkasanPendaftaran=[],ringkasanBerkasTerverifikasi=[];
+ cabang.forEach(function(g){g.kategori.forEach(function(k){
+  ringkasanPendaftaran.push({cabang:g.cabang,kategori:k.nama,jumlahKontingen:k.jumlahKontingen});
+  ringkasan.push({cabang:g.cabang,kategori:k.nama,jumlahPeserta:k.jumlahKontingen});
+ });});
+ cabangBerkasTerverifikasi.forEach(function(g){g.kategori.forEach(function(k){
+  ringkasanBerkasTerverifikasi.push({cabang:g.cabang,kategori:k.nama,jumlahKontingen:k.jumlahKontingen});
+ });});
  diagnostic.statusKontingen=statusCounts;
  diagnostic.kontingenTerverifikasi=names.length;
  diagnostic.jumlahCabangPublik=cabang.length;
  diagnostic.jumlahKategoriPublik=ringkasanPendaftaran.length;
+ diagnostic.jumlahKategoriBerkasTerverifikasi=ringkasanBerkasTerverifikasi.length;
  diagnostic.modeRekapPublik=mode;
  var finalState=getChampionshipFinalization_();finalState.pdf=getPublicChampionshipPdf_();
- var publicResult={kontingen:names,jumlahKontingen:names.length,cabang:cabang,ringkasan:ringkasan,ringkasanPendaftaran:ringkasanPendaftaran,modeRekapPublik:mode,diagnostik:diagnostic,hasil:getChampionshipResults_(),katalogLomba:getChampionshipCatalog_(),finalisasi:finalState};
+ var publicResult={kontingen:names,jumlahKontingen:names.length,cabang:cabang,cabangBerkasTerverifikasi:cabangBerkasTerverifikasi,ringkasan:ringkasan,ringkasanPendaftaran:ringkasanPendaftaran,ringkasanBerkasTerverifikasi:ringkasanBerkasTerverifikasi,modeRekapPublik:mode,diagnostik:diagnostic,hasil:getChampionshipResults_(),katalogLomba:getChampionshipCatalog_(),finalisasi:finalState};
  try{var publicPayload=JSON.stringify(publicResult);if(publicPayload.length<60000)publicCache.put(publicCacheKey,publicPayload,30);}catch(publicCacheWriteErr){}
  return publicResult;
 }

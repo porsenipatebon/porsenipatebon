@@ -3391,11 +3391,11 @@ function renderPublicRecap(d){
  var k=d.kontingen||[],a=document.getElementById('recap-kontingen');
  if(a)a.innerHTML='<h3 class="recap-h">DATA KONTINGEN TERVERIFIKASI</h3><p class="recap-count"><b style="font-size:1.35rem">'+(d.jumlahKontingen||0)+'</b> kontingen terverifikasi</p>'+(k.length?'<ol style="margin:0;padding-left:22px">'+k.map(function(n){return '<li>'+esc(n)+'</li>';}).join('')+'</ol>':'<p class="hint">Belum ada kontingen terverifikasi yang diterima oleh rekap publik. Jika Portal Panitia sudah menampilkan status Terverifikasi, periksa apakah Apps Script yang aktif sudah di-deploy.</p>');
  var mode=d.modeRekapPublik==='terverifikasi'?'terverifikasi':'terdaftar';
- var rows=mode==='terverifikasi'?(d.ringkasan||[]):(d.ringkasanPendaftaran||[]);
+ var rows=mode==='terverifikasi'?(d.ringkasan||[]):(d.ringkasanBerkasTerverifikasi||[]);
  var b=document.getElementById('recap-cabang');
- var heading=mode==='terverifikasi'?'PESERTA CABANG LOMBA DARI KONTINGEN TERVERIFIKASI':'SELURUH PENDAFTARAN CABANG LOMBA';
- var countHeading=mode==='terverifikasi'?'Kontingen terverifikasi':'Kontingen terdaftar';
- var note=mode==='terverifikasi'?'Hanya cabang dan kategori dari kontingen yang status pendaftaran induknya sudah Terverifikasi. Status berkas cabang lomba tidak menjadi syarat untuk tampil di rekap ini.':'Mode ini menampilkan seluruh pilihan cabang dan kategori dari semua kontingen yang mendaftar, termasuk yang belum terverifikasi.';
+ var heading=mode==='terverifikasi'?'PESERTA CABANG LOMBA DARI KONTINGEN TERVERIFIKASI':'REKAP BERKAS CABANG LOMBA TERVERIFIKASI';
+ var countHeading=mode==='terverifikasi'?'Kontingen terverifikasi':'Kontingen dengan berkas terverifikasi';
+ var note=mode==='terverifikasi'?'Menampilkan cabang dan kategori pilihan dari kontingen yang status pendaftaran induknya sudah Terverifikasi. Status berkas cabang lomba tidak menjadi syarat tampil.':'Menampilkan hanya pengajuan cabang lomba berstatus Terverifikasi dan berasal dari kontingen yang pendaftaran induknya juga sudah Terverifikasi. Berkas yang menunggu verifikasi, perlu revisi, atau ditolak tidak dihitung.';
  if(b)b.innerHTML='<h3 class="recap-h">'+heading+'</h3>'+(rows.length?'<div class="recap-summary"><table><colgroup><col class="c-cab"><col class="c-kat"><col class="c-jml"></colgroup><thead><tr><th>Cabang lomba</th><th>Kategori</th><th>'+countHeading+'</th></tr></thead><tbody>'+summaryRows(rows)+'</tbody></table><p class="hint">'+note+'</p></div>':'<p class="hint">Belum ada data cabang lomba untuk pilihan tampilan ini.</p>');
 }
 var RK=null;
