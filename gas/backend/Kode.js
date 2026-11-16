@@ -803,12 +803,22 @@ function adminSetPublicRecapMode_(d){
 var NEWS_SHEET_NAME='Kabar PORSENI';
 function newsSheet_(){var ss=SpreadsheetApp.getActiveSpreadsheet();if(!ss)throw new Error('Spreadsheet aktif tidak ditemukan.');var sh=ss.getSheetByName(NEWS_SHEET_NAME)||ss.insertSheet(NEWS_SHEET_NAME);if(sh.getLastRow()===0){sh.appendRow(['ID','Tanggal','Kategori','Judul','Ringkasan','Isi Berita','URL Gambar','Status','Diperbarui Oleh','Diperbarui Pada']);sh.setFrozenRows(1);sh.getRange(1,1,1,10).setFontWeight('bold');}return sh;}
 function newsRows_(){var sh=newsSheet_(),v=sh.getDataRange().getValues();return v.length<2?[]:v.slice(1).map(function(r,i){return {row:i+2,id:String(r[0]||''),tanggal:r[1] instanceof Date?Utilities.formatDate(r[1],Session.getScriptTimeZone(),'yyyy-MM-dd'):String(r[1]||''),kategori:String(r[2]||''),judul:String(r[3]||''),ringkasan:String(r[4]||''),isi:String(r[5]||''),gambar:String(r[6]||''),status:String(r[7]||'Draft'),oleh:String(r[8]||''),updated:String(r[9]||'')};});}
+function publicNewsImageUrl_(value){
+ var url=String(value||'').trim();
+ if(!url)return '';
+ // Normalize Google Drive share/view links into an image-serving thumbnail URL.
+ if(/(^|\.)drive\.google\.com$/i.test((url.match(/^https?:\/\/([^/]+)/i)||[])[1]||'')){
+  var match=url.match(/[?&]id=([A-Za-z0-9_-]+)/)||url.match(/\/file\/d\/([A-Za-z0-9_-]+)/)||url.match(/\/d\/([A-Za-z0-9_-]+)/);
+  if(match&&match[1])return 'https://drive.google.com/thumbnail?id='+encodeURIComponent(match[1])+'&sz=w1600';
+ }
+ return url;
+}
 function getPublicNews_(){
  var cache=CacheService.getScriptCache(),cacheKey='public_news_v1';
  try{var cached=cache.get(cacheKey);if(cached)return JSON.parse(cached);}catch(cacheReadErr){}
  var result=newsRows_().filter(function(n){return n.status==='Terbit';})
   .sort(function(a,b){return String(b.tanggal).localeCompare(String(a.tanggal))||b.row-a.row;})
-  .slice(0,30).map(function(n){return {id:n.id,tanggal:n.tanggal,kategori:n.kategori,judul:n.judul,ringkasan:n.ringkasan,isi:n.isi,gambar:n.gambar};});
+  .slice(0,30).map(function(n){return {id:n.id,tanggal:n.tanggal,kategori:n.kategori,judul:n.judul,ringkasan:n.ringkasan,isi:n.isi,gambar:publicNewsImageUrl_(n.gambar)};});
  try{var payload=JSON.stringify(result);if(payload.length<60000)cache.put(cacheKey,payload,60);}catch(cacheWriteErr){}
  return result;
 }
@@ -819,12 +829,45 @@ function adminNewsImageUpload_(d){
  if(!/^image\/(jpeg|png|webp)$/.test(mime))throw new Error('Format foto harus JPG, PNG, atau WebP.');
  if(!data||data.length>7*1024*1024)throw new Error('Foto kosong atau melebihi batas 5 MB.');
  var bytes=Utilities.base64Decode(data);if(bytes.length>5*1024*1024)throw new Error('Ukuran foto maksimal 5 MB.');
- var folderName='Kabar PORSENI';var folders=DriveApp.getFoldersByName(folderName),folder=folders.hasNext()?folders.next():DriveApp.createFolder(folderName);
+ // Simpan seluruh sampul dan foto isi berita langsung di folder 05. DATA WEB.
+ var porseniFolder=getFolderPath(DRIVE_PATH);
+ var folder=getFolder(porseniFolder,'05. DATA WEB');
  var blob=Utilities.newBlob(bytes,mime,name),file=folder.createFile(blob).setName(new Date().getTime()+'_'+name);
  file.setSharing(DriveApp.Access.ANYONE_WITH_LINK,DriveApp.Permission.VIEW);
- var id=file.getId(),url='https://drive.google.com/uc?export=view&id='+id;
+ var id=file.getId(),url='https://drive.google.com/thumbnail?id='+encodeURIComponent(id)+'&sz=w1600';
  logSecurityEvent_(admin.user,'UNGGAH FOTO BERITA','BERHASIL',file.getName());
  return {ok:true,id:id,url:url,name:file.getName()};
+}
+/**
+ * Jalankan SATU KALI secara manual setelah deploy.
+ * Memindahkan file foto berita dari folder lama ke:
+ * PORSENI PATEBON/PORSENI 2026/05. DATA WEB
+ * Sumber lama yang diperiksa:
+ * - My Drive/Kabar PORSENI
+ * - PORSENI PATEBON/PORSENI 2026/Kabar PORSENI
+ * File tidak dihapus; hanya dipindahkan ke folder tujuan.
+ */
+function migrateOldNewsImagesToPorseniFolder_(){
+ var porseniFolder=getFolderPath(DRIVE_PATH);
+ var target=getFolder(porseniFolder,'05. DATA WEB');
+ var sources=[];
+ var rootFolders=DriveApp.getRootFolder().getFoldersByName('Kabar PORSENI');
+ while(rootFolders.hasNext())sources.push({folder:rootFolders.next(),parent:DriveApp.getRootFolder()});
+ var nestedFolders=porseniFolder.getFoldersByName('Kabar PORSENI');
+ while(nestedFolders.hasNext())sources.push({folder:nestedFolders.next(),parent:porseniFolder});
+ var moved=0,removedFolders=0;
+ sources.forEach(function(source){
+  var files=source.folder.getFiles();
+  while(files.hasNext()){
+   var file=files.next();
+   target.addFile(file);
+   source.folder.removeFile(file);
+   moved++;
+  }
+  source.parent.removeFolder(source.folder);
+  removedFolders++;
+ });
+ return {ok:true,movedFiles:moved,removedEmptySourceFolders:removedFolders,target:'PORSENI PATEBON/PORSENI 2026/05. DATA WEB'};
 }
 function adminNewsSave_(d){var admin=requireAdmin_(d.token),x=d.news||{},judul=String(x.judul||'').trim(),isi=String(x.isi||'').trim();if(!judul||!isi)throw new Error('Judul dan isi berita wajib diisi.');if(judul.length>180||isi.length>20000)throw new Error('Judul maksimal 180 karakter dan isi maksimal 20.000 karakter.');var status=x.status==='Terbit'?'Terbit':'Draft',tanggal=String(x.tanggal||Utilities.formatDate(new Date(),Session.getScriptTimeZone(),'yyyy-MM-dd'));if(!/^\d{4}-\d{2}-\d{2}$/.test(tanggal))throw new Error('Tanggal berita tidak valid.');var sh=newsSheet_(),rows=newsRows_(),id=String(x.id||'').trim(),existing=rows.filter(function(n){return n.id===id;})[0],row=[id||Utilities.getUuid(),tanggal,String(x.kategori||'Pengumuman').slice(0,50),judul,String(x.ringkasan||'').slice(0,500),isi,String(x.gambar||'').trim(),status,admin.user||'Admin',new Date()];if(existing)sh.getRange(existing.row,1,1,row.length).setValues([row]);else sh.appendRow(row);invalidatePublicCache_('news');logSecurityEvent_(admin.user,'KELOLA BERITA',status,judul);return {ok:true,message:existing?'Berita berhasil diperbarui.':'Berita berhasil ditambahkan.',news:row[0]};}
 function adminNewsDelete_(d){var admin=requireAdmin_(d.token),id=String(d.id||'');if(!id)throw new Error('ID berita tidak ditemukan.');var sh=newsSheet_(),n=newsRows_().filter(function(x){return x.id===id;})[0];if(!n)throw new Error('Berita tidak ditemukan.');sh.deleteRow(n.row);invalidatePublicCache_('news');logSecurityEvent_(admin.user,'HAPUS BERITA','BERHASIL',n.judul);return {ok:true,message:'Berita berhasil dihapus.'};}
