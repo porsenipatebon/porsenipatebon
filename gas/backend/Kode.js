@@ -3876,7 +3876,7 @@ function createBranchRegistrationPdf_(d, folder) {
     var meta = w.table(infoRows);
     pdfGrid_(meta,[150,PDF_CONTENT_W-150],{size:10.5,padV:4,padH:8,minH:22,boldCols:[0],labelCol:0});
     w.para('\u00A0',{size:4,after:2});
-    heading('DAFTAR PESERTA', 3);
+    w.para('DAFTAR PESERTA', {size:10.5,bold:true,color:PDF_NAVY,before:3,after:4});
     var rows = [['No.','Nama Peserta','Jenis Kelamin','Tempat/Tanggal Lahir','Peran','Alamat Rumah']];
     people.forEach(function(p,i){
       rows.push([String(i+1),String(p.nama||''),p.gender==='L'?'Putra':p.gender==='P'?'Putri':String(p.gender||''),participantBirth(p),String(p.role||'-'),String(p.alamat||'')]);
@@ -3912,19 +3912,19 @@ function createBranchRegistrationPdf_(d, folder) {
   // Duta Pelajar tetap hanya memiliki bagian A dan B. CV serta berkas pendukung
   // tidak dicantumkan atau digabung ke formulir; seluruhnya masuk PDF Lampiran terpisah.
 
-  // Bagian verifikasi: B untuk semua kategori tunggal; C untuk kategori kelompok karena B dipakai daftar peserta.
-  if (isTeam) body.appendPageBreak();
-  w = pdfWriter_(pdfPage_(body));
-  heading(isTeam ? 'C. PERNYATAAN VERIFIKASI' : 'B. PERNYATAAN VERIFIKASI', 4);
-  w.para('Dengan ini saya menyatakan bahwa data peserta dan dokumen persyaratan yang disampaikan merupakan data yang benar dan sesuai dengan identitas peserta serta ketentuan PORSENI 2026. Seluruh berkas telah diperiksa dan diserahkan kepada Panitia PORSENI 2026 PAC IPNU–IPPNU Patebon untuk proses verifikasi.',{size:10.5,align:JUSTIFY,line:1.3,after:8});
-  var verifikasi = w.para('DIVERIFIKASI OLEH');
+  // Bukti penerimaan diterbitkan panitia setelah berkas lolos verifikasi.
+  // Tidak dipaksa ke halaman baru: ruang dan posisi menyesuaikan panjang isi formulir.
+  heading('B. BUKTI PENERIMAAN DAN VERIFIKASI BERKAS', 8);
+  w.para('Dengan ini, Panitia PORSENI 2026 PAC IPNU–IPPNU Patebon menyatakan bahwa berkas pendaftaran peserta pada cabang lomba sebagaimana tercantum dalam dokumen ini telah diterima, diperiksa, dan dinyatakan lengkap serta memenuhi persyaratan administrasi sesuai dengan ketentuan yang berlaku. Dokumen ini diterbitkan sebagai bukti resmi penerimaan berkas pendaftaran yang telah melalui proses verifikasi dan disetujui oleh Panitia PORSENI 2026 PAC IPNU–IPPNU Patebon.',{size:10,align:JUSTIFY,line:1.2,after:5});
+  w.para('Apabila di kemudian hari ditemukan kesalahan, ketidaksesuaian, atau bukti yang menunjukkan bahwa berkas yang diserahkan tidak sesuai dengan ketentuan, panitia berhak melakukan pemeriksaan dan verifikasi lebih lanjut berdasarkan dokumen, data, serta bukti-bukti pendukung yang tersedia. Hasil pemeriksaan tersebut dapat menjadi dasar bagi panitia untuk mengambil tindakan sesuai dengan ketentuan yang berlaku.',{size:9.5,align:JUSTIFY,line:1.15,after:4});
+  var verifikasi = w.para('DITERBITKAN DAN DIVERIFIKASI OLEH PANITIA');
   verifikasi.setAlignment(CENTER).setSpacingBefore(12).setSpacingAfter(12).setLineSpacing(1).setIndentStart(0).setIndentFirstLine(0).setIndentEnd(0);
   pdfFont_(verifikasi.editAsText(),11,true);
   var sg = w.table([['KOOR. PERLOMBAAN','SEKRETARIAT'],['\u00A0','\u00A0'],['( SOCHIBUL MUSTAQIM )','( A. FUAD SYAFI )']]);
   sg.setBorderWidth(0).setBorderColor('#FFFFFF');
   var sw = PDF_CONTENT_W/2;
   for (var sc=0;sc<2;sc++) sg.setColumnWidth(sc,sw);
-  sg.getRow(1).setMinimumHeight(100);
+  sg.getRow(1).setMinimumHeight(isTeam && people.length <= 3 ? 58 : (isTeam ? 72 : 82));
   for (var sr=0;sr<3;sr++) for (var sc2=0;sc2<2;sc2++) {
     var cell=sg.getCell(sr,sc2);
     cell.setPaddingTop(3).setPaddingBottom(3).setPaddingLeft(5).setPaddingRight(5).setVerticalAlignment(DocumentApp.VerticalAlignment.CENTER);

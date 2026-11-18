@@ -164,6 +164,11 @@
     </section>
     <section class="panel"><div class="toolbar" style="justify-content:space-between"><div><div class="eyebrow">DATABASE KEJUARAAN</div><b style="color:var(--navy)">Hasil tersimpan</b></div><button id="refreshResults" class="btn light">↻ Perbarui</button></div><div id="resultFinalization" class="finalization-box"></div><div id="resultList" class="result-list"><div class="empty">Memuat hasil…</div></div></section>
    </div>
+   <section class="panel" style="padding:20px">
+    <div class="eyebrow">HASIL KEJUARAAN</div><h2 style="font:800 19px Manrope;color:var(--navy);margin:5px 0">Uji Cetak Hasil Kejuaraan</h2>
+    <p class="muted" style="font-size:12px;margin:0 0 14px">Buat pratinjau PDF hasil kejuaraan dengan tanda dokumen uji coba. Tidak menjalankan finalisasi dan tidak mengirim email hasil resmi.</p>
+    <button id="testChampionshipPdf" class="btn warm" type="button">▧ Uji Cetak Hasil Kejuaraan</button>
+   </section>
   </section>
   <section id="testPrintPanel" class="hidden">
    <section class="panel" style="padding:20px;margin-bottom:16px">
@@ -190,13 +195,6 @@
     <p class="muted" style="font-size:12px;margin:0 0 12px">Memproses seluruh baris kontingen dan cabang secara bertahap. Tautan formulir diperbarui setelah PDF formulir dibuat; tautan lampiran diperbarui setelah PDF lampiran selesai. File lama tetap tersimpan di Drive.</p>
     <div class="actions"><button id="startDocumentMigration" class="btn warm" type="button">Mulai / Lanjutkan Migrasi Arsip</button><span id="documentMigrationStatus" class="muted" style="font-size:12px">Belum ada proses migrasi.</span></div>
    </section>
-   </section>
-   <section class="panel" style="padding:20px">
-    <div class="eyebrow">HASIL KEJUARAAN</div><h2 style="font:800 19px Manrope;color:var(--navy);margin:5px 0">Uji Cetak Hasil Kejuaraan</h2>
-    <p class="muted" style="font-size:12px;margin:0 0 14px">Buat pratinjau PDF hasil kejuaraan dengan tanda dokumen uji coba. Tidak menjalankan finalisasi dan tidak mengirim email hasil resmi.</p>
-    <button id="testChampionshipPdf" class="btn warm" type="button">▧ Uji Cetak Hasil Kejuaraan</button>
-   </section>
-  </section>
   </section>
   <section id="activityLogPanel" class="hidden">
    <section class="panel"><div class="toolbar" style="justify-content:space-between"><div><div class="eyebrow">AUDIT DAN KEAMANAN</div><b style="color:var(--navy)">Riwayat Aktivitas Kontingen dan Panitia</b><p class="muted" style="font-size:11px;margin:3px 0 0">Login berhasil/gagal, pratinjau, unggah, penggantian, penghapusan, dan perubahan data admin.</p></div><div class="log-tools"><button id="refreshActivityLogs" class="btn light" type="button">↻ Perbarui log</button><button id="scrollActivityLogsDown" class="btn" type="button">↓ Scroll ke bawah</button></div></div><div class="table-wrap activity-log-wrap" id="activityLogScroll"><table class="activity-log-table"><thead><tr><th>Waktu</th><th>Aktor</th><th>Aktivitas</th><th>Status</th><th>Detail</th></tr></thead><tbody id="activityLogRows"><tr><td colspan="5" class="empty">Memuat riwayat aktivitas…</td></tr></tbody></table></div><div class="footnote">Riwayat terbaru ditampilkan hingga 300 aktivitas. Log disimpan di Google Sheets oleh Apps Script.</div></section>
