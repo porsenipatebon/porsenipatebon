@@ -2526,6 +2526,450 @@ a:focus-visible,button:focus-visible,summary:focus-visible{
 }
 </style>
 
+
+<style id="competition-location-table-proportion-v29">
+/* Revisi proporsi tabel jadwal: nama cabang dan tempat mendapat ruang lebih lega. */
+.info-location .location-table-wrap{
+  width:100%!important;
+  max-width:100%!important;
+  overflow-x:hidden!important;
+  box-sizing:border-box!important;
+}
+.info-location .competition-location-table{
+  width:100%!important;
+  min-width:0!important;
+  max-width:100%!important;
+  table-layout:fixed!important;
+  box-sizing:border-box!important;
+}
+.info-location .competition-location-table th,
+.info-location .competition-location-table td{
+  box-sizing:border-box!important;
+  min-width:0!important;
+  white-space:normal!important;
+  word-break:normal!important;
+  overflow-wrap:break-word!important;
+  hyphens:none!important;
+  vertical-align:middle!important;
+}
+/* Lebar desktop dan mobile: cabang 24%, tanggal 28%, jam 16%, tempat 32%. */
+.info-location .competition-location-table th:nth-child(1),
+.info-location .competition-location-table td:nth-child(1){width:24%!important;text-align:left!important}
+.info-location .competition-location-table th:nth-child(2),
+.info-location .competition-location-table td:nth-child(2){width:28%!important;text-align:left!important}
+.info-location .competition-location-table th:nth-child(3),
+.info-location .competition-location-table td:nth-child(3){width:16%!important;text-align:left!important}
+.info-location .competition-location-table th:nth-child(4),
+.info-location .competition-location-table td:nth-child(4){width:32%!important;text-align:left!important}
+
+/* Jam tetap satu baris, dengan ukuran lebih ringkas. */
+.info-location .competition-location-table th:nth-child(3),
+.info-location .competition-location-table td:nth-child(3){
+  white-space:nowrap!important;
+  font-size:.78em!important;
+  letter-spacing:-.025em!important;
+  font-variant-numeric:tabular-nums;
+}
+
+/* Nama lokasi boleh turun baris pada spasi, tidak dipotong di tengah kata. */
+.info-location .competition-location-table td:nth-child(4) a,
+.info-location .competition-location-table td:nth-child(4) .location-map-link{
+  display:inline!important;
+  max-width:100%!important;
+  white-space:normal!important;
+  word-break:normal!important;
+  overflow-wrap:break-word!important;
+  line-height:1.4!important;
+  box-sizing:border-box!important;
+}
+.info-location .competition-location-table td:nth-child(4) a:after{
+  display:inline!important;
+  white-space:nowrap!important;
+  margin-left:3px!important;
+}
+@media(max-width:600px){
+  .info-location .competition-location-table{font-size:.76rem!important}
+  .info-location .competition-location-table th,
+  .info-location .competition-location-table td{
+    padding:10px 5px!important;
+    line-height:1.35!important;
+  }
+  .info-location .competition-location-table th:nth-child(1),
+  .info-location .competition-location-table td:nth-child(1){width:24%!important}
+  .info-location .competition-location-table th:nth-child(2),
+  .info-location .competition-location-table td:nth-child(2){width:28%!important}
+  .info-location .competition-location-table th:nth-child(3),
+  .info-location .competition-location-table td:nth-child(3){width:16%!important}
+  .info-location .competition-location-table th:nth-child(4),
+  .info-location .competition-location-table td:nth-child(4){width:32%!important}
+  .info-location .competition-location-table th:nth-child(3),
+  .info-location .competition-location-table td:nth-child(3){font-size:.72em!important}
+}
+@media(max-width:380px){
+  .info-location .competition-location-table{font-size:.72rem!important}
+  .info-location .competition-location-table th,
+  .info-location .competition-location-table td{padding:9px 4px!important}
+  .info-location .competition-location-table th:nth-child(3),
+  .info-location .competition-location-table td:nth-child(3){font-size:.68em!important}
+}
+</style>
+
+
+<style id="competition-location-table-final-balance-v30">
+/* Proporsi final tabel jadwal: ruang nama tempat ditambah, jam tetap terbaca normal. */
+.info-location .location-table-wrap{
+  width:100%!important;
+  max-width:100%!important;
+  overflow-x:hidden!important;
+  box-sizing:border-box!important;
+}
+.info-location .competition-location-table{
+  width:100%!important;
+  min-width:0!important;
+  max-width:100%!important;
+  table-layout:fixed!important;
+  box-sizing:border-box!important;
+}
+.info-location .competition-location-table th,
+.info-location .competition-location-table td{
+  box-sizing:border-box!important;
+  min-width:0!important;
+  white-space:normal!important;
+  word-break:normal!important;
+  overflow-wrap:break-word!important;
+  hyphens:none!important;
+  vertical-align:middle!important;
+}
+/* Cabang 22%, tanggal 26%, jam 18%, tempat 34%. */
+.info-location .competition-location-table th:nth-child(1),
+.info-location .competition-location-table td:nth-child(1){width:22%!important;text-align:left!important}
+.info-location .competition-location-table th:nth-child(2),
+.info-location .competition-location-table td:nth-child(2){width:26%!important;text-align:left!important}
+.info-location .competition-location-table th:nth-child(3),
+.info-location .competition-location-table td:nth-child(3){width:18%!important;text-align:left!important}
+.info-location .competition-location-table th:nth-child(4),
+.info-location .competition-location-table td:nth-child(4){width:34%!important;text-align:left!important}
+
+/* Ukuran jam dikembalikan normal, tidak diperkecil seperti revisi sebelumnya. */
+.info-location .competition-location-table th:nth-child(3),
+.info-location .competition-location-table td:nth-child(3){
+  white-space:nowrap!important;
+  font-size:inherit!important;
+  letter-spacing:normal!important;
+  font-variant-numeric:tabular-nums;
+}
+
+/* Nama tempat dibungkus utuh berdasarkan spasi, dengan ruang kolom lebih besar. */
+.info-location .competition-location-table td:nth-child(4) a,
+.info-location .competition-location-table td:nth-child(4) .location-map-link{
+  display:inline!important;
+  max-width:100%!important;
+  white-space:normal!important;
+  word-break:normal!important;
+  overflow-wrap:break-word!important;
+  line-height:1.4!important;
+  box-sizing:border-box!important;
+}
+.info-location .competition-location-table td:nth-child(4) a:after{
+  display:inline!important;
+  white-space:nowrap!important;
+  margin-left:3px!important;
+}
+@media(max-width:600px){
+  .info-location .competition-location-table{font-size:.78rem!important}
+  .info-location .competition-location-table th,
+  .info-location .competition-location-table td{
+    padding:10px 5px!important;
+    line-height:1.35!important;
+  }
+  .info-location .competition-location-table th:nth-child(1),
+  .info-location .competition-location-table td:nth-child(1){width:22%!important}
+  .info-location .competition-location-table th:nth-child(2),
+  .info-location .competition-location-table td:nth-child(2){width:26%!important}
+  .info-location .competition-location-table th:nth-child(3),
+  .info-location .competition-location-table td:nth-child(3){width:18%!important}
+  .info-location .competition-location-table th:nth-child(4),
+  .info-location .competition-location-table td:nth-child(4){width:34%!important}
+  .info-location .competition-location-table th:nth-child(3),
+  .info-location .competition-location-table td:nth-child(3){font-size:inherit!important}
+}
+@media(max-width:380px){
+  .info-location .competition-location-table{font-size:.74rem!important}
+  .info-location .competition-location-table th,
+  .info-location .competition-location-table td{padding:9px 4px!important}
+}
+</style>
+
+
+<style id="competition-location-table-header-spacing-v31">
+/* Header tabel rata tengah; isi setiap baris tetap rata kiri. */
+.info-location .competition-location-table thead th{
+  text-align:center!important;
+  vertical-align:middle!important;
+}
+.info-location .competition-location-table tbody td{
+  text-align:left!important;
+}
+
+/* Proporsi baru memberi ruang khusus untuk jam agar tidak menempel ke tempat. */
+.info-location .competition-location-table{
+  width:100%!important;
+  min-width:0!important;
+  max-width:100%!important;
+  table-layout:fixed!important;
+}
+.info-location .competition-location-table th:nth-child(1),
+.info-location .competition-location-table td:nth-child(1){width:23%!important}
+.info-location .competition-location-table th:nth-child(2),
+.info-location .competition-location-table td:nth-child(2){width:27%!important}
+.info-location .competition-location-table th:nth-child(3),
+.info-location .competition-location-table td:nth-child(3){width:22%!important}
+.info-location .competition-location-table th:nth-child(4),
+.info-location .competition-location-table td:nth-child(4){width:28%!important}
+
+/* Jam tetap berukuran normal dan diberi ruang kanan yang jelas. */
+.info-location .competition-location-table td:nth-child(3){
+  white-space:nowrap!important;
+  font-size:inherit!important;
+  letter-spacing:normal!important;
+  padding-right:12px!important;
+  font-variant-numeric:tabular-nums;
+}
+
+/* Kolom tempat punya jarak dari kolom jam dan teksnya turun per kata. */
+.info-location .competition-location-table td:nth-child(4){
+  padding-left:12px!important;
+}
+.info-location .competition-location-table td:nth-child(4) a,
+.info-location .competition-location-table td:nth-child(4) .location-map-link{
+  display:inline!important;
+  white-space:normal!important;
+  word-break:normal!important;
+  overflow-wrap:break-word!important;
+  max-width:100%!important;
+}
+@media(max-width:600px){
+  .info-location .competition-location-table th,
+  .info-location .competition-location-table td{
+    padding-top:10px!important;
+    padding-bottom:10px!important;
+  }
+  .info-location .competition-location-table th:nth-child(1),
+  .info-location .competition-location-table td:nth-child(1){width:23%!important}
+  .info-location .competition-location-table th:nth-child(2),
+  .info-location .competition-location-table td:nth-child(2){width:27%!important}
+  .info-location .competition-location-table th:nth-child(3),
+  .info-location .competition-location-table td:nth-child(3){width:22%!important}
+  .info-location .competition-location-table th:nth-child(4),
+  .info-location .competition-location-table td:nth-child(4){width:28%!important}
+  .info-location .competition-location-table td:nth-child(3){padding-right:12px!important}
+  .info-location .competition-location-table td:nth-child(4){padding-left:12px!important}
+}
+</style>
+
+
+<style id="competition-location-table-proportion-v32">
+/* Proporsi kolom disetel ulang mengikuti ruang teks pada layar ponsel. */
+.info-location .competition-location-table{
+  width:100%!important;
+  min-width:0!important;
+  max-width:100%!important;
+  table-layout:fixed!important;
+}
+.info-location .competition-location-table th:nth-child(1),
+.info-location .competition-location-table td:nth-child(1){width:20%!important}
+.info-location .competition-location-table th:nth-child(2),
+.info-location .competition-location-table td:nth-child(2){width:24%!important}
+.info-location .competition-location-table th:nth-child(3),
+.info-location .competition-location-table td:nth-child(3){width:22%!important}
+.info-location .competition-location-table th:nth-child(4),
+.info-location .competition-location-table td:nth-child(4){width:34%!important}
+
+/* Isi tetap rata kiri. Ruang antarkolom dibuat konsisten. */
+.info-location .competition-location-table tbody td{
+  text-align:left!important;
+  padding-left:8px!important;
+  padding-right:8px!important;
+  box-sizing:border-box!important;
+  word-break:normal!important;
+  overflow-wrap:break-word!important;
+}
+.info-location .competition-location-table thead th{
+  text-align:center!important;
+  padding-left:5px!important;
+  padding-right:5px!important;
+}
+
+/* Jam tetap dengan ukuran font normal, serta diberi jarak ke kolom tempat. */
+.info-location .competition-location-table td:nth-child(3){
+  white-space:nowrap!important;
+  font-size:inherit!important;
+  letter-spacing:normal!important;
+  padding-right:12px!important;
+  font-variant-numeric:tabular-nums;
+}
+.info-location .competition-location-table td:nth-child(4){
+  padding-left:12px!important;
+}
+.info-location .competition-location-table td:nth-child(4) a,
+.info-location .competition-location-table td:nth-child(4) .location-map-link{
+  display:inline!important;
+  max-width:100%!important;
+  white-space:normal!important;
+  word-break:normal!important;
+  overflow-wrap:break-word!important;
+}
+@media(max-width:600px){
+  .info-location .competition-location-table th,
+  .info-location .competition-location-table td{
+    padding-top:10px!important;
+    padding-bottom:10px!important;
+  }
+  .info-location .competition-location-table th:nth-child(1),
+  .info-location .competition-location-table td:nth-child(1){width:20%!important}
+  .info-location .competition-location-table th:nth-child(2),
+  .info-location .competition-location-table td:nth-child(2){width:24%!important}
+  .info-location .competition-location-table th:nth-child(3),
+  .info-location .competition-location-table td:nth-child(3){width:22%!important}
+  .info-location .competition-location-table th:nth-child(4),
+  .info-location .competition-location-table td:nth-child(4){width:34%!important}
+}
+@media(max-width:380px){
+  .info-location .competition-location-table tbody td{
+    padding-left:6px!important;
+    padding-right:6px!important;
+  }
+  .info-location .competition-location-table td:nth-child(3){padding-right:10px!important}
+  .info-location .competition-location-table td:nth-child(4){padding-left:10px!important}
+}
+</style>
+
+
+<style id="competition-location-table-content-width-v33">
+/*
+  Final layout: biarkan browser menentukan lebar kolom berdasarkan isi.
+  Tidak ada pembagian persentase tetap untuk empat kolom.
+*/
+.info-location .location-table-wrap{
+  width:100%!important;
+  max-width:100%!important;
+  overflow-x:auto!important;
+  box-sizing:border-box!important;
+  -webkit-overflow-scrolling:touch;
+}
+.info-location .competition-location-table{
+  width:100%!important;
+  min-width:0!important;
+  max-width:100%!important;
+  table-layout:auto!important;
+  border-collapse:separate!important;
+  border-spacing:0!important;
+  box-sizing:border-box!important;
+}
+
+/* Batalkan seluruh lebar kolom persentase dari revisi sebelumnya. */
+.info-location .competition-location-table th:nth-child(1),
+.info-location .competition-location-table td:nth-child(1),
+.info-location .competition-location-table th:nth-child(2),
+.info-location .competition-location-table td:nth-child(2),
+.info-location .competition-location-table th:nth-child(3),
+.info-location .competition-location-table td:nth-child(3),
+.info-location .competition-location-table th:nth-child(4),
+.info-location .competition-location-table td:nth-child(4){
+  width:auto!important;
+  max-width:none!important;
+  box-sizing:border-box!important;
+}
+
+/* Spasi antarkolom dibuat konsisten; isi tetap rata kiri. */
+.info-location .competition-location-table thead th{
+  text-align:center!important;
+  vertical-align:middle!important;
+  padding:12px 8px!important;
+  white-space:normal!important;
+}
+.info-location .competition-location-table tbody td{
+  text-align:left!important;
+  vertical-align:middle!important;
+  padding:12px 8px!important;
+  white-space:normal!important;
+  word-break:normal!important;
+  overflow-wrap:normal!important;
+  hyphens:none!important;
+}
+
+/* Jam tidak terpecah dan tetap menggunakan ukuran font tabel normal. */
+.info-location .competition-location-table th:nth-child(3),
+.info-location .competition-location-table td:nth-child(3){
+  white-space:nowrap!important;
+  font-size:inherit!important;
+  letter-spacing:normal!important;
+  font-variant-numeric:tabular-nums;
+  padding-left:9px!important;
+  padding-right:9px!important;
+}
+
+/* Tempat mengikuti panjang nama, diberi ruang minimum dan tidak memotong kata. */
+.info-location .competition-location-table th:nth-child(4),
+.info-location .competition-location-table td:nth-child(4){
+  min-width:112px!important;
+  padding-left:9px!important;
+}
+.info-location .competition-location-table td:nth-child(4) a,
+.info-location .competition-location-table td:nth-child(4) .location-map-link{
+  display:inline!important;
+  max-width:100%!important;
+  white-space:normal!important;
+  word-break:normal!important;
+  overflow-wrap:normal!important;
+  hyphens:none!important;
+  line-height:1.4!important;
+}
+.info-location .competition-location-table td:nth-child(4) a:after{
+  display:inline!important;
+  white-space:nowrap!important;
+  margin-left:4px!important;
+}
+
+/* Kolom cabang dan tanggal mengikuti kebutuhan teksnya, bukan ruang kosong sisa. */
+.info-location .competition-location-table th:nth-child(1),
+.info-location .competition-location-table td:nth-child(1){
+  min-width:88px!important;
+}
+.info-location .competition-location-table th:nth-child(2),
+.info-location .competition-location-table td:nth-child(2){
+  min-width:104px!important;
+}
+
+@media(max-width:600px){
+  .info-location .competition-location-table{
+    font-size:.78rem!important;
+  }
+  .info-location .competition-location-table thead th{
+    padding:10px 6px!important;
+  }
+  .info-location .competition-location-table tbody td{
+    padding:10px 6px!important;
+    line-height:1.4!important;
+  }
+  .info-location .competition-location-table th:nth-child(4),
+  .info-location .competition-location-table td:nth-child(4){
+    min-width:112px!important;
+  }
+}
+@media(max-width:380px){
+  .info-location .competition-location-table{
+    font-size:.74rem!important;
+  }
+  .info-location .competition-location-table th:nth-child(1),
+  .info-location .competition-location-table td:nth-child(1){min-width:80px!important}
+  .info-location .competition-location-table th:nth-child(2),
+  .info-location .competition-location-table td:nth-child(2){min-width:96px!important}
+  .info-location .competition-location-table th:nth-child(4),
+  .info-location .competition-location-table td:nth-child(4){min-width:104px!important}
+}
+</style>
+
 </head>
 <body>
 <i class="blob b1"></i><i class="blob b2"></i><i class="blob b3"></i>
@@ -2614,7 +3058,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{
 <div class="info-heading"><span class="info-icon">🎤</span><div><span class="timeline-kicker">25–26 DESEMBER 2026</span><h2>SUSUNAN ACARA PUNCAK</h2><p>Rangkaian puncak 25–26 Desember meliputi Opening Ceremony, Parade Gelar Budaya, Grand Final Duta Pelajar, perlombaan, PORSENI Expo, serta penyerahan piala dan pengumuman juara umum.</p></div></div>
 <div class="rundown-days">
 <article class="rundown-day"><div class="rundown-date"><b>25</b><span>DES<br/>JUMAT</span></div><div class="rundown-events">
-<div class="rundown-event"><time>Pagi</time><div><b>Pembekalan Duta Pelajar</b><small>Pembekalan peserta Duta Pelajar pada Jumat, 25 Desember 2026.</small></div></div>
+<div class="rundown-event"><time>Pagi</time><div><b>Pembekalan Duta Pelajar</b><small>Pembekalan peserta Duta Pelajar pada Jumat,<br>25 Desember<br>2026.</small></div></div>
 <div class="rundown-event"><time>15.00–18.00</time><div><b>Registrasi dan check in</b><small>Penerimaan dan registrasi kontingen</small></div></div>
 <div class="rundown-event"><time>19.00–20.00</time><div><b>Opening Ceremony</b><small>Pembukaan rangkaian PORSENI 2026</small></div></div>
 <div class="rundown-event"><time>20.00–23.30</time><div><b>Parade Gelar Budaya</b><small>Ekspresi seni dan budaya kontingen</small></div></div>
@@ -2634,24 +3078,24 @@ a:focus-visible,button:focus-visible,summary:focus-visible{
 <div class="info-heading"><span class="info-icon">📍</span><div><span class="timeline-kicker">JADWAL KEGIATAN</span><h2>JADWAL CABANG LOMBA &amp; LOKASI</h2><p>Jadwal disusun berdasarkan rundown PORSENI 2026 dan diurutkan menurut waktu pelaksanaan. Informasi tempat akan dilengkapi kemudian.</p></div></div>
 <div class="location-table-wrap">
 <table class="competition-location-table">
-<thead><tr><th>Cabang lomba</th><th>Hari, tanggal</th><th>Jam</th><th>Tempat</th></tr></thead>
+<thead><tr><th>Cabang lomba</th><th>Hari,<br>tanggal</th><th>Jam</th><th>Tempat</th></tr></thead>
 <tbody>
-<tr><td>Badminton</td><td>Minggu, 6 Desember 2026</td><td>08.00–17.30</td><td> <a class="location-map-link" href="https://maps.app.goo.gl/Xk28pBghHGd2nsTq8?g_st=ac">GOR SBR Purin</a> </td></tr>
-<tr><td>Voli</td><td>Minggu, 13 Desember 2026</td><td>08.00–17.30</td><td><a class="location-map-link" href="https://maps.app.goo.gl/25f5BLiScbRdfySs6">ASSALAM SPORT CENTER</a></td></tr>
-<tr><td>Parade Gelar Budaya</td><td>Jumat, 25 Desember 2026</td><td>19.00–23.30</td><td><a class="location-map-link" href="https://www.google.com/maps/search/?api=1&query=-6.9437628%2C110.1710739">Panggung Utama</a></td></tr>
-<tr><td>Sprint</td><td>Sabtu, 26 Desember 2026</td><td>08.00–12.00</td><td class="place-pending"><a class="location-map-link" href="https://maps.app.goo.gl/sGW2UXprhLwnjMni6?g_st=ac">Gelora Utama Margosari</a></td></tr>
-<tr><td>Tenis Meja</td><td>Sabtu, 26 Desember 2026</td><td>08.00–12.00</td><td class="place-pending"><a class="location-map-link" href="https://maps.app.goo.gl/Ayr1gnGKFTR6YztZ9?g_st=ac">SDN 1 Margosari</a> </td></tr>
-<tr><td>Kaligrafi</td><td>Sabtu, 26 Desember 2026</td><td>08.00–12.00</td><td class="place-pending"><a class="location-map-link" href="https://maps.app.goo.gl/d6LYCsRzd3MNPv5W7?g_st=ac">MDTU NU 04 Al-Mubtadi'in</a> </td></tr>
-<tr><td>Paduan Suara</td><td>Sabtu, 26 Desember 2026</td><td>08.00–12.00</td><td class="place-pending"> <a class="location-map-link" href="https://maps.app.goo.gl/RPaQk81eVR7otmNh8?g_st=ac">TPQ An-Nur Pagendingan</a> </td></tr>
-<tr><td>MTQ</td><td>Sabtu, 26 Desember 2026</td><td>08.00–12.00</td><td class="place-pending"><a class="location-map-link" href="https://maps.app.goo.gl/vir2bZdqZjPPVcG17?g_st=ac">Musholla Baitussyarif Deliksari</a></td></tr>
-<tr><td>Grand Final Duta Pelajar</td><td>Sabtu, 26 Desember 2026</td><td>08.00–12.00</td><td><a class="location-map-link" href="https://www.google.com/maps/search/?api=1&query=-6.9437628%2C110.1710739">Panggung Utama</a></td></tr>
-<tr><td>Baca Puisi</td><td>Sabtu, 26 Desember 2026</td><td>13.00–18.00</td><td class="place-pending"> <a class="location-map-link" href="https://maps.app.goo.gl/1442VQAsf76aaqcw6">Musholla Nurul Iman Rengas</a> </td></tr>
-<tr><td>Baca Kitab</td><td>Sabtu, 26 Desember 2026</td><td>13.00–18.00</td><td class="place-pending"><a class="location-map-link" href="https://maps.app.goo.gl/myUuRdMdhYkJMxiU8">Musholla Nurul Ikhsan Rengas</a></td></tr>
-<tr><td>Khitobah</td><td>Sabtu, 26 Desember 2026</td><td>13.00–18.00</td><td class="place-pending"><a class="location-map-link" href="https://maps.app.goo.gl/2UZc3YW1eL8wNdt2A">Musholla Miftahul Falah Pagendingan</a></td></tr>
-<tr><td>Rebana</td><td>Sabtu, 26 Desember 2026</td><td>16.00–23.00</td><td><a class="location-map-link" href="https://www.google.com/maps/search/?api=1&query=-6.9437628%2C110.1710739">Panggung Utama</a></td></tr>
-<tr><td>PES PS3</td><td>Sabtu, 26 Desember 2026</td><td>19.30–23.00</td><td class="place-pending"> <a class="location-map-link" href="https://maps.app.goo.gl/SFuFXMuJnU3TpywM9">Balaidesa Margosari</a> </td></tr>
-<tr><td>LCC</td><td>Sabtu, 26 Desember 2026</td><td>19.30–23.00</td><td class="place-pending"> <a class="location-map-link" href="https://maps.app.goo.gl/Ayr1gnGKFTR6YztZ9?g_st=ac">SDN 1 Margosari</a> </td></tr>
-<tr><td>Karya Ilmiah</td><td>Sabtu, 26 Desember 2026</td><td>19.30–23.00</td><td class="place-pending"> <a class="location-map-link" href="https://maps.app.goo.gl/D8DebCGxkYWmJrZs7">Musholla Darussalam</a> </td></tr>
+<tr><td>Badminton</td><td>Minggu,<br>6 Desember<br>2026</td><td>08.00–17.30</td><td> <a class="location-map-link" href="https://maps.app.goo.gl/Xk28pBghHGd2nsTq8?g_st=ac">GOR SBR Purin</a> </td></tr>
+<tr><td>Voli</td><td>Minggu,<br>13 Desember<br>2026</td><td>08.00–17.30</td><td><a class="location-map-link" href="https://maps.app.goo.gl/25f5BLiScbRdfySs6">ASSALAM SPORT CENTER</a></td></tr>
+<tr><td>Parade Gelar Budaya</td><td>Jumat,<br>25 Desember<br>2026</td><td>19.00–23.30</td><td><a class="location-map-link" href="https://www.google.com/maps/search/?api=1&query=-6.9437628%2C110.1710739">Panggung Utama</a></td></tr>
+<tr><td>Sprint</td><td>Sabtu,<br>26 Desember<br>2026</td><td>08.00–12.00</td><td class="place-pending"><a class="location-map-link" href="https://maps.app.goo.gl/sGW2UXprhLwnjMni6?g_st=ac">Gelora Utama Margosari</a></td></tr>
+<tr><td>Tenis Meja</td><td>Sabtu,<br>26 Desember<br>2026</td><td>08.00–12.00</td><td class="place-pending"><a class="location-map-link" href="https://maps.app.goo.gl/Ayr1gnGKFTR6YztZ9?g_st=ac">SDN 1 Margosari</a> </td></tr>
+<tr><td>Kaligrafi</td><td>Sabtu,<br>26 Desember<br>2026</td><td>08.00–12.00</td><td class="place-pending"><a class="location-map-link" href="https://maps.app.goo.gl/d6LYCsRzd3MNPv5W7?g_st=ac">MDTU NU 04 Al-Mubtadi'in</a> </td></tr>
+<tr><td>Paduan<br>Suara</td><td>Sabtu,<br>26 Desember<br>2026</td><td>08.00–12.00</td><td class="place-pending"> <a class="location-map-link" href="https://maps.app.goo.gl/RPaQk81eVR7otmNh8?g_st=ac">TPQ An-Nur Pagendingan</a> </td></tr>
+<tr><td>MTQ</td><td>Sabtu,<br>26 Desember<br>2026</td><td>08.00–12.00</td><td class="place-pending"><a class="location-map-link" href="https://maps.app.goo.gl/vir2bZdqZjPPVcG17?g_st=ac">Musholla Baitussyarif Deliksari</a></td></tr>
+<tr><td>Grand Final<br>Duta Pelajar</td><td>Sabtu,<br>26 Desember<br>2026</td><td>08.00–12.00</td><td><a class="location-map-link" href="https://www.google.com/maps/search/?api=1&query=-6.9437628%2C110.1710739">Panggung Utama</a></td></tr>
+<tr><td>Baca Puisi</td><td>Sabtu,<br>26 Desember<br>2026</td><td>13.00–18.00</td><td class="place-pending"> <a class="location-map-link" href="https://maps.app.goo.gl/1442VQAsf76aaqcw6">Musholla Nurul Iman Rengas</a> </td></tr>
+<tr><td>Baca Kitab</td><td>Sabtu,<br>26 Desember<br>2026</td><td>13.00–18.00</td><td class="place-pending"><a class="location-map-link" href="https://maps.app.goo.gl/myUuRdMdhYkJMxiU8">Musholla Nurul Ikhsan Rengas</a></td></tr>
+<tr><td>Khitobah</td><td>Sabtu,<br>26 Desember<br>2026</td><td>13.00–18.00</td><td class="place-pending"><a class="location-map-link" href="https://maps.app.goo.gl/2UZc3YW1eL8wNdt2A">Musholla Miftahul Falah Pagendingan</a></td></tr>
+<tr><td>Rebana</td><td>Sabtu,<br>26 Desember<br>2026</td><td>16.00–23.00</td><td><a class="location-map-link" href="https://www.google.com/maps/search/?api=1&query=-6.9437628%2C110.1710739">Panggung Utama</a></td></tr>
+<tr><td>PES PS3</td><td>Sabtu,<br>26 Desember<br>2026</td><td>19.30–23.00</td><td class="place-pending"> <a class="location-map-link" href="https://maps.app.goo.gl/SFuFXMuJnU3TpywM9">Balaidesa Margosari</a> </td></tr>
+<tr><td>LCC</td><td>Sabtu,<br>26 Desember<br>2026</td><td>19.30–23.00</td><td class="place-pending"> <a class="location-map-link" href="https://maps.app.goo.gl/Ayr1gnGKFTR6YztZ9?g_st=ac">SDN 1 Margosari</a> </td></tr>
+<tr><td>Karya Ilmiah</td><td>Sabtu,<br>26 Desember<br>2026</td><td>19.30–23.00</td><td class="place-pending"> <a class="location-map-link" href="https://maps.app.goo.gl/D8DebCGxkYWmJrZs7">Musholla Darussalam</a> </td></tr>
 </tbody>
 </table>
 </div>
@@ -3069,22 +3513,22 @@ Object.keys(CABANG).forEach(function(k){CABANG[k].forEach(function(x){
 var REGISTERED_EVENTS=[];
 var DEADLINES={"Duta Pelajar":"6 Desember 2026 (batas akhir pendaftaran tahap 1)","Voli":"6 Desember 2026","Badminton":"29 November 2026"};
 var SCHEDULE={
- "Duta Pelajar":"Pembekalan: Jumat, 25 Desember 2026 pagi. Grand Final Duta Pelajar: Sabtu, 26 Desember 2026. Rangkaian seleksi dan pengumuman tersedia pada timeline Duta Pelajar.",
- "Badminton":"Road to PORSENI: Minggu, 6 Desember 2026. Waktu pelaksanaan mengikuti informasi panitia.",
- "Voli":"Road to PORSENI: Minggu, 13 Desember 2026. Waktu pelaksanaan mengikuti informasi panitia.",
- "Khitobah":"Sabtu, 26 Desember 2026 · 13.00–18.00 WIB.",
- "Baca kitab":"Sabtu, 26 Desember 2026 · 13.00–18.00 WIB.",
- "Baca puisi":"Sabtu, 26 Desember 2026 · 13.00–18.00 WIB.",
- "Sprint":"Sabtu, 26 Desember 2026 · 08.00–12.00 WIB.",
- "Tenis meja":"Sabtu, 26 Desember 2026 · 08.00–12.00 WIB.",
- "Kaligrafi":"Sabtu, 26 Desember 2026 · 08.00–12.00 WIB.",
- "Paduan suara":"Sabtu, 26 Desember 2026 · 08.00–12.00 WIB.",
- "MTQ":"Sabtu, 26 Desember 2026 · 08.00–12.00 WIB.",
- "Parade Gelar Budaya":"Jumat, 25 Desember 2026 · 20.00–23.30 WIB.",
- "Rebana":"Sabtu, 26 Desember 2026 · sesi 1 pukul 16.00–18.00 WIB dan sesi 2 pukul 19.30–23.00 WIB.",
- "PES PS3":"Sabtu, 26 Desember 2026 · 19.30–23.00 WIB.",
- "LCC":"Sabtu, 26 Desember 2026 · 19.30–23.00 WIB.",
- "Karya ilmiah":"Sabtu, 26 Desember 2026 · 19.30–23.00 WIB."
+ "Duta Pelajar":"Pembekalan: Jumat,<br>25 Desember<br>2026 pagi. Grand Final Duta Pelajar: Sabtu,<br>26 Desember<br>2026. Rangkaian seleksi dan pengumuman tersedia pada timeline Duta Pelajar.",
+ "Badminton":"Road to PORSENI: Minggu,<br>6 Desember<br>2026. Waktu pelaksanaan mengikuti informasi panitia.",
+ "Voli":"Road to PORSENI: Minggu,<br>13 Desember<br>2026. Waktu pelaksanaan mengikuti informasi panitia.",
+ "Khitobah":"Sabtu,<br>26 Desember<br>2026 · 13.00–18.00 WIB.",
+ "Baca kitab":"Sabtu,<br>26 Desember<br>2026 · 13.00–18.00 WIB.",
+ "Baca puisi":"Sabtu,<br>26 Desember<br>2026 · 13.00–18.00 WIB.",
+ "Sprint":"Sabtu,<br>26 Desember<br>2026 · 08.00–12.00 WIB.",
+ "Tenis meja":"Sabtu,<br>26 Desember<br>2026 · 08.00–12.00 WIB.",
+ "Kaligrafi":"Sabtu,<br>26 Desember<br>2026 · 08.00–12.00 WIB.",
+ "Paduan suara":"Sabtu,<br>26 Desember<br>2026 · 08.00–12.00 WIB.",
+ "MTQ":"Sabtu,<br>26 Desember<br>2026 · 08.00–12.00 WIB.",
+ "Parade Gelar Budaya":"Jumat,<br>25 Desember<br>2026 · 20.00–23.30 WIB.",
+ "Rebana":"Sabtu,<br>26 Desember<br>2026 · sesi 1 pukul 16.00–18.00 WIB dan sesi 2 pukul 19.30–23.00 WIB.",
+ "PES PS3":"Sabtu,<br>26 Desember<br>2026 · 19.30–23.00 WIB.",
+ "LCC":"Sabtu,<br>26 Desember<br>2026 · 19.30–23.00 WIB.",
+ "Karya ilmiah":"Sabtu,<br>26 Desember<br>2026 · 19.30–23.00 WIB."
 };
 function deadlineFor(branch){return DEADLINES[branch]||"19 Desember 2026";}
 function configureSpecialFiles(){
@@ -3098,8 +3542,8 @@ function configureBranchInfo(){
  configureSpecialFiles();$("fb-title").textContent="Pengumpulan Berkas Cabang Lomba"+(branch?" — "+prettyBranchName(branch):"");
  var info=$("fb-info");
  if(!branch){info.innerHTML='Pilih tombol cabang lomba terlebih dahulu.';return;}
- var timeline=branch==="Duta Pelajar"?'<div class="portal-event-card" style="margin-top:12px"><h4>🎓 Timeline Duta Pelajar</h4><ol style="margin:6px 0 0;padding-left:22px"><li><b>Pendaftaran tahap 1:</b> batas akhir 6 Desember 2026.</li><li><b>Pengumuman tahap 1:</b> 7 Desember 2026.</li><li><b>Seleksi tahap 2:</b> 13 Desember 2026.</li><li><b>Pengumuman finalis:</b> 14 Desember 2026.</li><li><b>Pembekalan:</b> Jumat, 25 Desember 2026, pagi hari.</li><li><b>Grand Final Duta Pelajar:</b> Sabtu, 26 Desember 2026.</li></ol><p style="margin:8px 0 0"><a class="btn alt" href="#timeline-duta" id="fb-timeline-link">📅 Lihat Timeline Duta Pelajar</a></p></div>':'';
- info.innerHTML='<p style="margin:0 0 6px"><b>Batas akhir pengumpulan berkas:</b> '+deadlineFor(branch)+'</p><p style="margin:0"><b>Jadwal pelaksanaan:</b> '+(SCHEDULE[branch]||"Sabtu, 26 Desember 2026. Waktu mengikuti susunan acara PORSENI 2026.")+'</p>'+timeline;
+ var timeline=branch==="Duta Pelajar"?'<div class="portal-event-card" style="margin-top:12px"><h4>🎓 Timeline Duta Pelajar</h4><ol style="margin:6px 0 0;padding-left:22px"><li><b>Pendaftaran tahap 1:</b> batas akhir 6 Desember 2026.</li><li><b>Pengumuman tahap 1:</b> 7 Desember 2026.</li><li><b>Seleksi tahap 2:</b> 13 Desember 2026.</li><li><b>Pengumuman finalis:</b> 14 Desember 2026.</li><li><b>Pembekalan:</b> Jumat,<br>25 Desember<br>2026, pagi hari.</li><li><b>Grand Final Duta Pelajar:</b> Sabtu,<br>26 Desember<br>2026.</li></ol><p style="margin:8px 0 0"><a class="btn alt" href="#timeline-duta" id="fb-timeline-link">📅 Lihat Timeline Duta Pelajar</a></p></div>':'';
+ info.innerHTML='<p style="margin:0 0 6px"><b>Batas akhir pengumpulan berkas:</b> '+deadlineFor(branch)+'</p><p style="margin:0"><b>Jadwal pelaksanaan:</b> '+(SCHEDULE[branch]||"Sabtu,<br>26 Desember<br>2026. Waktu mengikuti susunan acara PORSENI 2026.")+'</p>'+timeline;
  var tl=$("fb-timeline-link");if(tl)tl.onclick=function(){setTimeout(function(){var el=$("tl-duta");if(el)el.scrollIntoView({behavior:"smooth",block:"start"});},120);};
  var cutoff=branch==="Duta Pelajar"||branch==="Voli"?"2026-12-06":branch==="Badminton"?"2026-11-29":"2026-12-19";
  setState($("b-state"),$("fb-btn"),["2026-11-01",cutoff],["1 November 2026",deadlineFor(branch)],"cabang");
@@ -3321,7 +3765,7 @@ function paperK(d,stamps){
 function paperB(d){
  return kop("FORMULIR PENGUMPULAN BERKAS CABANG LOMBA "+String(d.cabang||"").toUpperCase(),d)+'<table>'+tr("Nama kontingen",d.nama)+tr("Cabang lomba",prettyBranchName(d.cabang))+tr("Kategori",prettyCategoryLabel(d.cabang,d.kategori,KAT[d.cabang]||[]))+tr("Jumlah peserta",String(d.list.length))+tr("Berkas diunggah",(d.fl||[]).map(function(f){return f.name}).join(", "))+tr("Catatan",d.catatan)+'</table>'
  +'<h4>Daftar peserta</h4><table class="pl"><tr><th class="c">No</th><th>Nama peserta</th><th>Tempat lahir</th><th>Tanggal lahir</th><th class="c">L/P</th><th>Alamat rumah</th><th>WhatsApp</th><th>Peran</th></tr>'+d.list.map(function(p,i){return '<tr><td class="c">'+(i+1)+'</td><td>'+esc(p.n)+'</td><td>'+esc(p.tempatLahir||"")+'</td><td>'+esc(p.tanggalLahir||"")+'</td><td class="c">'+esc(p.l)+'</td><td>'+esc(p.alamat||"")+'</td><td>'+esc(p.wa||"")+'</td><td>'+esc(p.role||"-")+'</td></tr>'}).join('')+'</table>'
- +'<p style="margin-top:8px">Batas akhir pengumpulan berkas '+deadlineFor(d.cabang)+'. Jadwal pelaksanaan: '+(SCHEDULE[d.cabang]||'Sabtu, 26 Desember 2026 sesuai susunan acara PORSENI 2026.')+' Sekretariat: A. Fuad Syafi, WA 083836151201.</p>'
+ +'<p style="margin-top:8px">Batas akhir pengumpulan berkas '+deadlineFor(d.cabang)+'. Jadwal pelaksanaan: '+(SCHEDULE[d.cabang]||'Sabtu,<br>26 Desember<br>2026 sesuai susunan acara PORSENI 2026.')+' Sekretariat: A. Fuad Syafi, WA 083836151201.</p>'
  +sign("Sekretariat Penerima","Perwakilan Kontingen","") }
 var MSG={ok:["","✅ Data dan berkas berhasil terkirim ke panitia. Formulir cetak tersedia di bawah."],
  offline:["i","ℹ️ Belum terhubung ke server. Data belum terkirim."],
