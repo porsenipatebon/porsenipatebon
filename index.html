@@ -4950,6 +4950,123 @@ nav.desk-nav button {
   }
 }
 </style>
+
+<style id="competition-location-table-final-override-v34">
+/*
+  Final override ditempatkan setelah semua stylesheet lama agar aturan responsif
+  terdahulu tidak lagi memaksa table-layout:fixed dan pemenggalan kata.
+*/
+.info-location .location-table-wrap{
+  width:100%!important;
+  max-width:100%!important;
+  overflow-x:auto!important;
+  box-sizing:border-box!important;
+  -webkit-overflow-scrolling:touch;
+}
+.info-location .competition-location-table{
+  width:100%!important;
+  min-width:0!important;
+  max-width:100%!important;
+  table-layout:auto!important;
+  border-collapse:separate!important;
+  border-spacing:0!important;
+  box-sizing:border-box!important;
+}
+
+/* Tidak ada lagi persentase tetap atau lebar kolom yang dipaksakan. */
+.info-location .competition-location-table th,
+.info-location .competition-location-table td{
+  width:auto!important;
+  max-width:none!important;
+  min-width:0!important;
+  box-sizing:border-box!important;
+  word-break:normal!important;
+  overflow-wrap:normal!important;
+  hyphens:none!important;
+  vertical-align:middle!important;
+}
+
+/* Header di tengah. "Tempat" tetap satu kata utuh. */
+.info-location .competition-location-table thead th{
+  text-align:center!important;
+  white-space:normal!important;
+  padding:11px 7px!important;
+}
+.info-location .competition-location-table thead th:nth-child(4){
+  white-space:nowrap!important;
+}
+
+/* Isi tabel rata kiri dan browser membagi lebar berdasar isi sel. */
+.info-location .competition-location-table tbody td{
+  text-align:left!important;
+  white-space:normal!important;
+  padding:12px 7px!important;
+  line-height:1.4!important;
+}
+
+/* Jam dipertahankan satu baris dan mendapat jarak yang cukup dari tempat. */
+.info-location .competition-location-table th:nth-child(3),
+.info-location .competition-location-table td:nth-child(3){
+  white-space:nowrap!important;
+  font-size:inherit!important;
+  letter-spacing:normal!important;
+  padding-left:8px!important;
+  padding-right:12px!important;
+  font-variant-numeric:tabular-nums;
+}
+
+/* Tempat dapat mengambil ruang berdasarkan nama lokasi; jangan pecah di tengah kata. */
+.info-location .competition-location-table th:nth-child(4),
+.info-location .competition-location-table td:nth-child(4){
+  padding-left:12px!important;
+}
+.info-location .competition-location-table td:nth-child(4) a,
+.info-location .competition-location-table td:nth-child(4) .location-map-link{
+  display:inline!important;
+  max-width:none!important;
+  white-space:normal!important;
+  word-break:normal!important;
+  overflow-wrap:normal!important;
+  hyphens:none!important;
+  line-height:1.4!important;
+}
+.info-location .competition-location-table td:nth-child(4) a:after{
+  display:inline!important;
+  white-space:nowrap!important;
+  margin-left:4px!important;
+}
+
+/* Tanggal dan nama cabang tetap boleh turun baris pada spasi. */
+.info-location .competition-location-table td:nth-child(1),
+.info-location .competition-location-table td:nth-child(2){
+  white-space:normal!important;
+  overflow-wrap:normal!important;
+}
+
+@media(max-width:600px){
+  .info-location .competition-location-table{
+    font-size:.78rem!important;
+  }
+  .info-location .competition-location-table thead th{
+    padding:10px 6px!important;
+  }
+  .info-location .competition-location-table tbody td{
+    padding:10px 6px!important;
+  }
+  .info-location .competition-location-table td:nth-child(3){
+    padding-right:12px!important;
+  }
+  .info-location .competition-location-table td:nth-child(4){
+    padding-left:12px!important;
+  }
+}
+@media(max-width:380px){
+  .info-location .competition-location-table{
+    font-size:.76rem!important;
+  }
+}
+</style>
+
 </body>
 </html>
 <style>
