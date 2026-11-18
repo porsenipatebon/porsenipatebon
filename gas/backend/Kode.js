@@ -5,7 +5,7 @@
  */
 var PDF_TTD_KOOR_ID = '1Gkh8tDAhXNX3auf09J3KTnIEdx2hbT2j';
 var PDF_TTD_SEKRETARIAT_ID = '1CCuOOo6KzkX5kQbZjmAp1KRZ55qCcVwC';
-var PDF_STEMPEL_PANITIA_ID = '1ITYlMp7nb9pIUOiL53J469Q6uhfnzEzT';
+var PDF_TTD_KETUA_ID = '1caqKoFGjkgCo5X5zfZUFENEh5vwmNcxO';
 var NOTIFY = 'fuadsyafi62@gmail.com, wahyu.tyo242@gmail.com, shochibul.789@gmail.com, porsenipatebon@gmail.com';
 var SENDER_EMAIL = 'porsenipatebon@gmail.com';
 var SENDER_NAME = 'Panitia PORSENI 2026';
@@ -1221,7 +1221,7 @@ function buildChampionshipPdfBlob_(state,isTest){
  var sign=body.appendTable([
   ['Mengetahui,','','Ditetapkan oleh,'],
   ['Koordinator Perlombaan','','Ketua Panitia Pelaksana'],
-  ['\n\n','RUANG STEMPEL','\n\n'],
+  ['\n\n','','\n\n'],
   ['Sochibul Mustaqim','','Prasetyo Wahyu A.R.']
  ]);
  sign.setBorderWidth(0);
@@ -1236,6 +1236,10 @@ function buildChampionshipPdfBlob_(state,isTest){
    .setSpacingBefore(0).setSpacingAfter(0).setLineSpacing(1);
   cell.editAsText().setFontFamily('Arial').setFontSize(sr===2&&sc===1?7:9).setBold(sr===1||sr===3);
  }
+ // Tanda tangan Koordinator dan Ketua menggunakan PNG masing-masing.
+ // PNG Ketua sudah memuat tanda tangan sekaligus stempel panitia.
+ appendDriveSignature_(sign.getCell(2,0), PDF_TTD_KOOR_ID, 150, 68);
+ appendDriveSignature_(sign.getCell(2,2), PDF_TTD_KETUA_ID, 150, 68);
 
  // LAMPIRAN I — REKAPITULASI PEROLEHAN JUARA SETIAP KONTINGEN
  body.appendPageBreak();
@@ -3817,35 +3821,6 @@ function appendDriveSignature_(cell, fileId, maxWidth, maxHeight) {
 }
 
 
-/**
- * Menambahkan stempel panitia pada area tanda tangan sekretariat.
- * Stempel ditempatkan dalam paragraf yang sama dengan tanda tangan agar
- * tampil berdampingan dan masuk ke area tanda tangan, bukan di bawah nama.
- */
-function appendDriveStampBesideSignature_(signatureImage, fileId, maxWidth, maxHeight) {
-  if (!signatureImage) throw new Error('Gambar tanda tangan sekretariat tidak ditemukan.');
-  if (!fileId) throw new Error('ID Google Drive stempel panitia belum diisi.');
-
-  var stampFile = DriveApp.getFileById(fileId);
-  if (stampFile.isTrashed()) throw new Error('File stempel panitia berada di Trash Google Drive.');
-  var stampBlob = stampFile.getBlob();
-  if (stampBlob.getContentType() !== 'image/png') {
-    throw new Error('Stempel panitia harus berupa file PNG.');
-  }
-
-  var paragraph = signatureImage.getParent().asParagraph();
-  // Cap organisasi ditempatkan di sisi kiri tanda tangan. Sisipkan sebelum
-  // gambar tanda tangan agar tidak terdorong ke kanan/keluar area blok.
-  var stamp = paragraph.insertInlineImage(paragraph.getChildIndex(signatureImage), stampBlob);
-  var width = stamp.getWidth();
-  var height = stamp.getHeight();
-  var ratio = Math.min(maxWidth / width, maxHeight / height, 1);
-  stamp.setWidth(Math.round(width * ratio));
-  stamp.setHeight(Math.round(height * ratio));
-  return stamp;
-}
-
-
 function createBranchRegistrationPdf_(d, folder) {
 
   var doc = pdfNewDoc_('TEMP PORSENI CABANG ' + d.reg, 0);
@@ -4061,19 +4036,11 @@ appendDriveSignature_(
 );
 
 // ===== TANDA TANGAN SEKRETARIAT =====
-var sekretariatSignatureImage = appendDriveSignature_(
+appendDriveSignature_(
   sg.getCell(1, 1),
   PDF_TTD_SEKRETARIAT_ID,
   190,
   95
-);
-
-// Stempel berada di samping tanda tangan sekretariat, masuk ke area tanda tangan.
-appendDriveStampBesideSignature_(
-  sekretariatSignatureImage,
-  PDF_STEMPEL_PANITIA_ID,
-  48,
-  48
 );
 
   w.para(
