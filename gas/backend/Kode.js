@@ -5,7 +5,7 @@
  */
 var PDF_TTD_KOOR_ID = '1Gkh8tDAhXNX3auf09J3KTnIEdx2hbT2j';
 var PDF_TTD_SEKRETARIAT_ID = '1CCuOOo6KzkX5kQbZjmAp1KRZ55qCcVwC';
-var PDF_STEMPEL_PANITIA_ID = '1ITYlMp7nb9pIUOiL53J469Q6uhfnzEzT';
+var PDF_STEMPEL_PANITIA_ID = '1caqKoFGjkgCo5X5zfZUFENEh5vwmNcxO';
 var NOTIFY = 'fuadsyafi62@gmail.com, wahyu.tyo242@gmail.com, shochibul.789@gmail.com, porsenipatebon@gmail.com';
 var SENDER_EMAIL = 'porsenipatebon@gmail.com';
 var SENDER_NAME = 'Panitia PORSENI 2026';
