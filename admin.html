@@ -169,13 +169,20 @@
    <section class="panel" style="padding:20px;margin-bottom:16px">
     <div class="eyebrow">PENGUJIAN DOKUMEN</div><h2 style="font:800 19px Manrope;color:var(--navy);margin:5px 0">Uji Coba Cetak PDF</h2>
     <p class="muted" style="font-size:12px;margin:0 0 16px">Pilih jenis dokumen untuk membuat dan melihat pratinjau PDF uji coba. Proses ini tidak mengubah data pendaftaran.</p>
-    <div class="test-actions" style="justify-content:flex-start">
-     <button class="btn light" type="button" data-test-pdf="kontingen">Uji Kontingen</button>
-     <button class="btn light" type="button" data-test-pdf="duta">Uji Duta Pelajar</button>
-     <button class="btn light" type="button" data-test-pdf="tunggal">Uji Tunggal</button>
-     <button class="btn light" type="button" data-test-pdf="beregu">Uji Beregu</button>
-     <button class="btn warm" type="button" data-test-pdf="all">Cetak Semua Uji Coba</button>
+    <div class="test-actions" style="justify-content:flex-start;align-items:end">
+     <button class="btn light" type="button" data-test-pdf="kontingen">Uji Formulir & Lampiran Kontingen</button>
+     <div class="field" style="min-width:190px;margin:0"><label for="testBranchSelect">Cabang lomba</label><select id="testBranchSelect"></select></div>
+     <div class="field" style="min-width:190px;margin:0"><label for="testCategorySelect">Kategori</label><select id="testCategorySelect"></select></div>
+     <button class="btn" type="button" id="runSelectedCategoryTest">Uji Cabang & Kategori</button>
+     <button class="btn warm" type="button" data-test-pdf="all">Uji Seluruh Cabang & Kategori</button>
     </div>
+    <div id="testCatalogSummary" class="note-banner" style="margin-top:12px">Memuat katalog cabang dan kategori dari konfigurasi KAT…</div>
+   </section>
+   <section class="panel" style="padding:20px;margin-bottom:16px">
+    <div class="eyebrow">MIGRASI ARSIP LAMA</div><h2 style="font:800 18px Manrope;color:var(--navy);margin:5px 0 4px">Bangun Ulang PDF Pendaftaran</h2>
+    <p class="muted" style="font-size:12px;margin:0 0 12px">Memproses seluruh baris kontingen dan cabang secara bertahap. Tautan formulir diperbarui setelah PDF formulir dibuat; tautan lampiran diperbarui setelah PDF lampiran selesai. File lama tetap tersimpan di Drive.</p>
+    <div class="actions"><button id="startDocumentMigration" class="btn warm" type="button">Mulai / Lanjutkan Migrasi Arsip</button><span id="documentMigrationStatus" class="muted" style="font-size:12px">Belum ada proses migrasi.</span></div>
+   </section>
    </section>
    <section class="panel" style="padding:20px">
     <div class="eyebrow">HASIL KEJUARAAN</div><h2 style="font:800 19px Manrope;color:var(--navy);margin:5px 0">Uji Cetak Hasil Kejuaraan</h2>
@@ -432,16 +439,21 @@ function sendWhatsApp(){if(!selected)return;var phone=String(selected.waKetua||'
 function saveReview(){if(!selected)return;var status=$('reviewStatus').value,note=$('reviewNote').value.trim(),revisionItems=Array.prototype.map.call(document.querySelectorAll('[data-revision-item]:checked'),function(x){return x.value;});if((status==='Perlu Revisi'||status==='Ditolak')&&!note){toast('Catatan wajib diisi untuk status Perlu Revisi atau Ditolak.');$('reviewNote').focus();return;}if(status==='Perlu Revisi'&&!revisionItems.length){toast('Pilih minimal satu dokumen/data yang perlu direvisi.');return;}if(!window.confirm('Simpan status “'+status+'” dan kirim pemberitahuan email otomatis kepada ketua kontingen?'))return;var btn=$('saveReview');btn.disabled=true;btn.textContent='Menyimpan & mengirim…';call({action:'admin_update_status',token:token,type:selected.type,recordId:selected.recordId,status:status,note:note,revisionItems:revisionItems}).then(function(j){toast(j.message||'Status tersimpan.');$('detailOverlay').classList.add('hidden');return loadData();}).catch(function(err){toast(err.message);}).finally(function(){btn.disabled=false;btn.textContent='Simpan verifikasi & Kirim Email';});}
 document.addEventListener('click',function(e){
  var rp=e.target.closest('#resetPin'),tp=e.target.closest('[data-test-pdf]'),rm=e.target.closest('#retryMerge');
- if(rm){if(!selected){toast('Pilih data pendaftaran terlebih dahulu.');return;}if(!window.confirm('Gabungkan ulang formulir dengan seluruh lampiran PDF untuk '+selected.nama+'?\n\nGunakan hanya jika PDF belum menyatu dengan lampirannya.'))return;rm.disabled=true;call({action:'admin_retry_pdf_merge',token:token,type:selected.type,recordId:selected.recordId}).then(function(j){toast(j.message);}).catch(function(err){toast(err.message);}).finally(function(){rm.disabled=false;});return;}
+ if(rm){if(!selected){toast('Pilih data pendaftaran terlebih dahulu.');return;}if(!window.confirm('Bangun ulang PDF formulir dan PDF lampiran secara terpisah untuk '+selected.nama+'?\n\nTautan portal akan diperbarui setelah PDF baru selesai diproses. File lama tetap disimpan.'))return;rm.disabled=true;call({action:'admin_retry_pdf_merge',token:token,type:selected.type,recordId:selected.recordId}).then(function(j){toast(j.message);}).catch(function(err){toast(err.message);}).finally(function(){rm.disabled=false;});return;}
  if(rp){if(!selected||selected.type!=='kontingen'){toast('Reset PIN hanya tersedia untuk data kontingen.');return;}if(!window.confirm('Buat PIN baru untuk '+selected.nama+'?\n\nPIN lama langsung tidak berlaku. PIN baru hanya ditampilkan sekali.'))return;rp.disabled=true;call({action:'admin_reset_pin',token:token,nama:selected.nama}).then(function(j){window.prompt('PIN baru untuk '+selected.nama+' (salin dan sampaikan hanya kepada ketua kontingen):',j.pin);}).catch(function(err){toast(err.message);}).finally(function(){rp.disabled=false;});return;}
  if(tp){var kind=tp.getAttribute('data-test-pdf');tp.disabled=true;startTestPdfPreview(kind,tp).catch(function(err){toast(err.message);}).finally(function(){tp.disabled=false;});}
+ var catBtn=e.target.closest('#runSelectedCategoryTest');if(catBtn){var key=$('testBranchSelect').value+'::'+$('testCategorySelect').value;catBtn.disabled=true;startTestPdfPreview(key,catBtn).catch(function(err){toast(err.message);}).finally(function(){catBtn.disabled=false;});}
+ var migBtn=e.target.closest('#startDocumentMigration');if(migBtn){if(!window.confirm('Mulai migrasi seluruh arsip PDF kontingen dan cabang? Proses membuat PDF formulir dan PDF lampiran terpisah. File lama tidak dihapus.'))return;migBtn.disabled=true;migBtn.textContent='Memulai…';call({action:'admin_document_migration_start',token:token}).then(function(r){var st=r.migration||{};function runBatch(){return call({action:'admin_document_migration_step',token:token,limit:1}).then(function(x){var m=x.migration||{};$('documentMigrationStatus').textContent='Baris '+m.processed+'/'+m.total+' · berhasil '+m.succeeded+' · gagal '+m.failed+' · antrean lampiran '+(m.mergeQueued||0)+' · '+m.state;if(m.state==='running')return runBatch();return waitMerges();});}function waitMerges(){return call({action:'admin_document_migration_status',token:token}).then(function(x){var m=x.migration||{};$('documentMigrationStatus').textContent='Baris selesai '+m.processed+'/'+m.total+' · PDF lampiran selesai '+(m.mergeCompleted||0)+' · antrean '+(m.mergePending||0)+' · gagal '+(m.failed||0)+' baris / '+(m.mergeFailed||0)+' PDF lampiran';if(m.mergeDone){toast('Migrasi dan antrean PDF selesai. Berhasil '+m.succeeded+' baris, gagal '+m.failed+' baris; PDF lampiran gagal '+(m.mergeFailed||0)+'.');if(m.errors&&m.errors.length)console.warn('Kesalahan migrasi dokumen:',m.errors);return;}return new Promise(function(resolve){setTimeout(resolve,5000);}).then(waitMerges);});} $('documentMigrationStatus').textContent='Memulai migrasi '+st.total+' baris…';return runBatch();}).catch(function(err){toast(err.message);$('documentMigrationStatus').textContent='Migrasi terhenti: '+err.message;}).finally(function(){migBtn.disabled=false;migBtn.textContent='Mulai / Lanjutkan Migrasi Arsip';});}
 });
 var testPreviewJobs={},testPreviewTimer=null,testPreviewShownId='',testReadyList=[],testPdfCache={},testPdfObjectUrl='';
-function testPdfLabel(k){return ({kontingen:'PDF Kontingen',duta:'PDF Duta Pelajar',tunggal:'PDF Tunggal',beregu:'PDF Beregu'})[k]||k;}
+function testPdfLabel(k){var x=String(k||'').split('::');if(x[0]==='kontingen')return 'Kontingen · '+(x[1]||'PDF');return (x[0]||'')+' / '+(x[1]||'')+' · '+(x[2]||'PDF');}
+var testCatalog=[];
+function loadTestPdfCatalog(){return call({action:'admin_test_pdf_catalog',token:token}).then(function(r){testCatalog=r.catalog||[];var b=$('testBranchSelect'),c=$('testCategorySelect');b.innerHTML=testCatalog.map(function(x){return '<option value="'+esc(x.cabang)+'">'+esc(x.cabang)+'</option>';}).join('');function fillCats(){var hit=testCatalog.filter(function(x){return x.cabang===b.value;})[0];c.innerHTML=(hit?hit.kategori:[]).map(function(x){return '<option value="'+esc(x)+'">'+esc(x)+'</option>';}).join('');}b.onchange=fillCats;fillCats();$('testCatalogSummary').textContent='Katalog dimuat dari KAT: '+testCatalog.length+' cabang, '+testCatalog.reduce(function(n,x){return n+x.kategori.length;},0)+' kombinasi cabang/kategori.';}).catch(function(e){$('testCatalogSummary').textContent='Katalog tidak dapat dimuat: '+e.message;});}
+
 function setTestDownloadButtons(single,allCount){
  var a=$('testPreviewDownload'),b=$('testPreviewDownloadAll');
  if(a)a.classList.toggle('hidden',!single);
- if(b){b.classList.toggle('hidden',!(allCount>=2));b.textContent='⬇ Unduh semua ('+allCount+') .zip';}
+ if(b){b.classList.toggle('hidden',!(allCount>=2));b.textContent='⬇ Unduh semua PDF ('+allCount+')';}
 }
 function resetTestPreviewState(){
  if(testPreviewTimer){clearTimeout(testPreviewTimer);testPreviewTimer=null;}
@@ -451,12 +463,14 @@ function resetTestPreviewState(){
 function startTestPdfPreview(kind,button){
  resetTestPreviewState();
  $('testPreviewOverlay').classList.remove('hidden');$('testPreviewFrame').src='about:blank';$('testPreviewStatus').textContent='Membuat formulir dan memproses lampiran contoh di server…';$('testPreviewSelect').classList.add('hidden');$('testPreviewSelect').innerHTML='';
+ function requestOne(k){return call({action:'admin_test_pdf',token:token,kind:k});}
  function requestTestJobs(k){
-  if(k!=='all')return call({action:'admin_test_pdf',token:token,kind:k});
-  var kinds=['kontingen','duta','tunggal','beregu'],jobs={},chain=Promise.resolve();
-  kinds.forEach(function(one,idx){chain=chain.then(function(){$('testPreviewStatus').textContent='Menyusun PDF '+(idx+1)+' dari '+kinds.length+' ('+testPdfLabel(one)+')…';return call({action:'admin_test_pdf',token:token,kind:one}).then(function(r){Object.assign(jobs,r.jobs||{});});});});
-  return chain.then(function(){return {jobs:jobs,message:'PDF sedang digabungkan. Preview akan tampil otomatis setelah selesai.'};});
+  if(k!=='all')return requestOne(k);
+  var jobs={},scenarios=['kontingen'];testCatalog.forEach(function(x){(x.kategori||[]).forEach(function(cat){scenarios.push(x.cabang+'::'+cat);});});
+  var chain=Promise.resolve();scenarios.forEach(function(one,idx){chain=chain.then(function(){ $('testPreviewStatus').textContent='Membuat uji '+(idx+1)+' dari '+scenarios.length+' · '+one+'…';return requestOne(one).then(function(r){Object.keys(r.jobs||{}).forEach(function(k2){var job=r.jobs[k2];jobs[one+'::'+(k2==='formulir'?'Formulir':'Lampiran')] = Object.assign({},job,{label:one+' · '+(k2==='formulir'?'PDF Formulir':'PDF Lampiran')});});});});});
+  return chain.then(function(){return {jobs:jobs,message:'Seluruh skenario katalog telah dibuat. PDF formulir dan lampiran diproses terpisah.'};});
  }
+
  return requestTestJobs(kind).then(function(j){
   if(!j.jobs||!Object.keys(j.jobs).length)throw new Error('Pekerjaan PDF uji coba tidak berhasil dibuat.');
   testPreviewJobs=j.jobs;$('testPreviewStatus').textContent=j.message||'PDF sedang digabungkan. Preview akan tampil otomatis setelah selesai.';
@@ -478,7 +492,7 @@ function startTestPdfPreview(kind,button){
     testReadyList=ready;
     if(ready.length){
      var select=$('testPreviewSelect');
-     select.innerHTML=ready.map(function(x){return '<option value="'+esc(x.job.jobId)+'">'+esc(testPdfLabel(x.key))+'</option>';}).join('');
+     select.innerHTML=ready.map(function(x){return '<option value="'+esc(x.job.jobId)+'">'+esc(x.job.label||testPdfLabel(x.key))+'</option>';}).join('');
      select.classList.toggle('hidden',ready.length<2);
      if(!testPreviewShownId)showTestPdf(ready[0].job.jobId);
      select.value=testPreviewShownId;select.onchange=function(){showTestPdf(select.value);};
@@ -527,9 +541,9 @@ function downloadCurrentTestPdf(){
  fetchTestPdf(testPreviewShownId).then(function(item){saveBlobAs(new Blob([item.bytes],{type:'application/pdf'}),item.name);}).catch(function(err){toast(err.message);}).finally(function(){b.disabled=false;});
 }
 function downloadAllTestPdfs(){
- var list=testReadyList.slice();
+ var list=testReadyList.filter(function(x){return !x.job.empty;}).slice();
  if(!list.length){toast('Belum ada PDF yang siap diunduh.');return;}
- var b=$('testPreviewDownloadAll'),oldText=b.textContent;b.disabled=true;b.textContent='Menyiapkan ZIP…';
+ var b=$('testPreviewDownloadAll'),oldText=b.textContent;b.disabled=true;b.textContent='Menyiapkan unduhan…';
  Promise.all(list.map(function(x){return fetchTestPdf(x.job.jobId).then(function(item){return {key:x.key,item:item};});})).then(function(items){
   var used={},files=items.map(function(o){
    var n=o.item.name.replace(/[\\\/:*?"<>|]+/g,'_');
@@ -537,41 +551,9 @@ function downloadAllTestPdfs(){
    used[n]=1;return {name:n,bytes:o.item.bytes};
   });
   var d=new Date(),p=function(v){return String(v).padStart(2,'0');};
-  saveBlobAs(buildZip(files),'PORSENI_UJI_COBA_'+d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'_'+p(d.getHours())+p(d.getMinutes())+'.zip');
-  toast(files.length+' PDF diunduh dalam satu berkas ZIP.');
+  files.forEach(function(f,i){setTimeout(function(){saveBlobAs(new Blob([f.bytes],{type:'application/pdf'}),f.name);},i*350);});
+  toast(files.length+' PDF diunduh satu per satu.');
  }).catch(function(err){toast(err.message);}).finally(function(){b.disabled=false;b.textContent=oldText;});
-}
-var CRC_TABLE=null;
-function crc32(u8){
- if(!CRC_TABLE){CRC_TABLE=new Uint32Array(256);for(var n=0;n<256;n++){var c=n;for(var k=0;k<8;k++)c=(c&1)?(0xEDB88320^(c>>>1)):(c>>>1);CRC_TABLE[n]=c>>>0;}}
- var crc=0xFFFFFFFF;for(var i=0;i<u8.length;i++)crc=CRC_TABLE[(crc^u8[i])&255]^(crc>>>8);
- return (crc^0xFFFFFFFF)>>>0;
-}
-// ZIP tanpa kompresi (PDF sudah terkompresi), cukup untuk beberapa berkas uji.
-function buildZip(files){
- var enc=new TextEncoder(),parts=[],central=[],offset=0,now=new Date();
- var dosTime=(now.getHours()<<11)|(now.getMinutes()<<5)|(now.getSeconds()>>1);
- var dosDate=((now.getFullYear()-1980)<<9)|((now.getMonth()+1)<<5)|now.getDate();
- files.forEach(function(f){
-  var name=enc.encode(f.name),crc=crc32(f.bytes),size=f.bytes.length;
-  var lh=new DataView(new ArrayBuffer(30));
-  lh.setUint32(0,0x04034b50,true);lh.setUint16(4,20,true);lh.setUint16(6,0x0800,true);lh.setUint16(8,0,true);
-  lh.setUint16(10,dosTime,true);lh.setUint16(12,dosDate,true);lh.setUint32(14,crc,true);lh.setUint32(18,size,true);lh.setUint32(22,size,true);
-  lh.setUint16(26,name.length,true);lh.setUint16(28,0,true);
-  parts.push(lh.buffer,name,f.bytes);
-  var ch=new DataView(new ArrayBuffer(46));
-  ch.setUint32(0,0x02014b50,true);ch.setUint16(4,20,true);ch.setUint16(6,20,true);ch.setUint16(8,0x0800,true);ch.setUint16(10,0,true);
-  ch.setUint16(12,dosTime,true);ch.setUint16(14,dosDate,true);ch.setUint32(16,crc,true);ch.setUint32(20,size,true);ch.setUint32(24,size,true);
-  ch.setUint16(28,name.length,true);ch.setUint16(30,0,true);ch.setUint16(32,0,true);ch.setUint16(34,0,true);ch.setUint16(36,0,true);
-  ch.setUint32(38,0,true);ch.setUint32(42,offset,true);
-  central.push(ch.buffer,name);
-  offset+=30+name.length+size;
- });
- var cdSize=0;central.forEach(function(p){cdSize+=p.byteLength;});
- var end=new DataView(new ArrayBuffer(22));
- end.setUint32(0,0x06054b50,true);end.setUint16(4,0,true);end.setUint16(6,0,true);end.setUint16(8,files.length,true);end.setUint16(10,files.length,true);
- end.setUint32(12,cdSize,true);end.setUint32(16,offset,true);end.setUint16(20,0,true);
- return new Blob(parts.concat(central,[end.buffer]),{type:'application/zip'});
 }
 function closeTestPreview(){resetTestPreviewState();$('testPreviewFrame').src='about:blank';if(testPdfObjectUrl){URL.revokeObjectURL(testPdfObjectUrl);testPdfObjectUrl='';}$('testPreviewOverlay').classList.add('hidden');}
 $('testPreviewClose').addEventListener('click',closeTestPreview);$('testPreviewDownload').addEventListener('click',downloadCurrentTestPdf);$('testPreviewDownloadAll').addEventListener('click',downloadAllTestPdfs);$('testPreviewOverlay').addEventListener('click',function(e){if(e.target===$('testPreviewOverlay'))closeTestPreview();});
@@ -841,7 +823,7 @@ function setTab(next){
  $('searchInput').value='';$('statusFilter').value='';
  $('pageTitle').textContent=tab==='kontingen'?'Data Kontingen':tab==='cabang'?'Data Cabang Lomba':isNews?'Kelola Kabar PORSENI':isResults?'Hasil Kejuaraan PORSENI 2026':isTestPrint?'Uji Coba Cetak':isDevops?'PORSENI Control Center':'Log Aktivitas';
  $('pageDesc').textContent=tab==='kontingen'?'Kelola data, dokumen, dan proses verifikasi kontingen.':tab==='cabang'?'Kelola data peserta, kategori, dokumen, serta status verifikasi cabang lomba.':isNews?'Tulis, edit, dan publikasikan berita yang akan tampil otomatis di website utama.':isResults?'Input juara setiap cabang lomba dan perbarui klasemen website utama.':isTestPrint?'Buat dan periksa pratinjau dokumen PDF sebelum digunakan.':isDevops?'Ganti halaman website atau kode Apps Script dari satu tempat.':'Periksa riwayat login, unggah, pratinjau dokumen, dan perubahan oleh panitia.';
- if(isResults)loadResults();else if(isLogs)loadActivityLogs();else if(isNews)loadNewsAdmin();else if(isDevops){populateResetResultBranches();loadDevOps(true).catch(function(){});}else{renderMetrics();renderRecap();renderTable();}
+ if(isTestPrint)loadTestPdfCatalog();if(isResults)loadResults();else if(isLogs)loadActivityLogs();else if(isNews)loadNewsAdmin();else if(isDevops){populateResetResultBranches();loadDevOps(true).catch(function(){});}else{renderMetrics();renderRecap();renderTable();}
 }
 function loadActivityLogs(force){if(ADMIN_TAB_LOADED.logs&&!force)return Promise.resolve();var body=$('activityLogRows');body.innerHTML='<tr><td colspan="5" class="empty">Memuat riwayat aktivitas…</td></tr>';return call({action:'admin_security_logs',token:token}).then(function(j){var rows=j.logs||[];ADMIN_TAB_LOADED.logs=true;body.innerHTML=rows.length?rows.map(function(x){return '<tr><td>'+esc(x.waktu)+'</td><td>'+esc(x.aktor)+'</td><td>'+esc(x.aktivitas)+'</td><td><span class="status '+(x.status==='BERHASIL'?'ok':x.status==='GAGAL'||x.status==='DIKUNCI'?'no':'wait')+'">'+esc(x.status)+'</span></td><td>'+esc(x.detail)+'</td></tr>';}).join(''):'<tr><td colspan="5" class="empty">Belum ada aktivitas tercatat.</td></tr>';}).catch(function(err){body.innerHTML='<tr><td colspan="5" class="empty">'+esc(err.message)+'</td></tr>';});}
 

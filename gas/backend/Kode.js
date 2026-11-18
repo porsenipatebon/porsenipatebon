@@ -626,6 +626,10 @@ function doPost(e){
   if(d.action==='admin_apply_change_request')throw new Error('Fitur pengajuan perubahan telah dinonaktifkan. Hubungi Sekretariat/Koordinator Perlombaan dan kirimkan berkas terbaru secara manual melalui WhatsApp.');
   if(d.action==='admin_reset_pin')return out(adminResetPin_(d));
   if(d.action==='admin_test_pdf')return out(adminTestPdf_(d));
+  if(d.action==='admin_test_pdf_catalog')return out(adminTestPdfCatalog_(d));
+  if(d.action==='admin_document_migration_start')return out(adminStartDocumentMigration_(d));
+  if(d.action==='admin_document_migration_step')return out(adminDocumentMigrationStep_(d));
+  if(d.action==='admin_document_migration_status')return out(adminDocumentMigrationStatus_(d));
       if(d.action==='admin_test_pdf_status')return out(adminTestPdfStatus_(d));
     if(d.action==='admin_test_pdf_file')return out(adminTestPdfFile_(d));
     if(d.action==='admin_retry_pdf_merge')return out(adminRetryPdfMerge_(d));
@@ -658,9 +662,9 @@ function doPost(e){
   d.reg=newRegFor_(d.type);d.waktu=new Date();
   stage='siapkan_folder_drive';var folder=resolveDestination(d,c);d.folder=folder.getUrl();
   stage='simpan_lampiran';var fileLinks=saveAttachments(d.files||[],folder,d);
-  stage='buat_pdf_pendaftaran';var pdfFile=createRegistrationPdf(d,folder);assertPrivateIndividualFile_(pdfFile);d.pdf=pdfFile.getUrl();
-  stage='gabungkan_lampiran_pdf';try{assertPdfMergeLibraryReady_(d.files||[]);d.pdfMergePending=queuePdfMerge_(pdfFile,d,folder);}catch(mergeQueueErr){d.pdfMergePending=false;logSecurityEvent_(d.nama,'PENGGABUNGAN PDF','GAGAL DIJADWALKAN',d.reg+' | '+String(mergeQueueErr&&mergeQueueErr.message||mergeQueueErr));}
-  stage='arsip_pdf';var archiveFile=archivePrintablePdf_(pdfFile,d);d.archivePdf=archiveFile.getUrl();
+  stage='buat_pdf_formulir';var pdfFile=createRegistrationPdf(d,folder);assertPrivateIndividualFile_(pdfFile);d.pdf=pdfFile.getUrl();
+  stage='buat_pdf_lampiran_terpisah';try{assertPdfMergeLibraryReady_(d.files||[]);d.pdfMergePending=queueAttachmentPdfMerge_(d,folder);}catch(mergeQueueErr){d.pdfMergePending=false;logSecurityEvent_(d.nama,'PENGGABUNGAN PDF LAMPIRAN','GAGAL DIJADWALKAN',d.reg+' | '+String(mergeQueueErr&&mergeQueueErr.message||mergeQueueErr));}
+  d.archivePdf='';
   d.berkas=['PDF formulir: '+d.pdf].concat(fileLinks).join('\n');
   stage='tulis_google_sheets';lock=LockService.getScriptLock();lock.waitLock(30000);
   try{if(d.type==='kontingen')assertContingentNotRegistered_(canonicalContingentName_(d.nama));appendRecord(c,d);}finally{lock.releaseLock();}
@@ -1921,20 +1925,20 @@ function parseRevisionItems_(raw){
  if(Array.isArray(raw))return raw;
  try{var v=JSON.parse(String(raw||'[]'));return Array.isArray(v)?v.map(function(x){return String(x||'');}).filter(Boolean):[];}catch(e){return [];}
 }
-function rebuildRevisionPdfForRow_(type,row){
+function rebuildRevisionPdfForRow_(type,row,migrationId){
  var ss=SpreadsheetApp.getActiveSpreadsheet(),sh=ss.getSheetByName(CFG[type].sheet),headers=sh.getRange(1,1,1,sh.getLastColumn()).getValues()[0],vals=sh.getRange(row,1,1,sh.getLastColumn()).getValues()[0];
  function val(h){var i=headers.indexOf(h);return i<0?'':vals[i];}
  var folderId=getDriveFileIdFromUrl_(String(val('Folder Drive')||''));if(!folderId)throw new Error('Folder arsip tidak ditemukan untuk membangun PDF revisi.');
  var folder=DriveApp.getFolderById(folderId);assertPrivateFolderTree_(folder);var oldId=getDriveFileIdFromUrl_(String(val('PDF Formulir (link Drive)')||''));
  var links=parsePortalFiles_(String(val('Berkas (link Drive)')||'')).filter(function(x){return !/^pdf formulir$/i.test(x.label);}),files=[],savedPdf=[];
- links.forEach(function(x){var id=getDriveFileIdFromUrl_(x.url);if(!id)return;var f=DriveApp.getFileById(id),mime=String(f.getMimeType()||'').toLowerCase();if(mime===MimeType.PDF){if(!isStandaloneCompetitionDocumentLabel_(x.label)){files.push({label:x.label,name:f.getName(),type:MimeType.PDF});savedPdf.push({id:id,mime:MimeType.PDF,label:x.label,name:f.getName()});}return;}if(mime==='image/jpeg'||mime==='image/png'){var bytes=f.getBlob().getBytes();files.push({label:x.label,name:f.getName(),type:detectedMime_(bytes,mime),data:Utilities.base64Encode(bytes)});}});
- var rec={type:type,reg:String(val('No. Registrasi')||''),nama:String(val('Nama Kontingen')||''),files:files,savedAttachments:savedPdf};
+ links.forEach(function(x){var id=getDriveFileIdFromUrl_(x.url);if(!id)return;var f=DriveApp.getFileById(id),mime=String(f.getMimeType()||'').toLowerCase();if(mime===MimeType.PDF){files.push({label:x.label,name:f.getName(),type:MimeType.PDF});savedPdf.push({id:id,mime:MimeType.PDF,label:x.label,name:f.getName()});return;}if(mime==='image/jpeg'||mime==='image/png'){var bytes=f.getBlob().getBytes();files.push({label:x.label,name:f.getName(),type:detectedMime_(bytes,mime),data:Utilities.base64Encode(bytes)});}});
+ var rec={type:type,reg:String(val('No. Registrasi')||''),nama:String(val('Nama Kontingen')||''),files:files,savedAttachments:savedPdf,migrationId:String(migrationId||'')};
  if(type==='kontingen'){rec.asal=String(val('Asal')||'');rec.alamat=String(val('Alamat')||'');rec.ketua=String(val('Ketua')||'');rec.tempat_lahir_ketua=String(val('Tempat Lahir Ketua')||'');rec.tanggal_lahir_ketua=String(val('Tanggal Lahir Ketua')||'');rec.wa_ketua=String(val('WA Ketua')||'');rec.email=String(val('Email')||'');rec.cabang=String(val('Cabang Lomba')||'');rec.jml=String(val('Jumlah Peserta')||'');rec.bayar=String(val('Metode Bayar')||'');rec.tgl_bayar=String(val('Tgl Bayar')||'');rec.ketua_pr_ipnu=String(val('Ketua PR IPNU')||'');rec.ketua_pr_ippnu=String(val('Ketua PR IPPNU')||'');}
  else{rec.cabang=String(val('Cabang Lomba')||'');rec.kategori=String(val('Kategori')||'');rec.catatan=String(val('Catatan')||'');rec.jml=String(val('Jumlah Peserta')||'');var raw=String(val('Daftar Peserta')||'').split(/\r?\n/).filter(Boolean);function detailAt(t,i){var lines=String(t||'').split(/\r?\n/);if(lines.length<=i)return '';var line=lines[i].replace(/^\s*\d+\.\s*/,'');var p=line.indexOf(':');return p>=0?line.slice(p+1).trim():line.trim();}rec.pesertaList=raw.map(function(line,i){var clean=line.replace(/^\s*\d+\.\s*/,'').trim(),m=clean.match(/^(.*?)\s*\(([LP])\)(?:\s*-\s*(.*))?$/i);return {nama:m?m[1].trim():clean,gender:m?m[2].toUpperCase():'',role:m&&m[3]?m[3].trim():'',tempatLahir:detailAt(val('Tempat Lahir Peserta'),i),tanggalLahir:detailAt(val('Tanggal Lahir Peserta'),i),alamat:detailAt(val('Alamat Rumah Peserta'),i),wa:detailAt(val('WA Peserta'),i)};});rec.peserta=String(val('Daftar Peserta')||'');rec.tempat_lahir_peserta=String(val('Tempat Lahir Peserta')||'');rec.tanggal_lahir_peserta=String(val('Tanggal Lahir Peserta')||'');rec.alamat_peserta=String(val('Alamat Rumah Peserta')||'');rec.wa_peserta=String(val('WA Peserta')||'');}
- var newPdf=createRegistrationPdf(rec,folder);assertPrivateIndividualFile_(newPdf);var pdfCol=headers.indexOf('PDF Formulir (link Drive)')+1,archiveCol=headers.indexOf('Arsip PDF Panitia (link Drive)')+1,filesCol=headers.indexOf('Berkas (link Drive)')+1;if(pdfCol)sh.getRange(row,pdfCol).setValue(newPdf.getUrl());if(archiveCol)sh.getRange(row,archiveCol).setValue(newPdf.getUrl());
+ var newPdf=createRegistrationPdf(rec,folder);assertPrivateIndividualFile_(newPdf);rec.pendingFormPdfId=newPdf.getId();var pdfCol=headers.indexOf('PDF Formulir (link Drive)')+1,archiveCol=headers.indexOf('Arsip PDF Panitia (link Drive)')+1,filesCol=headers.indexOf('Berkas (link Drive)')+1;
  if(filesCol){var oldLines=String(val('Berkas (link Drive)')||'').split(/\r?\n/).filter(function(x){return !/^PDF formulir:/i.test(x);});oldLines.unshift('PDF formulir: '+newPdf.getUrl());sh.getRange(row,filesCol).setValue(oldLines.join('\n'));}
- if(savedPdf.length)queuePdfMerge_(newPdf,rec,folder,{oldPdfIds:oldId?[oldId]:[]});else if(oldId&&oldId!==newPdf.getId()){try{DriveApp.getFileById(oldId).setTrashed(true);}catch(e){}}
- return newPdf.getUrl();
+ var attachmentQueued=queueAttachmentPdfMerge_(rec,folder);if(!attachmentQueued){if(pdfCol)sh.getRange(row,pdfCol).setValue(newPdf.getUrl());if(archiveCol)sh.getRange(row,archiveCol).setValue('');}
+ return migrationId?{url:newPdf.getUrl(),queued:!!attachmentQueued}:newPdf.getUrl();
 }
 
 function contingentReplaceRevisionFiles_(d){
@@ -1969,15 +1973,15 @@ function getContingentPortalData_(nama){
  result.dataKontingen=readKontingenData_(nama);
  result.approval={status:String(kr['Status Verifikasi']||'Menunggu Verifikasi'),catatan:String(kr['Catatan Panitia']||''),revisionItems:parseRevisionItems_(kr['Item Revisi']),revisionValues:{'Asal':String(kr['Asal']||''),'Alamat':String(kr['Alamat']||''),'Ketua':String(kr['Ketua']||''),'Tempat Lahir Ketua':String(kr['Tempat Lahir Ketua']||''),'Tanggal Lahir Ketua':(kr['Tanggal Lahir Ketua'] instanceof Date?Utilities.formatDate(kr['Tanggal Lahir Ketua'],'Asia/Jakarta','yyyy-MM-dd'):String(kr['Tanggal Lahir Ketua']||'')),'WA Ketua':String(kr['WA Ketua']||''),'Email':String(kr['Email']||''),'Cabang Lomba':String(kr['Cabang Lomba']||''),'Jumlah Peserta':String(kr['Jumlah Peserta']||''),'Metode Bayar':String(kr['Metode Bayar']||''),'Tgl Bayar':String(kr['Tgl Bayar']||''),'Ketua PR IPNU':String(kr['Ketua PR IPNU']||''),'Ketua PR IPPNU':String(kr['Ketua PR IPPNU']||''),'WA Ketua IPNU':String(kr['WA Ketua IPNU']||''),'WA Ketua IPPNU':String(kr['WA Ketua IPPNU']||''),'Instagram Ketua Kontingen':String(kr['Instagram Ketua Kontingen']||''),'Instagram Ketua PR/PK IPNU':String(kr['Instagram Ketua PR/PK IPNU']||''),'Instagram Ketua PR/PK IPPNU':String(kr['Instagram Ketua PR/PK IPPNU']||''),'Instagram PR/PK IPNU-IPPNU':String(kr['Instagram PR/PK IPNU-IPPNU']||'')},waktu:kr['Diverifikasi Pada']?Utilities.formatDate(new Date(kr['Diverifikasi Pada']),Session.getScriptTimeZone(),'dd-MM-yyyy HH:mm'):''};
  // Portal menerima ID file individual saja. Folder dan PDF arsip internal tidak pernah dikirim.
- result.registrasi={nomor:String(kr['No. Registrasi']||''),waktu:kr['Waktu']?Utilities.formatDate(new Date(kr['Waktu']),Session.getScriptTimeZone(),'dd-MM-yyyy HH:mm'):'',cabang:String(kr['Cabang Lomba']||''),pdfId:getDriveFileIdFromUrl_(kr['PDF Formulir (link Drive)']||''),mergePending:isMergePending_(String(kr['No. Registrasi']||'')),berkas:fileRefs(kr['Berkas (link Drive)']||'')};
+ result.registrasi={nomor:String(kr['No. Registrasi']||''),waktu:kr['Waktu']?Utilities.formatDate(new Date(kr['Waktu']),Session.getScriptTimeZone(),'dd-MM-yyyy HH:mm'):'',cabang:String(kr['Cabang Lomba']||''),pdfId:getDriveFileIdFromUrl_(kr['PDF Formulir (link Drive)']||''),archivePdfId:getDriveFileIdFromUrl_(kr['Arsip PDF Panitia (link Drive)']||''),mergePending:isMergePending_(String(kr['No. Registrasi']||'')),berkas:fileRefs(kr['Berkas (link Drive)']||'')};
  var rows=readRows(CFG.cabang.sheet).filter(function(r){return normalizeEvent_(r['Nama Kontingen'])===normalizeEvent_(nama);});
- result.berkasCabang=rows.map(function(r){return {nomor:String(r['No. Registrasi']||''),waktu:r['Waktu']?Utilities.formatDate(new Date(r['Waktu']),Session.getScriptTimeZone(),'dd-MM-yyyy HH:mm'):'',cabang:String(r['Cabang Lomba']||''),kategori:String(r['Kategori']||''),jumlah:String(r['Jumlah Peserta']||''),pdfId:getDriveFileIdFromUrl_(r['PDF Formulir (link Drive)']||''),mergePending:isMergePending_(String(r['No. Registrasi']||'')),berkas:fileRefs(r['Berkas (link Drive)']||'')};});
+ result.berkasCabang=rows.map(function(r){return {nomor:String(r['No. Registrasi']||''),waktu:r['Waktu']?Utilities.formatDate(new Date(r['Waktu']),Session.getScriptTimeZone(),'dd-MM-yyyy HH:mm'):'',cabang:String(r['Cabang Lomba']||''),kategori:String(r['Kategori']||''),jumlah:String(r['Jumlah Peserta']||''),pdfId:getDriveFileIdFromUrl_(r['PDF Formulir (link Drive)']||''),archivePdfId:getDriveFileIdFromUrl_(r['Arsip PDF Panitia (link Drive)']||''),mergePending:isMergePending_(String(r['No. Registrasi']||'')),berkas:fileRefs(r['Berkas (link Drive)']||'')};});
  var events=getRegisteredEvents_(nama);
  result.statusCabang=events.map(function(ev){
   return {cabang:ev.cabang,batasAkhir:branchDeadline_(ev.cabang),kategori:ev.categories.map(function(cat){
    var found=null;for(var i=rows.length-1;i>=0;i--){if(normalizeEvent_(rows[i]['Cabang Lomba'])===normalizeEvent_(ev.cabang)&&normalizeEvent_(rows[i]['Kategori'])===normalizeEvent_(cat)){found=rows[i];break;}}
    var branchReg=found?String(found['No. Registrasi']||''):'';
-   return {nama:cat,status:found?'Sudah dikirim':'Belum dikirim',statusVerifikasi:found?String(found['Status Verifikasi']||'Menunggu Verifikasi'):'',catatanPanitia:found?String(found['Catatan Panitia']||''):'',revisionItems:found?parseRevisionItems_(found['Item Revisi']):[],revisionValues:found?{'Cabang Lomba':String(found['Cabang Lomba']||''),'Kategori':String(found['Kategori']||''),'Jumlah Peserta':String(found['Jumlah Peserta']||''),'Daftar Peserta':String(found['Daftar Peserta']||''),'Tempat Lahir Peserta':String(found['Tempat Lahir Peserta']||''),'Tanggal Lahir Peserta':String(found['Tanggal Lahir Peserta']||''),'Alamat Rumah Peserta':String(found['Alamat Rumah Peserta']||''),'WA Peserta':String(found['WA Peserta']||''),'Catatan':String(found['Catatan']||'')}: {},berkas:found?fileRefs(found['Berkas (link Drive)']||''):[],waktuKirim:found&&found['Waktu']?Utilities.formatDate(new Date(found['Waktu']),Session.getScriptTimeZone(),'dd-MM-yyyy HH:mm'):'',nomor:branchReg,pdfId:found?getDriveFileIdFromUrl_(found['PDF Formulir (link Drive)']||''):'',mergePending:found?isMergePending_(branchReg):false};
+   return {nama:cat,status:found?'Sudah dikirim':'Belum dikirim',statusVerifikasi:found?String(found['Status Verifikasi']||'Menunggu Verifikasi'):'',catatanPanitia:found?String(found['Catatan Panitia']||''):'',revisionItems:found?parseRevisionItems_(found['Item Revisi']):[],revisionValues:found?{'Cabang Lomba':String(found['Cabang Lomba']||''),'Kategori':String(found['Kategori']||''),'Jumlah Peserta':String(found['Jumlah Peserta']||''),'Daftar Peserta':String(found['Daftar Peserta']||''),'Tempat Lahir Peserta':String(found['Tempat Lahir Peserta']||''),'Tanggal Lahir Peserta':String(found['Tanggal Lahir Peserta']||''),'Alamat Rumah Peserta':String(found['Alamat Rumah Peserta']||''),'WA Peserta':String(found['WA Peserta']||''),'Catatan':String(found['Catatan']||'')}: {},berkas:found?fileRefs(found['Berkas (link Drive)']||''):[],waktuKirim:found&&found['Waktu']?Utilities.formatDate(new Date(found['Waktu']),Session.getScriptTimeZone(),'dd-MM-yyyy HH:mm'):'',nomor:branchReg,pdfId:found?getDriveFileIdFromUrl_(found['PDF Formulir (link Drive)']||''):'',archivePdfId:found?getDriveFileIdFromUrl_(found['Arsip PDF Panitia (link Drive)']||''):'',mergePending:found?isMergePending_(branchReg):false};
   })};
  });
  var logSheet=ss.getSheetByName(SECURITY_LOG_SHEET);result.riwayat=[];
@@ -1991,11 +1995,12 @@ function getContingentOwnedFileIds_(nama){
  var ss=SpreadsheetApp.getActiveSpreadsheet(),allowed={};
  [CFG.kontingen,CFG.cabang].forEach(function(cfg){
   var sh=ss.getSheetByName(cfg.sheet);if(!sh||sh.getLastRow()<2)return;
-  var values=sh.getDataRange().getValues(),h=values[0],ni=h.indexOf('Nama Kontingen'),pi=h.indexOf('PDF Formulir (link Drive)'),bi=h.indexOf('Berkas (link Drive)');
+  var values=sh.getDataRange().getValues(),h=values[0],ni=h.indexOf('Nama Kontingen'),pi=h.indexOf('PDF Formulir (link Drive)'),ai=h.indexOf('Arsip PDF Panitia (link Drive)'),bi=h.indexOf('Berkas (link Drive)');
   if(ni<0)return;
   for(var r=1;r<values.length;r++){
    if(normalizeEvent_(values[r][ni])!==normalizeEvent_(nama))continue;
    if(pi>=0){var pId=getDriveFileIdFromUrl_(values[r][pi]);if(pId)allowed[pId]=true;}
+   if(ai>=0){var aId=getDriveFileIdFromUrl_(values[r][ai]);if(aId)allowed[aId]=true;}
    if(bi>=0)parsePortalFiles_(values[r][bi]).forEach(function(x){var id=getDriveFileIdFromUrl_(x.url);if(id)allowed[id]=true;});
   }
  });
@@ -2903,8 +2908,6 @@ function createRegistrationPdf(d, folder) {
     }
   );
 
-  appendImageAttachmentPages_(body, d);
-  appendPdfAttachmentIndex_(body, d);
   pdfTidyBody_(body);
 
   return pdfSavePdf_(doc, d, folder);
@@ -3149,11 +3152,11 @@ function queuePdfMerge_(mainPdf,d,folder,options){
  var seenPdfIds={};
  var pdfIds=(d.savedAttachments||[]).filter(function(a){
   var id=String(a&&a.id||'');
-  if(isStandaloneCompetitionDocumentLabel_(a&&a.label))return false;
+  if(options.role!=='attachment' && isStandaloneCompetitionDocumentLabel_(a&&a.label))return false;
   if(String(a&&a.mime||'').toLowerCase()!=='application/pdf'||!id||seenPdfIds[id])return false;
   seenPdfIds[id]=true;return true;
  }).map(function(a){return String(a.id);});
- if(!pdfIds.length && !options.jobId)return false;
+ if(!pdfIds.length && !options.jobId && options.role!=='attachment')return false;
  var jobId=String(options.jobId||''),mainPdfId=mainPdf.getId();
  var lock=LockService.getScriptLock();lock.waitLock(20000);
  try{
@@ -3167,9 +3170,9 @@ function queuePdfMerge_(mainPdf,d,folder,options){
    ensurePdfMergeTrigger_(1000);
    return jobId||true;
   }
-  var job={qid:Utilities.getUuid().replace(/-/g,''),mainPdfId:mainPdfId,pdfIds:pdfIds,folderId:folder.getId(),outputFolderId:options.outputFolderId||folder.getId(),cleanupFolder:!!options.cleanupFolder,jobId:jobId,reg:String(d.reg||''),type:String(d.type||''),nama:String(d.nama||''),cabang:String(d.cabang||''),kategori:String(d.kategori||''),fileName:options.fileName||pdfName(d),oldPdfIds:(options.oldPdfIds||[]).filter(Boolean),attempts:0,waits:0,createdAt:new Date().toISOString()};
+  var job={qid:Utilities.getUuid().replace(/-/g,''),mainPdfId:mainPdfId,pdfIds:pdfIds,folderId:folder.getId(),outputFolderId:options.outputFolderId||folder.getId(),cleanupFolder:!!options.cleanupFolder,jobId:jobId,reg:String(d.reg||''),type:String(d.type||''),role:String(options.role||'combined'),preserveMainPdf:!!options.preserveMainPdf,nama:String(d.nama||''),cabang:String(d.cabang||''),kategori:String(d.kategori||''),fileName:options.fileName||pdfName(d),pendingFormPdfId:String(options.pendingFormPdfId||d.pendingFormPdfId||''),migrationId:String(options.migrationId||d.migrationId||''),oldPdfIds:(options.oldPdfIds||[]).filter(Boolean),attempts:0,waits:0,createdAt:new Date().toISOString()};
   savePdfMergeJob_(job);
-  setPdfJobStatus_(job,'processing','Sedang menyatukan formulir dan seluruh lampiran PDF.');
+  setPdfJobStatus_(job,'processing',job.role==='attachment'?'Sedang menyatukan seluruh lampiran menjadi PDF terpisah.':'Sedang memproses PDF.');
   ensurePdfMergeTrigger_(1000);
  }finally{lock.releaseLock();}
  return jobId||true;
@@ -3239,8 +3242,9 @@ async function processPdfMergeQueue_(){
     if(finalFile.getName()!==completedName)finalFile.setName(completedName);
     assertPrivateIndividualFile_(finalFile);
     updateMergedPdfRecord_(job,finalFile);
-     try{sendApprovedContingentPdfEmailAfterMerge_(job,finalFile);}catch(autoMailErr){console.warn("Email PDF kontingen setelah penggabungan gagal: "+autoMailErr);}
-    try{DriveApp.getFileById(job.mainPdfId).setTrashed(true);}catch(renameErr){}
+     if(job.role==='attachment')markDocumentMigrationMerge_(job,true);
+     if(job.role!=='attachment'){try{sendApprovedContingentPdfEmailAfterMerge_(job,finalFile);}catch(autoMailErr){console.warn("Email PDF kontingen setelah penggabungan gagal: "+autoMailErr);}}
+    if(!job.preserveMainPdf){try{DriveApp.getFileById(job.mainPdfId).setTrashed(true);}catch(renameErr){}}
     (job.oldPdfIds||[]).forEach(function(oldId){try{if(oldId&&oldId!==finalFile.getId())DriveApp.getFileById(oldId).setTrashed(true);}catch(cleanOldErr){console.warn('PDF lama tidak dapat dipindahkan ke Trash: '+cleanOldErr);}});
     if(job.cleanupFolder){try{DriveApp.getFolderById(job.folderId).setTrashed(true);}catch(cleanErr){console.warn('Folder sementara tidak dapat dibersihkan: '+cleanErr);}}
     setPdfJobStatus_(job,'ready','PDF final siap dipratinjau.',{fileId:finalFile.getId(),previewUrl:'https://drive.google.com/file/d/'+finalFile.getId()+'/preview',downloadUrl:'https://drive.google.com/uc?export=download&id='+finalFile.getId(),name:finalFile.getName()});
@@ -3255,6 +3259,7 @@ async function processPdfMergeQueue_(){
      needMore=true;
     }else{
      setPdfJobStatus_(job,'error',job.lastError||'Penggabungan PDF gagal.');
+     if(job.role==='attachment')markDocumentMigrationMerge_(job,false);
      if(job.jobId){if(job.cleanupFolder){try{DriveApp.getFolderById(job.folderId).setTrashed(true);}catch(cleanErr2){}}}
      else notifyMergeFailure_(job,job.lastError);
      removePdfMergeJob_(job.qid);
@@ -3299,18 +3304,65 @@ function sendApprovedContingentPdfEmailAfterMerge_(job,finalFile){
  }
 }
 
+function markDocumentMigrationMerge_(job,success){
+ var id=String(job&&job.migrationId||'');if(!id)return;
+ var props=PropertiesService.getScriptProperties(),key='PORSENI_DOCUMENT_MIGRATION_MERGE_'+id+'_'+(success?'OK':'FAIL');
+ try{var lock=LockService.getScriptLock();lock.waitLock(10000);try{props.setProperty(key,String(Number(props.getProperty(key)||0)+1));}finally{lock.releaseLock();}}catch(e){console.warn('Status migrasi PDF tidak dapat diperbarui: '+e);}
+}
 function updateMergedPdfRecord_(job,finalFile){
  if(String(job.reg||'').indexOf('-UJI-')>=0 || String(job.reg||'').indexOf('UJI-')===0)return;
  var cfg=job.type==='kontingen'?CFG.kontingen:CFG.cabang,ss=SpreadsheetApp.getActiveSpreadsheet(),sh=ss&&ss.getSheetByName(cfg.sheet);
  if(!sh||sh.getLastRow()<2)return;
- var headers=sh.getRange(1,1,1,sh.getLastColumn()).getValues()[0],iReg=headers.indexOf('No. Registrasi'),iPdf=headers.indexOf('PDF Formulir (link Drive)'),iArchive=headers.indexOf('Arsip PDF Panitia (link Drive)'),iFiles=headers.indexOf('Berkas (link Drive)');
- if(iReg<0||iPdf<0)return;
+ var headers=sh.getRange(1,1,1,sh.getLastColumn()).getValues()[0],iReg=headers.indexOf('No. Registrasi'),iPdf=headers.indexOf('PDF Formulir (link Drive)'),iArchive=headers.indexOf('Arsip PDF Panitia (link Drive)');
+ if(iReg<0)return;
  var values=sh.getRange(2,1,sh.getLastRow()-1,headers.length).getValues(),target=-1;
  for(var i=values.length-1;i>=0;i--)if(String(values[i][iReg]||'')===String(job.reg)){target=i+2;break;}
  if(target<0)return;
- var url=finalFile.getUrl();sh.getRange(target,iPdf+1).setValue(url);
- if(iArchive>=0)sh.getRange(target,iArchive+1).setValue(url);
- if(iFiles>=0){var raw=String(sh.getRange(target,iFiles+1).getValue()||''),lines=raw.split(/\r?\n/);if(lines.length&&/^PDF formulir:/i.test(lines[0]))lines[0]='PDF formulir: '+url;else lines.unshift('PDF formulir: '+url);sh.getRange(target,iFiles+1).setValue(lines.join('\n'));}
+ if(job.role==='attachment'){if(iArchive>=0)sh.getRange(target,iArchive+1).setValue(finalFile.getUrl());if(job.pendingFormPdfId&&iPdf>=0){var pendingForm=DriveApp.getFileById(job.pendingFormPdfId);assertPrivateIndividualFile_(pendingForm);sh.getRange(target,iPdf+1).setValue(pendingForm.getUrl());}return;}
+ if(iPdf>=0)sh.getRange(target,iPdf+1).setValue(finalFile.getUrl());
+}
+
+// Gabungkan semua lampiran menjadi PDF terpisah dari formulir.
+function createRegistrationAttachmentImagesPdf_(d,folder){
+ var all=Array.isArray(d.files)?d.files:[],imgs=all.filter(function(f){if(!f||!f.data)return false;var mime=detectedMime_(Utilities.base64Decode(f.data),f.type||'');return mime==='image/jpeg'||mime==='image/png';});
+ var pdfLabels=all.filter(function(f){if(!f)return false;var mime=String(f.type||'').toLowerCase();if(mime===MimeType.PDF||mime==='application/pdf')return true;if(!f.data)return false;try{return detectedMime_(Utilities.base64Decode(f.data),mime)==='application/pdf';}catch(e){return false;}});
+ if(!imgs.length&&!pdfLabels.length)return null;
+ var doc=DocumentApp.create('TEMP ATTACHMENT IMAGES '+Utilities.getUuid()),body=doc.getBody();
+ body.setPageWidth(595.28).setPageHeight(841.89).setMarginTop(42).setMarginBottom(42).setMarginLeft(42).setMarginRight(42);
+ if(pdfLabels.length){
+  var title=body.appendParagraph('DAFTAR LAMPIRAN PDF');title.setAlignment(DocumentApp.HorizontalAlignment.CENTER).setSpacingBefore(0).setSpacingAfter(12);pdfFont_(title.editAsText(),13,true,PDF_NAVY);
+  body.appendParagraph('Dokumen PDF berikut digabungkan setelah halaman daftar ini sesuai urutan unggahan:').setAlignment(DocumentApp.HorizontalAlignment.CENTER).setSpacingAfter(10);
+  pdfLabels.forEach(function(f,i){var line=body.appendParagraph((i+1)+'. '+String(f.label||f.name||'Dokumen PDF'));line.setSpacingBefore(2).setSpacingAfter(4);pdfFont_(line.editAsText(),10.5,false,PDF_INK);});
+ }
+ if(imgs.length&&pdfLabels.length)body.appendPageBreak();
+ if(imgs.length){
+  if(d.type==='cabang'){
+   appendBranchImageAttachmentPages_(body,d);
+   var usedLabels={};(d.pesertaList||[]).forEach(function(person,i){usedLabels[('pas foto peserta '+(i+1)).toLowerCase()]=true;usedLabels[('ktp peserta '+(i+1)).toLowerCase()]=true;});
+   var rest=imgs.filter(function(f){return !usedLabels[String(f.label||'').trim().toLowerCase()];});
+   if(rest.length)appendImageAttachmentPages_(body,{files:rest});
+  }else appendImageAttachmentPages_(body,{files:imgs});
+ }
+ pdfTidyBody_(body);doc.saveAndClose();
+ var docFile=DriveApp.getFileById(doc.getId());
+ try{return folder.createFile(docFile.getAs(MimeType.PDF).setName('IMG_LAMPIRAN_'+safe(d.reg)+'_'+Utilities.getUuid().slice(0,6)+'.pdf'));}
+ finally{docFile.setTrashed(true);}
+}
+function queueAttachmentPdfMerge_(d,folder){
+ var source=Array.isArray(d.files)?d.files:[],images=[],pdfs=[],seen={},savedNames={},savedLabels={};
+ (d.savedAttachments||[]).forEach(function(a){savedNames[String(a.label||'').toLowerCase()+'|'+String(a.name||'').toLowerCase()]=true;savedLabels[String(a.label||'').toLowerCase()]=true;});
+ source.forEach(function(f){if(!f||!f.data)return;var bytes=Utilities.base64Decode(f.data),mime=detectedMime_(bytes,f.type||'');
+  if(mime.indexOf('image/')===0)images.push({label:f.label||f.name,name:f.name,type:mime,data:f.data});
+  else if(mime===MimeType.PDF){if(savedNames[String(f.label||'').toLowerCase()+'|'+String(f.name||'').toLowerCase()]||savedLabels[String(f.label||'').toLowerCase()])return;var created=folder.createFile(Utilities.newBlob(bytes,MimeType.PDF,'SRC_'+safe(f.name||'lampiran.pdf')));if(!seen[created.getId()]){seen[created.getId()]=true;pdfs.push(created.getId());}}
+ });
+ (d.savedAttachments||[]).forEach(function(a){var id=String(a&&a.id||'');if(id&&String(a.mime||'').toLowerCase()===MimeType.PDF&&!seen[id]){seen[id]=true;pdfs.push(id);}});
+ var imagePdf=(images.length||pdfs.length)?createRegistrationAttachmentImagesPdf_(d,folder):null;
+ if(!imagePdf&&!pdfs.length)return false;
+ var main=imagePdf,rest=pdfs.slice();
+ if(!main)main=DriveApp.getFileById(rest.shift());
+ var name='LAMPIRAN_'+safe(d.reg)+'_'+safe(d.nama)+(d.type==='cabang'?'_'+safe(d.cabang)+'_'+safe(d.kategori):'')+'.pdf';
+ var refs=rest.map(function(id){return {id:id,mime:MimeType.PDF,label:'Lampiran'};});
+ return queuePdfMerge_(main,{type:d.type,reg:d.reg,nama:d.nama,savedAttachments:refs},{getId:function(){return folder.getId();}},{role:'attachment',preserveMainPdf:true,fileName:name,pendingFormPdfId:d.pendingFormPdfId||'',migrationId:d.migrationId||''});
 }
 
 function attachmentFileName_(d){
@@ -3606,38 +3658,56 @@ function createTestImagesPdf_(files,tempFolder,ownerName){
 }
 function buildTestPdfJob_(d){
  if(typeof PDFApp==='undefined'||!PDFApp||typeof PDFApp.mergePDFs!=='function')throw new Error('Library PDFApp belum terpasang. Tambahkan PDFApp dengan fungsi mergePDFs sebelum menjalankan uji cetak.');
- var outputFolder=testFolder_(),tempFolder=DriveApp.createFolder('TEMP_PORSENI_UJI_'+Utilities.getUuid()),saved=[];
+ var outputFolder=testFolder_(),tempFolder=DriveApp.createFolder('TEMP_PORSENI_UJI_'+Utilities.getUuid()),jobs={};
  try{
-  // Uji coba wajib mengikuti jalur produksi: seluruh gambar diproses hanya oleh
-  // createRegistrationPdf()/createBranchRegistrationPdf_(). Jangan konversi ulang
-  // gambar menjadi PDF terpisah karena gambar cabang sudah ditata di halaman formulir.
-  var formPdf=createRegistrationPdf(d,tempFolder);
+  // Dokumen formulir hanya berisi formulir. Lampiran dibangun pada alur terpisah.
+  var formPdf=createRegistrationPdf(d,tempFolder);assertPrivateIndividualFile_(formPdf);
+  var formJobId=Utilities.getUuid();
+  queuePdfMerge_(formPdf,{type:d.type,reg:d.reg,nama:d.nama,savedAttachments:[]},tempFolder,{outputFolderId:outputFolder.getId(),cleanupFolder:false,jobId:formJobId,role:'form',preserveMainPdf:true,fileName:'UJI_FORMULIR_'+safe(d.reg)+'_'+safe(d.nama)+'.pdf'});
+  jobs.formulir={jobId:formJobId,label:'PDF Formulir'};
 
-  // Hanya lampiran PDF asli yang disimpan untuk digabung setelah formulir,
-  // sama seperti jalur pendaftaran sebenarnya. Lampiran gambar tidak digabung ulang.
+  var images=[],pdfIds=[],seen={};
   (d.files||[]).forEach(function(f){
    if(!f||!f.data)return;
-   // Lewati gambar sebelum base64Decode: gambar sudah diproses satu kali oleh
-   // mesin formulir produksi. Decode hanya PDF yang benar-benar perlu digabung.
-   var declaredMime=String(f.type||'').toLowerCase().split(';')[0].trim();
-   if(declaredMime==='image/png'||declaredMime==='image/jpeg'||declaredMime==='image/jpg')return;
-   var bytes=Utilities.base64Decode(f.data),mime=detectedMime_(bytes,declaredMime);
-   if(mime==='application/pdf'){
-    var pdfFile=tempFolder.createFile(Utilities.newBlob(bytes,'application/pdf','SRC_'+safe(f.name||'lampiran.pdf')));
-    saved.push({label:f.label||f.name,id:pdfFile.getId(),mime:'application/pdf'});
-   }else{
-    throw new Error('Format lampiran uji tidak didukung untuk PDF: '+(f.name||mime));
-   }
+   var bytes=Utilities.base64Decode(f.data),mime=detectedMime_(bytes,f.type||'');
+   if(mime.indexOf('image/')===0){images.push({label:f.label||f.name,name:f.name,type:mime,data:f.data});return;}
+   if(mime===MimeType.PDF){var pf=tempFolder.createFile(Utilities.newBlob(bytes,MimeType.PDF,'SRC_'+safe(f.name||'lampiran.pdf')));if(!seen[pf.getId()]){seen[pf.getId()]=true;pdfIds.push({id:pf.getId(),label:f.label||f.name,mime:MimeType.PDF});}return;}
+   throw new Error('Format lampiran uji tidak didukung: '+(f.name||mime));
   });
-
-  d.savedAttachments=saved;
-  var jobId=Utilities.getUuid();
-  // jobId tetap memaksa finalisasi ke folder UJI COBA, termasuk ketika tidak ada
-  // lampiran PDF. Ini hanya alur penyimpanan hasil uji; isi PDF tetap mengikuti produksi.
-  queuePdfMerge_(formPdf,d,tempFolder,{outputFolderId:outputFolder.getId(),cleanupFolder:true,jobId:jobId,fileName:'UJI_'+safe(d.reg)+'_'+safe(d.nama)+'.pdf'});
-  return {jobId:jobId,kind:d.cabang==='Duta Pelajar'?'duta':(/^Beregu/i.test(d.kategori||'')?'beregu':(d.type==='kontingen'?'kontingen':'tunggal'))};
+  if(images.length){var imagePdf=createRegistrationAttachmentImagesPdf_(d,tempFolder);if(imagePdf)pdfIds.unshift({id:imagePdf.getId(),label:'Lampiran gambar',mime:MimeType.PDF});}
+  if(pdfIds.length){
+   var first=DriveApp.getFileById(pdfIds.shift().id),attJobId=Utilities.getUuid();
+   queuePdfMerge_(first,{type:d.type,reg:d.reg,nama:d.nama,savedAttachments:pdfIds},{getId:function(){return tempFolder.getId();}},{role:'attachment',preserveMainPdf:true,outputFolderId:outputFolder.getId(),cleanupFolder:false,jobId:attJobId,fileName:'UJI_LAMPIRAN_'+safe(d.reg)+'_'+safe(d.nama)+(d.type==='cabang'?'_'+safe(d.cabang)+'_'+safe(d.kategori):'')+'.pdf'});
+   jobs.lampiran={jobId:attJobId,label:'PDF Lampiran'};
+  }else{
+   var noAttId=Utilities.getUuid();setPdfJobStatus_({jobId:noAttId},'ready','Tidak ada lampiran pada skenario uji.',{fileId:'',name:'Tidak ada lampiran'});
+   jobs.lampiran={jobId:noAttId,label:'PDF Lampiran (kosong)',empty:true};
+  }
+  return jobs;
  }catch(err){try{tempFolder.setTrashed(true);}catch(cleanErr){}throw err;}
 }
+function sampleImageAttachment_(label,name){return {label:label,data:SAMPLE_ATTACHMENT_B64_,type:'image/png',name:name||'contoh-lampiran.png'};}
+function samplePdfAttachment_(label,name){return {label:label,name:name||'contoh-lampiran.pdf',type:MimeType.PDF,data:'JVBERi0xLjMKJZOMi54gUmVwb3J0TGFiIEdlbmVyYXRlZCBQREYgZG9jdW1lbnQgKG9wZW5zb3VyY2UpCjEgMCBvYmoKPDwKL0YxIDIgMCBSCj4+CmVuZG9iagoyIDAgb2JqCjw8Ci9CYXNlRm9udCAvSGVsdmV0aWNhIC9FbmNvZGluZyAvV2luQW5zaUVuY29kaW5nIC9OYW1lIC9GMSAvU3VidHlwZSAvVHlwZTEgL1R5cGUgL0ZvbnQKPj4KZW5kb2JqCjMgMCBvYmoKPDwKL0NvbnRlbnRzIDcgMCBSIC9NZWRpYUJveCBbIDAgMCAyMDAgMTIwIF0gL1BhcmVudCA2IDAgUiAvUmVzb3VyY2VzIDw8Ci9Gb250IDEgMCBSIC9Qcm9jU2V0IFsgL1BERiAvVGV4dCAvSW1hZ2VCIC9JbWFnZUMgL0ltYWdlSSBdCj4+IC9Sb3RhdGUgMCAvVHJhbnMgPDwKCj4+IAogIC9UeXBlIC9QYWdlCj4+CmVuZG9iago0IDAgb2JqCjw8Ci9QYWdlTW9kZSAvVXNlTm9uZSAvUGFnZXMgNiAwIFIgL1R5cGUgL0NhdGFsb2cKPj4KZW5kb2JqCjUgMCBvYmoKPDwKL0F1dGhvciAoYW5vbnltb3VzKSAvQ3JlYXRpb25EYXRlIChEOjIwMjYxMTA2MDUyMTEyKzAwJzAwJykgL0NyZWF0b3IgKGFub255bW91cykgL0tleXdvcmRzICgpIC9Nb2REYXRlIChEOjIwMjYxMTA2MDUyMTEyKzAwJzAwJykgL1Byb2R1Y2VyIChSZXBvcnRMYWIgUERGIExpYnJhcnkgLSBcKG9wZW5zb3VyY2VcKSkgCiAgL1N1YmplY3QgKHVuc3BlY2lmaWVkKSAvVGl0bGUgKHVudGl0bGVkKSAvVHJhcHBlZCAvRmFsc2UKPj4KZW5kb2JqCjYgMCBvYmoKPDwKL0NvdW50IDEgL0tpZHMgWyAzIDAgUiBdIC9UeXBlIC9QYWdlcwo+PgplbmRvYmoKNyAwIG9iago8PAovRmlsdGVyIFsgL0FTQ0lJODVEZWNvZGUgL0ZsYXRlRGVjb2RlIF0gL0xlbmd0aCAxNTIKPj4Kc3RyZWFtCkdhcFFoMEU9RiwwVVxIM1RccE5ZVF5RS2s/dGM+SVAsO1cjVTFeMjNpaFBFTV8/Q1c0S0lTaTc6cDtXTSNnJClubjRDaFVhPUtzLTtbQD5eO1tDWGo8LGcsWThsUSljJWdtTFFvKXUnTDE9SzIuYVxpRGxfREsoO0BZLipaOjE+aiZKRTZYQFA1R182ZUkjT11RK0E2TH4+ZW5kc3RyZWFtCmVuZG9iagp4cmVmCjAgOAowMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAwNjEgMDAwMDAgbiAKMDAwMDAwMDA5MiAwMDAwMCBuIAowMDAwMDAwMTk5IDAwMDAwIG4gCjAwMDAwMDAzOTIgMDAwMDAgbiAKMDAwMDAwMDQ2MCAwMDAwMCBuIAowMDAwMDAwNzIxIDAwMDAwIG4gCjAwMDAwMDA3ODAgMDAwMDAgbiAKdHJhaWxlcgo8PAovSUQgCls8NGFiZWMwMDg2ZGZlNjQ2YjM4YjRkZTI2NGI2Njc4ODM+PDRhYmVjMDA4NmRmZTY0NmIzOGI0ZGUyNjRiNjY3ODgzPl0KJSBSZXBvcnRMYWIgZ2VuZXJhdGVkIFBERiBkb2N1bWVudCAtLSBkaWdlc3QgKG9wZW5zb3VyY2UpCgovSW5mbyA1IDAgUgovUm9vdCA0IDAgUgovU2l6ZSA4Cj4+CnN0YXJ0eHJlZgoxMDIyCiUlRU9GCg=='};}
+function makeCatalogTestRecord_(branch,category){
+ var id=Utilities.getUuid().slice(0,8),count=1;
+ if(branch==='Badminton')count=2;
+ else if(branch==='LCC'||branch==='Karya ilmiah')count=3;
+ else if(branch==='Voli')count=6;
+ else if(branch==='Paduan suara')count=11;
+ else if(branch==='Rebana'||branch==='Parade Gelar Budaya')count=5;
+ var people=[];
+ for(var i=1;i<=count;i++){
+  var gender=/Putri/i.test(category)?'P':(/Putra/i.test(category)||branch==='Voli'?'L':(branch==='Badminton'?(i===1?'L':'P'):(i%2?'L':'P')));
+  var role=branch==='Paduan suara'?(i===1?'Dirigen':'Penyanyi'):(/Kelompok|Ganda/i.test(category)&&i===1?'Ketua Tim':'');
+  people.push({nama:'Peserta Contoh '+i,gender:gender,role:role,tempatLahir:'Kendal',tanggalLahir:'2007-0'+(i+1)+'-15',alamat:'Desa Contoh, Patebon, Kendal',wa:branch==='Duta Pelajar'?'08123456789'+i:''});
+ }
+ var files=[];for(var fi=1;fi<=people.length;fi++){files.push(sampleImageAttachment_('Pas foto peserta '+fi,'pas-foto-'+fi+'.png'));files.push(sampleImageAttachment_('KTP peserta '+fi,'ktp-'+fi+'.png'));}files.push(samplePdfAttachment_('Surat Tugas dari PR IPNU-IPPNU','surat-tugas.pdf'));
+ if(branch==='Duta Pelajar'){files.push(samplePdfAttachment_('CV Duta Pelajar','cv-duta.pdf'));files.push(samplePdfAttachment_('Berkas Pendukung Duta Pelajar','pendukung-duta.pdf'));}
+ if(branch==='Karya ilmiah'){files.push(samplePdfAttachment_('Makalah KTI (Word)','makalah-kti-word.pdf'));files.push(samplePdfAttachment_('Makalah KTI (PDF)','makalah-kti.pdf'));files.push(samplePdfAttachment_('Presentasi KTI (PPT)','presentasi-kti-ppt.pdf'));}
+ if(branch==='Khitobah')files.push(samplePdfAttachment_('Naskah Khitobah (PDF)','naskah-khitobah.pdf'));
+ return {type:'cabang',reg:'UJI-'+id,nama:'PR IPNU IPPNU CONTOH UJI COBA',cabang:branch,kategori:category,jml:people.length,pesertaList:people,peserta:people.map(function(x,i){return (i+1)+'. '+x.nama+' ('+x.gender+')'+(x.role?' - '+x.role:'');}).join('\n'),catatan:'Skenario uji otomatis sesuai katalog KAT dan aturan peserta cabang.',email:'uji@example.com',waktu:new Date().toISOString(),files:files};
+}
+function makeContingentTestRecord_(){return {type:'kontingen',reg:'UJI-K-'+Utilities.getUuid().slice(0,8),nama:'PR IPNU IPPNU CONTOH UJI COBA',pin:'123456',waktu:new Date().toISOString(),ketua:'Ahmad Contoh',tempat_lahir_ketua:'Kendal',tanggal_lahir_ketua:'2006-08-17',alamat:'Jl. Contoh No. 1, Patebon, Kendal',wa_ketua:'081234567890',email:'uji@example.com',ketua_pr_ipnu:'Ahmad Contoh',ketua_pr_ippnu:'Siti Contoh',cabang:Object.keys(KAT).join('; '),files:[sampleImageAttachment_('Bukti pembayaran','bukti-pembayaran.png'),sampleImageAttachment_('KTP ketua kontingen','ktp-ketua.png'),samplePdfAttachment_('SP / berita acara RAT','sp-rat.pdf'),samplePdfAttachment_('Pakta integritas','pakta-integritas.pdf')]};}
 
 function sampleImageAttachment_(label,name){return {label:label,data:SAMPLE_ATTACHMENT_B64_,type:'image/png',name:name||'contoh-lampiran.png'};}
 function ujiCetakPdfKontingen(){
@@ -3660,16 +3730,48 @@ function ujiCetakPdfBeregu(){
  return buildTestPdfJob_(d);
 }
 function adminTestPdf_(d){
- var admin=requireAdmin_(d.token),kind=String(d.kind||'all');
- if(!pdfMergeReady_())throw new Error('Uji cetak formulir memerlukan library PDFApp. Library belum terdeteksi pada proyek Apps Script. Pasang/aktifkan library PDFApp yang menyediakan fungsi mergePDFs, lalu deploy ulang.');
+ var admin=requireAdmin_(d.token),kind=String(d.kind||'kontingen');
+ if(!pdfMergeReady_())throw new Error('Uji cetak memerlukan library PDFApp dengan fungsi mergePDFs.');
  cleanupTestPdfStatus_();
- var jobs={kontingen:ujiCetakPdfKontingen,duta:ujiCetakPdfDutaPelajar,tunggal:ujiCetakPdfTunggal,beregu:ujiCetakPdfBeregu},result={};
- if(kind==='all'){Object.keys(jobs).forEach(function(k){result[k]=jobs[k]();});}
- else if(jobs[kind])result[kind]=jobs[kind]();
- else throw new Error('Jenis uji cetak tidak dikenal.');
- adminAudit_(admin,'UJI CETAK PDF','sistem','','uji coba',kind==='all'?'Empat PDF contoh sedang diproses dan akan disimpan sebagai PDF final di folder UJI COBA.':'PDF uji '+kind+' sedang diproses.');
- return {ok:true,kind:kind,jobs:result,message:'PDF sedang disusun. Preview akan terbuka otomatis setelah seluruh halaman selesai digabungkan.'};
+ var rec;
+ if(kind==='kontingen')rec=makeContingentTestRecord_();
+ else {var parts=kind.split('::');if(parts.length!==2||!KAT[parts[0]]||KAT[parts[0]].indexOf(parts[1])<0)throw new Error('Cabang/kategori uji tidak ditemukan di katalog KAT.');rec=makeCatalogTestRecord_(parts[0],parts[1]);}
+ var jobs=buildTestPdfJob_(rec);
+ adminAudit_(admin,'UJI CETAK PDF','sistem','',kind,'Uji formulir dan lampiran terpisah untuk '+(rec.type==='kontingen'?'Kontingen':rec.cabang+' / '+rec.kategori)+'.');
+ return {ok:true,kind:kind,jobs:jobs,message:'PDF formulir dan PDF lampiran diproses secara terpisah.'};
 }
+function adminTestPdfCatalog_(d){requireAdmin_(d.token);return {ok:true,catalog:Object.keys(KAT).map(function(branch){return {cabang:branch,kategori:(KAT[branch]||[]).slice()};})};}
+
+var DOC_MIGRATION_PROP_='PORSENI_DOCUMENT_MIGRATION_V1';
+function getDocumentMigrationRows_(){
+ var ss=SpreadsheetApp.getActiveSpreadsheet(),items=[];
+ ['kontingen','cabang'].forEach(function(type){var sh=ss.getSheetByName(CFG[type].sheet);if(!sh||sh.getLastRow()<2)return;var h=sh.getRange(1,1,1,sh.getLastColumn()).getValues()[0],regIx=h.indexOf('No. Registrasi');if(regIx<0)throw new Error('Kolom No. Registrasi tidak ditemukan pada '+CFG[type].sheet);var rows=sh.getRange(2,1,sh.getLastRow()-1,h.length).getValues();rows.forEach(function(r,i){var reg=String(r[regIx]||'').trim();if(reg)items.push({type:type,row:i+2,reg:reg});});});
+ return items;
+}
+function adminStartDocumentMigration_(d){
+ var admin=requireAdmin_(d.token),props=PropertiesService.getScriptProperties(),existing=props.getProperty(DOC_MIGRATION_PROP_);
+ if(existing){var active=JSON.parse(existing);if(active.state==='running'||active.state==='completed')return {ok:true,migration:active,message:active.state==='running'?'Migrasi sudah berjalan dan dapat dilanjutkan.':'Migrasi baris sudah selesai; periksa status antrean PDF sebelum menjalankan ulang.'};}
+ if(!pdfMergeReady_())throw new Error('Migrasi memerlukan library PDFApp dengan fungsi mergePDFs.');
+ var total=getDocumentMigrationRows_().length;
+ var state={id:Utilities.getUuid(),state:'running',startedAt:new Date().toISOString(),startedBy:admin.user,total:total,processed:0,succeeded:0,failed:0,mergeQueued:0,mergeCompleted:0,mergeFailed:0,cursor:0,lastError:'',errors:[]};
+ props.setProperty(DOC_MIGRATION_PROP_,JSON.stringify(state));
+ adminAudit_(admin,'MULAI MIGRASI DOKUMEN','sistem','',state.id,'Total '+total+' baris; formulir dan lampiran dibangun terpisah.');
+ return {ok:true,migration:state,message:'Migrasi dimulai. Sistem akan memproses data secara bertahap.'};
+}
+function adminDocumentMigrationStep_(d){
+ var admin=requireAdmin_(d.token),props=PropertiesService.getScriptProperties(),raw=props.getProperty(DOC_MIGRATION_PROP_);if(!raw)throw new Error('Belum ada migrasi dokumen.');var st=JSON.parse(raw);if(st.state!=='running')return {ok:true,migration:st};
+ var limit=Math.max(1,Math.min(2,Number(d.limit)||1)),items=getDocumentMigrationRows_(),ss=SpreadsheetApp.getActiveSpreadsheet();
+ for(var n=0;n<limit&&st.cursor<items.length;n++){
+  var item=items[st.cursor++];st.processed++;
+  try{var sh=ss.getSheetByName(CFG[item.type].sheet);if(!sh||item.row>sh.getLastRow())throw new Error('Baris sumber tidak ditemukan.');var headers=sh.getRange(1,1,1,sh.getLastColumn()).getValues()[0],regCol=headers.indexOf('No. Registrasi');if(regCol<0||String(sh.getRange(item.row,regCol+1).getValue()||'')!==item.reg)throw new Error('Nomor registrasi berubah; baris dilewati demi keamanan.');var rebuilt=rebuildRevisionPdfForRow_(item.type,item.row,st.id);st.succeeded++;if(rebuilt&&rebuilt.queued)st.mergeQueued++;}
+  catch(err){st.failed++;st.lastError=String(err&&err.message||err).slice(0,200);st.errors.push({type:item.type,row:item.row,reg:item.reg,error:st.lastError});if(st.errors.length>10)st.errors.shift();}
+ }
+ if(st.cursor>=items.length){st.state='completed';st.finishedAt=new Date().toISOString();}
+ props.setProperty(DOC_MIGRATION_PROP_,JSON.stringify(st));
+ if(st.state==='completed')adminAudit_(admin,'MIGRASI DOKUMEN SELESAI','sistem','',st.id,'Berhasil '+st.succeeded+', gagal '+st.failed+' dari '+st.total+'.');
+ return {ok:true,migration:st,message:st.state==='completed'?'Migrasi selesai.':'Batch migrasi diproses.'};
+}
+function adminDocumentMigrationStatus_(d){requireAdmin_(d.token);var raw=PropertiesService.getScriptProperties().getProperty(DOC_MIGRATION_PROP_);if(!raw)return {ok:true,migration:null};var st=JSON.parse(raw),pending=listPdfMergeJobs_().filter(function(j){return String(j.migrationId||'')===String(st.id);}).length,props=PropertiesService.getScriptProperties();st.mergePending=pending;st.mergeCompleted=Number(props.getProperty('PORSENI_DOCUMENT_MIGRATION_MERGE_'+st.id+'_OK')||0);st.mergeFailed=Number(props.getProperty('PORSENI_DOCUMENT_MIGRATION_MERGE_'+st.id+'_FAIL')||0);st.mergeDone=(st.state==='completed'&&pending===0);return {ok:true,migration:st};}
 
 function appendDriveSignature_(cell, fileId, maxWidth, maxHeight) {
   if (!fileId) {
@@ -3810,7 +3912,7 @@ function createBranchRegistrationPdf_(d, folder) {
   });
 
   // B. DATA PESERTA: tata letak dibedakan menurut kategori tunggal/beregu.
-  var isTeam = /^beregu/i.test(String(d.kategori||''));
+  var isTeam = /^(beregu|kelompok|ganda)/i.test(String(d.kategori||''));
   var isDuta = String(d.cabang||'') === 'Duta Pelajar';
   var participantRows = isTeam
     ? (isDuta ? [['No.','Nama Peserta','Jenis Kelamin','Tempat/Tanggal Lahir','WhatsApp','Peran','Alamat Rumah']] : [['No.','Nama Peserta','Jenis Kelamin','Tempat/Tanggal Lahir','Peran','Alamat Rumah']])
@@ -3970,7 +4072,6 @@ appendDriveStampBesideSignature_(
     }
   );
 
-  appendBranchImageAttachmentPages_(body, d);
   // Surat Tugas dan Lampiran Khusus berformat PDF digabungkan setelah PDF formulir,
   // dengan urutan yang disimpan pada daftar berkas unggahan.
   pdfTidyBody_(body);
@@ -4055,13 +4156,7 @@ function adminRebuildRegistrationPdf_(d){
   var f=DriveApp.getFileById(id),mime=String(f.getMimeType()||'').toLowerCase();
   // PDF hanya memerlukan metadata untuk halaman indeks dan antrean merge.
   // Hindari membaca seluruh byte PDF lalu mengubahnya menjadi base64 saat rebuild.
-  if(mime===MimeType.PDF){
-   if(!isStandaloneCompetitionDocumentLabel_(x.label)){
-    files.push({label:x.label,name:f.getName(),type:MimeType.PDF});
-    savedPdf.push({id:id,mime:MimeType.PDF,label:x.label,name:f.getName()});
-   }
-   return;
-  }
+  if(mime===MimeType.PDF){files.push({label:x.label,name:f.getName(),type:MimeType.PDF});savedPdf.push({id:id,mime:MimeType.PDF,label:x.label,name:f.getName()});return;}
   // Hanya gambar yang benar-benar ditanam ke Google Docs yang dibaca.
   if(mime==='image/jpeg'||mime==='image/png'){
    var blob=f.getBlob(),bytes=blob.getBytes();
@@ -4087,44 +4182,20 @@ function adminRebuildRegistrationPdf_(d){
   rec.peserta=String(val('Daftar Peserta')||'');rec.tempat_lahir_peserta=String(val('Tempat Lahir Peserta')||'');
   rec.tanggal_lahir_peserta=String(val('Tanggal Lahir Peserta')||'');rec.alamat_peserta=String(val('Alamat Rumah Peserta')||'');rec.wa_peserta=String(val('WA Peserta')||'');
  }
- var oldId=getDriveFileIdFromUrl_(String(val('PDF Formulir (link Drive)')||''));
  var newPdf=createRegistrationPdf(rec,folder);assertPrivateIndividualFile_(newPdf);
  var pdfCol=headers.indexOf('PDF Formulir (link Drive)')+1,archiveCol=headers.indexOf('Arsip PDF Panitia (link Drive)')+1,filesCol=headers.indexOf('Berkas (link Drive)')+1;
- if(pdfCol)sh.getRange(row,pdfCol).setValue(newPdf.getUrl());
- if(archiveCol)sh.getRange(row,archiveCol).setValue(newPdf.getUrl());
+ rec.pendingFormPdfId=newPdf.getId();
  if(filesCol){var oldLines=String(val('Berkas (link Drive)')||'').split(/\r?\n/).filter(function(x){return !/^PDF formulir:/i.test(x);});oldLines.unshift('PDF formulir: '+newPdf.getUrl());sh.getRange(row,filesCol).setValue(oldLines.join('\n'));}
- if(savedPdf.length){
-  queuePdfMerge_(newPdf,rec,folder,{oldPdfIds:oldId?[oldId]:[]});
-  adminAudit_(admin,'BANGUN ULANG PDF DAN JADWALKAN PENGGABUNGAN',type,row,reg,nama+' | '+savedPdf.length+' lampiran PDF');
-  return {ok:true,message:'PDF formulir baru dibuat. Penggabungan '+savedPdf.length+' lampiran PDF dijadwalkan; PDF final akan menggantikan versi sebelumnya setelah selesai.'};
- }
- if(oldId&&oldId!==newPdf.getId()){try{DriveApp.getFileById(oldId).setTrashed(true);}catch(e){}}
- adminAudit_(admin,'BANGUN ULANG PDF',type,row,reg,nama+' | PDF baru tanpa lampiran PDF tambahan');
- return {ok:true,message:'PDF berhasil dibangun ulang dengan seluruh data dan lampiran gambar terbaru.'};
+ var queued=queueAttachmentPdfMerge_(rec,folder);if(!queued){if(pdfCol)sh.getRange(row,pdfCol).setValue(newPdf.getUrl());if(archiveCol)sh.getRange(row,archiveCol).setValue('');}
+ adminAudit_(admin,'BANGUN ULANG PDF FORMULIR DAN LAMPIRAN',type,row,reg,nama+' | '+savedPdf.length+' lampiran PDF + '+files.length+' berkas gambar');
+ return {ok:true,message:queued?'PDF formulir baru sudah dibuat. PDF lampiran sedang disusun terpisah; tautan portal akan diperbarui otomatis setelah selesai.':'PDF formulir baru sudah dibuat. Tidak ada lampiran yang perlu digabung.'};
 }
 
 function adminRetryPdfMerge_(d){
-  var admin=requireAdmin_(d.token),type=String(d.type||'');
-  if(type!=='kontingen'&&type!=='cabang')throw new Error('Jenis data tidak valid.');
-  var sh=SpreadsheetApp.getActiveSpreadsheet().getSheetByName(CFG[type].sheet);if(!sh)throw new Error('Data tidak ditemukan.');
-  var row=resolveAdminRecordRow_(sh,d),headers=sh.getRange(1,1,1,sh.getLastColumn()).getValues()[0],vals=sh.getRange(row,1,1,sh.getLastColumn()).getValues()[0];
-  function g(h){var i=headers.indexOf(h);return i<0?'':vals[i];}
-  var mainId=getDriveFileIdFromUrl_(g('PDF Formulir (link Drive)'));if(!mainId)throw new Error('PDF formulir tidak tercatat pada data ini.');
-  var mainFile=DriveApp.getFileById(mainId),folder=mainFile.getParents().next();
-  if(wasPdfMerged_(mainFile)||folder.getFilesByName('DRAFT_SEBELUM_GABUNG_'+mainFile.getName()).hasNext())throw new Error('PDF ini sudah pernah digabung. Gabung ulang dibatalkan agar lampiran tidak ganda.');
-  if(isMergePending_(String(g('No. Registrasi')||'')))throw new Error('Penggabungan untuk data ini sudah dijadwalkan. Tunggu beberapa menit.');
-  var pdfIds=[],seenPdfIds={};
-  parsePortalFiles_(g('Berkas (link Drive)')).forEach(function(x){
-    if(/^pdf formulir$/i.test(x.label)||isStandaloneCompetitionDocumentLabel_(x.label))return;
-    var id=getDriveFileIdFromUrl_(x.url);if(!id||seenPdfIds[id])return;
-    try{if(DriveApp.getFileById(id).getMimeType()===MimeType.PDF){seenPdfIds[id]=true;pdfIds.push(id);}}catch(e){}
-  });
-  if(!pdfIds.length)throw new Error('Tidak ada lampiran PDF yang perlu digabung pada data ini.');
-  var rd={type:type,reg:String(g('No. Registrasi')||''),nama:String(g('Nama Kontingen')||''),cabang:String(g('Cabang Lomba')||''),kategori:String(g('Kategori')||''),savedAttachments:pdfIds.map(function(id){return {id:id,mime:'application/pdf'};})};
-  queuePdfMerge_(mainFile,rd,folder);
-  adminAudit_(admin,'GABUNG ULANG PDF',type,row,rd.reg,rd.nama+' | '+pdfIds.length+' lampiran PDF');
-  return {ok:true,message:'Penggabungan dijadwalkan ('+pdfIds.length+' lampiran PDF). Hasil final muncul di Portal Kontingen dalam 1–3 menit.'};
+ // Tombol lama tetap kompatibel, tetapi kini membangun ulang formulir bersih dan PDF lampiran terpisah.
+ return adminRebuildRegistrationPdf_(d);
 }
+
 // Jalankan SEKALI dari editor Apps Script: memberi izin trigger/Drive/Mail dan memeriksa library PDFApp.
 function siapkanPenggabunganPdf(){
   var laporan={pdfAppTerpasang:pdfMergeReady_(),trigger:ScriptApp.getProjectTriggers().length,kuotaEmail:MailApp.getRemainingDailyQuota(),folderUji:testFolder_().getUrl()};
