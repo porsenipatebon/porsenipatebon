@@ -1184,7 +1184,8 @@ function buildChampionshipPdfBlob_(state,isTest){
  }
  function para(text,size,bold){
   var q=body.appendParagraph(text);q.setAlignment(DocumentApp.HorizontalAlignment.JUSTIFY);
-  q.setIndentStart(SIDE).setIndentEnd(SIDE).setIndentFirstLine(0);
+  // Samakan indentasi baris pertama dengan margin kiri agar tidak menjorok ke tepi.
+  q.setIndentStart(SIDE).setIndentEnd(SIDE).setIndentFirstLine(SIDE);
   q.setLineSpacing(1.15).setSpacingBefore(2).setSpacingAfter(7);
   q.editAsText().setFontFamily('Arial').setFontSize(size||9).setBold(!!bold).setForegroundColor(ink);
   return q;
@@ -1247,7 +1248,7 @@ function buildChampionshipPdfBlob_(state,isTest){
  for(var wi=0;wi<3;wi++){var wm=(data.medals||[])[wi];winnerRows.push([wi===0?'Juara Umum I':wi===1?'Juara Umum II':'Juara Umum III',wm?wm.k:'—',wm?String(wm.points):'—']);}
  appendPaddedTable(winnerRows,[155,260,180],false);
  para('Keputusan ini berlaku sejak tanggal ditetapkan. Apabila di kemudian hari terdapat kekeliruan, akan dilakukan perbaikan sebagaimana mestinya.',9,false);
- center(isTest?'Patebon, .................... 2026':'Patebon, .... ................ 2026',9,false,muted);
+ var signDate=center(isTest?'Patebon, .................... 2026':'Patebon, .... ................ 2026',9,false,muted); signDate.setSpacingAfter(1);
 
  // Ketua Panitia di sebelah kiri, Koordinator Perlombaan di sebelah kanan.
  var signOuter=body.appendTable([['']]);
@@ -1265,14 +1266,14 @@ function buildChampionshipPdfBlob_(state,isTest){
  ]);
  sign.setBorderWidth(0);
  sign.setColumnWidth(0,PDF_CONTENT_W/2).setColumnWidth(1,PDF_CONTENT_W/2);
- sign.getRow(2).setMinimumHeight(82);
+ sign.getRow(2).setMinimumHeight(68);
  for(var sr=0;sr<sign.getNumRows();sr++)for(var sc=0;sc<2;sc++){
-  var cell=sign.getCell(sr,sc);cell.setPaddingTop(4).setPaddingBottom(4).setPaddingLeft(7).setPaddingRight(7);
-  cell.getChild(0).asParagraph().setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+  var cell=sign.getCell(sr,sc);cell.setPaddingTop(1).setPaddingBottom(1).setPaddingLeft(7).setPaddingRight(7);
+  cell.getChild(0).asParagraph().setAlignment(DocumentApp.HorizontalAlignment.CENTER).setSpacingBefore(0).setSpacingAfter(0).setLineSpacing(1);
   cell.editAsText().setFontFamily('Arial').setFontSize(9).setForegroundColor(ink).setBold(sr===1||sr===3);
  }
- appendDriveSignature_(sign.getCell(2,0),PDF_TTD_KETUA_ID,150,70);
- appendDriveSignature_(sign.getCell(2,1),PDF_TTD_KOOR_ID,150,70);
+ appendDriveSignature_(sign.getCell(2,0),PDF_TTD_KETUA_ID,185,90);
+ appendDriveSignature_(sign.getCell(2,1),PDF_TTD_KOOR_ID,185,90);
 
  // LAMPIRAN I — REKAPITULASI PEROLEHAN JUARA SETIAP KONTINGEN
  body.appendPageBreak();
