@@ -246,7 +246,7 @@
     <div class="eyebrow" style="color:#1d4ed8">PEMBARUAN TERPADU · MULTI-FILE</div>
     <h3 style="font:800 17px Manrope;color:var(--navy);margin:5px 0">Upload beberapa file & terbitkan sekaligus</h3>
     <p class="muted" style="font-size:12px;margin:0 0 12px">Pilih beberapa file sekaligus dengan Ctrl/Shift pada jendela pemilih file. Anda juga boleh memilih file secara bertahap; pilihan sebelumnya tetap tersimpan. Sistem mengenali nama file, menyimpan seluruh perubahan dalam satu commit GitHub, lalu otomatis memicu deployment Apps Script jika Kode.js ikut diunggah. GitHub Pages menerbitkan index.html/admin.html dari commit yang sama.</p>
-    <div class="field"><label for="devopsBundleFiles">Pilih file pembaruan (bisa lebih dari satu; pilihan bertahap didukung)</label><input id="devopsBundleFiles" type="file" multiple accept=".html,.htm,.js,.gs,.json,.css,.yml,.yaml,.md,.txt,.svg"><small class="muted">Nama yang dikenali: index.html, admin.html, Kode.js (atau Kode.gs), appsscript.json, CNAME, dan file aset teks yang didukung. File kredensial tidak diterima.</small></div>
+    <div class="field"><label for="devopsBundleFiles">Pilih file pembaruan (bisa lebih dari satu; pilihan bertahap didukung)</label><input id="devopsBundleFiles" type="file" multiple accept=".html,.htm,.js,.gs,.json,.css,.yml,.yaml,.md,.txt,.svg"><small class="muted">Nama yang dikenali: index.html, admin.html, Kode.js (atau Kode.gs), appsscript.json, CNAME, dan file aset teks yang didukung. Jika index.html diunggah, Portal Panitia otomatis membuat/menyinkronkan fallback URL bersih 404.html. File kredensial tidak diterima.</small></div>
     <div id="devopsBundleList" class="note-banner" style="margin:8px 0">Belum ada file dipilih.</div>
     <label style="display:flex;align-items:flex-start;gap:8px;font-size:12px;margin:10px 0"><input id="devopsBundleDeployGas" type="checkbox" checked style="margin-top:2px"> Jika backend Apps Script disertakan, otomatis jalankan backup dan perbarui Web App produksi.</label>
     <div class="actions"><button id="devopsPublishBundle" class="btn warm" type="button" disabled>Upload semua, commit, & deploy</button><button id="devopsClearBundle" class="btn light" type="button">Kosongkan pilihan</button></div>
@@ -729,6 +729,11 @@ function devOpsReadBundleFiles(files){
  if(accepted)toast(accepted+' file ditambahkan/diperbarui. Total pilihan: '+devOpsBundleSelection.length+' file.');
  if(skipped.length)toast('Tidak dimasukkan: '+skipped.join('; '));
 }
+function devOpsBuild404Fallback_(html){
+ var source=String(html||'').replace(/<base\b[^>]*>/i,'');
+ if(!/<head[^>]*>/i.test(source))throw new Error('index.html tidak memiliki elemen <head>; fallback URL bersih tidak dapat dibuat.');
+ return source.replace(/(<head[^>]*>)/i,'$1\n<base href="/">');
+}
 function devOpsPublishBundle(){
  if(user!=='Tyo'||!devOpsReady||!devOpsBundleSelection.length){toast('Pilih file dan pastikan koneksi GitHub aktif.');return;}
  var total=devOpsBundleSelection.reduce(function(n,x){return n+x.file.size;},0);
@@ -740,8 +745,11 @@ function devOpsPublishBundle(){
  if(!window.confirm(confirmText))return;
  var btn=$('devopsPublishBundle'),status=$('devopsBundleStatus');btn.disabled=true;status.textContent='Membaca file lokal…';
  Promise.all(devOpsBundleSelection.map(function(x){return new Promise(function(resolve,reject){var r=new FileReader();r.onload=function(){resolve({path:x.path,content:String(r.result||'')});};r.onerror=function(){reject(new Error('Gagal membaca '+x.file.name));};r.readAsText(x.file,'UTF-8');});})).then(function(items){
+  var mainIndex=items.filter(function(x){return x.path==='index.html';})[0];
   status.textContent='Mengirim '+items.length+' file ke GitHub dalam satu batch…';
-  return callWithTimeout({action:'admin_devops_publish_bundle',token:token,files:items,deployGas:hasGas&&$('devopsBundleDeployGas').checked,confirmation:'SAYA-PAHAM-APPS-SCRIPT',productionConfirm:'DEPLOY-PRODUKSI-PORSENI-2026'},180000);
+  var publishPromise=callWithTimeout({action:'admin_devops_publish_bundle',token:token,files:items,deployGas:hasGas&&$('devopsBundleDeployGas').checked,confirmation:'SAYA-PAHAM-APPS-SCRIPT',productionConfirm:'DEPLOY-PRODUKSI-PORSENI-2026'},180000);
+  if(mainIndex){publishPromise=publishPromise.then(function(result){status.textContent='Menyinkronkan fallback URL bersih 404.html…';return callWithTimeout({action:'admin_devops_read_file',token:token,path:'404.html'},45000).catch(function(){return {sha:''};}).then(function(currentFallback){return callWithTimeout({action:'admin_devops_save_file',token:token,path:'404.html',content:devOpsBuild404Fallback_(mainIndex.content),sha:currentFallback.sha||'',message:'Sinkronisasi fallback URL bersih dari index.html'},60000);}).then(function(){result.cleanUrlFallbackSynced=true;return result;});});}
+  return publishPromise;
  }).then(function(j){
   status.textContent=j.message+' Commit: '+String(j.commitSha||'').slice(0,7)+(j.workflowUrl?' · Workflow: '+j.workflowUrl:'');
   toast('Batch berhasil disimpan. '+(j.gasDispatched?'Deployment Apps Script sedang berjalan.':'GitHub Pages akan menerbitkan frontend.'));
@@ -776,6 +784,12 @@ function devOpsSaveFile(){
  var btn=$('devopsSaveFile');btn.disabled=true;
  callWithTimeout({action:'admin_devops_save_file',token:token,path:path,content:content,sha:devOpsFileSha,message:'Update '+path+' melalui PORSENI Control Center'},60000).then(function(j){
   devOpsFileSha=j.sha||'';$('devopsFileMeta').textContent='Tersimpan di GitHub · commit '+String(j.commitSha||'').slice(0,7);
+  if(path==='index.html'){
+   var fallback=devOpsBuild404Fallback_(content);
+   return callWithTimeout({action:'admin_devops_read_file',token:token,path:'404.html'},45000).catch(function(){return {sha:''};}).then(function(currentFallback){
+    return callWithTimeout({action:'admin_devops_save_file',token:token,path:'404.html',content:fallback,sha:currentFallback.sha||'',message:'Sinkronisasi fallback URL bersih dari index.html'},60000);
+   }).then(function(){toast('index.html tersimpan dan fallback URL bersih 404.html otomatis disinkronkan.');return devOpsLoadFiles();});
+  }
   toast('Halaman '+path+' berhasil disimpan ke GitHub. Tunggu GitHub Pages selesai menerbitkan.');
   return devOpsLoadFiles();
  }).catch(function(e){toast(e.message);$('devopsFileMeta').textContent=e.message;}).finally(function(){btn.disabled=false;});
