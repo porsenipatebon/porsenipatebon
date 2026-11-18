@@ -3246,6 +3246,19 @@ a:focus-visible,button:focus-visible,summary:focus-visible{
 <p class="pgsub" style="margin:0 0 10px">Lengkapi data peserta secara manual, pas foto, dan identitas diri. Panitia akan memeriksa dokumen dan data identitas secara manual melalui Portal Admin.</p>
 <div class="note" id="fb-rule">Ketentuan jumlah peserta akan tampil setelah cabang lomba dipilih.</div>
 <div id="fb-peserta"></div>
+<section class="formbox" id="fb-duta-profile" hidden style="margin:14px 0;padding:14px;border:1px solid #cbd8e8;border-radius:14px">
+<h3>Profil dan Gagasan Calon Duta Pelajar</h3>
+<p class="hint">Bagian ini wajib diisi khusus peserta Duta Pelajar. Jawablah dengan pemikiran sendiri dan jelas.</p>
+<label class="fld"><span>Instagram pribadi * (contoh: @namapengguna)</span><input autocomplete="off" maxlength="100" name="duta_instagram" placeholder="@username" required disabled type="text"/></label>
+<label class="fld"><span>1. Motivasi mengikuti Duta Pelajar *</span><textarea name="duta_motivasi" maxlength="1000" rows="4" required disabled placeholder="Jelaskan alasan dan motivasi Anda mengikuti seleksi Duta Pelajar..."></textarea></label>
+<label class="fld"><span>2. Visi sebagai Duta Pelajar NU Patebon *</span><textarea name="duta_visi" maxlength="1000" rows="4" required disabled placeholder="Tuliskan cita-cita besar yang ingin Anda wujudkan..."></textarea></label>
+<label class="fld"><span>3. Misi untuk mewujudkan visi *</span><textarea name="duta_misi" maxlength="1000" rows="4" required disabled placeholder="Tuliskan langkah-langkah nyata yang akan Anda lakukan..."></textarea></label>
+<label class="fld"><span>4. Harapan untuk Pelajar NU Patebon *</span><textarea name="duta_harapan" maxlength="1000" rows="4" required disabled placeholder="Apa harapan Anda bagi perkembangan dan masa depan Pelajar NU Patebon?..."></textarea></label>
+<label class="fld"><span>5. Program atau gagasan unggulan *</span><textarea name="duta_program" maxlength="1000" rows="4" required disabled placeholder="Jelaskan program atau gerakan yang ingin Anda gagas jika terpilih..."></textarea></label>
+<label class="fld"><span>6. Komitmen sebagai Duta Pelajar *</span><textarea name="duta_komitmen" maxlength="1000" rows="4" required disabled placeholder="Jelaskan kesiapan dan komitmen Anda menjalankan tugas serta program selama masa pengabdian..."></textarea></label>
+<label class="fld"><span>7. Isu atau tantangan yang dihadapi Pelajar NU Patebon *</span><textarea name="duta_isu" maxlength="1000" rows="4" required disabled placeholder="Menurut Anda, apa tantangan terbesar Pelajar NU Patebon dan mengapa perlu diperhatikan?..."></textarea></label>
+<p class="hint">Maksimal 1.000 karakter untuk setiap jawaban.</p>
+</section>
 <button class="btn alt" id="fb-add" type="button">+ Tambah peserta</button>
 <div hidden="" id="fb-kti-files">
 <h3>Berkas Karya Tulis Ilmiah</h3>
@@ -3705,6 +3718,7 @@ function updateParticipantRule(){
  var rule=participantRule(),box=$("fb-peserta"),banner=$("fb-rule");
  banner.textContent=rule.desc;
  Array.prototype.forEach.call(box.querySelectorAll(".prow"),function(row){var role=row.querySelector("[name=pr]"),gender=row.querySelector("[name=pl]");if(role){role.parentNode.hidden=!rule.choir;role.onchange=function(){syncChoirRoles(role);};}if(gender)gender.parentNode.hidden=(PICK==="Voli");if(gender&&PICK==="Voli")gender.value="L";if(gender&&PICK==="PES PS3")gender.parentNode.hidden=false;var wa=row.querySelector("[name=wa_manual]"),waWrap=row.querySelector("[data-participant-wa]");if(wa){var onlyDuta=PICK==="Duta Pelajar";wa.disabled=!onlyDuta;wa.required=onlyDuta;if(waWrap){waWrap.hidden=!onlyDuta;}}});
+ var dutaBox=$("fb-duta-profile");if(dutaBox){var showDuta=PICK==="Duta Pelajar";dutaBox.hidden=!showDuta;Array.prototype.forEach.call(dutaBox.querySelectorAll("input,textarea"),function(el){el.disabled=!showDuta;el.required=showDuta;});}
  if(rule.choir)syncChoirRoles();
  $("fb-add").hidden=box.children.length>=rule.max;
  $("fb-add").textContent="+ Tambah peserta ("+box.children.length+"/"+rule.max+")";
@@ -3991,6 +4005,18 @@ $("fb").addEventListener("submit",function(e){e.preventDefault();var f=e.target,
  }
  var suratTugas=f.elements.f_surat_tugas.files[0];
  var d={type:"cabang",waktu:new Date().toISOString(),reg:regNo("C"),nama:v(f,"nama"),pin:v(f,"pin"),cabang:v(f,"cabang"),kategori:v(f,"kategori"),jml:list.length,catatan:v(f,"catatan"),pesertaList:list.map(function(q){return {nama:q.n,gender:q.l,role:q.role,tempatLahir:q.tempatLahir,tanggalLahir:q.tanggalLahir,alamat:q.alamat,wa:q.wa}})};
+ if(PICK==="Duta Pelajar"){
+  d.dutaProfile={
+   instagram:v(f,"duta_instagram"),
+   motivasi:v(f,"duta_motivasi"),
+   visi:v(f,"duta_visi"),
+   misi:v(f,"duta_misi"),
+   harapan:v(f,"duta_harapan"),
+   program:v(f,"duta_program"),
+   komitmen:v(f,"duta_komitmen"),
+   isu:v(f,"duta_isu")
+  };
+ }
  var items=[],participantNo=0;try{Array.prototype.forEach.call(rows,function(r,i){var nm=r.querySelector('[name="pn"]').value.trim();if(!nm)return;participantNo++;var foto=r.querySelector('[name="peserta_foto"]').files[0],ktp=r.querySelector('[name="peserta_ktp"]').files[0];if(!foto)throw new Error("Pas foto 4×6 wajib diunggah untuk peserta "+nm+".");checkFileType(foto,["image"],"Pas foto peserta "+nm);items.push({label:"Pas foto peserta "+participantNo,participantIndex:participantNo-1,file:foto});if(!ktp)throw new Error("KTP peserta wajib diunggah untuk peserta "+nm+".");checkFileType(ktp,["image"],"KTP peserta "+nm);items.push({label:"KTP peserta "+participantNo,participantIndex:participantNo-1,file:ktp})});
  if(PICK==="Karya ilmiah"){
   var word=f.elements.f_kti_word.files[0],paperPdf=f.elements.f_kti_pdf.files[0],ppt=f.elements.f_kti_ppt.files[0];
