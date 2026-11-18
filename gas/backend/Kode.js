@@ -3,11 +3,12 @@
  * Pasang pada Apps Script yang terikat ke Spreadsheet database.
  * Setelah mengganti kode, deploy ulang sebagai Web App: Execute as Me, access Anyone.
  */
-var PDF_TTD_KOOR_ID = '1fM24qlCUGcKMwjtnGdLr8eDWH6pmpL9b';
-var PDF_TTD_SEKRETARIAT_ID = '1CCuOOo6KzkX5kQbZjmAp1KRZ55qCcVwC';
+var PDF_TTD_KOOR_ID = '1LUPYF-iLHSDJBjgJE9e4k4X1lCsqupvu';
+var PDF_TTD_SEKRETARIAT_ID = '1oP8fvwdMSaOE12ItNfWOWKDgqh_lXBYe';
 // Tanda tangan dan stempel Ketua Panitia (file gabungan dari Google Drive).
 var PDF_TTD_KETUA_ID = '1caqKoFGjkgCo5X5zfZUFENEh5vwmNcxO';
-var PDF_STEMPEL_PANITIA_ID = '1ITYlMp7nb9pIUOiL53J469Q6uhfnzEzT';
+// Stempel Sekretariat sudah menyatu dengan aset PDF_TTD_SEKRETARIAT_ID; tidak perlu ID stempel terpisah.
+var PDF_STEMPEL_PANITIA_ID = ''; 
 var NOTIFY = 'fuadsyafi62@gmail.com, wahyu.tyo242@gmail.com, shochibul.789@gmail.com, porsenipatebon@gmail.com';
 var SENDER_EMAIL = 'porsenipatebon@gmail.com';
 var SENDER_NAME = 'Panitia PORSENI 2026';
@@ -3794,6 +3795,7 @@ function appendDriveSignature_(cell, fileId, maxWidth, maxHeight) {
   }
 
   var file = DriveApp.getFileById(fileId);
+  if (file.isTrashed()) throw new Error('File tanda tangan berada di Trash Google Drive: ' + file.getName());
   var image = cell.appendImage(file.getBlob());
 
   var originalWidth = image.getWidth();
@@ -3942,8 +3944,8 @@ function createBranchRegistrationPdf_(d, folder) {
     pdfFont_(cell.editAsText(),11,true);
   }
   appendDriveSignature_(sg.getCell(1,0),PDF_TTD_KOOR_ID,180,85);
-  var sekretariatSignatureImage=appendDriveSignature_(sg.getCell(1,1),PDF_TTD_SEKRETARIAT_ID,145,75);
-  appendDriveStampBesideSignature_(sekretariatSignatureImage,PDF_STEMPEL_PANITIA_ID,48,48);
+  // Tanda tangan dan stempel Sekretariat sudah menjadi satu gambar Drive.
+  appendDriveSignature_(sg.getCell(1,1),PDF_TTD_SEKRETARIAT_ID,180,85);
   w.para('Dokumen ini dibuat secara elektronik melalui website resmi PORSENI 2026 | Nomor Pendaftaran: '+d.reg+' | '+idDate_(d.waktu||new Date(),true),{size:9.5,italic:true,align:CENTER,color:'#3A4A63',before:5});
   pdfTidyBody_(body);
   return pdfSavePdf_(doc,d,folder);
