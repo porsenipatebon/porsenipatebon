@@ -5,6 +5,8 @@
  */
 var PDF_TTD_KOOR_ID = '1fM24qlCUGcKMwjtnGdLr8eDWH6pmpL9b';
 var PDF_TTD_SEKRETARIAT_ID = '1CCuOOo6KzkX5kQbZjmAp1KRZ55qCcVwC';
+// Tanda tangan dan stempel Ketua Panitia (file gabungan dari Google Drive).
+var PDF_TTD_KETUA_ID = '1caqKoFGjkgCo5X5zfZUFENEh5vwmNcxO';
 var PDF_STEMPEL_PANITIA_ID = '1ITYlMp7nb9pIUOiL53J469Q6uhfnzEzT';
 var NOTIFY = 'fuadsyafi62@gmail.com, wahyu.tyo242@gmail.com, shochibul.789@gmail.com, porsenipatebon@gmail.com';
 var SENDER_EMAIL = 'porsenipatebon@gmail.com';
@@ -1216,17 +1218,23 @@ function buildChampionshipPdfBlob_(state,isTest){
  para('Keputusan ini berlaku sejak tanggal ditetapkan. Apabila di kemudian hari terdapat kekeliruan, akan dilakukan perbaikan sebagaimana mestinya.',9,false);
  center(isTest?'Patebon, .................... 2026':'Patebon, .... ................ 2026',9,false);
  var sign=body.appendTable([
-  ['Mengetahui,','','Ditetapkan oleh,'],
-  ['Koordinator Perlombaan','','Ketua Panitia Pelaksana'],
-  ['\n\n\n\n','RUANG STEMPEL','\n\n\n\n'],
-  ['Sochibul Mustaqim','','Prasetyo Wahyu A.R.']
+  ['Mengetahui,','Ditetapkan oleh,'],
+  ['Koordinator Perlombaan','Ketua Panitia Pelaksana'],
+  ['\u00A0','\u00A0'],
+  ['Sochibul Mustaqim','Prasetyo Wahyu A.R.']
  ]);
  sign.setBorderWidth(0);
- for(var sr=0;sr<sign.getNumRows();sr++)for(var sc=0;sc<3;sc++){
-  var cell=sign.getCell(sr,sc);cell.setPaddingTop(3).setPaddingBottom(3).setPaddingLeft(sc===0?SIDE:5).setPaddingRight(sc===2?SIDE:5);
+ sign.setColumnWidth(0,PDF_CONTENT_W/2).setColumnWidth(1,PDF_CONTENT_W/2);
+ sign.getRow(2).setMinimumHeight(78);
+ for(var sr=0;sr<sign.getNumRows();sr++)for(var sc=0;sc<2;sc++){
+  var cell=sign.getCell(sr,sc);cell.setPaddingTop(3).setPaddingBottom(3).setPaddingLeft(6).setPaddingRight(6);
   cell.getChild(0).asParagraph().setAlignment(DocumentApp.HorizontalAlignment.CENTER);
-  cell.editAsText().setFontFamily('Arial').setFontSize(sr===2&&sc===1?7:9).setBold(sr===1||sr===3);
+  cell.editAsText().setFontFamily('Arial').setFontSize(9).setBold(sr===1||sr===3);
  }
+ // SK Hasil Kejuaraan memakai Koordinator Perlombaan di kiri dan Ketua Panitia di kanan.
+ // File Ketua Panitia dari Drive sudah menjadi satu aset tanda tangan + stempel.
+ appendDriveSignature_(sign.getCell(2,0),PDF_TTD_KOOR_ID,150,68);
+ appendDriveSignature_(sign.getCell(2,1),PDF_TTD_KETUA_ID,150,68);
 
  // LAMPIRAN I — REKAPITULASI PEROLEHAN JUARA SETIAP KONTINGEN
  body.appendPageBreak();
@@ -3912,8 +3920,9 @@ function createBranchRegistrationPdf_(d, folder) {
   // Duta Pelajar tetap hanya memiliki bagian A dan B. CV serta berkas pendukung
   // tidak dicantumkan atau digabung ke formulir; seluruhnya masuk PDF Lampiran terpisah.
 
-  // Bukti penerimaan diterbitkan panitia setelah berkas lolos verifikasi.
-  // Tidak dipaksa ke halaman baru: ruang dan posisi menyesuaikan panjang isi formulir.
+  // Untuk kelompok berisi 6 peserta atau lebih, pindahkan seluruh bagian B ke halaman berikutnya.
+  // Ini menjaga redaksi verifikasi dan blok tanda tangan tidak terjepit/terpotong di bawah tabel.
+  if (isTeam && people.length >= 6) body.appendPageBreak();
   heading('B. BUKTI PENERIMAAN DAN VERIFIKASI BERKAS', 8);
   w.para('Dengan ini, Panitia PORSENI 2026 PAC IPNU–IPPNU Patebon menyatakan bahwa berkas pendaftaran peserta pada cabang lomba sebagaimana tercantum dalam dokumen ini telah diterima, diperiksa, dan dinyatakan lengkap serta memenuhi persyaratan administrasi sesuai dengan ketentuan yang berlaku. Dokumen ini diterbitkan sebagai bukti resmi penerimaan berkas pendaftaran yang telah melalui proses verifikasi dan disetujui oleh Panitia PORSENI 2026 PAC IPNU–IPPNU Patebon.',{size:10,align:JUSTIFY,line:1.2,after:5});
   w.para('Apabila di kemudian hari ditemukan kesalahan, ketidaksesuaian, atau bukti yang menunjukkan bahwa berkas yang diserahkan tidak sesuai dengan ketentuan, panitia berhak melakukan pemeriksaan dan verifikasi lebih lanjut berdasarkan dokumen, data, serta bukti-bukti pendukung yang tersedia. Hasil pemeriksaan tersebut dapat menjadi dasar bagi panitia untuk mengambil tindakan sesuai dengan ketentuan yang berlaku.',{size:9.5,align:JUSTIFY,line:1.15,after:4});
