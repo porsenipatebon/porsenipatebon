@@ -3,7 +3,7 @@
  * Pasang pada Apps Script yang terikat ke Spreadsheet database.
  * Setelah mengganti kode, deploy ulang sebagai Web App: Execute as Me, access Anyone.
  */
-var PDF_TTD_KOOR_ID = '1LUPYF-iLHSDJBjgJE9e4k4X1lCsqupvu';
+var PDF_TTD_KOOR_ID = '1Gkh8tDAhXNX3auf09J3KTnIEdx2hbT2j';
 var PDF_TTD_SEKRETARIAT_ID = '1oP8fvwdMSaOE12ItNfWOWKDgqh_lXBYe';
 // Tanda tangan dan stempel Ketua Panitia (file gabungan dari Google Drive).
 var PDF_TTD_KETUA_ID = '1caqKoFGjkgCo5X5zfZUFENEh5vwmNcxO';
