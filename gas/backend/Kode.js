@@ -3,9 +3,12 @@
  * Pasang pada Apps Script yang terikat ke Spreadsheet database.
  * Setelah mengganti kode, deploy ulang sebagai Web App: Execute as Me, access Anyone.
  */
-var PDF_TTD_KOOR_ID = '1Gkh8tDAhXNX3auf09J3KTnIEdx2hbT2j';
-var PDF_TTD_SEKRETARIAT_ID = '1CCuOOo6KzkX5kQbZjmAp1KRZ55qCcVwC';
-var PDF_STEMPEL_PANITIA_ID = '1caqKoFGjkgCo5X5zfZUFENEh5vwmNcxO';
+var PDF_TTD_KOOR_ID = '1LUPYF-iLHSDJBjgJE9e4k4X1lCsqupvu';
+var PDF_TTD_SEKRETARIAT_ID = '1oP8fvwdMSaOE12ItNfWOWKDgqh_lXBYe';
+// Tanda tangan dan stempel Ketua Panitia (file gabungan dari Google Drive).
+var PDF_TTD_KETUA_ID = '1caqKoFGjkgCo5X5zfZUFENEh5vwmNcxO';
+// Stempel Sekretariat sudah menyatu dengan aset PDF_TTD_SEKRETARIAT_ID; tidak perlu ID stempel terpisah.
+var PDF_STEMPEL_PANITIA_ID = ''; 
 var NOTIFY = 'fuadsyafi62@gmail.com, wahyu.tyo242@gmail.com, shochibul.789@gmail.com, porsenipatebon@gmail.com';
 var SENDER_EMAIL = 'porsenipatebon@gmail.com';
 var SENDER_NAME = 'Panitia PORSENI 2026';
@@ -101,8 +104,8 @@ var KAT = {
  'MTQ':['Putra','Putri']
 };
 var CFG = {
- kontingen:{sheet:'Kontingen',folder:'02. BERKAS KONTINGEN',head:['Waktu','No. Registrasi','Nama Kontingen','Asal','Alamat','Ketua','WA Ketua','Email','Cabang Lomba','Jumlah Peserta','Metode Bayar','Tgl Bayar','Berkas (link Drive)','Folder Drive','PDF Formulir (link Drive)','Arsip PDF Panitia (link Drive)','Ketua PR IPNU','WA Ketua IPNU','Ketua PR IPPNU','WA Ketua IPPNU','Tempat Lahir Ketua','Tanggal Lahir Ketua','Instagram Ketua Kontingen','Instagram Ketua PR/PK IPNU','Instagram Ketua PR/PK IPPNU','Instagram PR/PK IPNU-IPPNU'],keys:['waktu','reg','nama','asal','alamat','ketua','wa_ketua','email','cabang','jml','bayar','tgl_bayar','berkas','folder','pdf','archivePdf','ketua_pr_ipnu','wa_ketua_ipnu','ketua_pr_ippnu','wa_ketua_ippnu','tempat_lahir_ketua','tanggal_lahir_ketua','ig_ketua','ig_ketua_ipnu','ig_ketua_ippnu','ig_organisasi']},
- cabang:{sheet:'Cabang',folder:'03. BERKAS CABANG LOMBA',head:['Waktu','No. Registrasi','Nama Kontingen','Cabang Lomba','Kategori','Jumlah Peserta','Daftar Peserta','Tempat Lahir Peserta','Tanggal Lahir Peserta','Alamat Rumah Peserta','WA Peserta','Catatan','Berkas (link Drive)','Folder Drive','PDF Formulir (link Drive)','Arsip PDF Panitia (link Drive)'],keys:['waktu','reg','nama','cabang','kategori','jml','peserta','tempat_lahir_peserta','tanggal_lahir_peserta','alamat_peserta','wa_peserta','catatan','berkas','folder','pdf','archivePdf']}
+ kontingen:{sheet:'Kontingen',folder:'02. BERKAS KONTINGEN',head:['Waktu','No. Registrasi','Nama Kontingen','Asal','Alamat','Ketua','WA Ketua','Email','Cabang Lomba','Jumlah Peserta','Metode Bayar','Tgl Bayar','Berkas (link Drive)','Folder Drive','PDF Formulir (link Drive)','PDF Lampiran (link Drive)','Arsip PDF Panitia (link Drive)','Ketua PR IPNU','WA Ketua IPNU','Ketua PR IPPNU','WA Ketua IPPNU','Tempat Lahir Ketua','Tanggal Lahir Ketua','Instagram Ketua Kontingen','Instagram Ketua PR/PK IPNU','Instagram Ketua PR/PK IPPNU','Instagram PR/PK IPNU-IPPNU'],keys:['waktu','reg','nama','asal','alamat','ketua','wa_ketua','email','cabang','jml','bayar','tgl_bayar','berkas','folder','pdf','attachmentPdf','archivePdf','ketua_pr_ipnu','wa_ketua_ipnu','ketua_pr_ippnu','wa_ketua_ippnu','tempat_lahir_ketua','tanggal_lahir_ketua','ig_ketua','ig_ketua_ipnu','ig_ketua_ippnu','ig_organisasi']},
+ cabang:{sheet:'Cabang',folder:'03. BERKAS CABANG LOMBA',head:['Waktu','No. Registrasi','Nama Kontingen','Cabang Lomba','Kategori','Jumlah Peserta','Daftar Peserta','Tempat Lahir Peserta','Tanggal Lahir Peserta','Alamat Rumah Peserta','WA Peserta','Catatan','Berkas (link Drive)','Folder Drive','PDF Formulir (link Drive)','PDF Lampiran (link Drive)','Arsip PDF Panitia (link Drive)'],keys:['waktu','reg','nama','cabang','kategori','jml','peserta','tempat_lahir_peserta','tanggal_lahir_peserta','alamat_peserta','wa_peserta','catatan','berkas','folder','pdf','attachmentPdf','archivePdf']}
 };
 var KONTINGEN = [
  'PK IPNU IPPNU MTS NU 07 PATEBON',
@@ -1181,20 +1184,17 @@ function buildChampionshipPdfBlob_(state,isTest){
   table.setBorderWidth(0.6).setBorderColor(line);
   for(var r=0;r<table.getNumRows();r++)for(var c=0;c<table.getRow(r).getNumCells();c++){
    var cell=table.getCell(r,c);
-   // Isi tabel mengikuti lebar konten standar PDF lain (A4 dengan margin 2 cm).
-   // Margin dibuat dari lebar tabel, bukan padding berlebih pada sel terluar.
-   cell.setPaddingTop(compact?3:5).setPaddingBottom(compact?3:5).setPaddingLeft(6).setPaddingRight(6);
+   // Tabel berada pada area full-bleed agar kop tetap full-width; padding kolom
+   // pertama/terakhir menciptakan margin isi sekitar 2 cm tanpa mengecilkan header.
+   var leftPad=(c===0?SIDE:6),rightPad=(c===table.getRow(r).getNumCells()-1?SIDE:6);
+   cell.setPaddingTop(compact?3:5).setPaddingBottom(compact?3:5).setPaddingLeft(leftPad).setPaddingRight(rightPad);
    cell.editAsText().setFontFamily('Arial').setFontSize(compact?8:9).setForegroundColor('#222222');
    if(header&&r===0){cell.setBackgroundColor(cream);cell.editAsText().setBold(true).setForegroundColor(navy);}
    else cell.setBackgroundColor(r%2===0?ivory:softGray);
   }
  }
  function setTableColumnWidths(table,widths){
-  try{
-   var total=widths.reduce(function(sum,w){return sum+Number(w||0);},0);
-   var target=PDF_CONTENT_W||481.88;
-   widths.forEach(function(w,i){table.setColumnWidth(i,Math.round((Number(w||0)/total*target)*100)/100);});
-  }catch(e){}
+  try{widths.forEach(function(w,i){table.setColumnWidth(i,w);});}catch(e){}
  }
  function appendPaddedTable(rows,widths,compact){
   var t=body.appendTable(rows);styleTable(t,true,!!compact);if(widths)setTableColumnWidths(t,widths);return t;
@@ -1219,23 +1219,23 @@ function buildChampionshipPdfBlob_(state,isTest){
  para('Keputusan ini berlaku sejak tanggal ditetapkan. Apabila di kemudian hari terdapat kekeliruan, akan dilakukan perbaikan sebagaimana mestinya.',9,false);
  center(isTest?'Patebon, .................... 2026':'Patebon, .... ................ 2026',9,false);
  var sign=body.appendTable([
-  ['Mengetahui,','','Ditetapkan oleh,'],
-  ['Koordinator Perlombaan','','Ketua Panitia Pelaksana'],
-  ['\n\n','RUANG STEMPEL','\n\n'],
-  ['Sochibul Mustaqim','','Prasetyo Wahyu A.R.']
+  ['Mengetahui,','Ditetapkan oleh,'],
+  ['Koordinator Perlombaan','Ketua Panitia Pelaksana'],
+  ['\u00A0','\u00A0'],
+  ['Sochibul Mustaqim','Prasetyo Wahyu A.R.']
  ]);
  sign.setBorderWidth(0);
- // Blok pengesahan sejajar dengan lebar konten PDF lain; ruang tanda tangan
- // cukup lapang, tetapi jarak ke jabatan dan nama tidak lagi berlebihan.
- try{sign.setColumnWidth(0,200).setColumnWidth(1,81.88).setColumnWidth(2,200);}catch(e){}
+ sign.setColumnWidth(0,PDF_CONTENT_W/2).setColumnWidth(1,PDF_CONTENT_W/2);
  sign.getRow(2).setMinimumHeight(78);
- for(var sr=0;sr<sign.getNumRows();sr++)for(var sc=0;sc<3;sc++){
-  var cell=sign.getCell(sr,sc);
-  cell.setPaddingTop(sr===2?0:1).setPaddingBottom(sr===2?0:1).setPaddingLeft(4).setPaddingRight(4);
-  cell.getChild(0).asParagraph().setAlignment(DocumentApp.HorizontalAlignment.CENTER)
-   .setSpacingBefore(0).setSpacingAfter(0).setLineSpacing(1);
-  cell.editAsText().setFontFamily('Arial').setFontSize(sr===2&&sc===1?7:9).setBold(sr===1||sr===3);
+ for(var sr=0;sr<sign.getNumRows();sr++)for(var sc=0;sc<2;sc++){
+  var cell=sign.getCell(sr,sc);cell.setPaddingTop(3).setPaddingBottom(3).setPaddingLeft(6).setPaddingRight(6);
+  cell.getChild(0).asParagraph().setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+  cell.editAsText().setFontFamily('Arial').setFontSize(9).setBold(sr===1||sr===3);
  }
+ // SK Hasil Kejuaraan memakai Koordinator Perlombaan di kiri dan Ketua Panitia di kanan.
+ // File Ketua Panitia dari Drive sudah menjadi satu aset tanda tangan + stempel.
+ appendDriveSignature_(sign.getCell(2,0),PDF_TTD_KOOR_ID,150,68);
+ appendDriveSignature_(sign.getCell(2,1),PDF_TTD_KETUA_ID,150,68);
 
  // LAMPIRAN I — REKAPITULASI PEROLEHAN JUARA SETIAP KONTINGEN
  body.appendPageBreak();
@@ -1944,9 +1944,9 @@ function rebuildRevisionPdfForRow_(type,row,migrationId){
  var rec={type:type,reg:String(val('No. Registrasi')||''),nama:String(val('Nama Kontingen')||''),files:files,savedAttachments:savedPdf,migrationId:String(migrationId||'')};
  if(type==='kontingen'){rec.asal=String(val('Asal')||'');rec.alamat=String(val('Alamat')||'');rec.ketua=String(val('Ketua')||'');rec.tempat_lahir_ketua=String(val('Tempat Lahir Ketua')||'');rec.tanggal_lahir_ketua=String(val('Tanggal Lahir Ketua')||'');rec.wa_ketua=String(val('WA Ketua')||'');rec.email=String(val('Email')||'');rec.cabang=String(val('Cabang Lomba')||'');rec.jml=String(val('Jumlah Peserta')||'');rec.bayar=String(val('Metode Bayar')||'');rec.tgl_bayar=String(val('Tgl Bayar')||'');rec.ketua_pr_ipnu=String(val('Ketua PR IPNU')||'');rec.ketua_pr_ippnu=String(val('Ketua PR IPPNU')||'');}
  else{rec.cabang=String(val('Cabang Lomba')||'');rec.kategori=String(val('Kategori')||'');rec.catatan=String(val('Catatan')||'');rec.jml=String(val('Jumlah Peserta')||'');var raw=String(val('Daftar Peserta')||'').split(/\r?\n/).filter(Boolean);function detailAt(t,i){var lines=String(t||'').split(/\r?\n/);if(lines.length<=i)return '';var line=lines[i].replace(/^\s*\d+\.\s*/,'');var p=line.indexOf(':');return p>=0?line.slice(p+1).trim():line.trim();}rec.pesertaList=raw.map(function(line,i){var clean=line.replace(/^\s*\d+\.\s*/,'').trim(),m=clean.match(/^(.*?)\s*\(([LP])\)(?:\s*-\s*(.*))?$/i);return {nama:m?m[1].trim():clean,gender:m?m[2].toUpperCase():'',role:m&&m[3]?m[3].trim():'',tempatLahir:detailAt(val('Tempat Lahir Peserta'),i),tanggalLahir:detailAt(val('Tanggal Lahir Peserta'),i),alamat:detailAt(val('Alamat Rumah Peserta'),i),wa:detailAt(val('WA Peserta'),i)};});rec.peserta=String(val('Daftar Peserta')||'');rec.tempat_lahir_peserta=String(val('Tempat Lahir Peserta')||'');rec.tanggal_lahir_peserta=String(val('Tanggal Lahir Peserta')||'');rec.alamat_peserta=String(val('Alamat Rumah Peserta')||'');rec.wa_peserta=String(val('WA Peserta')||'');}
- var newPdf=createRegistrationPdf(rec,folder);assertPrivateIndividualFile_(newPdf);rec.pendingFormPdfId=newPdf.getId();var pdfCol=headers.indexOf('PDF Formulir (link Drive)')+1,archiveCol=headers.indexOf('Arsip PDF Panitia (link Drive)')+1,filesCol=headers.indexOf('Berkas (link Drive)')+1;
+ var newPdf=createRegistrationPdf(rec,folder);assertPrivateIndividualFile_(newPdf);rec.pendingFormPdfId=newPdf.getId();var pdfCol=headers.indexOf('PDF Formulir (link Drive)')+1,attachmentCol=headers.indexOf('PDF Lampiran (link Drive)')+1,archiveCol=headers.indexOf('Arsip PDF Panitia (link Drive)')+1,filesCol=headers.indexOf('Berkas (link Drive)')+1;
  if(filesCol){var oldLines=String(val('Berkas (link Drive)')||'').split(/\r?\n/).filter(function(x){return !/^PDF formulir:/i.test(x);});oldLines.unshift('PDF formulir: '+newPdf.getUrl());sh.getRange(row,filesCol).setValue(oldLines.join('\n'));}
- var attachmentQueued=queueAttachmentPdfMerge_(rec,folder);if(!attachmentQueued){if(pdfCol)sh.getRange(row,pdfCol).setValue(newPdf.getUrl());if(archiveCol)sh.getRange(row,archiveCol).setValue('');}
+ var attachmentQueued=queueAttachmentPdfMerge_(rec,folder);if(!attachmentQueued){if(pdfCol)sh.getRange(row,pdfCol).setValue(newPdf.getUrl());if(attachmentCol)sh.getRange(row,attachmentCol).setValue('');if(archiveCol)sh.getRange(row,archiveCol).setValue('');}
  return migrationId?{url:newPdf.getUrl(),queued:!!attachmentQueued}:newPdf.getUrl();
 }
 
@@ -3323,12 +3323,12 @@ function updateMergedPdfRecord_(job,finalFile){
  if(String(job.reg||'').indexOf('-UJI-')>=0 || String(job.reg||'').indexOf('UJI-')===0)return;
  var cfg=job.type==='kontingen'?CFG.kontingen:CFG.cabang,ss=SpreadsheetApp.getActiveSpreadsheet(),sh=ss&&ss.getSheetByName(cfg.sheet);
  if(!sh||sh.getLastRow()<2)return;
- var headers=sh.getRange(1,1,1,sh.getLastColumn()).getValues()[0],iReg=headers.indexOf('No. Registrasi'),iPdf=headers.indexOf('PDF Formulir (link Drive)'),iArchive=headers.indexOf('Arsip PDF Panitia (link Drive)');
+ var headers=sh.getRange(1,1,1,sh.getLastColumn()).getValues()[0],iReg=headers.indexOf('No. Registrasi'),iPdf=headers.indexOf('PDF Formulir (link Drive)'),iAttachment=headers.indexOf('PDF Lampiran (link Drive)');
  if(iReg<0)return;
  var values=sh.getRange(2,1,sh.getLastRow()-1,headers.length).getValues(),target=-1;
  for(var i=values.length-1;i>=0;i--)if(String(values[i][iReg]||'')===String(job.reg)){target=i+2;break;}
  if(target<0)return;
- if(job.role==='attachment'){if(iArchive>=0)sh.getRange(target,iArchive+1).setValue(finalFile.getUrl());if(job.pendingFormPdfId&&iPdf>=0){var pendingForm=DriveApp.getFileById(job.pendingFormPdfId);assertPrivateIndividualFile_(pendingForm);sh.getRange(target,iPdf+1).setValue(pendingForm.getUrl());}return;}
+ if(job.role==='attachment'){if(iAttachment>=0)sh.getRange(target,iAttachment+1).setValue(finalFile.getUrl());if(job.pendingFormPdfId&&iPdf>=0){var pendingForm=DriveApp.getFileById(job.pendingFormPdfId);assertPrivateIndividualFile_(pendingForm);sh.getRange(target,iPdf+1).setValue(pendingForm.getUrl());}return;}
  if(iPdf>=0)sh.getRange(target,iPdf+1).setValue(finalFile.getUrl());
 }
 
@@ -3795,6 +3795,7 @@ function appendDriveSignature_(cell, fileId, maxWidth, maxHeight) {
   }
 
   var file = DriveApp.getFileById(fileId);
+  if (file.isTrashed()) throw new Error('File tanda tangan berada di Trash Google Drive: ' + file.getName());
   var image = cell.appendImage(file.getBlob());
 
   var originalWidth = image.getWidth();
@@ -3847,255 +3848,108 @@ function appendDriveStampBesideSignature_(signatureImage, fileId, maxWidth, maxH
 
 
 function createBranchRegistrationPdf_(d, folder) {
-
   var doc = pdfNewDoc_('TEMP PORSENI CABANG ' + d.reg, 0);
   var body = doc.getBody();
-
-  // Gunakan header A4 standar yang sama dengan formulir Kontingen.
-  // pdfNewDoc_ sudah memasang kop pada header dokumen dengan lebar penuh A4
-  // dan margin atas yang menyediakan ruang untuk kop. Header otomatis berulang
-  // pada setiap halaman formulir; lampiran foto/KTP dan PDF tetap tanpa kop.
   var CENTER = DocumentApp.HorizontalAlignment.CENTER;
   var JUSTIFY = DocumentApp.HorizontalAlignment.JUSTIFY;
-
   var w = pdfWriter_(pdfPage_(body));
+  var isTeam = /^(beregu|kelompok|ganda)/i.test(String(d.kategori || '').trim());
+  var isDuta = String(d.cabang || '') === 'Duta Pelajar';
+  var people = Array.isArray(d.pesertaList) ? d.pesertaList : [];
 
   function heading(text, before) {
-    return w.para(text, {
-      size: 12,
-      bold: true,
-      color: PDF_NAVY,
-      before: before === undefined ? 8 : before,
-      after: 3
+    return w.para(text, {size:12, bold:true, color:PDF_NAVY, before:before===undefined?8:before, after:4});
+  }
+  function valueText(value) {
+    if (value === null || value === undefined || String(value).trim() === '') return '-';
+    return String(value).trim();
+  }
+  function verticalFields(rows) {
+    rows.forEach(function(row) {
+      w.para(String(row[0] || ''), {size:9.5, bold:true, color:'#334155', before:3, after:1});
+      w.para(valueText(row[1]), {size:11, after:4, line:1.15});
     });
   }
-
-  // ==================================================
-  // HALAMAN 1: IDENTITAS DAN DATA PESERTA
-  // ==================================================
-
-  w.para('FORMULIR PENGUMPULAN BERKAS', {
-    size: 15,
-    bold: true,
-    align: CENTER,
-    before: 0,
-    after: 1
-  });
-
-  w.para(
-    ('CABANG LOMBA ' + displayBranchName_(d.cabang)).toUpperCase(),
-    {
-      size: 14,
-      bold: true,
-      align: CENTER,
-      before: 0,
-      after: 1
-    }
-  );
-
-  w.para(
-    ('KATEGORI ' + displayCategoryName_(d.cabang, d.kategori)).toUpperCase(),
-    {
-      size: 14,
-      bold: true,
-      align: CENTER,
-      before: 0,
-      after: 13
-    }
-  );
-
-  // A. IDENTITAS KONTINGEN
-  heading('A. IDENTITAS KONTINGEN DAN PERLOMBAAN', 0);
-
-  var meta = w.table([
-    ['Kontingen', d.nama || ''],
-    [
-      'Jumlah Peserta',
-      String(d.jml || ((d.pesertaList || []).length))
-    ]
-  ]);
-
-  pdfGrid_(meta, [
-    150,
-    PDF_CONTENT_W - 150
-  ], {
-    size: 11,
-    padV: 4,
-    padH: 8,
-    minH: 22,
-    boldCols: [0],
-    labelCol: 0
-  });
-
-  // B. DATA PESERTA: tata letak dibedakan menurut kategori tunggal/beregu.
-  var isTeam = /^(beregu|kelompok|ganda)/i.test(String(d.kategori||''));
-  var isDuta = String(d.cabang||'') === 'Duta Pelajar';
-  var participantRows = isTeam
-    ? (isDuta ? [['No.','Nama Peserta','Jenis Kelamin','Tempat/Tanggal Lahir','WhatsApp','Peran','Alamat Rumah']] : [['No.','Nama Peserta','Jenis Kelamin','Tempat/Tanggal Lahir','Peran','Alamat Rumah']])
-    : (isDuta ? [['No.','Nama Peserta','Jenis Kelamin','Tempat/Tanggal Lahir','WhatsApp','Alamat Rumah']] : [['No.','Nama Peserta','Jenis Kelamin','Tempat/Tanggal Lahir','Alamat Rumah']]);
-  (d.pesertaList || []).forEach(function(p, i) {
-    var gender=p.gender === 'L' ? 'Putra' : p.gender === 'P' ? 'Putri' : String(p.gender||'');
-    var birth=[String(p.tempatLahir||''),idDate_(p.tanggalLahir)].filter(Boolean).join(', ');
-    var base=[String(i+1),String(p.nama||''),gender,birth];
-    if(isDuta)base.push(String(p.wa||''));
-    if(isTeam)base.push(String(p.role||'Anggota'));
-    base.push(String(p.alamat||''));participantRows.push(base);
-  });
-  heading(isTeam?'B. DATA PESERTA BEREGU / TIM':'B. DATA PESERTA TUNGGAL');
-  var pt=w.table(participantRows);
-  var widths=isTeam?(isDuta?[22,90,48,78,68,58,PDF_CONTENT_W-364]:[22,100,52,90,62,PDF_CONTENT_W-326]):(isDuta?[24,105,54,105,78,PDF_CONTENT_W-366]:[24,112,58,112,PDF_CONTENT_W-306]);
-  var aligns=isTeam?(isDuta?['C','L','C','C','C','C','L']:['C','L','C','C','C','L']):(isDuta?['C','L','C','C','C','L']:['C','L','C','C','L']);
-  pdfGrid_(pt,widths,{size:8.5,padV:3,padH:3,header:true,align:aligns});
-  if(String(d.cabang||'')==='Duta Pelajar'){
-    heading('C. KETERANGAN KHUSUS DUTA PELAJAR');
-    w.para('Pengumpulan ini menggunakan format umum formulir cabang lomba. Berkas khusus Duta Pelajar (CV dan berkas pendukung) tercatat sebagai lampiran pada bagian administrasi.',{size:10,align:JUSTIFY,after:3});
-    (d.files||[]).filter(function(f){return /duta pelajar/i.test(String(f.label||''));}).forEach(function(f){w.para('• '+String(f.label||'Lampiran Duta Pelajar')+' — '+String(f.name||''),{size:9.5,after:2,indent:10});});
+  function participantBirth(p) {
+    return [String(p.tempatLahir || '').trim(), idDate_(p.tanggalLahir)].filter(Boolean).join(', ') || '-';
   }
 
-  // ==================================================
-  // HALAMAN 2: ADMINISTRASI DAN TANDA TANGAN
-  // ==================================================
+  w.para('FORMULIR PENGUMPULAN BERKAS', {size:15,bold:true,align:CENTER,before:0,after:1});
+  w.para(('CABANG LOMBA ' + displayBranchName_(d.cabang)).toUpperCase(), {size:14,bold:true,align:CENTER,before:0,after:1});
+  w.para(('KATEGORI ' + displayCategoryName_(d.cabang,d.kategori)).toUpperCase(), {size:13,bold:true,align:CENTER,before:0,after:12});
 
-  body.appendPageBreak();
-
-  // Writer halaman kedua; kop diulang otomatis oleh header standar dokumen.
-  w = pdfWriter_(pdfPage_(body));
-
-  // C. CATATAN (jika tersedia)
-  var nx = 'C';
-
-  if (d.catatan) {
-    heading(nx + '. CATATAN');
-
-    w.para(String(d.catatan), {
-      size: 10.5,
-      align: JUSTIFY,
-      after: 5
+  // A. Identitas kontingen dan peserta. Tunggal ditata vertikal; beregu tetap tabel.
+  heading('A. INFORMASI KONTINGEN DAN PESERTA LOMBA', 0);
+  var infoRows = [['Nama Kontingen', d.nama || '']];
+  if (isTeam) infoRows.push(['Jumlah Peserta', String(d.jml || people.length) + ' orang']);
+  if (isTeam) {
+    var meta = w.table(infoRows);
+    pdfGrid_(meta,[150,PDF_CONTENT_W-150],{size:10.5,padV:4,padH:8,minH:22,boldCols:[0],labelCol:0});
+    w.para('\u00A0',{size:4,after:2});
+    w.para('DAFTAR PESERTA', {size:10.5,bold:true,color:PDF_NAVY,before:3,after:4});
+    var rows = [['No.','Nama Peserta','Jenis Kelamin','Tempat/Tanggal Lahir','Peran','Alamat Rumah']];
+    people.forEach(function(p,i){
+      rows.push([String(i+1),String(p.nama||''),p.gender==='L'?'Putra':p.gender==='P'?'Putri':String(p.gender||''),participantBirth(p),String(p.role||'-'),String(p.alamat||'')]);
     });
+    var tbl = w.table(rows);
+    pdfGrid_(tbl,[22,100,55,105,58,PDF_CONTENT_W-340],{size:8.5,padV:3,padH:3,header:true,align:['C','L','C','C','C','L']});
+  } else {
+    var vertical = [['Nama Kontingen',d.nama||'']];
+    people.forEach(function(p,i){
+      vertical.push(['Nama Peserta',p.nama||'']);
+      vertical.push(['Jenis Kelamin',p.gender==='L'?'Putra':p.gender==='P'?'Putri':(p.gender||'')]);
+      vertical.push(['Tempat/Tanggal Lahir',participantBirth(p)]);
+      vertical.push(['Alamat Rumah',p.alamat||'']);
+      if (isDuta) vertical.push(['Nomor WhatsApp Peserta',p.wa||'']);
+      if (p.role) vertical.push(['Peran',p.role]);
+    });
+    verticalFields(vertical);
 
-    nx = 'D';
+    // Field tambahan formulir dapat diteruskan sebagai d.additionalFields / d.formFields.
+    // Ini membuat field khusus Duta (misalnya motivasi) otomatis ikut tercetak saat ditambahkan di form.
+    if (isDuta) {
+      var extras = d.additionalFields || d.formFields || d.customFields || [];
+      if (Array.isArray(extras) && extras.length) {
+        extras.forEach(function(item){
+          if (item && typeof item === 'object') verticalFields([[item.label || item.name || 'Informasi Tambahan', item.value]]);
+        });
+      } else if (extras && typeof extras === 'object') {
+        Object.keys(extras).forEach(function(key){ verticalFields([[key,extras[key]]]); });
+      }
+    }
   }
 
-  // PERNYATAAN
-  heading(nx + '. PERNYATAAN');
+  // Duta Pelajar tetap hanya memiliki bagian A dan B. CV serta berkas pendukung
+  // tidak dicantumkan atau digabung ke formulir; seluruhnya masuk PDF Lampiran terpisah.
 
-  w.para(
-    'Data peserta dan dokumen yang disampaikan merupakan data milik kontingen yang bersangkutan. Formulir ini menjadi bukti pengiriman berkas kepada Panitia PORSENI 2026 PAC IPNU–IPPNU Patebon.',
-    {
-      size: 10.5,
-      align: JUSTIFY,
-      line: 1.3,
-      after: 6
-    }
-  );
-
-  // ===== JUDUL VERIFIKASI =====
-var verifikasi = w.para('DIVERIFIKASI OLEH');
-
-verifikasi
-  .setAlignment(DocumentApp.HorizontalAlignment.CENTER)
-  .setSpacingBefore(8)
-  .setSpacingAfter(6)
-  .setLineSpacing(1)
-  .setIndentStart(0)
-  .setIndentFirstLine(0)
-  .setIndentEnd(0);
-
-pdfFont_(verifikasi.editAsText(), 11, true);
-
-
-// ===== TABEL TANDA TANGAN 2 KOLOM =====
-var sg = w.table([
-  ['KOOR. PERLOMBAAN', 'SEKRETARIAT'],
-  ['\u00A0', '\u00A0'],
-  ['( SOCHIBUL MUSTAQIM )', '( A. FUAD SYAFI )']
-]);
-
-sg.setBorderWidth(0).setBorderColor('#FFFFFF');
-
-var sw = PDF_CONTENT_W / 2;
-
-for (var sc = 0; sc < 2; sc++) {
-  sg.setColumnWidth(sc, sw);
-}
-
-// Tinggi area tanda tangan
-sg.getRow(1).setMinimumHeight(122);
-
-// Pengaturan seluruh sel
-for (var sr = 0; sr < 3; sr++) {
-  for (var sc2 = 0; sc2 < 2; sc2++) {
-
-    var cell = sg.getCell(sr, sc2);
-
-    cell.setPaddingTop(1)
-      .setPaddingBottom(1)
-      .setPaddingLeft(5)
-      .setPaddingRight(5)
-      .setVerticalAlignment(
-        DocumentApp.VerticalAlignment.CENTER
-      );
-
-    var sp = cell.getChild(0).asParagraph();
-
-    sp.setAlignment(
-        DocumentApp.HorizontalAlignment.CENTER
-      )
-      .setSpacingBefore(0)
-      .setSpacingAfter(0)
-      .setLineSpacing(1)
-      .setIndentStart(0)
-      .setIndentFirstLine(0)
-      .setIndentEnd(0);
-
-    pdfFont_(cell.editAsText(), 11, true);
+  // Untuk kelompok berisi 6 peserta atau lebih, pindahkan seluruh bagian B ke halaman berikutnya.
+  // Ini menjaga redaksi verifikasi dan blok tanda tangan tidak terjepit/terpotong di bawah tabel.
+  if (isTeam && people.length >= 6) body.appendPageBreak();
+  heading('B. BUKTI PENERIMAAN DAN VERIFIKASI BERKAS', 8);
+  w.para('Dengan ini, Panitia PORSENI 2026 PAC IPNU–IPPNU Patebon menyatakan bahwa berkas pendaftaran peserta pada cabang lomba sebagaimana tercantum dalam dokumen ini telah diterima, diperiksa, dan dinyatakan lengkap serta memenuhi persyaratan administrasi sesuai dengan ketentuan yang berlaku. Dokumen ini diterbitkan sebagai bukti resmi penerimaan berkas pendaftaran yang telah melalui proses verifikasi dan disetujui oleh Panitia PORSENI 2026 PAC IPNU–IPPNU Patebon.',{size:10,align:JUSTIFY,line:1.2,after:5});
+  w.para('Apabila di kemudian hari ditemukan kesalahan, ketidaksesuaian, atau bukti yang menunjukkan bahwa berkas yang diserahkan tidak sesuai dengan ketentuan, panitia berhak melakukan pemeriksaan dan verifikasi lebih lanjut berdasarkan dokumen, data, serta bukti-bukti pendukung yang tersedia. Hasil pemeriksaan tersebut dapat menjadi dasar bagi panitia untuk mengambil tindakan sesuai dengan ketentuan yang berlaku.',{size:9.5,align:JUSTIFY,line:1.15,after:4});
+  var verifikasi = w.para('DITERBITKAN DAN DIVERIFIKASI OLEH PANITIA');
+  verifikasi.setAlignment(CENTER).setSpacingBefore(12).setSpacingAfter(12).setLineSpacing(1).setIndentStart(0).setIndentFirstLine(0).setIndentEnd(0);
+  pdfFont_(verifikasi.editAsText(),11,true);
+  var sg = w.table([['KOOR. PERLOMBAAN','SEKRETARIAT'],['\u00A0','\u00A0'],['( SOCHIBUL MUSTAQIM )','( A. FUAD SYAFI )']]);
+  sg.setBorderWidth(0).setBorderColor('#FFFFFF');
+  var sw = PDF_CONTENT_W/2;
+  for (var sc=0;sc<2;sc++) sg.setColumnWidth(sc,sw);
+  sg.getRow(1).setMinimumHeight(isTeam && people.length <= 3 ? 58 : (isTeam ? 72 : 82));
+  for (var sr=0;sr<3;sr++) for (var sc2=0;sc2<2;sc2++) {
+    var cell=sg.getCell(sr,sc2);
+    cell.setPaddingTop(3).setPaddingBottom(3).setPaddingLeft(5).setPaddingRight(5).setVerticalAlignment(DocumentApp.VerticalAlignment.CENTER);
+    var sp=cell.getChild(0).asParagraph();
+    sp.setAlignment(CENTER).setSpacingBefore(0).setSpacingAfter(0).setLineSpacing(1).setIndentStart(0).setIndentFirstLine(0).setIndentEnd(0);
+    pdfFont_(cell.editAsText(),11,true);
   }
-}
-
-// ===== TANDA TANGAN KOOR. PERLOMBAAN =====
-appendDriveSignature_(
-  sg.getCell(1, 0),
-  PDF_TTD_KOOR_ID,
-  220,
-  105
-);
-
-// ===== TANDA TANGAN SEKRETARIAT =====
-var sekretariatSignatureImage = appendDriveSignature_(
-  sg.getCell(1, 1),
-  PDF_TTD_SEKRETARIAT_ID,
-  190,
-  95
-);
-
-// Stempel berada di samping tanda tangan sekretariat, masuk ke area tanda tangan.
-appendDriveStampBesideSignature_(
-  sekretariatSignatureImage,
-  PDF_STEMPEL_PANITIA_ID,
-  48,
-  48
-);
-
-  w.para(
-    'Dokumen ini dibuat secara elektronik melalui website resmi PORSENI 2026 | Nomor Pendaftaran: ' +
-    d.reg + ' | ' + idDate_(d.waktu || new Date(), true),
-    {
-      size: 10,
-      italic: true,
-      align: CENTER,
-      color: '#3A4A63',
-      before: 5
-    }
-  );
-
-  // Surat Tugas dan Lampiran Khusus berformat PDF digabungkan setelah PDF formulir,
-  // dengan urutan yang disimpan pada daftar berkas unggahan.
+  appendDriveSignature_(sg.getCell(1,0),PDF_TTD_KOOR_ID,180,85);
+  // Tanda tangan dan stempel Sekretariat sudah menjadi satu gambar Drive.
+  appendDriveSignature_(sg.getCell(1,1),PDF_TTD_SEKRETARIAT_ID,180,85);
+  w.para('Dokumen ini dibuat secara elektronik melalui website resmi PORSENI 2026 | Nomor Pendaftaran: '+d.reg+' | '+idDate_(d.waktu||new Date(),true),{size:9.5,italic:true,align:CENTER,color:'#3A4A63',before:5});
   pdfTidyBody_(body);
-
-  return pdfSavePdf_(doc, d, folder);
+  return pdfSavePdf_(doc,d,folder);
 }
-
-
 
 /* ===================================================================
    V34 — PENGGABUNGAN PDF YANG TAHAN GANGGUAN
@@ -4199,10 +4053,10 @@ function adminRebuildRegistrationPdf_(d){
   rec.tanggal_lahir_peserta=String(val('Tanggal Lahir Peserta')||'');rec.alamat_peserta=String(val('Alamat Rumah Peserta')||'');rec.wa_peserta=String(val('WA Peserta')||'');
  }
  var newPdf=createRegistrationPdf(rec,folder);assertPrivateIndividualFile_(newPdf);
- var pdfCol=headers.indexOf('PDF Formulir (link Drive)')+1,archiveCol=headers.indexOf('Arsip PDF Panitia (link Drive)')+1,filesCol=headers.indexOf('Berkas (link Drive)')+1;
+ var pdfCol=headers.indexOf('PDF Formulir (link Drive)')+1,attachmentCol=headers.indexOf('PDF Lampiran (link Drive)')+1,archiveCol=headers.indexOf('Arsip PDF Panitia (link Drive)')+1,filesCol=headers.indexOf('Berkas (link Drive)')+1;
  rec.pendingFormPdfId=newPdf.getId();
  if(filesCol){var oldLines=String(val('Berkas (link Drive)')||'').split(/\r?\n/).filter(function(x){return !/^PDF formulir:/i.test(x);});oldLines.unshift('PDF formulir: '+newPdf.getUrl());sh.getRange(row,filesCol).setValue(oldLines.join('\n'));}
- var queued=queueAttachmentPdfMerge_(rec,folder);if(!queued){if(pdfCol)sh.getRange(row,pdfCol).setValue(newPdf.getUrl());if(archiveCol)sh.getRange(row,archiveCol).setValue('');}
+ var queued=queueAttachmentPdfMerge_(rec,folder);if(!queued){if(pdfCol)sh.getRange(row,pdfCol).setValue(newPdf.getUrl());if(attachmentCol)sh.getRange(row,attachmentCol).setValue('');if(archiveCol)sh.getRange(row,archiveCol).setValue('');}
  adminAudit_(admin,'BANGUN ULANG PDF FORMULIR DAN LAMPIRAN',type,row,reg,nama+' | '+savedPdf.length+' lampiran PDF + '+files.length+' berkas gambar');
  return {ok:true,message:queued?'PDF formulir baru sudah dibuat. PDF lampiran sedang disusun terpisah; tautan portal akan diperbarui otomatis setelah selesai.':'PDF formulir baru sudah dibuat. Tidak ada lampiran yang perlu digabung.'};
 }
