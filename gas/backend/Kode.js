@@ -1201,17 +1201,33 @@ function buildChampionshipPdfBlob_(state,isTest){
  function styleTable(table,header,compact){
   table.setBorderWidth(0.65).setBorderColor(line);
   for(var r=0;r<table.getNumRows();r++)for(var c=0;c<table.getRow(r).getNumCells();c++){
-   var cell=table.getCell(r,c),last=c===table.getRow(r).getNumCells()-1;
-   var leftPad=(c===0?SIDE:7),rightPad=(last?SIDE:7);
-   cell.setPaddingTop(compact?5:7).setPaddingBottom(compact?5:7).setPaddingLeft(leftPad).setPaddingRight(rightPad);
+   var cell=table.getCell(r,c);
+   cell.setPaddingTop(compact?5:7).setPaddingBottom(compact?5:7).setPaddingLeft(7).setPaddingRight(7);
    cell.editAsText().setFontFamily('Arial').setFontSize(compact?8:9).setForegroundColor(ink);
    if(header&&r===0){cell.setBackgroundColor(navy);cell.editAsText().setBold(true).setForegroundColor('#FFFFFF');}
    else cell.setBackgroundColor(r%2===0?pale:'#FFFFFF');
   }
  }
- function setTableColumnWidths(table,widths){try{widths.forEach(function(w,i){table.setColumnWidth(i,w);});}catch(e){}}
+ function setTableColumnWidths(table,widths){
+  try{
+   var total=widths.reduce(function(a,b){return a+b;},0),scale=PDF_CONTENT_W/total;
+   widths.forEach(function(w,i){table.setColumnWidth(i,w*scale);});
+  }catch(e){}
+ }
+ // Tabel dibungkus sel selebar halaman dengan padding 2 cm di kiri dan kanan.
+ // Dengan begitu garis tepi dan warna tabel ikut masuk ke area margin, bukan hanya teksnya.
  function appendPaddedTable(rows,widths,compact){
-  var t=body.appendTable(rows);styleTable(t,true,!!compact);if(widths)setTableColumnWidths(t,widths);return t;
+  var outer=body.appendTable([['']]);
+  outer.setBorderWidth(0).setBorderColor('#FFFFFF');
+  var wrap=outer.getCell(0,0);
+  wrap.setPaddingTop(0).setPaddingBottom(0).setPaddingLeft(SIDE).setPaddingRight(SIDE);
+  var spacer=wrap.getChild(0).asParagraph();
+  spacer.setSpacingBefore(0).setSpacingAfter(0).setLineSpacing(1);
+  spacer.editAsText().setFontSize(1);
+  var t=wrap.appendTable(rows);
+  styleTable(t,true,!!compact);
+  if(widths)setTableColumnWidths(t,widths);
+  return t;
  }
  if(isTest){var draft=center('DOKUMEN UJI COBA — BELUM RESMI',10,true,'#B42318');draft.setSpacingAfter(8);}
 
@@ -1234,7 +1250,14 @@ function buildChampionshipPdfBlob_(state,isTest){
  center(isTest?'Patebon, .................... 2026':'Patebon, .... ................ 2026',9,false,muted);
 
  // Ketua Panitia di sebelah kiri, Koordinator Perlombaan di sebelah kanan.
- var sign=body.appendTable([
+ var signOuter=body.appendTable([['']]);
+ signOuter.setBorderWidth(0).setBorderColor('#FFFFFF');
+ var signWrap=signOuter.getCell(0,0);
+ signWrap.setPaddingTop(0).setPaddingBottom(0).setPaddingLeft(SIDE).setPaddingRight(SIDE);
+ var signSpacer=signWrap.getChild(0).asParagraph();
+ signSpacer.setSpacingBefore(0).setSpacingAfter(0).setLineSpacing(1);
+ signSpacer.editAsText().setFontSize(1);
+ var sign=signWrap.appendTable([
   ['Mengetahui,','Ditetapkan oleh,'],
   ['Ketua Panitia Pelaksana','Koordinator Perlombaan'],
   ['\u00A0','\u00A0'],
