@@ -1170,86 +1170,72 @@ function buildChampionshipPdfBlob_(state,isTest){
  data.detail.forEach(function(x){byKey[normalizeEvent_(x.cabang)+'|'+normalizeEvent_(x.kategori)]=x;});
  var doc=pdfNewDoc_('TEMP_HASIL_RESMI_PORSENI_2026_'+new Date().getTime(),0);
  var body=doc.getBody();
- // Tata letak mengikuti dokumen resmi PORSENI lainnya: kop penuh, isi rapi,
- // palet navy-biru dengan aksen emas, dan jarak antarelemen yang konsisten.
+ // Header tetap full-width dari pdfNewDoc_. Isi SK diberi margin visual 2 cm
+ // melalui indent paragraf dan padding tabel, bukan mengubah margin halaman.
  var SIDE=PDF_SIDE||56.7;
- var navy='#0B2D72',blue='#0A63C9',cyan='#12A9E8',gold='#F7941D';
- var ink='#24364B',muted='#64748B',pale='#F3F7FD',paleBlue='#E8F1FF',line='#D7E3F2';
- function center(text,size,bold,color){
-  var q=body.appendParagraph(text);q.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
-  q.setIndentStart(SIDE).setIndentEnd(SIDE).setIndentFirstLine(0);
-  q.setSpacingBefore(0).setSpacingAfter(4);
-  q.editAsText().setFontFamily('Arial').setFontSize(size||10).setBold(!!bold).setForegroundColor(color||ink);
-  return q;
- }
- function para(text,size,bold){
-  var q=body.appendParagraph(text);q.setAlignment(DocumentApp.HorizontalAlignment.JUSTIFY);
-  q.setIndentStart(SIDE).setIndentEnd(SIDE).setIndentFirstLine(0);
-  q.setLineSpacing(1.15).setSpacingBefore(2).setSpacingAfter(7);
-  q.editAsText().setFontFamily('Arial').setFontSize(size||9).setBold(!!bold).setForegroundColor(ink);
-  return q;
- }
+ var navy='#24364B',muted='#666666',cream='#F7F3E8',ivory='#FFFDF7',softGray='#EEF0F2',line='#D8D5CC';
+ function center(text,size,bold){var q=body.appendParagraph(text);q.setAlignment(DocumentApp.HorizontalAlignment.CENTER);q.setIndentStart(SIDE).setIndentEnd(SIDE).setIndentFirstLine(0);q.editAsText().setFontFamily('Arial').setFontSize(size||10).setBold(!!bold);return q;}
+ function para(text,size,bold){var q=body.appendParagraph(text);q.setAlignment(DocumentApp.HorizontalAlignment.JUSTIFY);q.setIndentStart(SIDE).setIndentEnd(SIDE).setIndentFirstLine(0);q.setSpacingAfter(5);q.editAsText().setFontFamily('Arial').setFontSize(size||10).setBold(!!bold);return q;}
  function pageTitle(kicker,title,sub){
-  var k=center(kicker,8,true,blue);k.setSpacingAfter(3);
-  var h=center(title,16,true,navy);h.setSpacingAfter(3);
-  if(sub){var st=center(sub,9,true,muted);st.setSpacingAfter(7);}
-  var rule=body.appendParagraph('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-  rule.setAlignment(DocumentApp.HorizontalAlignment.CENTER).setIndentStart(SIDE).setIndentEnd(SIDE);
-  rule.setSpacingBefore(0).setSpacingAfter(11);
-  rule.editAsText().setFontFamily('Arial').setFontSize(7).setBold(true).setForegroundColor(gold);
+  center(kicker,9,true);center(title,15,true);if(sub)center(sub,9,false);
+  var lineP=body.appendParagraph('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');lineP.setAlignment(DocumentApp.HorizontalAlignment.CENTER);lineP.setIndentStart(SIDE).setIndentEnd(SIDE);lineP.setSpacingAfter(10);lineP.editAsText().setFontSize(7).setForegroundColor(navy);
  }
  function styleTable(table,header,compact){
-  table.setBorderWidth(0.65).setBorderColor(line);
+  table.setBorderWidth(0.6).setBorderColor(line);
   for(var r=0;r<table.getNumRows();r++)for(var c=0;c<table.getRow(r).getNumCells();c++){
-   var cell=table.getCell(r,c),last=c===table.getRow(r).getNumCells()-1;
-   var leftPad=(c===0?SIDE:7),rightPad=(last?SIDE:7);
-   cell.setPaddingTop(compact?5:7).setPaddingBottom(compact?5:7).setPaddingLeft(leftPad).setPaddingRight(rightPad);
-   cell.editAsText().setFontFamily('Arial').setFontSize(compact?8:9).setForegroundColor(ink);
-   if(header&&r===0){cell.setBackgroundColor(navy);cell.editAsText().setBold(true).setForegroundColor('#FFFFFF');}
-   else cell.setBackgroundColor(r%2===0?pale:'#FFFFFF');
+   var cell=table.getCell(r,c);
+   // Tabel berada pada area full-bleed agar kop tetap full-width; padding kolom
+   // pertama/terakhir menciptakan margin isi sekitar 2 cm tanpa mengecilkan header.
+   var leftPad=(c===0?SIDE:6),rightPad=(c===table.getRow(r).getNumCells()-1?SIDE:6);
+   cell.setPaddingTop(compact?3:5).setPaddingBottom(compact?3:5).setPaddingLeft(leftPad).setPaddingRight(rightPad);
+   cell.editAsText().setFontFamily('Arial').setFontSize(compact?8:9).setForegroundColor('#222222');
+   if(header&&r===0){cell.setBackgroundColor(cream);cell.editAsText().setBold(true).setForegroundColor(navy);}
+   else cell.setBackgroundColor(r%2===0?ivory:softGray);
   }
  }
- function setTableColumnWidths(table,widths){try{widths.forEach(function(w,i){table.setColumnWidth(i,w);});}catch(e){}}
+ function setTableColumnWidths(table,widths){
+  try{widths.forEach(function(w,i){table.setColumnWidth(i,w);});}catch(e){}
+ }
  function appendPaddedTable(rows,widths,compact){
   var t=body.appendTable(rows);styleTable(t,true,!!compact);if(widths)setTableColumnWidths(t,widths);return t;
  }
- if(isTest){var draft=center('DOKUMEN UJI COBA — BELUM RESMI',10,true,'#B42318');draft.setSpacingAfter(8);}
+ if(isTest){var draft=center('DOKUMEN UJI COBA — BELUM RESMI',11,true);draft.editAsText().setForegroundColor('#B3261E');}
 
  // HALAMAN 1 — SK DAN PERINGKAT JUARA UMUM
  pageTitle('PANITIA PELAKSANA PEKAN OLAHRAGA DAN SENI','SURAT KEPUTUSAN','PORSENI 2026 · PAC IPNU-IPPNU PATEBON');
- center('Nomor: ....../SK/PORSENI/2026',9,false,muted);
- center('TENTANG',10,true,blue);
- center('PENETAPAN JUARA UMUM PORSENI 2026',12,true,navy);
- center('PANITIA PELAKSANA PORSENI 2026',9,true,ink);
+ center('Nomor: ....../SK/PORSENI/2026',9,false);
+ center('TENTANG',10,true);
+ center('PENETAPAN JUARA UMUM PORSENI 2026',12,true);
+ center('PANITIA PELAKSANA PORSENI 2026',10,true);
  para('Dengan memohon rahmat Tuhan Yang Maha Esa, Panitia Pelaksana Pekan Olahraga dan Seni (PORSENI) 2026 PAC IPNU-IPPNU Patebon, setelah memperhatikan dan mempertimbangkan hasil seluruh cabang perlombaan, menetapkan keputusan sebagai berikut:',9,false);
  para('Menimbang: bahwa untuk memberikan kepastian dan pengesahan atas hasil kejuaraan PORSENI 2026, perlu ditetapkan Juara Umum berdasarkan hasil akhir seluruh cabang perlombaan.',9,false);
  para('Memperhatikan: hasil penilaian dan rekapitulasi panitia pada seluruh cabang perlombaan PORSENI 2026.',9,false);
- center('MEMUTUSKAN',11,true,blue);
+ center('MEMUTUSKAN',11,true);
  para('Menetapkan: KEPUTUSAN PANITIA PELAKSANA PORSENI 2026 TENTANG PENETAPAN JUARA UMUM PORSENI 2026.',9,true);
  para('Menetapkan tiga kontingen sebagai Juara Umum PORSENI 2026 dengan urutan dan perolehan poin sebagai berikut:',9,false);
- var winnerRows=[['Peringkat','Nama Kontingen','Total Poin']];
+ var winnerRows=[['Juara','Nama Kontingen','Total Poin']];
  for(var wi=0;wi<3;wi++){var wm=(data.medals||[])[wi];winnerRows.push([wi===0?'Juara Umum I':wi===1?'Juara Umum II':'Juara Umum III',wm?wm.k:'—',wm?String(wm.points):'—']);}
- appendPaddedTable(winnerRows,[155,260,180],false);
+ var wt=appendPaddedTable(winnerRows,[155,260,180],false);
  para('Keputusan ini berlaku sejak tanggal ditetapkan. Apabila di kemudian hari terdapat kekeliruan, akan dilakukan perbaikan sebagaimana mestinya.',9,false);
- center(isTest?'Patebon, .................... 2026':'Patebon, .... ................ 2026',9,false,muted);
-
- // Ketua Panitia di sebelah kiri, Koordinator Perlombaan di sebelah kanan.
+ center(isTest?'Patebon, .................... 2026':'Patebon, .... ................ 2026',9,false);
  var sign=body.appendTable([
   ['Mengetahui,','Ditetapkan oleh,'],
-  ['Ketua Panitia Pelaksana','Koordinator Perlombaan'],
+  ['Koordinator Perlombaan','Ketua Panitia Pelaksana'],
   ['\u00A0','\u00A0'],
-  ['Prasetyo Wahyu A.R.','Sochibul Mustaqim']
+  ['Sochibul Mustaqim','Prasetyo Wahyu A.R.']
  ]);
  sign.setBorderWidth(0);
  sign.setColumnWidth(0,PDF_CONTENT_W/2).setColumnWidth(1,PDF_CONTENT_W/2);
- sign.getRow(2).setMinimumHeight(82);
+ sign.getRow(2).setMinimumHeight(78);
  for(var sr=0;sr<sign.getNumRows();sr++)for(var sc=0;sc<2;sc++){
-  var cell=sign.getCell(sr,sc);cell.setPaddingTop(4).setPaddingBottom(4).setPaddingLeft(7).setPaddingRight(7);
+  var cell=sign.getCell(sr,sc);cell.setPaddingTop(3).setPaddingBottom(3).setPaddingLeft(6).setPaddingRight(6);
   cell.getChild(0).asParagraph().setAlignment(DocumentApp.HorizontalAlignment.CENTER);
-  cell.editAsText().setFontFamily('Arial').setFontSize(9).setForegroundColor(ink).setBold(sr===1||sr===3);
+  cell.editAsText().setFontFamily('Arial').setFontSize(9).setBold(sr===1||sr===3);
  }
- appendDriveSignature_(sign.getCell(2,0),PDF_TTD_KETUA_ID,150,70);
- appendDriveSignature_(sign.getCell(2,1),PDF_TTD_KOOR_ID,150,70);
+ // SK Hasil Kejuaraan memakai Koordinator Perlombaan di kiri dan Ketua Panitia di kanan.
+ // File Ketua Panitia dari Drive sudah menjadi satu aset tanda tangan + stempel.
+ appendDriveSignature_(sign.getCell(2,0),PDF_TTD_KOOR_ID,150,68);
+ appendDriveSignature_(sign.getCell(2,1),PDF_TTD_KETUA_ID,150,68);
 
  // LAMPIRAN I — REKAPITULASI PEROLEHAN JUARA SETIAP KONTINGEN
  body.appendPageBreak();
@@ -3918,19 +3904,6 @@ function createBranchRegistrationPdf_(d, folder) {
       if (p.role) vertical.push(['Peran',p.role]);
     });
     verticalFields(vertical);
-    if (isDuta && d.dutaProfile) {
-      verticalFields([['Instagram Pribadi',d.dutaProfile.instagram||'']]);
-      heading('B. GAGASAN DAN KOMITMEN CALON DUTA PELAJAR', 8);
-      verticalFields([
-        ['1. Motivasi Mengikuti Duta Pelajar',d.dutaProfile.motivasi],
-        ['2. Visi sebagai Duta Pelajar NU Patebon',d.dutaProfile.visi],
-        ['3. Misi untuk Mewujudkan Visi',d.dutaProfile.misi],
-        ['4. Harapan untuk Pelajar NU Patebon',d.dutaProfile.harapan],
-        ['5. Program atau Gagasan Unggulan',d.dutaProfile.program],
-        ['6. Komitmen sebagai Duta Pelajar',d.dutaProfile.komitmen],
-        ['7. Isu atau Tantangan Pelajar NU Patebon',d.dutaProfile.isu]
-      ]);
-    }
 
     // Field tambahan formulir dapat diteruskan sebagai d.additionalFields / d.formFields.
     // Ini membuat field khusus Duta (misalnya motivasi) otomatis ikut tercetak saat ditambahkan di form.
@@ -3952,7 +3925,7 @@ function createBranchRegistrationPdf_(d, folder) {
   // Untuk kelompok berisi 6 peserta atau lebih, pindahkan seluruh bagian B ke halaman berikutnya.
   // Ini menjaga redaksi verifikasi dan blok tanda tangan tidak terjepit/terpotong di bawah tabel.
   if (isTeam && people.length >= 6) body.appendPageBreak();
-  heading((isDuta ? 'C. ' : 'B. ') + 'BUKTI PENERIMAAN DAN VERIFIKASI BERKAS', 8);
+  heading('B. BUKTI PENERIMAAN DAN VERIFIKASI BERKAS', 8);
   w.para('Dengan ini, Panitia PORSENI 2026 PAC IPNU–IPPNU Patebon menyatakan bahwa berkas pendaftaran peserta pada cabang lomba sebagaimana tercantum dalam dokumen ini telah diterima, diperiksa, dan dinyatakan lengkap serta memenuhi persyaratan administrasi sesuai dengan ketentuan yang berlaku. Dokumen ini diterbitkan sebagai bukti resmi penerimaan berkas pendaftaran yang telah melalui proses verifikasi dan disetujui oleh Panitia PORSENI 2026 PAC IPNU–IPPNU Patebon.',{size:10,align:JUSTIFY,line:1.2,after:5});
   w.para('Apabila di kemudian hari ditemukan kesalahan, ketidaksesuaian, atau bukti yang menunjukkan bahwa berkas yang diserahkan tidak sesuai dengan ketentuan, panitia berhak melakukan pemeriksaan dan verifikasi lebih lanjut berdasarkan dokumen, data, serta bukti-bukti pendukung yang tersedia. Hasil pemeriksaan tersebut dapat menjadi dasar bagi panitia untuk mengambil tindakan sesuai dengan ketentuan yang berlaku.',{size:9.5,align:JUSTIFY,line:1.15,after:4});
   var verifikasi = w.para('DITERBITKAN DAN DIVERIFIKASI OLEH PANITIA');
