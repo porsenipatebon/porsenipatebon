@@ -2390,6 +2390,25 @@ var PDF_NAVY = '#0B2D72';
 var PDF_INK = '#111111';
 var ID_MONTHS_ = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
 
+// Usia dihitung pada tanggal tetap PORSENI, bukan tanggal input atau tanggal cetak.
+var PORSENI_AGE_REFERENCE_ = '2026-12-25';
+function porseniAge_(birthValue) {
+  var birthText = birthValue instanceof Date && !isNaN(birthValue.getTime())
+    ? Utilities.formatDate(birthValue, 'Asia/Jakarta', 'yyyy-MM-dd')
+    : String(birthValue == null ? '' : birthValue).trim();
+  var m = birthText.match(/^(\d{4})-(\d{2})-(\d{2})(?:$|T)/);
+  if (!m) return 'Belum dihitung';
+  var y=Number(m[1]), mo=Number(m[2])-1, day=Number(m[3]);
+  var birth=new Date(Date.UTC(y,mo,day));
+  if (birth.getUTCFullYear()!==y || birth.getUTCMonth()!==mo || birth.getUTCDate()!==day) return 'Tanggal lahir tidak valid';
+  var rp=PORSENI_AGE_REFERENCE_.split('-').map(Number), ref=new Date(Date.UTC(rp[0],rp[1]-1,rp[2]));
+  if (birth>ref) return 'Tanggal lahir melewati tanggal acuan';
+  var years=ref.getUTCFullYear()-y, months=ref.getUTCMonth()-mo, days=ref.getUTCDate()-day;
+  if (days<0) { months--; days+=new Date(Date.UTC(ref.getUTCFullYear(),ref.getUTCMonth(),0)).getUTCDate(); }
+  if (months<0) { years--; months+=12; }
+  return years+' tahun, '+months+' bulan, '+days+' hari';
+}
+
 function idDate_(v, withTime) {
   if (v === undefined || v === null || v === '') return '';
   var s = String(v).trim(), m = s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
@@ -2625,6 +2644,7 @@ function createRegistrationPdf(d, folder) {
     ['Waktu Pendaftaran', idDate_(d.waktu || new Date(), true)],
     ['Nama Ketua Kontingen', d.ketua || ''],
     ['Tempat/Tanggal Lahir Ketua', tempatTanggal],
+    ['Usia Ketua per 25 Desember 2026', porseniAge_(d.tanggal_lahir_ketua)],
     ['Alamat Rumah Ketua', d.alamat || ''],
     ['No. WA Ketua Kontingen', d.wa_ketua || ''],
     ['Email Kontingen', d.email || ''],
@@ -3887,6 +3907,7 @@ function createBranchRegistrationPdf_(d, folder) {
   function participantBirth(p) {
     return [String(p.tempatLahir || '').trim(), idDate_(p.tanggalLahir)].filter(Boolean).join(', ') || '-';
   }
+  function participantAge(p) { return porseniAge_(p.tanggalLahir); }
 
   w.para('FORMULIR PENGUMPULAN BERKAS', {size:15,bold:true,align:CENTER,before:0,after:1});
   w.para(('CABANG LOMBA ' + displayBranchName_(d.cabang)).toUpperCase(), {size:14,bold:true,align:CENTER,before:0,after:1});
@@ -3901,18 +3922,19 @@ function createBranchRegistrationPdf_(d, folder) {
     pdfGrid_(meta,[150,PDF_CONTENT_W-150],{size:10.5,padV:4,padH:8,minH:22,boldCols:[0],labelCol:0});
     w.para('\u00A0',{size:4,after:2});
     w.para('DAFTAR PESERTA', {size:10.5,bold:true,color:PDF_NAVY,before:3,after:4});
-    var rows = [['No.','Nama Peserta','Jenis Kelamin','Tempat/Tanggal Lahir','Peran','Alamat Rumah']];
+    var rows = [['No.','Nama Peserta','Jenis Kelamin','Tempat/Tanggal Lahir','Usia per 25 Des 2026','Peran','Alamat Rumah']];
     people.forEach(function(p,i){
-      rows.push([String(i+1),String(p.nama||''),p.gender==='L'?'Putra':p.gender==='P'?'Putri':String(p.gender||''),participantBirth(p),String(p.role||'-'),String(p.alamat||'')]);
+      rows.push([String(i+1),String(p.nama||''),p.gender==='L'?'Putra':p.gender==='P'?'Putri':String(p.gender||''),participantBirth(p),participantAge(p),String(p.role||'-'),String(p.alamat||'')]);
     });
     var tbl = w.table(rows);
-    pdfGrid_(tbl,[22,100,55,105,58,PDF_CONTENT_W-340],{size:8.5,padV:3,padH:3,header:true,align:['C','L','C','C','C','L']});
+    pdfGrid_(tbl,[20,82,48,92,76,48,PDF_CONTENT_W-366],{size:7.8,padV:3,padH:2,header:true,align:['C','L','C','C','C','C','L']});
   } else {
     var vertical = [['Nama Kontingen',d.nama||'']];
     people.forEach(function(p,i){
       vertical.push(['Nama Peserta',p.nama||'']);
       vertical.push(['Jenis Kelamin',p.gender==='L'?'Putra':p.gender==='P'?'Putri':(p.gender||'')]);
       vertical.push(['Tempat/Tanggal Lahir',participantBirth(p)]);
+      vertical.push(['Usia per 25 Desember 2026',participantAge(p)]);
       vertical.push(['Alamat Rumah',p.alamat||'']);
       if (isDuta) vertical.push(['Nomor WhatsApp Peserta',p.wa||'']);
       if (p.role) vertical.push(['Peran',p.role]);
