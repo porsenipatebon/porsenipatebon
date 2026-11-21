@@ -633,7 +633,7 @@ function requireContingentSession_(token){
 }
 function contingentLogout_(token){token=String(token||'');if(/^[a-f0-9]{64}$/.test(token))CacheService.getScriptCache().remove('cont_session_'+token);return {ok:true};}
 
-function doGet(){return out({ok:true,info:'PORSENI 2026 form endpoint',backendVersion:'PORSENI-2026-PERF-V41-20261121',pinMaxAttempts:PIN_MAX_ATTEMPTS,pinLockMinutes:PIN_LOCK_MS/60000,contingentSessionSeconds:CONTINGENT_SESSION_SECONDS});}
+function doGet(){return out({ok:true,info:'PORSENI 2026 form endpoint',backendVersion:'PORSENI-2026-EMAIL-V45-20261122',pinMaxAttempts:PIN_MAX_ATTEMPTS,pinLockMinutes:PIN_LOCK_MS/60000,contingentSessionSeconds:CONTINGENT_SESSION_SECONDS});}
 function doPost(e){
  var lock,d=null,stage='baca_request';
  try{
@@ -1004,7 +1004,7 @@ function adminUpdateStatus_(d){
  if(emailPayload){
   try{
    var mail=adminSendEmail_(emailPayload);
-   result.emailSent=true;result.recipient=mail.recipient;result.message+=' Pemberitahuan email berhasil dikirim.';
+   result.emailSent=true;result.recipient=mail.recipient;result.message+=' Pemberitahuan email berhasil dikirim ke '+mail.recipient+'.';
   }catch(mailErr){
    result.emailSent=false;result.emailError=String(mailErr&&mailErr.message||mailErr);
    if(type==='kontingen'&&status==='Terverifikasi'&&/masih dalam proses penggabungan/i.test(result.emailError)&&isMergePending_(String(reg||''))){result.emailPending=true;result.message+=' Email verifikasi akan dikirim otomatis begitu PDF selesai digabungkan.';}else{result.message+=' Namun email belum berhasil dikirim: '+result.emailError;}
@@ -1567,6 +1567,7 @@ function adminSendEmail_(d){
   }
  }
  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))throw new Error('Alamat email penerima tidak tersedia atau tidak valid pada data pendaftaran kontingen.');
+ var typoFix=emailTypoHint_(email);if(typoFix)throw new Error('Alamat email "'+email+'" tampak salah ketik (mungkin maksudnya '+typoFix+'). Perbaiki alamat pada data kontingen, lalu kirim ulang.');
  var cabang=String(val('Cabang Lomba')||'').trim(),kategori=String(val('Kategori')||'').trim();
  var jenis=type==='kontingen'?'pendaftaran kontingen':'berkas cabang lomba'+(cabang?' '+cabang:'')+(kategori?' ('+kategori+')':'');
  var subject='[PORSENI 2026] '+status+' - '+nama+(type==='cabang'?(cabang?' - '+cabang:'')+(kategori?' ('+kategori+')':''):'')+(reg?' ('+reg+')':'');
@@ -1594,27 +1595,23 @@ function adminSendEmail_(d){
   body+='\n\nTerima kasih atas perhatian dan kerja samanya.\n\nSalam,\nPanitia PORSENI 2026\nPAC IPNU-IPPNU Kecamatan Patebon\n“Unitas Ad Gloriam”\n\nEmail ini dikirim melalui Portal Panitia PORSENI 2026.';
  }
  if(MailApp.getRemainingDailyQuota()<1)throw new Error('Kuota pengiriman email harian akun Google Apps Script telah habis.');
+ var partialLampiran=false;
  var mailOptions={to:email,subject:subject,body:body,name:SENDER_NAME,replyTo:REPLY_TO};
   if(type==='kontingen'&&status==='Terverifikasi'){
-   var pdfId=getDriveFileIdFromUrl_(String(val('PDF Formulir (link Drive)')||''));
-   if(!pdfId)throw new Error('PDF formulir kontingen belum tersedia. Bangun ulang PDF terlebih dahulu.');
-   var pdfFile=DriveApp.getFileById(pdfId),hasPdfAttachment=false;
-   parsePortalFiles_(String(val('Berkas (link Drive)')||'')).forEach(function(f){
-    if(/^pdf formulir$/i.test(f.label))return;
-    var id=getDriveFileIdFromUrl_(f.url);if(!id)return;
-    try{if(DriveApp.getFileById(id).getMimeType()===MimeType.PDF)hasPdfAttachment=true;}catch(ignore){}
-   });
-   if(hasPdfAttachment&&!wasPdfMerged_(pdfFile))throw new Error('PDF lengkap masih dalam proses penggabungan. Tunggu sampai PDF final siap, lalu simpan verifikasi kembali untuk mengirim email beserta lampiran PDF penuh.');
-   mailOptions.attachments=[pdfFile.getBlob().setName(pdfFile.getName())];
-   mailOptions.body+='\n\nTerlampir PDF formulir pendaftaran kontingen lengkap beserta lampiran berkas yang telah digabungkan.';
+   var lampiranPending=isMergePending_(reg),formUrl=String(val('PDF Formulir (link Drive)')||'');
+   if(!formUrl&&lampiranPending){var pfId=pendingFormPdfIdForReg_(reg);if(pfId)formUrl='https://drive.google.com/file/d/'+pfId+'/view';}
+   var built=kontingenEmailAttachments_(formUrl,lampiranPending?'':String(val('PDF Lampiran (link Drive)')||''));
+   partialLampiran=lampiranPending;
+   mailOptions.attachments=built.attachments;
+   mailOptions.body+='\n\nTerlampir PDF formulir pendaftaran kontingen'+built.note+'.'+(lampiranPending?' Daftar lampiran masih disusun dan akan kami kirim terpisah segera setelah selesai.':'');
   }
   sendPorseniEmail_(mailOptions);
  try{
   var log=ss.getSheetByName('Log Email')||ss.insertSheet('Log Email');
   if(log.getLastRow()===0){log.appendRow(['Waktu','Admin','Jenis Data','Baris Sheet','Nomor Registrasi','Nama Kontingen','Email Tujuan','Status Verifikasi','Subjek','Hasil']);log.setFrozenRows(1);log.getRange(1,1,1,10).setFontWeight('bold');}
-  log.appendRow([new Date(),admin.user||'Admin',type,rowNumber,reg,nama,email,status,subject,'Terkirim']);
+  log.appendRow([new Date(),admin.user||'Admin',type,rowNumber,reg,nama,email,status,subject,partialLampiran?'Terkirim (tanpa daftar lampiran)':'Terkirim']);
  }catch(logErr){console.error('Email terkirim, tetapi pencatatan Log Email gagal: '+logErr);}
- return {ok:true,message:'Email berhasil dikirim.',recipient:email,subject:subject,sentAt:Utilities.formatDate(new Date(),perfTz_(),'dd-MM-yyyy HH:mm:ss')};
+ return {ok:true,message:'Email berhasil dikirim ke '+email+'. Jika belum masuk, periksa folder Spam atau pastikan alamat tersebut benar.'+(partialLampiran?' Daftar lampiran masih disusun dan akan dikirim otomatis setelah selesai.':''),recipient:email,subject:subject,sentAt:Utilities.formatDate(new Date(),perfTz_(),'dd-MM-yyyy HH:mm:ss')};
 }
 /** Jalankan satu kali dari editor Apps Script untuk memberikan otorisasi pengiriman email. */
 function authorizeEmailService(){
@@ -1654,7 +1651,7 @@ function validate(d){
  ['nama'].forEach(function(k){if(!String(d[k]||'').trim())throw new Error('Nama kontingen wajib diisi.');});
  if(!canonicalContingentName_(d.nama)||KONTINGEN.indexOf(canonicalContingentName_(d.nama))<0)throw new Error('Nama kontingen tidak ada dalam daftar resmi. Silakan pilih dari dropdown.');
  if(d.type==='kontingen'){if(!registrationIsOpen_('kontingen'))assertKontingenWindow_();['ketua','tempat_lahir_ketua','tanggal_lahir_ketua','alamat','wa_ketua','email','ketua_pr_ipnu','wa_ketua_ipnu','ketua_pr_ippnu','wa_ketua_ippnu'].forEach(function(k){d[k]=cleanKontingenField_(k,d[k]);});}
- if(d.type==='kontingen'){d.email=String(d.email||'').trim().toLowerCase();if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email))throw new Error('Alamat email kontingen wajib diisi dengan format yang valid. Email ini digunakan untuk seluruh notifikasi pendaftaran dan cabang lomba.');}
+ if(d.type==='kontingen'){d.email=String(d.email||'').trim().toLowerCase();var emailTypo=emailTypoHint_(d.email);if(emailTypo)throw new Error('Alamat email tampak salah ketik. Maksud Anda '+emailTypo+'? Periksa kembali penulisan email, karena seluruh notifikasi dikirim ke alamat ini.');if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email))throw new Error('Alamat email kontingen wajib diisi dengan format yang valid. Email ini digunakan untuk seluruh notifikasi pendaftaran dan cabang lomba.');}
  if(d.type==='cabang'){
   if(registrationControls_().maintenanceCabang)throw new Error('Pendaftaran cabang lomba sedang ditutup sementara karena pemeliharaan/perbaikan sistem. Silakan coba kembali setelah panitia membuka pendaftaran.');
   var canonicalName=canonicalContingentName_(d.nama);
@@ -3367,7 +3364,7 @@ async function processPdfMergeQueue_(){
     assertPrivateIndividualFile_(finalFile);
     updateMergedPdfRecord_(job,finalFile);
      if(job.role==='attachment')markDocumentMigrationMerge_(job,true);
-     if(job.role!=='attachment'){try{sendApprovedContingentPdfEmailAfterMerge_(job,finalFile);}catch(autoMailErr){console.warn("Email PDF kontingen setelah penggabungan gagal: "+autoMailErr);}}
+     if(job.type==='kontingen'){try{sendApprovedContingentPdfEmailAfterMerge_(job,finalFile);}catch(autoMailErr){console.warn("Email PDF kontingen setelah penggabungan gagal: "+autoMailErr);}}
     if(!job.preserveMainPdf){try{DriveApp.getFileById(job.mainPdfId).setTrashed(true);}catch(renameErr){}}
     (job.oldPdfIds||[]).forEach(function(oldId){try{if(oldId&&oldId!==finalFile.getId())DriveApp.getFileById(oldId).setTrashed(true);}catch(cleanOldErr){console.warn('PDF lama tidak dapat dipindahkan ke Trash: '+cleanOldErr);}});
     if(job.cleanupFolder){try{DriveApp.getFolderById(job.folderId).setTrashed(true);}catch(cleanErr){console.warn('Folder sementara tidak dapat dibersihkan: '+cleanErr);}}
@@ -3415,11 +3412,12 @@ function sendApprovedContingentPdfEmailAfterMerge_(job,finalFile){
  if(log.getLastRow()===0){log.appendRow(['Waktu','Admin','Jenis Data','Baris Sheet','Nomor Registrasi','Nama Kontingen','Email Tujuan','Status Verifikasi','Subjek','Hasil']);log.setFrozenRows(1);log.getRange(1,1,1,10).setFontWeight('bold');}
  var logs=log.getDataRange().getValues(),lh=logs[0],ri=lh.indexOf('Nomor Registrasi'),si=lh.indexOf('Status Verifikasi'),hi=lh.indexOf('Hasil');
  if(ri>=0&&si>=0&&hi>=0&&logs.slice(1).some(function(r){return String(r[ri]||'')===String(job.reg||'')&&String(r[si]||'')==='Terverifikasi'&&String(r[hi]||'')==='Terkirim';}))return {sent:false,reason:'Email sudah terkirim.'};
+ var built;try{built=kontingenEmailAttachments_(String(row[ix['PDF Formulir (link Drive)']]||''),String(row[ix['PDF Lampiran (link Drive)']]||''));}catch(buildErr){built={attachments:[finalFile.getBlob().setName(finalFile.getName())],note:''};}
  var subject='[PORSENI 2026] TERVERIFIKASI - '+nama+' ('+job.reg+')';
- var body='Assalamu’alaikum Wr. Wb.\n\nYth. '+(ketua?'Bapak/Ibu '+ketua+' selaku ':'')+'Ketua Kontingen '+nama+',\n\nAlhamdulillah, pendaftaran kontingen telah TERVERIFIKASI. Terima kasih atas kerja sama dan partisipasinya.\n\nBersama email ini kami lampirkan PDF formulir pendaftaran lengkap beserta seluruh lampiran yang telah digabungkan.\n\nSalam,\nPanitia PORSENI 2026\nPAC IPNU-IPPNU Kecamatan Patebon\n“Unitas Ad Gloriam”';
+ var body='Assalamu’alaikum Wr. Wb.\n\nYth. '+(ketua?'Bapak/Ibu '+ketua+' selaku ':'')+'Ketua Kontingen '+nama+',\n\nAlhamdulillah, pendaftaran kontingen telah TERVERIFIKASI. Terima kasih atas kerja sama dan partisipasinya.\n\nBersama email ini kami lampirkan PDF formulir pendaftaran kontingen'+built.note+'.\n\nSalam,\nPanitia PORSENI 2026\nPAC IPNU-IPPNU Kecamatan Patebon\n“Unitas Ad Gloriam”';
  try{
   if(MailApp.getRemainingDailyQuota()<1)throw new Error('Kuota email harian habis.');
-  sendPorseniEmail_({to:email,subject:subject,body:body,attachments:[finalFile.getBlob().setName(finalFile.getName())],name:SENDER_NAME,replyTo:REPLY_TO});
+  sendPorseniEmail_({to:email,subject:subject,body:body,attachments:built.attachments,name:SENDER_NAME,replyTo:REPLY_TO});
   log.appendRow([new Date(),'Sistem (setelah PDF selesai)','kontingen','',job.reg,nama,email,'Terverifikasi',subject,'Terkirim']);
   return {sent:true,recipient:email};
  }catch(err){
@@ -3595,7 +3593,7 @@ function cleanKontingenField_(key,val){
   if(f.type==='place'&&(v.length<3||v.length>60||!/[A-Za-z]/.test(v)))throw new Error(f.label+' tidak valid (minimal 3 karakter, memuat huruf).');
   if(f.type==='address'&&(v.length<10||v.length>250))throw new Error(f.label+' harus lengkap (minimal 10 karakter).');
   if(f.type==='phone'){v=normPhone_(v);if(!/^08\d{8,12}$/.test(v))throw new Error(f.label+' tidak valid. Gunakan format 08xxxxxxxxxx.');}
-  if(f.type==='email'){v=v.toLowerCase();if(v.length>120||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v))throw new Error(f.label+' tidak valid.');}
+  if(f.type==='email'){v=v.toLowerCase();var editTypo=emailTypoHint_(v);if(editTypo)throw new Error(f.label+' tampak salah ketik (mungkin maksudnya '+editTypo+').');if(v.length>120||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v))throw new Error(f.label+' tidak valid.');}
   if(f.type==='date'){
     var m=v.match(/^(\d{4})-(\d{2})-(\d{2})$/);if(!m)throw new Error(f.label+' tidak valid.');
     var dt=new Date(Number(m[1]),Number(m[2])-1,Number(m[3]));
@@ -4241,7 +4239,7 @@ function markBouncedEmails_(log,threadsText,nowMs){
  if(ei<0||hi<0)return [];
  var cutoff=(nowMs||Date.now())-3*86400000,candidates={},rowsByEmail={},r;
  for(r=1;r<vals.length;r++){
-  if(String(vals[r][hi]||'')!=='Terkirim')continue;
+  if(String(vals[r][hi]||'').indexOf('Terkirim')!==0)continue;
   var when=vals[r][ti] instanceof Date?vals[r][ti].getTime():0;if(when&&when<cutoff)continue;
   var em=String(vals[r][ei]||'').trim().toLowerCase();if(!em)continue;
   candidates[em]=true;(rowsByEmail[em]=rowsByEmail[em]||[]).push(r+1);
@@ -4288,6 +4286,7 @@ function diagnoseEmailDelivery(){
  info.pengirimSiap=effective===SENDER_EMAIL.toLowerCase()||aliases.indexOf(SENDER_EMAIL.toLowerCase())>=0;
  info.aliasGmail=aliases;info.kuotaEmailTersisa=MailApp.getRemainingDailyQuota();
  info.penerimaNotifikasiPanitia=String(NOTIFY).split(',').length;
+ try{var pj=listPdfMergeJobs_();info.penggabunganPdf={libraryPDFAppSiap:pdfMergeReady_(),jumlahAntrean:pj.length,antreanTertua:pj.length?String(pj[0].createdAt||''):'-'};}catch(pe){info.penggabunganPdf='gagal dibaca: '+pe;}
  var log=SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Log Email');
  info.logEmailTerakhir=log&&log.getLastRow()>1?log.getRange(Math.max(2,log.getLastRow()-9),1,Math.min(10,log.getLastRow()-1),10).getValues().map(function(r){return {email:r[6],status:r[7],hasil:r[9]};}):[];
  if(String(UJI_EMAIL_TUJUAN||'').trim()){
@@ -4296,4 +4295,67 @@ function diagnoseEmailDelivery(){
  }else info.emailUji='Lewati. Isi UJI_EMAIL_TUJUAN untuk mengirim email uji.';
  Logger.log(JSON.stringify(info,null,2));
  return info;
+}
+
+
+/** Lampiran email verifikasi kontingen: PDF formulir (wajib) + PDF daftar lampiran (bila ada dan muat di batas 25 MB Gmail). */
+function kontingenEmailAttachments_(formUrl,lampiranUrl){
+ var formId=getDriveFileIdFromUrl_(String(formUrl||''));
+ if(!formId)throw new Error('PDF formulir kontingen belum tersedia. Bangun ulang PDF terlebih dahulu.');
+ var form=DriveApp.getFileById(formId),out=[form.getBlob().setName(form.getName())],note='';
+ var lampiranId=getDriveFileIdFromUrl_(String(lampiranUrl||''));
+ if(lampiranId){
+  try{
+   var lampiran=DriveApp.getFileById(lampiranId);
+   if(form.getSize()+lampiran.getSize()<=24*1024*1024){out.push(lampiran.getBlob().setName(lampiran.getName()));note=' dan PDF daftar lampiran berkas';}
+   else note='. Daftar lampiran tidak dapat dilampirkan karena ukurannya terlalu besar dan tersimpan pada arsip resmi panitia';
+  }catch(lampiranErr){console.warn('Daftar lampiran tidak dapat dilampirkan: '+lampiranErr);}
+ }
+ return {attachments:out,note:note};
+}
+
+
+/** Mengembalikan alamat yang kemungkinan dimaksud bila email tampak salah ketik, atau '' bila tampak wajar. */
+var EMAIL_DOMAIN_TYPOS_ = {
+ 'gmial.com':'gmail.com','gmal.com':'gmail.com','gmai.com':'gmail.com','gmaill.com':'gmail.com','gmail.con':'gmail.com','gmail.co':'gmail.com','gmail.cm':'gmail.com',
+ 'gmail.comm':'gmail.com','gmail.coom':'gmail.com','gmail.om':'gmail.com','gmail.vom':'gmail.com','gmail.xom':'gmail.com','gmail.co.id':'gmail.com','gnail.com':'gmail.com',
+ 'gmali.com':'gmail.com','gamil.com':'gmail.com','ggmail.com':'gmail.com','gmeil.com':'gmail.com',
+ 'yaho.com':'yahoo.com','yahooo.com':'yahoo.com','yahoo.con':'yahoo.com','yahoo.co':'yahoo.com','yahho.com':'yahoo.com',
+ 'hotmail.con':'hotmail.com','hotmial.com':'hotmail.com','outlook.con':'outlook.com','outlok.com':'outlook.com'
+};
+function emailTypoHint_(email){
+ var e=String(email||'').trim().toLowerCase(),at=e.lastIndexOf('@');
+ if(at<1)return '';
+ var local=e.slice(0,at),domain=e.slice(at+1),fixedLocal=local.replace(/\.{2,}/g,'.').replace(/^\.+|\.+$/g,'');
+ var fixedDomain=EMAIL_DOMAIN_TYPOS_[domain]||domain;
+ var fixed=fixedLocal+'@'+fixedDomain;
+ return fixed!==e&&fixedLocal?fixed:'';
+}
+
+/** Jalankan dari editor Apps Script: daftar kontingen yang alamat emailnya tampak salah ketik (hasil di Execution log). */
+function auditAlamatEmailKontingen(){
+ var ss=SpreadsheetApp.getActiveSpreadsheet(),sh=ss&&ss.getSheetByName(CFG.kontingen.sheet),out=[];
+ if(!sh||sh.getLastRow()<2){Logger.log('Tidak ada data kontingen.');return out;}
+ var v=sh.getDataRange().getValues(),h=v[0],iN=h.indexOf('Nama Kontingen'),iE=h.indexOf('Email'),iR=h.indexOf('No. Registrasi');
+ for(var r=1;r<v.length;r++){
+  var email=String(v[r][iE]||'').trim().toLowerCase(),name=String(v[r][iN]||'').trim();if(!name)continue;
+  var problem='';
+  if(!email)problem='email kosong';
+  else if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))problem='format tidak valid';
+  else{var fix=emailTypoHint_(email);if(fix)problem='tampak salah ketik, mungkin: '+fix;}
+  if(problem)out.push({baris:r+1,registrasi:String(v[r][iR]||''),kontingen:name,email:email,masalah:problem});
+ }
+ Logger.log(out.length?JSON.stringify(out,null,2):'Semua alamat email kontingen tampak wajar.');
+ return out;
+}
+
+
+/** ID PDF formulir yang menunggu antrean penggabungan lampiran untuk satu nomor registrasi ('' bila tidak ada). */
+function pendingFormPdfIdForReg_(reg){
+ var all=perfProps_(),id='';
+ Object.keys(all).forEach(function(k){
+  if(k.indexOf(PDF_MERGE_JOB_PREFIX_)!==0)return;
+  try{var j=JSON.parse(all[k]);if(!j.jobId&&String(j.reg)===String(reg)&&j.pendingFormPdfId)id=String(j.pendingFormPdfId);}catch(e){}
+ });
+ return id;
 }
