@@ -345,7 +345,7 @@ var BRANCH_LABELS={'Duta Pelajar':'Duta Pelajar','Khitobah':'Khitobah','LCC':'LC
 function prettyBranch(name){return BRANCH_LABELS[name]||name;}
 function prettyCategory(branch,category){return category;}
 var $=function(id){return document.getElementById(id)};
-function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}).finally(function(){loadDataPromise=null;});}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function call(payload){return fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)}).then(function(r){return r.json();}).then(function(j){if(!j||!j.ok)throw new Error(j&&j.error||'Permintaan gagal.');return j;});}
 function callWithTimeout(payload,ms){return new Promise(function(resolve,reject){var settled=false,timer=setTimeout(function(){if(!settled){settled=true;reject(new Error('Server belum merespons dalam '+Math.round(ms/1000)+' detik. Periksa koneksi lalu tekan Muat ulang data.'));}},ms||45000);call(payload).then(function(v){if(settled)return;settled=true;clearTimeout(timer);resolve(v);}).catch(function(e){if(settled)return;settled=true;clearTimeout(timer);reject(e);});});}
 function toast(message){$('toast').textContent=message;$('toast').classList.remove('hidden');setTimeout(function(){$('toast').classList.add('hidden');},3600);}
@@ -353,7 +353,20 @@ function showLogin(){$('appView').classList.add('hidden');$('loginView').classLi
 function showApp(){$('loginView').classList.add('hidden');$('appView').classList.remove('hidden');$('adminIdentity').textContent='PETUGAS: '+user.toUpperCase();var resetPanel=$('resetRegistrationPanel');if(resetPanel)resetPanel.classList.toggle('hidden',user!=='Tyo');var devopsNav=$('devopsNav');if(devopsNav)devopsNav.classList.toggle('hidden',user!=='Tyo');if($('devopsPanel'))$('devopsPanel').classList.add('hidden');}
 function login(e){e.preventDefault();var btn=$('loginBtn');btn.disabled=true;btn.textContent='Memeriksa akses…';$('loginError').classList.add('hidden');call({action:'admin_login',user:$('adminUser').value,password:$('password').value}).then(function(j){token=j.token;user=j.user||$('adminUser').value;sessionStorage.setItem('porseni_admin_token',token);sessionStorage.setItem('porseni_admin_user',user);$('password').value='';showApp();return loadData();}).catch(function(err){$('loginError').textContent=err.message;$('loginError').classList.remove('hidden');}).finally(function(){btn.disabled=false;btn.textContent='Masuk ke Portal Panitia';});}
 function logout(){var old=token;token='';user='';sessionStorage.removeItem('porseni_admin_token');sessionStorage.removeItem('porseni_admin_user');call({action:'admin_logout',token:old}).catch(function(){}).finally(showLogin);}
-var loadDataPromise=null;function loadData(){if(loadDataPromise)return loadDataPromise; $('tableBody').innerHTML='<tr><td colspan="6" class="empty">Memuat data pendaftaran dan status kontrol…</td></tr>';['regKontStatus','regCabStatus','regCabMaintenanceStatus'].forEach(function(id){var el=$(id);if(el)el.textContent='Memuat status…';});loadDataPromise=callWithTimeout({action:'admin_dashboard',token:token},45000).then(function(j){data=j;renderMetrics();renderRecap();renderPublicRecapMode();renderRegistrationControls(j.registration);renderTable();fillContingentOptions();}).catch(function(err){if(/sesi|login|tidak valid/i.test(err.message)){logout();return;}['regKontStatus','regCabStatus','regCabMaintenanceStatus'].forEach(function(id){var el=$(id);if(el)el.textContent='Gagal memuat — '+err.message;});$('tableBody').innerHTML='<tr><td colspan="6" class="empty">'+esc(err.message)+'</td></tr>';});}
+var loadDataPromise=null;function loadData(){
+ if(loadDataPromise)return loadDataPromise;
+ $('tableBody').innerHTML='<tr><td colspan="6" class="empty">Memuat data pendaftaran dan status kontrol…</td></tr>';
+ ['regKontStatus','regCabStatus','regCabMaintenanceStatus'].forEach(function(id){var el=$(id);if(el)el.textContent='Memuat status…';});
+ loadDataPromise=callWithTimeout({action:'admin_dashboard',token:token},45000)
+ .then(function(j){data=j;renderMetrics();renderRecap();renderPublicRecapMode();renderRegistrationControls(j.registration);renderTable();fillContingentOptions();})
+ .catch(function(err){
+  if(/sesi|login|tidak valid/i.test(err.message)){logout();return;}
+  ['regKontStatus','regCabStatus','regCabMaintenanceStatus'].forEach(function(id){var el=$(id);if(el)el.textContent='Gagal memuat — '+err.message;});
+  $('tableBody').innerHTML='<tr><td colspan="6" class="empty">'+esc(err.message)+'</td></tr>';
+ })
+ .finally(function(){loadDataPromise=null;});
+ return loadDataPromise;
+}
 function fillContingentOptions(){
  var list=$('contingentOptions');
  if(!list)return;
