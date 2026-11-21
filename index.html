@@ -4149,14 +4149,14 @@ function applyPublicRecap(recap,fromCache){
  if(recap.hasil){MEDALS=recap.hasil.medals||[];UPDATED=new Date().toLocaleDateString('id-ID');renderHasil();renderChampionshipDetails(recap.hasil.detail||[],CHAMPIONSHIP_CATALOG);}
  if(fromCache){['recap-kontingen','recap-cabang'].forEach(function(id){var el=document.getElementById(id);if(el){var n=document.createElement('p');n.className='hint cache-note';n.textContent='Menampilkan data terakhir yang berhasil dimuat. Hubungkan kembali server untuk memperbarui data.';el.appendChild(n);}});}
 }
-var PUBLIC_RECAP_LOADED=false,PUBLIC_RECAP_PENDING=null;
+var PUBLIC_RECAP_LOADED=false,PUBLIC_RECAP_PENDING=null,PUBLIC_RECAP_DATA=null;
 function loadPublicRecap(force){
  if(PUBLIC_RECAP_LOADED&&!force)return Promise.resolve();if(PUBLIC_RECAP_PENDING)return PUBLIC_RECAP_PENDING;
  if(!SCRIPT_URL){var noUrl=document.querySelectorAll('#recap-kontingen,#recap-cabang');noUrl.forEach(function(el){var n=document.createElement('p');n.className='hint';n.textContent='Koneksi data pendaftaran belum dikonfigurasi.';el.appendChild(n);});return;}
  PUBLIC_RECAP_PENDING=fetch(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'public_recap'})})
  .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
- .then(function(j){if(!j||!j.ok||!j.recap)throw new Error((j&&j.error)||'Server tidak mengirim data rekap.');var recap=j.recap;applyPublicRecap(recap,false);PUBLIC_RECAP_LOADED=true;try{localStorage.setItem('PORSENI_2026_PUBLIC_RECAP',JSON.stringify({savedAt:new Date().toISOString(),recap:recap}));}catch(e){}})
- .catch(function(err){var cached=null;try{cached=JSON.parse(localStorage.getItem('PORSENI_2026_PUBLIC_RECAP')||'null');}catch(e){}if(cached&&cached.recap){applyPublicRecap(cached.recap,true);PUBLIC_RECAP_LOADED=true;}else{['recap-kontingen','recap-cabang'].forEach(function(id){var el=document.getElementById(id);if(el){var n=document.createElement('p');n.className='hint';n.textContent='Data belum dapat dimuat: '+(err&&err.message?err.message:'koneksi ke Apps Script gagal')+'. Periksa deployment dan izin akses Google Apps Script.';el.appendChild(n);}});}}).then(function(){PUBLIC_RECAP_PENDING=null;});
+ .then(function(j){if(!j||!j.ok||!j.recap)throw new Error((j&&j.error)||'Server tidak mengirim data rekap.');var recap=j.recap;PUBLIC_RECAP_DATA=recap;applyPublicRecap(recap,false);PUBLIC_RECAP_LOADED=true;try{localStorage.setItem('PORSENI_2026_PUBLIC_RECAP',JSON.stringify({savedAt:new Date().toISOString(),recap:recap}));}catch(e){}})
+ .catch(function(err){var cached=null;try{cached=JSON.parse(localStorage.getItem('PORSENI_2026_PUBLIC_RECAP')||'null');}catch(e){}if(cached&&cached.recap){PUBLIC_RECAP_DATA=cached.recap;applyPublicRecap(cached.recap,true);PUBLIC_RECAP_LOADED=true;}else{['recap-kontingen','recap-cabang'].forEach(function(id){var el=document.getElementById(id);if(el){var n=document.createElement('p');n.className='hint';n.textContent='Data belum dapat dimuat: '+(err&&err.message?err.message:'koneksi ke Apps Script gagal')+'. Periksa deployment dan izin akses Google Apps Script.';el.appendChild(n);}});}}).then(function(){PUBLIC_RECAP_PENDING=null;});
  return PUBLIC_RECAP_PENDING;
 }
 function summaryRows(rows){
@@ -4187,9 +4187,13 @@ function loadParticipantRecap(){
  var root=document.getElementById('recap-detail');if(!root)return;
  if(!SCRIPT_URL){root.innerHTML='<div class="recap-empty">Formulir belum terhubung ke Google Sheets.</div>';return;}
  root.innerHTML='<div class="recap-empty">Memuat data rekap…</div>';
- fetch(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'public_recap'})})
- .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(function(j){if(!j||!j.ok)throw new Error((j&&j.error)||'Server tidak mengirim data rekap.');RK=j.recap||{};rkFillFilter();renderParticipantRecap();})
- .catch(function(err){root.innerHTML='<div class="recap-empty">Rekap belum dapat dimuat: '+esc(err&&err.message?err.message:'koneksi Apps Script gagal')+'. Periksa deployment dan izin akses.</div>';});
+ // Gunakan permintaan dan cache rekap publik yang sama; hindari request public_recap kedua.
+ loadPublicRecap().then(function(){
+  if(!PUBLIC_RECAP_DATA)throw new Error('Data rekap belum tersedia.');
+  RK=PUBLIC_RECAP_DATA;rkFillFilter();renderParticipantRecap();
+ }).catch(function(err){
+  root.innerHTML='<div class="recap-empty">Rekap belum dapat dimuat: '+esc(err&&err.message?err.message:'koneksi Apps Script gagal')+'. Periksa deployment dan izin akses.</div>';
+ });
 }
 function rkFillFilter(){
  var sel=document.getElementById('rk-cabang'),cur=sel.value,gs=(RK&&RK.cabang)||[];

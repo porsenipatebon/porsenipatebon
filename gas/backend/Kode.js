@@ -584,7 +584,6 @@ function doPost(e){
   if(d.action==='admin_logout')return out(adminLogout_(d.token));
   if(d.action==='admin_dashboard')return out(adminDashboard_(d.token));
   if(d.action==='admin_record_files')return out(adminRecordFiles_(d));
-  if(d.action==='admin_email_history')return out(adminEmailHistory_(d));
   if(d.action==='public_registration_status')return out({ok:true,registration:registrationControls_()});
   if(d.action==='admin_get_registration_controls')return out(adminGetRegistrationControls_(d.token));
   if(d.action==='admin_set_registration_controls')return out(adminSetRegistrationControls_(d));
@@ -779,7 +778,7 @@ function adminReadSheet_(sheetName,type,includeFiles){
   var files=includeFiles?parsePortalFiles_(val(row,'Berkas (link Drive)')):[];
   var record={type:type,rowNumber:i+2,recordId:String(val(row,'ID Data')||''),nomor:String(val(row,'No. Registrasi')||''),nama:String(val(row,'Nama Kontingen')||''),waktu:val(row,'Waktu')?Utilities.formatDate(new Date(val(row,'Waktu')),Session.getScriptTimeZone(),'dd-MM-yyyy HH:mm'):'',status:String(val(row,'Status Verifikasi')||'Menunggu Verifikasi'),catatanAdmin:String(val(row,'Catatan Panitia')||''),revisionItems:parseRevisionItems_(val(row,'Item Revisi')),pdf:String(val(row,'PDF Formulir (link Drive)')||''),attachmentPdf:String(val(row,'PDF Lampiran (link Drive)')||''),archivePdf:String(val(row,'Arsip PDF Panitia (link Drive)')||''),folder:String(val(row,'Folder Drive')||''),berkas:files};
   if(type==='kontingen'){
-   record.asal=String(val(row,'Asal')||'');record.alamat=String(val(row,'Alamat')||'');record.ketua=String(val(row,'Ketua')||'');record.tempatLahirKetua=String(val(row,'Tempat Lahir Ketua')||'');record.tanggalLahirKetua=String(val(row,'Tanggal Lahir Ketua')||'');record.waKetua=String(val(row,'WA Ketua')||'');record.email=String(val(row,'Email')||'');record.cabang=String(val(row,'Cabang Lomba')||'');record.jumlahPeserta=String(val(row,'Jumlah Peserta')||'');record.metodeBayar=String(val(row,'Metode Bayar')||'');record.tanggalBayar=String(val(row,'Tgl Bayar')||'');record.ketuaIpnu=String(val(row,'Ketua PR IPNU')||'');record.ketuaIppnu=String(val(row,'Ketua PR IPPNU')||'');record.waKetuaIpnu=String(val(row,'WA Ketua IPNU')||'');record.waKetuaIppnu=String(val(row,'WA Ketua IPPNU')||'');record.igKetua=String(val(row,'Instagram Ketua Kontingen')||'');record.igKetuaIpnu=String(val(row,'Instagram Ketua PR/PK IPNU')||'');record.igKetuaIppnu=String(val(row,'Instagram Ketua PR/PK IPPNU')||'');record.igOrganisasi=String(val(row,'Instagram PR/PK IPNU-IPPNU')||'');
+   record.asal=String(val(row,'Asal')||'');record.alamat=String(val(row,'Alamat')||'');record.ketua=String(val(row,'Ketua')||'');record.tempatLahirKetua=String(val(row,'Tempat Lahir Ketua')||'');record.tanggalLahirKetua=String(val(row,'Tanggal Lahir Ketua')||'');record.waKetua=String(val(row,'WA Ketua')||'');record.email=String(val(row,'Email')||'');record.cabang=String(val(row,'Cabang Lomba')||'');record.jumlahPeserta=String(val(row,'Jumlah Peserta')||'');record.metodeBayar=String(val(row,'Metode Bayar')||'');record.tanggalBayar=String(val(row,'Tgl Bayar')||'');record.ketuaIpnu=String(val(row,'Ketua PR IPNU')||'');record.ketuaIppnu=String(val(row,'Ketua PR IPPNU')||'');record.igKetua=String(val(row,'Instagram Ketua Kontingen')||'');record.igKetuaIpnu=String(val(row,'Instagram Ketua PR/PK IPNU')||'');record.igKetuaIppnu=String(val(row,'Instagram Ketua PR/PK IPPNU')||'');record.igOrganisasi=String(val(row,'Instagram PR/PK IPNU-IPPNU')||'');
   }else{
    record.cabang=String(val(row,'Cabang Lomba')||'');record.kategori=String(val(row,'Kategori')||'');record.jumlahPeserta=String(val(row,'Jumlah Peserta')||'');record.peserta=String(val(row,'Daftar Peserta')||'');record.tempatLahirPeserta=String(val(row,'Tempat Lahir Peserta')||'');record.tanggalLahir=String(val(row,'Tanggal Lahir Peserta')||'');record.alamatPeserta=String(val(row,'Alamat Rumah Peserta')||'');record.waPeserta=String(val(row,'WA Peserta')||'');record.catatan=String(val(row,'Catatan')||'');
   }
@@ -914,21 +913,6 @@ function revisionFieldHeaders_(type){
   : ['Cabang Lomba','Kategori','Jumlah Peserta','Daftar Peserta','Tempat Lahir Peserta','Tanggal Lahir Peserta','Alamat Rumah Peserta','WA Peserta','Catatan'];
 }
 function revisionItemLabel_(item){var s=String(item||'');if(s.indexOf('field|')===0)return s.slice(6);if(s.indexOf('file|')===0)return s.slice(5);return s;}
-function adminEmailHistory_(d){
- var admin=requireAdmin_(d.token),recordId=String(d.registrationNo||d.recordId||'').trim();
- if(!recordId)throw new Error('Nomor registrasi tidak ditemukan.');
- var ss=SpreadsheetApp.getActiveSpreadsheet(),sh=ss.getSheetByName('Log Email');
- if(!sh||sh.getLastRow()<2)return {ok:true,logs:[]};
- var values=sh.getDataRange().getValues(),headers=values[0].map(function(x){return String(x||'').trim();});
- function ix(name){return headers.indexOf(name);}
- var iReg=ix('Nomor Registrasi'),iTime=ix('Waktu'),iAdmin=ix('Admin'),iType=ix('Jenis Data'),iName=ix('Nama Kontingen'),iTo=ix('Email Tujuan'),iStatus=ix('Hasil'),iSubject=ix('Subjek');
- if(iReg<0)return {ok:true,logs:[]};
- var logs=values.slice(1).filter(function(row){return String(row[iReg]||'').trim()===recordId;}).map(function(row){
-  var raw=iTime>=0?row[iTime]:'';
-  return {waktu:raw instanceof Date?Utilities.formatDate(raw,Session.getScriptTimeZone()||'Asia/Jakarta','dd-MM-yyyy HH:mm:ss'):String(raw||''),admin:iAdmin>=0?String(row[iAdmin]||''):'',jenis:iType>=0?String(row[iType]||''):'',nama:iName>=0?String(row[iName]||''):'',penerima:iTo>=0?String(row[iTo]||''):'',status:iStatus>=0?String(row[iStatus]||''):'Tidak diketahui',subjek:iSubject>=0?String(row[iSubject]||''):'',pesan:''};
- }).reverse().slice(0,100);
- return {ok:true,logs:logs};
-}
 function adminUpdateStatus_(d){
  var admin=requireAdmin_(d.token),type=String(d.type||''),status=String(d.status||''),note=String(d.note||'').slice(0,1000),revisionItems=Array.isArray(d.revisionItems)?d.revisionItems.map(function(x){return String(x||'').trim();}).filter(Boolean):[];
  if(type!=='kontingen'&&type!=='cabang')throw new Error('Jenis data tidak valid.');
@@ -1005,7 +989,7 @@ function adminUpdateRecord_(d){
   if(!sheet)throw new Error('Data tidak ditemukan. Muat ulang halaman.');
   ensureAdminColumns_(sheet);
   var rowNumber=resolveAdminRecordRow_(sheet,d),headers=sheet.getRange(1,1,1,sheet.getLastColumn()).getValues()[0];
-  var allowed=type==='kontingen'?{asal:'Asal',alamat:'Alamat',ketua:'Ketua',tempatLahirKetua:'Tempat Lahir Ketua',tanggalLahirKetua:'Tanggal Lahir Ketua',waKetua:'WA Ketua',email:'Email',jumlahPeserta:'Jumlah Peserta',cabang:'Cabang Lomba',metodeBayar:'Metode Bayar',tanggalBayar:'Tgl Bayar',ketuaIpnu:'Ketua PR IPNU',ketuaIppnu:'Ketua PR IPPNU',waKetuaIpnu:'WA Ketua IPNU',waKetuaIppnu:'WA Ketua IPPNU',igKetua:'Instagram Ketua Kontingen',igKetuaIpnu:'Instagram Ketua PR/PK IPNU',igKetuaIppnu:'Instagram Ketua PR/PK IPPNU',igOrganisasi:'Instagram PR/PK IPNU-IPPNU'}:{cabang:'Cabang Lomba',kategori:'Kategori',jumlahPeserta:'Jumlah Peserta',peserta:'Daftar Peserta',tempatLahirPeserta:'Tempat Lahir Peserta',tanggalLahir:'Tanggal Lahir Peserta',alamatPeserta:'Alamat Rumah Peserta',waPeserta:'WA Peserta',catatan:'Catatan'};
+  var allowed=type==='kontingen'?{asal:'Asal',alamat:'Alamat',ketua:'Ketua',tempatLahirKetua:'Tempat Lahir Ketua',tanggalLahirKetua:'Tanggal Lahir Ketua',waKetua:'WA Ketua',email:'Email',jumlahPeserta:'Jumlah Peserta',cabang:'Cabang Lomba',metodeBayar:'Metode Bayar',tanggalBayar:'Tgl Bayar',ketuaIpnu:'Ketua PR IPNU',ketuaIppnu:'Ketua PR IPPNU'}:{cabang:'Cabang Lomba',kategori:'Kategori',jumlahPeserta:'Jumlah Peserta',peserta:'Daftar Peserta',tempatLahirPeserta:'Tempat Lahir Peserta',tanggalLahir:'Tanggal Lahir Peserta',alamatPeserta:'Alamat Rumah Peserta',waPeserta:'WA Peserta',catatan:'Catatan'};
   var fields=d.fields||{},changed=[];
   Object.keys(fields).forEach(function(key){if(!allowed[key])return;var col=headers.indexOf(allowed[key]);if(col<0)return;var value=String(fields[key]===null?'':fields[key]);if(/^[=+@-]/.test(value))value="'"+value;sheet.getRange(rowNumber,col+1).setValue(value);changed.push(allowed[key]);});
   if(!changed.length)throw new Error('Tidak ada kolom yang dapat diperbarui.');
@@ -2004,18 +1988,34 @@ function contingentReplaceRevisionFiles_(d){
 function getContingentPortalData_(nama){
  var ss=SpreadsheetApp.getActiveSpreadsheet();if(!ss)throw new Error('Database PORSENI tidak dapat diakses.');
  var result={nama:nama,registrasi:null,berkasCabang:[],statusCabang:[]};
- function readRows(sheetName){var sh=ss.getSheetByName(sheetName);if(!sh||sh.getLastRow()<2)return [];var v=sh.getDataRange().getValues(),h=v[0];return v.slice(1).map(function(row){var o={};h.forEach(function(k,i){o[k]=row[i];});return o;});}
+ function readSnapshot(sheetName){
+  var sh=ss.getSheetByName(sheetName);
+  if(!sh||sh.getLastRow()<2)return {headers:[],values:[],rows:[]};
+  var values=sh.getDataRange().getValues(),headers=values[0];
+  var rows=values.slice(1).map(function(row){var o={};headers.forEach(function(k,i){o[k]=row[i];});return o;});
+  return {headers:headers,values:values,rows:rows};
+ }
  function fileRefs(text){return parsePortalFiles_(text).map(function(x){return portalFileRef_(x.url,x.label);}).filter(Boolean);}
- var kont=readRows(CFG.kontingen.sheet).filter(function(r){return normalizeEvent_(r['Nama Kontingen'])===normalizeEvent_(nama);});
+ // Ambil snapshot tiap sheet satu kali. Data yang sama dipakai untuk profil,
+ // daftar pengajuan, dan status cabang agar tidak memindai Spreadsheet berulang.
+ var kontSnapshot=readSnapshot(CFG.kontingen.sheet),cabangSnapshot=readSnapshot(CFG.cabang.sheet);
+ var kont=kontSnapshot.rows.filter(function(r){return normalizeEvent_(r['Nama Kontingen'])===normalizeEvent_(nama);});
  if(!kont.length)throw new Error('Data pendaftaran kontingen belum ditemukan.');
  var kr=kont[kont.length-1];
- result.dataKontingen=readKontingenData_(nama);
+ result.dataKontingen={};
+ Object.keys(EDITABLE_FIELDS_).forEach(function(k){
+  var def=EDITABLE_FIELDS_[k],raw=kr[def.head];
+  if(raw instanceof Date)raw=Utilities.formatDate(raw,'Asia/Jakarta','yyyy-MM-dd');
+  raw=String(raw==null?'':raw);
+  if(def.type==='phone'&&/^8\d{8,12}$/.test(raw))raw='0'+raw;
+  result.dataKontingen[k]=raw;
+ });
  result.approval={status:String(kr['Status Verifikasi']||'Menunggu Verifikasi'),catatan:String(kr['Catatan Panitia']||''),revisionItems:parseRevisionItems_(kr['Item Revisi']),revisionValues:{'Asal':String(kr['Asal']||''),'Alamat':String(kr['Alamat']||''),'Ketua':String(kr['Ketua']||''),'Tempat Lahir Ketua':String(kr['Tempat Lahir Ketua']||''),'Tanggal Lahir Ketua':(kr['Tanggal Lahir Ketua'] instanceof Date?Utilities.formatDate(kr['Tanggal Lahir Ketua'],'Asia/Jakarta','yyyy-MM-dd'):String(kr['Tanggal Lahir Ketua']||'')),'WA Ketua':String(kr['WA Ketua']||''),'Email':String(kr['Email']||''),'Cabang Lomba':String(kr['Cabang Lomba']||''),'Jumlah Peserta':String(kr['Jumlah Peserta']||''),'Metode Bayar':String(kr['Metode Bayar']||''),'Tgl Bayar':String(kr['Tgl Bayar']||''),'Ketua PR IPNU':String(kr['Ketua PR IPNU']||''),'Ketua PR IPPNU':String(kr['Ketua PR IPPNU']||''),'WA Ketua IPNU':String(kr['WA Ketua IPNU']||''),'WA Ketua IPPNU':String(kr['WA Ketua IPPNU']||''),'Instagram Ketua Kontingen':String(kr['Instagram Ketua Kontingen']||''),'Instagram Ketua PR/PK IPNU':String(kr['Instagram Ketua PR/PK IPNU']||''),'Instagram Ketua PR/PK IPPNU':String(kr['Instagram Ketua PR/PK IPPNU']||''),'Instagram PR/PK IPNU-IPPNU':String(kr['Instagram PR/PK IPNU-IPPNU']||'')},waktu:kr['Diverifikasi Pada']?Utilities.formatDate(new Date(kr['Diverifikasi Pada']),Session.getScriptTimeZone(),'dd-MM-yyyy HH:mm'):''};
  // Portal menerima ID file individual saja. Folder dan PDF arsip internal tidak pernah dikirim.
  result.registrasi={nomor:String(kr['No. Registrasi']||''),waktu:kr['Waktu']?Utilities.formatDate(new Date(kr['Waktu']),Session.getScriptTimeZone(),'dd-MM-yyyy HH:mm'):'',cabang:String(kr['Cabang Lomba']||''),pdfId:getDriveFileIdFromUrl_(kr['PDF Formulir (link Drive)']||''),attachmentPdfId:getDriveFileIdFromUrl_(kr['PDF Lampiran (link Drive)']||''),archivePdfId:getDriveFileIdFromUrl_(kr['Arsip PDF Panitia (link Drive)']||''),mergePending:isMergePending_(String(kr['No. Registrasi']||'')),berkas:fileRefs(kr['Berkas (link Drive)']||'')};
- var rows=readRows(CFG.cabang.sheet).filter(function(r){return normalizeEvent_(r['Nama Kontingen'])===normalizeEvent_(nama);});
+ var rows=cabangSnapshot.rows.filter(function(r){return normalizeEvent_(r['Nama Kontingen'])===normalizeEvent_(nama);});
  result.berkasCabang=rows.map(function(r){return {nomor:String(r['No. Registrasi']||''),waktu:r['Waktu']?Utilities.formatDate(new Date(r['Waktu']),Session.getScriptTimeZone(),'dd-MM-yyyy HH:mm'):'',cabang:String(r['Cabang Lomba']||''),kategori:String(r['Kategori']||''),jumlah:String(r['Jumlah Peserta']||''),pdfId:getDriveFileIdFromUrl_(r['PDF Formulir (link Drive)']||''),attachmentPdfId:getDriveFileIdFromUrl_(r['PDF Lampiran (link Drive)']||''),archivePdfId:getDriveFileIdFromUrl_(r['Arsip PDF Panitia (link Drive)']||''),mergePending:isMergePending_(String(r['No. Registrasi']||'')),berkas:fileRefs(r['Berkas (link Drive)']||'')};});
- var events=getRegisteredEvents_(nama);
+ var events=getRegisteredEvents_(nama,kontSnapshot.values,cabangSnapshot.values);
  result.statusCabang=events.map(function(ev){
   return {cabang:ev.cabang,batasAkhir:branchDeadline_(ev.cabang),kategori:ev.categories.map(function(cat){
    var found=null;for(var i=rows.length-1;i>=0;i--){if(normalizeEvent_(rows[i]['Cabang Lomba'])===normalizeEvent_(ev.cabang)&&normalizeEvent_(rows[i]['Kategori'])===normalizeEvent_(cat)){found=rows[i];break;}}
@@ -2166,13 +2166,13 @@ function findLatestBranchRecord_(nama,cabang,kategori){
  return null;
 }
 
-function getRegisteredEvents_(nama){
+function getRegisteredEvents_(nama,kontValues,branchValues){
  var ss=SpreadsheetApp.getActiveSpreadsheet();
  if(KONTINGEN.indexOf(nama)<0)throw new Error('Nama kontingen tidak ada dalam daftar resmi.');
  if(!ss)throw new Error('Database PORSENI tidak dapat diakses.');
  var sh=ss.getSheetByName(CFG.kontingen.sheet);
  if(!sh||sh.getLastRow()<2)throw new Error('Kontingen belum terdaftar di database.');
- var values=sh.getDataRange().getValues(),headers=values[0];
+ var values=kontValues||sh.getDataRange().getValues(),headers=values[0];
  var iNama=headers.indexOf('Nama Kontingen'),iCabang=headers.indexOf('Cabang Lomba');
  if(iNama<0||iCabang<0)throw new Error('Kolom nama/cabang pada database kontingen tidak ditemukan.');
  var registeredText='';
@@ -2191,7 +2191,7 @@ function getRegisteredEvents_(nama){
  });
  var sub=ss.getSheetByName(CFG.cabang.sheet);
  if(sub&&sub.getLastRow()>=2){
-  var rows=sub.getDataRange().getValues(),h=rows[0],iN=h.indexOf('Nama Kontingen'),iB=h.indexOf('Cabang Lomba'),iK=h.indexOf('Kategori'),iS=h.indexOf('Status Verifikasi');
+  var rows=branchValues||sub.getDataRange().getValues(),h=rows[0],iN=h.indexOf('Nama Kontingen'),iB=h.indexOf('Cabang Lomba'),iK=h.indexOf('Kategori'),iS=h.indexOf('Status Verifikasi');
   if(iN>=0&&iB>=0&&iK>=0){
    for(var r=1;r<rows.length;r++){
     if(normalizeEvent_(rows[r][iN])!==normalizeEvent_(nama))continue;
