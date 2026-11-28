@@ -4003,12 +4003,18 @@ function createBranchRegistrationPdf_(d, folder) {
     pdfGrid_(meta,[150,PDF_CONTENT_W-150],{size:10.5,padV:4,padH:8,minH:22,boldCols:[0],labelCol:0});
     w.para('\u00A0',{size:4,after:2});
     w.para('DAFTAR PESERTA', {size:10.5,bold:true,color:PDF_NAVY,before:3,after:4});
-    var rows = [['No.','Nama Peserta','Jenis Kelamin','Tempat/Tanggal Lahir','Usia per 25 Des 2026','Peran','Alamat Rumah']];
+    var isChoir = String(d.cabang||'') === 'Paduan suara';
+    var rows = [['No.','Nama Peserta','Jenis Kelamin','Tempat/Tanggal Lahir','Usia per 25 Des 2026'].concat(isChoir?['Peran']:[]).concat(['Alamat Rumah'])];
     people.forEach(function(p,i){
-      rows.push([String(i+1),String(p.nama||''),p.gender==='L'?'Putra':p.gender==='P'?'Putri':String(p.gender||''),participantBirth(p),participantAge(p),String(p.role||'-'),String(p.alamat||'')]);
+      var row=[String(i+1),String(p.nama||''),p.gender==='L'?'Putra':p.gender==='P'?'Putri':String(p.gender||''),participantBirth(p),participantAge(p)];
+      if(isChoir) row.push(String(p.role||'-'));
+      row.push(String(p.alamat||''));
+      rows.push(row);
     });
     var tbl = w.table(rows);
-    pdfGrid_(tbl,[20,82,48,92,76,48,PDF_CONTENT_W-366],{size:7.8,padV:3,padH:2,header:true,align:['C','L','C','C','C','C','L']});
+    var widths = isChoir ? [20,82,48,92,76,48,PDF_CONTENT_W-366] : [20,90,50,100,76,PDF_CONTENT_W-336];
+    var aligns = isChoir ? ['C','L','C','C','C','C','L'] : ['C','L','C','C','C','L'];
+    pdfGrid_(tbl,widths,{size:7.8,padV:3,padH:2,header:true,align:aligns});
   } else {
     var vertical = [['Nama Kontingen',d.nama||'']];
     people.forEach(function(p,i){
@@ -4018,7 +4024,7 @@ function createBranchRegistrationPdf_(d, folder) {
       vertical.push(['Usia per 25 Desember 2026',participantAge(p)]);
       vertical.push(['Alamat Rumah',p.alamat||'']);
       if (isDuta) vertical.push(['Nomor WhatsApp Peserta',p.wa||'']);
-      if (p.role) vertical.push(['Peran',p.role]);
+      if (isChoir && p.role) vertical.push(['Peran',p.role]);
     });
     verticalFields(vertical);
     if (isDuta && d.dutaProfile) {

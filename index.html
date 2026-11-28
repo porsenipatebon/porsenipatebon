@@ -3876,8 +3876,11 @@ function paperK(d,stamps){
  +'<p class="print-time">Waktu pendaftaran: <b>'+esc(when)+' WIB</b></p>'+signature3(d,stamps);
 }
 function paperB(d){
+ var isChoir=String(d.cabang||'')==='Paduan suara';
+ var headers='<tr><th class="c">No</th><th>Nama peserta</th><th>Tempat lahir</th><th>Tanggal lahir</th><th>Usia per 25 Desember 2026</th><th class="c">L/P</th><th>Alamat rumah</th><th>WhatsApp</th>'+(isChoir?'<th>Peran</th>':'')+'</tr>';
+ var rows=d.list.map(function(p,i){return '<tr><td class="c">'+(i+1)+'</td><td>'+esc(p.n)+'</td><td>'+esc(p.tempatLahir||"")+'</td><td>'+esc(p.tanggalLahir||"")+'</td><td>'+esc(porseniAge(p.tanggalLahir))+'</td><td class="c">'+esc(p.l)+'</td><td>'+esc(p.alamat||"")+'</td><td>'+esc(p.wa||"")+'</td>'+(isChoir?'<td>'+esc(p.role||"-")+'</td>':'')+'</tr>'}).join('');
  return kop("FORMULIR PENGUMPULAN BERKAS CABANG LOMBA "+String(d.cabang||"").toUpperCase(),d)+'<table>'+tr("Nama kontingen",d.nama)+tr("Cabang lomba",prettyBranchName(d.cabang))+tr("Kategori",prettyCategoryLabel(d.cabang,d.kategori,KAT[d.cabang]||[]))+tr("Jumlah peserta",String(d.list.length))+tr("Berkas diunggah",(d.fl||[]).map(function(f){return f.name}).join(", "))+tr("Catatan",d.catatan)+'</table>'
- +'<h4>Daftar peserta</h4><table class="pl"><tr><th class="c">No</th><th>Nama peserta</th><th>Tempat lahir</th><th>Tanggal lahir</th><th>Usia per 25 Desember 2026</th><th class="c">L/P</th><th>Alamat rumah</th><th>WhatsApp</th><th>Peran</th></tr>'+d.list.map(function(p,i){return '<tr><td class="c">'+(i+1)+'</td><td>'+esc(p.n)+'</td><td>'+esc(p.tempatLahir||"")+'</td><td>'+esc(p.tanggalLahir||"")+'</td><td>'+esc(porseniAge(p.tanggalLahir))+'</td><td class="c">'+esc(p.l)+'</td><td>'+esc(p.alamat||"")+'</td><td>'+esc(p.wa||"")+'</td><td>'+esc(p.role||"-")+'</td></tr>'}).join('')+'</table>'
+ +'<h4>Daftar peserta</h4><table class="pl">'+headers+rows+'</table>'
  +'<p style="margin-top:8px">Batas akhir pengumpulan berkas '+deadlineFor(d.cabang)+'. Jadwal pelaksanaan: '+(SCHEDULE[d.cabang]||'Sabtu,<br>26 Desember<br>2026 sesuai susunan acara PORSENI 2026.')+' Sekretariat: A. Fuad Syafi, WA 083836151201.</p>'
  +sign("Sekretariat Penerima","Perwakilan Kontingen","") }
 var MSG={ok:["","✅ Data dan berkas berhasil terkirim ke panitia. Formulir cetak tersedia di bawah."],
